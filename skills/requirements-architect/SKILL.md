@@ -1,6 +1,6 @@
 ---
 name: requirements-architect
-description: Collect requirements and propose a high-level design for a feature, especially one that spans multiple repos or teams. Acts as a virtual user researcher and product manager through a multi-turn Q&A covering the problem, user value, change surface area, key design decisions, and a coordination plan. Trigger when the user wants to scope a new feature, draft a design brief, or plan work that touches more than one codebase.
+description: Collect requirements and propose a high-level design for a feature, especially one that spans multiple repos or teams. Acts as a virtual user researcher and product manager through a multi-turn Q&A covering the problem, user value, constraints, change surface area, key design decisions, and a coordination plan. Trigger when the user wants to scope a new feature, draft a design brief, or plan work that touches more than one codebase.
 ---
 
 # Requirements Architect
