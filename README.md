@@ -1,4 +1,4 @@
-# skills-mcp
+# iop-skills
 
 A single-binary [Model Context Protocol](https://modelcontextprotocol.io) server
 that ships a bundle of Claude skills embedded at compile time. Each skill under
@@ -8,7 +8,7 @@ skill body for the model to follow.
 ## Layout
 
 ```
-skills-mcp/
+iop-skills/
 ├── Cargo.toml
 ├── src/
 │   └── main.rs
@@ -34,18 +34,19 @@ description: <one-line description used as the MCP tool description>
 cargo build --release
 ```
 
-The result is a single static-ish binary at `target/release/skills-mcp`; all
+The result is a single static-ish binary at `target/release/iop-skills`; all
 skill content is baked in via `include_dir!`, so no sidecar files are needed.
 
 ## Run (stdio)
 
-Configure your MCP client (e.g. Claude Code) to spawn the binary:
+Configure your MCP client (e.g. Claude Code) to spawn the binary. The JSON
+key is the display name — pick whatever you want:
 
 ```json
 {
   "mcpServers": {
-    "skills": {
-      "command": "/path/to/skills-mcp"
+    "iop-skills": {
+      "command": "/path/to/iop-skills"
     }
   }
 }
