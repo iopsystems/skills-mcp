@@ -1,18 +1,18 @@
 use std::{borrow::Cow, path::PathBuf, sync::Arc};
 
 use anyhow::{Context, Result};
-use include_dir::{Dir, File, include_dir};
+use include_dir::{include_dir, Dir, File};
 use rmcp::{
-    ErrorData as McpError, RoleServer, ServerHandler, ServiceExt,
     model::{
         CallToolRequestParams, CallToolResult, Content, Implementation, InitializeResult,
         ListToolsResult, PaginatedRequestParams, ProtocolVersion, ServerCapabilities, Tool,
     },
     service::RequestContext,
     transport::stdio,
+    ErrorData as McpError, RoleServer, ServerHandler, ServiceExt,
 };
 use serde::Deserialize;
-use serde_json::{Value, json};
+use serde_json::{json, Value};
 use tokio::sync::Mutex;
 
 mod vault;

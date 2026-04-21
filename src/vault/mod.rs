@@ -11,6 +11,6 @@ pub mod query;
 pub mod schema;
 
 #[allow(unused_imports)]
-pub use index::{INDEX_FILENAME, Index, RefreshOutcome, locate_vault};
+pub use index::{locate_vault, Index, RefreshOutcome, INDEX_FILENAME};
 #[allow(unused_imports)]
-pub use query::{ArtifactRow, Direction, EdgeRow, SearchFilters, edges_of, search};
+pub use query::{edges_of, search, ArtifactRow, Direction, EdgeRow, SearchFilters};

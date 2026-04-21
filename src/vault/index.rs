@@ -10,8 +10,8 @@ use std::{
     time::UNIX_EPOCH,
 };
 
-use anyhow::{Context, Result, anyhow};
-use rusqlite::{Connection, OptionalExtension, params};
+use anyhow::{anyhow, Context, Result};
+use rusqlite::{params, Connection, OptionalExtension};
 use walkdir::WalkDir;
 
 use crate::vault::{
@@ -50,8 +50,8 @@ impl Index {
         }
 
         let db_path = root.join(INDEX_FILENAME);
-        let conn = Connection::open(&db_path)
-            .with_context(|| format!("open {}", db_path.display()))?;
+        let conn =
+            Connection::open(&db_path).with_context(|| format!("open {}", db_path.display()))?;
         conn.pragma_update(None, "journal_mode", "WAL")
             .context("set journal_mode=WAL")?;
         conn.pragma_update(None, "synchronous", "NORMAL")
@@ -152,10 +152,7 @@ impl Index {
                 |r| r.get(0),
             )
             .optional()?;
-        let stored_mtime: u64 = stored
-            .as_deref()
-            .and_then(|s| s.parse().ok())
-            .unwrap_or(0);
+        let stored_mtime: u64 = stored.as_deref().and_then(|s| s.parse().ok()).unwrap_or(0);
 
         if vault_mtime <= stored_mtime && stored.is_some() {
             return Ok(RefreshOutcome::UpToDate);
@@ -190,23 +187,17 @@ impl Index {
                    title = excluded.title,
                    frontmatter_json = excluded.frontmatter_json",
             )?;
-            let mut insert_edge = tx.prepare(
-                "INSERT OR IGNORE INTO edge (from_id, to_id, kind) VALUES (?1, ?2, ?3)",
-            )?;
-            let mut insert_fts = tx.prepare(
-                "INSERT INTO artifact_fts (id, title, body) VALUES (?1, ?2, ?3)",
-            )?;
+            let mut insert_edge = tx
+                .prepare("INSERT OR IGNORE INTO edge (from_id, to_id, kind) VALUES (?1, ?2, ?3)")?;
+            let mut insert_fts =
+                tx.prepare("INSERT INTO artifact_fts (id, title, body) VALUES (?1, ?2, ?3)")?;
 
             for a in &artifacts {
                 insert_artifact_row(&mut insert_artifact, &self.root, a)?;
                 for e in &a.edges {
                     insert_edge.execute(params![&e.from_id, &e.to_id, &e.kind])?;
                 }
-                insert_fts.execute(params![
-                    &a.id,
-                    a.title.as_deref().unwrap_or(""),
-                    &a.body
-                ])?;
+                insert_fts.execute(params![&a.id, a.title.as_deref().unwrap_or(""), &a.body])?;
             }
         }
         tx.commit()?;
@@ -251,7 +242,7 @@ fn newest_mtime(root: &Path) -> Result<u64> {
     for entry in WalkDir::new(root)
         .follow_links(false)
         .into_iter()
-        .filter_entry(|e| !is_hidden(e.file_name()))
+        .filter_entry(|e| e.depth() == 0 || !is_hidden(e.file_name()))
     {
         let Ok(entry) = entry else { continue };
         if !entry.file_type().is_file() {
@@ -282,10 +273,7 @@ pub fn locate_vault(start: &Path) -> Result<PathBuf> {
     if let Ok(env) = std::env::var("IOP_VAULT_PATH") {
         let p = PathBuf::from(env);
         if !p.exists() {
-            return Err(anyhow!(
-                "IOP_VAULT_PATH={} does not exist",
-                p.display()
-            ));
+            return Err(anyhow!("IOP_VAULT_PATH={} does not exist", p.display()));
         }
         return Ok(p);
     }
@@ -311,4 +299,178 @@ fn looks_like_vault(p: &Path) -> bool {
     ["scopes", "briefs", "arcs"]
         .iter()
         .any(|d| p.join(d).is_dir())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::fs;
+    use tempfile::TempDir;
+
+    /// Build a minimal vault tempdir containing a SCHEMA.md (matching
+    /// this build's supported version) plus the provided artifacts.
+    /// Each tuple is (relative_path, frontmatter_body, markdown_body).
+    fn make_vault(artifacts: &[(&str, &str, &str)]) -> TempDir {
+        let tmp = TempDir::new().unwrap();
+        fs::write(
+            tmp.path().join("SCHEMA.md"),
+            format!(
+                "---\nid: schema\ntype: schema\nversion: {}\n---\n# schema\n",
+                schema::SUPPORTED_SCHEMA_VERSION
+            ),
+        )
+        .unwrap();
+        for (rel, fm, body) in artifacts {
+            let p = tmp.path().join(rel);
+            if let Some(parent) = p.parent() {
+                fs::create_dir_all(parent).unwrap();
+            }
+            fs::write(&p, format!("---\n{fm}\n---\n{body}\n")).unwrap();
+        }
+        tmp
+    }
+
+    #[test]
+    fn open_creates_index_file_and_tables() {
+        let vault = make_vault(&[]);
+        let idx = Index::open(vault.path()).unwrap();
+        assert!(vault.path().join(INDEX_FILENAME).is_file());
+        // meta table exists and has the index_schema_version row
+        let v: String = idx
+            .conn
+            .query_row(
+                "SELECT value FROM meta WHERE key = 'index_schema_version'",
+                [],
+                |r| r.get(0),
+            )
+            .unwrap();
+        assert_eq!(v, INDEX_SCHEMA_VERSION.to_string());
+    }
+
+    #[test]
+    fn open_refuses_on_schema_version_mismatch() {
+        let tmp = TempDir::new().unwrap();
+        fs::write(
+            tmp.path().join("SCHEMA.md"),
+            format!(
+                "---\nid: schema\ntype: schema\nversion: {}\n---\n",
+                schema::SUPPORTED_SCHEMA_VERSION + 99
+            ),
+        )
+        .unwrap();
+        let err = Index::open(tmp.path()).map(|_| ()).unwrap_err();
+        assert!(
+            err.to_string().contains("SCHEMA.md is version"),
+            "unexpected error: {err}"
+        );
+    }
+
+    #[test]
+    fn rebuild_populates_artifacts_and_edges() {
+        let vault = make_vault(&[
+            (
+                "briefs/p.md",
+                "id: p\ntype: problem-brief\nstatus: accepted",
+                "# problem\n\nsome problem text",
+            ),
+            (
+                "briefs/d.md",
+                "id: d\ntype: design-brief\nstatus: proposed\nframes: p\nrelates_to: [p]",
+                "# design\n\nsome design text",
+            ),
+        ]);
+        let mut idx = Index::open(vault.path()).unwrap();
+        idx.rebuild().unwrap();
+
+        let n_artifact: i64 = idx
+            .conn
+            .query_row("SELECT COUNT(*) FROM artifact", [], |r| r.get(0))
+            .unwrap();
+        // 2 briefs + schema
+        assert_eq!(n_artifact, 3);
+
+        let n_edges: i64 = idx
+            .conn
+            .query_row("SELECT COUNT(*) FROM edge WHERE from_id = 'd'", [], |r| {
+                r.get(0)
+            })
+            .unwrap();
+        assert_eq!(n_edges, 2); // frames + relates_to
+
+        let frames_target: String = idx
+            .conn
+            .query_row(
+                "SELECT to_id FROM edge WHERE from_id = 'd' AND kind = 'frames'",
+                [],
+                |r| r.get(0),
+            )
+            .unwrap();
+        assert_eq!(frames_target, "p");
+    }
+
+    #[test]
+    fn refresh_is_idempotent_when_nothing_changed() {
+        let vault = make_vault(&[(
+            "briefs/p.md",
+            "id: p\ntype: problem-brief\nstatus: accepted",
+            "# p",
+        )]);
+        let mut idx = Index::open(vault.path()).unwrap();
+        assert!(matches!(
+            idx.refresh_if_stale().unwrap(),
+            RefreshOutcome::Rebuilt
+        ));
+        assert!(matches!(
+            idx.refresh_if_stale().unwrap(),
+            RefreshOutcome::UpToDate
+        ));
+    }
+
+    #[test]
+    fn refresh_rebuilds_when_a_file_changes() {
+        use std::thread::sleep;
+        use std::time::Duration;
+
+        let vault = make_vault(&[(
+            "briefs/p.md",
+            "id: p\ntype: problem-brief\nstatus: accepted",
+            "# p",
+        )]);
+        let mut idx = Index::open(vault.path()).unwrap();
+        idx.refresh_if_stale().unwrap();
+
+        // mtime resolution is 1s on some filesystems; make sure our edit
+        // lands in a later second.
+        sleep(Duration::from_millis(1100));
+        fs::write(
+            vault.path().join("briefs/p.md"),
+            "---\nid: p\ntype: problem-brief\nstatus: obsolete\n---\n# p\n",
+        )
+        .unwrap();
+
+        assert!(matches!(
+            idx.refresh_if_stale().unwrap(),
+            RefreshOutcome::Rebuilt
+        ));
+        let status: String = idx
+            .conn
+            .query_row("SELECT status FROM artifact WHERE id = 'p'", [], |r| {
+                r.get(0)
+            })
+            .unwrap();
+        assert_eq!(status, "obsolete");
+    }
+
+    #[test]
+    fn locate_vault_finds_schema_md() {
+        let vault = make_vault(&[]);
+        let nested = vault.path().join("nested/deeply/inside");
+        fs::create_dir_all(&nested).unwrap();
+        let found = locate_vault(&nested).unwrap();
+        // Both paths should resolve to the same canonical vault root.
+        assert_eq!(
+            found.canonicalize().unwrap(),
+            vault.path().canonicalize().unwrap()
+        );
+    }
 }
