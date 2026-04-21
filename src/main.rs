@@ -176,6 +176,32 @@ fn programmatic_tools() -> Vec<Tool> {
             icons: None,
             meta: None,
         },
+        Tool {
+            name: Cow::Borrowed("vault_check_transition"),
+            title: None,
+            description: Some(Cow::Borrowed(
+                "Evaluate a proposed status transition against the vault's \
+                 resolution-propagation invariants. Returns allowed/blockers/\
+                 warnings with machine-stable rule ids and artifact evidence. \
+                 Use this before committing a status change to catch cascading \
+                 violations (e.g. accepting a decision whose design-brief is \
+                 still draft, closing an arc with open inquiries).",
+            )),
+            input_schema: obj_schema(json!({
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string", "description": "The artifact id to transition"},
+                    "new_status": {"type": "string", "description": "The proposed new status"}
+                },
+                "required": ["id", "new_status"],
+                "additionalProperties": false
+            })),
+            output_schema: None,
+            annotations: None,
+            execution: None,
+            icons: None,
+            meta: None,
+        },
     ]
 }
 
@@ -302,6 +328,7 @@ impl ServerHandler for SkillsServer {
             "vault_search" => self.handle_vault_search(request.arguments).await,
             "vault_edges" => self.handle_vault_edges(request.arguments).await,
             "vault_reindex" => self.handle_vault_reindex().await,
+            "vault_check_transition" => self.handle_vault_check_transition(request.arguments).await,
             name => match self.find_skill(name) {
                 Some(skill) => Ok(CallToolResult::success(vec![Content::text(
                     skill.body.clone(),
@@ -400,6 +427,41 @@ impl SkillsServer {
         match index.rebuild() {
             Ok(()) => Ok(json_result(json!({"status": "rebuilt"}))),
             Err(e) => Ok(vault_err(format!("rebuild failed: {e:#}"))),
+        }
+    }
+
+    async fn handle_vault_check_transition(
+        &self,
+        args: Option<serde_json::Map<String, Value>>,
+    ) -> Result<CallToolResult, McpError> {
+        let args = args.unwrap_or_default();
+        let Some(id) = args.get("id").and_then(Value::as_str) else {
+            return Ok(vault_err("missing required argument: id".to_string()));
+        };
+        let Some(new_status) = args.get("new_status").and_then(Value::as_str) else {
+            return Ok(vault_err(
+                "missing required argument: new_status".to_string(),
+            ));
+        };
+        let id = id.to_string();
+        let new_status = new_status.to_string();
+
+        let mut guard = match self.vault_index().await {
+            Ok(g) => g,
+            Err(msg) => return Ok(vault_err(msg)),
+        };
+        let VaultState::Ready(index) = &mut *guard else {
+            return Ok(vault_err("vault unavailable".to_string()));
+        };
+        if let Err(e) = index.refresh_if_stale() {
+            return Ok(vault_err(format!("refresh failed: {e:#}")));
+        }
+        match vault::check_transition(index, &id, &new_status) {
+            Ok(result) => match serde_json::to_value(&result) {
+                Ok(v) => Ok(json_result(v)),
+                Err(e) => Ok(vault_err(format!("serialize failed: {e}"))),
+            },
+            Err(e) => Ok(vault_err(format!("check_transition failed: {e:#}"))),
         }
     }
 }

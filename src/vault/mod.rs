@@ -9,8 +9,11 @@ pub mod index;
 pub mod parse;
 pub mod query;
 pub mod schema;
+pub mod transitions;
 
 #[allow(unused_imports)]
 pub use index::{locate_vault, Index, RefreshOutcome, INDEX_FILENAME};
 #[allow(unused_imports)]
 pub use query::{edges_of, search, ArtifactRow, Direction, EdgeRow, SearchFilters};
+#[allow(unused_imports)]
+pub use transitions::{check_transition, ArtifactRef, Finding, TransitionCheck};
