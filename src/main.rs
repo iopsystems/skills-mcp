@@ -202,6 +202,41 @@ fn programmatic_tools() -> Vec<Tool> {
             icons: None,
             meta: None,
         },
+        Tool {
+            name: Cow::Borrowed("vault_reflect"),
+            title: None,
+            description: Some(Cow::Borrowed(
+                "Produce the Part A (graph hygiene) report the reconciler \
+                 consumes: scope activity, arc momentum, orphan problem-briefs, \
+                 stale design-briefs, pending syntheses, and stale open arcs. \
+                 Returns structured JSON; the reconcile-vault skill layers \
+                 strategic judgment (Part B) on top. All three window \
+                 parameters are optional; defaults are 30 / 14 / 60 days.",
+            )),
+            input_schema: obj_schema(json!({
+                "type": "object",
+                "properties": {
+                    "window_days": {
+                        "type": "integer", "minimum": 1, "maximum": 3650,
+                        "description": "How many days back counts as 'recent'. Default 30."
+                    },
+                    "min_days_stale_design": {
+                        "type": "integer", "minimum": 1, "maximum": 3650,
+                        "description": "A design-brief in draft/proposed longer than this is stale. Default 14."
+                    },
+                    "min_days_stale_arc": {
+                        "type": "integer", "minimum": 1, "maximum": 3650,
+                        "description": "An open arc with no activity for longer than this is stale. Default 60."
+                    }
+                },
+                "additionalProperties": false
+            })),
+            output_schema: None,
+            annotations: None,
+            execution: None,
+            icons: None,
+            meta: None,
+        },
     ]
 }
 
@@ -329,6 +364,7 @@ impl ServerHandler for SkillsServer {
             "vault_edges" => self.handle_vault_edges(request.arguments).await,
             "vault_reindex" => self.handle_vault_reindex().await,
             "vault_check_transition" => self.handle_vault_check_transition(request.arguments).await,
+            "vault_reflect" => self.handle_vault_reflect(request.arguments).await,
             name => match self.find_skill(name) {
                 Some(skill) => Ok(CallToolResult::success(vec![Content::text(
                     skill.body.clone(),
@@ -462,6 +498,51 @@ impl SkillsServer {
                 Err(e) => Ok(vault_err(format!("serialize failed: {e}"))),
             },
             Err(e) => Ok(vault_err(format!("check_transition failed: {e:#}"))),
+        }
+    }
+
+    async fn handle_vault_reflect(
+        &self,
+        args: Option<serde_json::Map<String, Value>>,
+    ) -> Result<CallToolResult, McpError> {
+        let args = args.unwrap_or_default();
+        let window_days = args
+            .get("window_days")
+            .and_then(Value::as_u64)
+            .map(|v| v as u32)
+            .unwrap_or(30);
+        let min_days_stale_design = args
+            .get("min_days_stale_design")
+            .and_then(Value::as_u64)
+            .map(|v| v as u32)
+            .unwrap_or(14);
+        let min_days_stale_arc = args
+            .get("min_days_stale_arc")
+            .and_then(Value::as_u64)
+            .map(|v| v as u32)
+            .unwrap_or(60);
+
+        let mut guard = match self.vault_index().await {
+            Ok(g) => g,
+            Err(msg) => return Ok(vault_err(msg)),
+        };
+        let VaultState::Ready(index) = &mut *guard else {
+            return Ok(vault_err("vault unavailable".to_string()));
+        };
+        if let Err(e) = index.refresh_if_stale() {
+            return Ok(vault_err(format!("refresh failed: {e:#}")));
+        }
+        match vault::reflect(
+            index,
+            window_days,
+            min_days_stale_design,
+            min_days_stale_arc,
+        ) {
+            Ok(report) => match serde_json::to_value(&report) {
+                Ok(v) => Ok(json_result(v)),
+                Err(e) => Ok(vault_err(format!("serialize failed: {e}"))),
+            },
+            Err(e) => Ok(vault_err(format!("reflect failed: {e:#}"))),
         }
     }
 }
