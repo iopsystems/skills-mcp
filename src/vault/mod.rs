@@ -8,6 +8,7 @@
 pub mod index;
 pub mod parse;
 pub mod query;
+pub mod reflection;
 pub mod schema;
 pub mod transitions;
 
@@ -15,5 +16,11 @@ pub mod transitions;
 pub use index::{locate_vault, Index, RefreshOutcome, INDEX_FILENAME};
 #[allow(unused_imports)]
 pub use query::{edges_of, search, ArtifactRow, Direction, EdgeRow, SearchFilters};
+#[allow(unused_imports)]
+pub use reflection::{
+    arc_momentum, orphan_problem_briefs, pending_syntheses, reflect, scope_activity, stale_arcs,
+    stale_design_briefs, ArcMomentum, OrphanProblemBrief, PendingSynthesis, ReflectionReport,
+    ScopeActivity, StaleArc, StaleDesignBrief,
+};
 #[allow(unused_imports)]
 pub use transitions::{check_transition, ArtifactRef, Finding, TransitionCheck};
