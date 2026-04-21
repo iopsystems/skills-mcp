@@ -1,7 +1,7 @@
-use std::{borrow::Cow, sync::Arc};
+use std::{borrow::Cow, path::PathBuf, sync::Arc};
 
 use anyhow::{Context, Result};
-use include_dir::{include_dir, Dir, File};
+use include_dir::{Dir, File, include_dir};
 use rmcp::{
     ErrorData as McpError, RoleServer, ServerHandler, ServiceExt,
     model::{
@@ -12,7 +12,12 @@ use rmcp::{
     transport::stdio,
 };
 use serde::Deserialize;
-use serde_json::json;
+use serde_json::{Value, json};
+use tokio::sync::Mutex;
+
+mod vault;
+
+use vault::{Direction, Index, SearchFilters};
 
 static SKILLS: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/skills");
 
@@ -79,32 +84,158 @@ fn split_frontmatter(src: &str) -> Option<(&str, &str)> {
     Some((fm, body))
 }
 
-fn empty_schema() -> Arc<serde_json::Map<String, serde_json::Value>> {
-    let value = json!({
+fn empty_schema() -> Arc<serde_json::Map<String, Value>> {
+    obj_schema(json!({
         "type": "object",
         "properties": {},
         "additionalProperties": false
-    });
-    match value {
-        serde_json::Value::Object(map) => Arc::new(map),
+    }))
+}
+
+fn obj_schema(v: Value) -> Arc<serde_json::Map<String, Value>> {
+    match v {
+        Value::Object(map) => Arc::new(map),
         _ => unreachable!("literal is an object"),
     }
+}
+
+/// Built-in programmatic tools — Rust-backed, with real input schemas,
+/// returning structured JSON. Complements the instructional skills.
+fn programmatic_tools() -> Vec<Tool> {
+    vec![
+        Tool {
+            name: Cow::Borrowed("vault_search"),
+            title: None,
+            description: Some(Cow::Borrowed(
+                "Search the knowledge-iop vault for artifacts matching filters. \
+                 At least one of type/status/author/topic must be provided. \
+                 Returns up to `limit` rows (default 50, max 500). `topic` is \
+                 a full-text-search term matched against title and body.",
+            )),
+            input_schema: obj_schema(json!({
+                "type": "object",
+                "properties": {
+                    "type": {
+                        "type": "string",
+                        "description": "Artifact type: scope, arc, problem-brief, design-brief, decision, discussion, session-note, inquiry, exploration, synthesis, claim, schema"
+                    },
+                    "status": {"type": "string"},
+                    "author": {"type": "string"},
+                    "topic": {"type": "string", "description": "FTS5 search term over title + body"},
+                    "limit": {"type": "integer", "minimum": 1, "maximum": 500}
+                },
+                "additionalProperties": false
+            })),
+            output_schema: None,
+            annotations: None,
+            execution: None,
+            icons: None,
+            meta: None,
+        },
+        Tool {
+            name: Cow::Borrowed("vault_edges"),
+            title: None,
+            description: Some(Cow::Borrowed(
+                "Return edges touching the given artifact id. Optionally \
+                 filter by edge kind (frames, supersedes, superseded_by, \
+                 relates_to, conflicts_with, depends_on, derived_from, arc, \
+                 scopes, inquiry) and direction (outgoing, incoming, both — \
+                 default both). Each row includes the neighbor artifact.",
+            )),
+            input_schema: obj_schema(json!({
+                "type": "object",
+                "properties": {
+                    "id": {"type": "string", "description": "The artifact id to pivot on"},
+                    "kind": {"type": "string"},
+                    "direction": {
+                        "type": "string",
+                        "enum": ["outgoing", "incoming", "both"]
+                    }
+                },
+                "required": ["id"],
+                "additionalProperties": false
+            })),
+            output_schema: None,
+            annotations: None,
+            execution: None,
+            icons: None,
+            meta: None,
+        },
+        Tool {
+            name: Cow::Borrowed("vault_reindex"),
+            title: None,
+            description: Some(Cow::Borrowed(
+                "Force a full rebuild of the vault's sqlite index. Normally \
+                 unnecessary — queries auto-rebuild on staleness — but useful \
+                 after a schema bump or to debug drift.",
+            )),
+            input_schema: empty_schema(),
+            output_schema: None,
+            annotations: None,
+            execution: None,
+            icons: None,
+            meta: None,
+        },
+    ]
 }
 
 #[derive(Clone)]
 struct SkillsServer {
     skills: Arc<Vec<LoadedSkill>>,
+    /// Lazily-opened vault index, shared across tool calls. `None` means
+    /// no vault was located; programmatic vault tools will error out.
+    vault: Arc<Mutex<VaultState>>,
+}
+
+enum VaultState {
+    /// Never attempted to locate the vault yet.
+    Unresolved,
+    /// Vault located and index opened; holds the connection.
+    Ready(Index),
+    /// Vault location attempt failed; cached so we don't retry every call.
+    Unavailable(String),
 }
 
 impl SkillsServer {
     fn new(skills: Vec<LoadedSkill>) -> Self {
         Self {
             skills: Arc::new(skills),
+            vault: Arc::new(Mutex::new(VaultState::Unresolved)),
         }
     }
 
-    fn find(&self, name: &str) -> Option<&LoadedSkill> {
+    fn find_skill(&self, name: &str) -> Option<&LoadedSkill> {
         self.skills.iter().find(|s| s.name == name)
+    }
+
+    /// Get a refreshed index, locating the vault on first use.
+    async fn vault_index(&self) -> Result<tokio::sync::OwnedMutexGuard<VaultState>, String> {
+        let guard = self.vault.clone().lock_owned().await;
+        match &*guard {
+            VaultState::Ready(_) => return Ok(guard),
+            VaultState::Unavailable(msg) => return Err(msg.clone()),
+            VaultState::Unresolved => {}
+        }
+        drop(guard);
+        let start = std::env::current_dir().unwrap_or_else(|_| PathBuf::from("."));
+        let open_result = tokio::task::spawn_blocking(move || {
+            let root = vault::locate_vault(&start)?;
+            Index::open(&root)
+        })
+        .await
+        .map_err(|e| format!("vault open task panicked: {e}"))?;
+        let mut guard = self.vault.clone().lock_owned().await;
+        match open_result {
+            Ok(idx) => {
+                *guard = VaultState::Ready(idx);
+                Ok(guard)
+            }
+            Err(err) => {
+                let msg = format!("{err:#}");
+                *guard = VaultState::Unavailable(msg.clone());
+                Err(msg)
+            }
+        }
     }
 }
 
@@ -122,8 +253,11 @@ impl ServerHandler for SkillsServer {
                 website_url: None,
             },
             instructions: Some(
-                "Each tool corresponds to a Claude skill. Invoke a tool to receive the skill's \
-                 instructions; then follow them for the remainder of the task."
+                "This server exposes two kinds of tools. Skill tools \
+                 (catchup, requirements-architect, ...) return instruction text \
+                 to follow. Vault tools (vault_search, vault_edges, vault_reindex) \
+                 query a SQLite index of the knowledge-iop vault and return \
+                 structured JSON."
                     .to_string(),
             ),
         }
@@ -134,15 +268,15 @@ impl ServerHandler for SkillsServer {
         _request: Option<PaginatedRequestParams>,
         _context: RequestContext<RoleServer>,
     ) -> Result<ListToolsResult, McpError> {
-        let schema = empty_schema();
-        let tools = self
+        let empty = empty_schema();
+        let mut tools: Vec<Tool> = self
             .skills
             .iter()
             .map(|s| Tool {
                 name: Cow::Owned(s.name.clone()),
                 title: None,
                 description: Some(Cow::Owned(s.description.clone())),
-                input_schema: schema.clone(),
+                input_schema: empty.clone(),
                 output_schema: None,
                 annotations: None,
                 execution: None,
@@ -150,6 +284,8 @@ impl ServerHandler for SkillsServer {
                 meta: None,
             })
             .collect();
+        tools.extend(programmatic_tools());
+        tools.sort_by(|a, b| a.name.cmp(&b.name));
         Ok(ListToolsResult {
             tools,
             next_cursor: None,
@@ -162,16 +298,119 @@ impl ServerHandler for SkillsServer {
         request: CallToolRequestParams,
         _context: RequestContext<RoleServer>,
     ) -> Result<CallToolResult, McpError> {
-        match self.find(&request.name) {
-            Some(skill) => Ok(CallToolResult::success(vec![Content::text(
-                skill.body.clone(),
-            )])),
-            None => Ok(CallToolResult::error(vec![Content::text(format!(
-                "unknown skill: {}",
-                request.name
-            ))])),
+        match request.name.as_ref() {
+            "vault_search" => self.handle_vault_search(request.arguments).await,
+            "vault_edges" => self.handle_vault_edges(request.arguments).await,
+            "vault_reindex" => self.handle_vault_reindex().await,
+            name => match self.find_skill(name) {
+                Some(skill) => Ok(CallToolResult::success(vec![Content::text(
+                    skill.body.clone(),
+                )])),
+                None => Ok(CallToolResult::error(vec![Content::text(format!(
+                    "unknown tool: {name}"
+                ))])),
+            },
         }
     }
+}
+
+impl SkillsServer {
+    async fn handle_vault_search(
+        &self,
+        args: Option<serde_json::Map<String, Value>>,
+    ) -> Result<CallToolResult, McpError> {
+        let args = args.unwrap_or_default();
+        let mut guard = match self.vault_index().await {
+            Ok(g) => g,
+            Err(msg) => return Ok(vault_err(msg)),
+        };
+        let VaultState::Ready(index) = &mut *guard else {
+            return Ok(vault_err("vault unavailable".to_string()));
+        };
+        if let Err(e) = index.refresh_if_stale() {
+            return Ok(vault_err(format!("refresh failed: {e:#}")));
+        }
+
+        let r#type = args.get("type").and_then(Value::as_str);
+        let status = args.get("status").and_then(Value::as_str);
+        let author = args.get("author").and_then(Value::as_str);
+        let topic = args.get("topic").and_then(Value::as_str);
+        let limit = args.get("limit").and_then(Value::as_u64).map(|v| v as u32);
+        let filters = SearchFilters {
+            r#type,
+            status,
+            author,
+            topic,
+            limit,
+        };
+        let rows = match vault::search(index, &filters) {
+            Ok(r) => r,
+            Err(e) => return Ok(vault_err(format!("search failed: {e:#}"))),
+        };
+        Ok(json_result(json!({
+            "count": rows.len(),
+            "matches": rows,
+        })))
+    }
+
+    async fn handle_vault_edges(
+        &self,
+        args: Option<serde_json::Map<String, Value>>,
+    ) -> Result<CallToolResult, McpError> {
+        let args = args.unwrap_or_default();
+        let Some(id) = args.get("id").and_then(Value::as_str) else {
+            return Ok(vault_err("missing required argument: id".to_string()));
+        };
+        let id = id.to_string();
+        let kind = args.get("kind").and_then(Value::as_str).map(str::to_string);
+        let direction = match args.get("direction").and_then(Value::as_str) {
+            Some("outgoing") => Direction::Outgoing,
+            Some("incoming") => Direction::Incoming,
+            _ => Direction::Both,
+        };
+        let mut guard = match self.vault_index().await {
+            Ok(g) => g,
+            Err(msg) => return Ok(vault_err(msg)),
+        };
+        let VaultState::Ready(index) = &mut *guard else {
+            return Ok(vault_err("vault unavailable".to_string()));
+        };
+        if let Err(e) = index.refresh_if_stale() {
+            return Ok(vault_err(format!("refresh failed: {e:#}")));
+        }
+        let rows = match vault::edges_of(index, &id, kind.as_deref(), direction) {
+            Ok(r) => r,
+            Err(e) => return Ok(vault_err(format!("edges query failed: {e:#}"))),
+        };
+        Ok(json_result(json!({
+            "id": id,
+            "count": rows.len(),
+            "edges": rows,
+        })))
+    }
+
+    async fn handle_vault_reindex(&self) -> Result<CallToolResult, McpError> {
+        let mut guard = match self.vault_index().await {
+            Ok(g) => g,
+            Err(msg) => return Ok(vault_err(msg)),
+        };
+        let VaultState::Ready(index) = &mut *guard else {
+            return Ok(vault_err("vault unavailable".to_string()));
+        };
+        match index.rebuild() {
+            Ok(()) => Ok(json_result(json!({"status": "rebuilt"}))),
+            Err(e) => Ok(vault_err(format!("rebuild failed: {e:#}"))),
+        }
+    }
+}
+
+fn json_result(v: Value) -> CallToolResult {
+    let text = serde_json::to_string_pretty(&v).unwrap_or_else(|_| v.to_string());
+    CallToolResult::success(vec![Content::text(text)])
+}
+
+fn vault_err(msg: String) -> CallToolResult {
+    CallToolResult::error(vec![Content::text(msg)])
 }
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 2)]
