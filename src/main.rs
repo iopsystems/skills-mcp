@@ -315,7 +315,7 @@ impl ServerHandler for SkillsServer {
             },
             instructions: Some(
                 "This server exposes two kinds of tools. Skill tools \
-                 (catchup, requirements-architect, ...) return instruction text \
+                 (catchup, plan-feature, ...) return instruction text \
                  to follow. Vault tools (vault_search, vault_edges, vault_reindex) \
                  query a SQLite index of the knowledge-iop vault and return \
                  structured JSON."
