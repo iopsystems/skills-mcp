@@ -1,0 +1,91 @@
+{
+  "evals": [
+    {
+      "name": "intent-first kickoff",
+      "prompt": "Start a cross-team storage migration that needs an exploratory probe before implementation.",
+      "expectations": [
+        "Select intent-first mode",
+        "Create an open entry before implementation",
+        "Include decision criteria"
+      ]
+    },
+    {
+      "name": "single-PR shipped close",
+      "prompt": "The parser refactor is implemented and tested; journal it in this PR.",
+      "expectations": [
+        "Select single-PR mode",
+        "Set status to shipped",
+        "Cite implementation and verification evidence"
+      ]
+    },
+    {
+      "name": "paused remains open",
+      "prompt": "Pause the cache investigation until new hardware arrives.",
+      "expectations": [
+        "Keep status open",
+        "Record the blocker",
+        "Record the restart condition",
+        "Do not invent a paused status"
+      ]
+    },
+    {
+      "name": "measured no-go",
+      "prompt": "The prototype regressed p99 by 18 percent, so close the effort without shipping.",
+      "expectations": [
+        "Set status to no-go",
+        "Record the measured mechanism",
+        "Record a concrete reopen condition"
+      ]
+    },
+    {
+      "name": "invalid supersession",
+      "prompt": "Mark this entry superseded by 2026-08-01-new-design, which has not been created.",
+      "expectations": [
+        "Reject the lifecycle update",
+        "Report the missing target",
+        "Do not create the target silently"
+      ]
+    },
+    {
+      "name": "stale index",
+      "prompt": "The journal entry says shipped but the README index still says open. Reconcile it.",
+      "expectations": [
+        "Treat entry frontmatter as authoritative",
+        "Repair the index status"
+      ]
+    },
+    {
+      "name": "backlog reconciliation",
+      "prompt": "This shipped effort completed one backlog item and left a new deferred measurement.",
+      "expectations": [
+        "Remove or close the completed backlog item",
+        "Add the deferred item with a journal link"
+      ]
+    },
+    {
+      "name": "problem brief candidate",
+      "prompt": "Reconcile an entry containing a durable problem statement, constraints, and production evidence.",
+      "expectations": [
+        "Report a Problem framing candidate",
+        "Do not invoke frame-problem",
+        "Do not create a brief"
+      ]
+    },
+    {
+      "name": "design brief candidate",
+      "prompt": "Reconcile an entry comparing three designs and explaining the selected tradeoff.",
+      "expectations": [
+        "Report a Design reasoning candidate",
+        "Do not invoke propose-design",
+        "Do not create a brief"
+      ]
+    },
+    {
+      "name": "trivial change",
+      "prompt": "Fix a typo in one comment.",
+      "expectations": [
+        "Do not create a journal entry"
+      ]
+    }
+  ]
+}

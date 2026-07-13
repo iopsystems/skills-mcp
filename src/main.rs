@@ -577,3 +577,67 @@ async fn main() -> Result<()> {
     service.waiting().await.context("MCP service error")?;
     Ok(())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn engineering_journal_skill_is_embedded() {
+        let skills = load_skills().expect("embedded skills should load");
+        let journal = skills
+            .iter()
+            .find(|skill| skill.name == "engineering-journal")
+            .expect("engineering-journal should be served");
+
+        assert!(journal.description.contains("non-trivial"));
+        assert!(journal.body.contains("status: open"));
+        assert!(journal.body.contains("status: shipped"));
+        assert!(journal.body.contains("status: no-go"));
+        assert!(journal.body.contains("status: superseded"));
+    }
+
+    #[test]
+    fn engineering_journal_contract_covers_reconciliation_boundaries() {
+        let skills = load_skills().expect("embedded skills should load");
+        let body = &skills
+            .iter()
+            .find(|skill| skill.name == "engineering-journal")
+            .expect("engineering-journal should be served")
+            .body;
+
+        for required in [
+            "intent-first",
+            "single-PR",
+            "docs/journal/README.md",
+            "Problem framing candidate",
+            "Design reasoning candidate",
+            "Do not invoke `frame-problem`",
+            "Do not invoke `propose-design`",
+        ] {
+            assert!(
+                body.contains(required),
+                "missing contract marker: {required}"
+            );
+        }
+    }
+
+    #[test]
+    fn engineering_journal_evals_cover_key_scenarios() {
+        let raw = include_str!("../skills/engineering-journal/evals/trigger-evals.json");
+        let value: serde_json::Value =
+            serde_json::from_str(raw).expect("journal evals should be valid JSON");
+        let evals = value["evals"]
+            .as_array()
+            .expect("journal evals should contain an evals array");
+
+        assert_eq!(evals.len(), 10);
+        for eval in evals {
+            assert!(eval["name"].as_str().is_some());
+            assert!(eval["prompt"].as_str().is_some());
+            assert!(eval["expectations"]
+                .as_array()
+                .is_some_and(|v| !v.is_empty()));
+        }
+    }
+}

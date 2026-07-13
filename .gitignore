@@ -1,4 +1,5 @@
 /target
+/.worktrees/
 Cargo.lock.tmp
 *.swp
 .DS_Store
