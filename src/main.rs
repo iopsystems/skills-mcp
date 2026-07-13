@@ -621,4 +621,23 @@ mod tests {
             );
         }
     }
+
+    #[test]
+    fn engineering_journal_evals_cover_key_scenarios() {
+        let raw = include_str!("../skills/engineering-journal/evals/trigger-evals.json");
+        let value: serde_json::Value =
+            serde_json::from_str(raw).expect("journal evals should be valid JSON");
+        let evals = value["evals"]
+            .as_array()
+            .expect("journal evals should contain an evals array");
+
+        assert_eq!(evals.len(), 10);
+        for eval in evals {
+            assert!(eval["name"].as_str().is_some());
+            assert!(eval["prompt"].as_str().is_some());
+            assert!(eval["expectations"]
+                .as_array()
+                .is_some_and(|v| !v.is_empty()));
+        }
+    }
 }
