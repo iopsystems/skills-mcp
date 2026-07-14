@@ -11,18 +11,33 @@ charter before every material documentation effort.
 - Established conventions and guidance: `<paths>`
 - Shared terminology: `<terms and authoritative definitions>`
 
-## Independent Audience Ranks
+## Audience Priorities and Success
 
-Rank each audience independently rather than forcing a single ordering. Record
-priority, representative tasks, expected prior knowledge, and accessibility or
-environment constraints.
+Use the same priority scale for each audience:
 
-| Audience | Independent rank | Representative tasks | Prior knowledge | Constraints |
-| --- | --- | --- | --- | --- |
-| Human users | `<rank>` | `<tasks>` | `<knowledge>` | `<constraints>` |
-| Agent users | `<rank>` | `<tasks>` | `<knowledge>` | `<constraints>` |
-| Human developers | `<rank>` | `<tasks>` | `<knowledge>` | `<constraints>` |
-| Coding agents | `<rank>` | `<tasks>` | `<knowledge>` | `<constraints>` |
+- `P0` — primary audience; required tasks must pass before completion.
+- `P1` — important audience; satisfy its criteria unless an explicit documented
+  tradeoff is approved.
+- `P2` — secondary audience; preserve correctness and meet criteria where they
+  do not compromise P0 or P1.
+- `out of scope` — not targeted by this effort; shared authoritative facts still
+  must not be false for this audience.
+
+For each in-scope audience, record at least one frozen representative task and a
+measurable success criterion in addition to prior knowledge and constraints.
+
+| Audience | Priority | Frozen representative task | Measurable success criterion | Prior knowledge | Constraints |
+| --- | --- | --- | --- | --- | --- |
+| Human users | `<P0/P1/P2/out of scope>` | `<task>` | `<observable pass condition>` | `<knowledge>` | `<constraints>` |
+| Agent users | `<P0/P1/P2/out of scope>` | `<task>` | `<observable pass condition>` | `<knowledge>` | `<constraints>` |
+| Human developers | `<P0/P1/P2/out of scope>` | `<task>` | `<observable pass condition>` | `<knowledge>` | `<constraints>` |
+| Coding agents | `<P0/P1/P2/out of scope>` | `<task>` | `<observable pass condition>` | `<knowledge>` | `<constraints>` |
+
+Rank and success criteria drive content order, examples, visual and textual
+emphasis, and verification. Resolve audience conflicts by preserving shared
+authoritative facts and satisfying the higher-priority criterion without making
+lower-priority contracts false. Document the tradeoff and every unmet criterion.
+Ask the human owner when priorities conflict materially; do not guess a winner.
 
 ## Sources of Truth
 

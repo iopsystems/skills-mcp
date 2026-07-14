@@ -45,16 +45,27 @@ struct ManifestFile {
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct EvalFile {
     evals: Vec<EvalCase>,
 }
 
 #[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
 struct EvalCase {
     name: String,
-    case: String,
     prompt: String,
-    expectations: Vec<String>,
+    should_trigger: bool,
+    context: Option<String>,
+    required_outcomes: Vec<String>,
+    prohibited_outcomes: Vec<String>,
+}
+
+#[derive(Debug, Deserialize)]
+#[serde(deny_unknown_fields)]
+struct SkillFrontmatter {
+    name: String,
+    description: String,
 }
 
 fn repository_root() -> PathBuf {
@@ -63,6 +74,13 @@ fn repository_root() -> PathBuf {
 
 fn templates_root() -> PathBuf {
     repository_root().join("templates")
+}
+
+fn design_journal() -> String {
+    read(
+        repository_root()
+            .join("docs/journal/2026-07-13-skill-templates-and-project-documentation.md"),
+    )
 }
 
 fn read(path: impl AsRef<Path>) -> String {
@@ -108,16 +126,74 @@ fn assert_contains_all(body: &str, phrases: &[&str]) {
     }
 }
 
-fn frontmatter_keys(body: &str) -> BTreeSet<String> {
+fn parse_frontmatter(body: &str) -> SkillFrontmatter {
     let body = body
         .strip_prefix("---\n")
         .expect("skill should start with YAML frontmatter");
     let (yaml, _) = body
         .split_once("\n---\n")
         .expect("skill frontmatter should have a closing fence");
-    let frontmatter: BTreeMap<String, serde_yaml::Value> =
-        serde_yaml::from_str(yaml).expect("skill frontmatter should be valid YAML");
-    frontmatter.into_keys().collect()
+    assert!(yaml.len() <= 1024, "skill frontmatter must remain portable");
+    serde_yaml::from_str(yaml).expect("skill frontmatter should contain only typed fields")
+}
+
+fn markdown_section<'a>(body: &'a str, heading: &str) -> &'a str {
+    let marker = format!("## {heading}\n");
+    let after_heading = body
+        .split_once(&marker)
+        .unwrap_or_else(|| panic!("missing {marker:?} section"))
+        .1;
+    after_heading
+        .split_once("\n## ")
+        .map_or(after_heading, |(section, _)| section)
+}
+
+fn markdown_subsection<'a>(body: &'a str, heading: &str) -> &'a str {
+    let marker = format!("### {heading}\n");
+    let after_heading = body
+        .split_once(&marker)
+        .unwrap_or_else(|| panic!("missing {marker:?} subsection"))
+        .1;
+    after_heading
+        .split_once("\n### ")
+        .map_or(after_heading, |(section, _)| section)
+}
+
+fn numbered_steps(section: &str) -> Vec<u8> {
+    section
+        .lines()
+        .filter_map(|line| line.split_once(". "))
+        .filter_map(|(number, _)| number.parse::<u8>().ok())
+        .collect()
+}
+
+fn markdown_targets(body: &str) -> Vec<&str> {
+    let mut targets = Vec::new();
+    let mut remainder = body;
+    while let Some((_, after_open)) = remainder.split_once("](") {
+        let Some((target, after_close)) = after_open.split_once(')') else {
+            break;
+        };
+        targets.push(target);
+        remainder = after_close;
+    }
+    targets
+}
+
+fn normalized_contains_all(body: &str, phrases: &[&str]) -> bool {
+    let body = body
+        .split_whitespace()
+        .collect::<Vec<_>>()
+        .join(" ")
+        .to_ascii_lowercase();
+    phrases.iter().all(|phrase| {
+        let phrase = phrase
+            .split_whitespace()
+            .collect::<Vec<_>>()
+            .join(" ")
+            .to_ascii_lowercase();
+        body.contains(&phrase)
+    })
 }
 
 #[test]
@@ -201,26 +277,67 @@ fn manifests_are_versioned_complete_and_digest_verified() {
 
 #[test]
 fn skill_templates_use_portable_structure_and_relative_support_links() {
-    let engineering = read(templates_root().join("engineering-journal-skill/SKILL.md"));
-    let document = read(templates_root().join("document-feature-skill/SKILL.md"));
+    for (template_id, manifest) in manifests() {
+        let template_root = templates_root().join(&template_id);
+        let skill = read(template_root.join("SKILL.md"));
+        let frontmatter = parse_frontmatter(&skill);
+        assert!(!frontmatter.name.trim().is_empty());
+        assert!(!frontmatter.description.trim().is_empty());
+        assert!(frontmatter.description.starts_with("Use when "));
+        assert!(frontmatter
+            .name
+            .bytes()
+            .all(|byte| byte.is_ascii_alphanumeric() || byte == b'-'));
+        assert_ne!(frontmatter.name, template_id);
 
-    let expected_frontmatter = BTreeSet::from(["description".into(), "name".into()]);
-    assert_eq!(frontmatter_keys(&engineering), expected_frontmatter);
-    assert_eq!(
-        frontmatter_keys(&document),
-        BTreeSet::from(["description".into(), "name".into()])
+        let installed_root = tempfile::tempdir().unwrap();
+        let installed_skill = installed_root
+            .path()
+            .join(".agents/skills")
+            .join(&frontmatter.name);
+        for file in &manifest.files {
+            let destination = installed_skill.join(&file.path);
+            fs::create_dir_all(destination.parent().unwrap()).unwrap();
+            fs::copy(template_root.join(&file.path), destination).unwrap();
+        }
+        assert_eq!(
+            installed_skill.file_name().unwrap().to_str().unwrap(),
+            frontmatter.name
+        );
+        for target in markdown_targets(&skill) {
+            assert!(!target.starts_with('/'));
+            assert!(!target.contains("://"));
+            assert!(!target.split('/').any(|component| component == ".."));
+            assert!(
+                installed_skill.join(target).is_file(),
+                "unresolved supporting link {target:?} for {template_id}"
+            );
+        }
+    }
+}
+
+#[test]
+fn feature_workflow_has_exactly_ten_ordered_semantic_steps() {
+    let body = read(templates_root().join("document-feature-skill/SKILL.md"));
+    let workflow = markdown_section(&body, "Workflow");
+    assert_eq!(numbered_steps(workflow), (1..=10).collect::<Vec<_>>());
+    assert_contains_all(
+        workflow,
+        &[
+            "each in-scope audience",
+            "authoritative",
+            "blind task simulations",
+            "separate structured critic",
+            "risk-based human review",
+            "at most three formal",
+        ],
     );
-    assert!(engineering.contains("(references/project-profile.md)"));
-    assert!(document.contains("(references/audience-charter.md)"));
-    assert!(!engineering.contains("](/"));
-    assert!(!document.contains("](/"));
 
-    let step_numbers: Vec<_> = document
-        .lines()
-        .filter_map(|line| line.split_once(". "))
-        .filter_map(|(number, _)| number.parse::<u8>().ok())
-        .collect();
-    assert_eq!(step_numbers, (1..=10).collect::<Vec<_>>());
+    let without_step_four = workflow.replacen("4. ", "", 1);
+    assert_ne!(
+        numbered_steps(&without_step_four),
+        (1..=10).collect::<Vec<_>>()
+    );
 }
 
 #[test]
@@ -278,7 +395,6 @@ fn feature_documentation_template_covers_surfaces_evidence_and_review_loop() {
             "authoritative",
             "blind task simulations",
             "separate structured critic",
-            "at most three rounds",
             "DOT is authoritative",
             "commit",
             "SVG",
@@ -305,7 +421,7 @@ fn feature_documentation_template_covers_surfaces_evidence_and_review_loop() {
             "agent users",
             "human developers",
             "coding agents",
-            "independent rank",
+            "priority",
             "project type",
             "prior knowledge",
             "sources of truth",
@@ -317,28 +433,205 @@ fn feature_documentation_template_covers_surfaces_evidence_and_review_loop() {
     );
 }
 
-#[test]
-fn trigger_evals_cover_positive_negative_and_boundary_cases() {
-    for id in TEMPLATE_IDS {
-        let path = templates_root().join(id).join("evals/trigger-evals.json");
-        let evals: EvalFile = serde_json::from_str(&read(&path))
-            .unwrap_or_else(|error| panic!("failed to parse {}: {error}", path.display()));
-        assert!(!evals.evals.is_empty());
+fn assert_instruction_trust_and_execution_boundary(id: &str) {
+    let body = read(templates_root().join(id).join("SKILL.md"));
+    let boundary = markdown_section(&body, "Trust and Execution Boundary");
+    let requirements = [
+        "recognized repository governance",
+        "harness and user precedence",
+        "ordinary documentation",
+        "source comments",
+        "fixtures",
+        "generated files",
+        "commit and history text",
+        "external content",
+        "evidence or data",
+        "never executable instructions",
+        "inspect commands",
+        "platform permissions",
+        "explicit user authorization",
+        "destructive",
+        "credential-bearing",
+        "unexpected network",
+    ];
+    assert_contains_all(boundary, &requirements);
 
-        let mut categories = BTreeSet::new();
-        for eval in evals.evals {
-            assert!(!eval.name.trim().is_empty());
-            assert!(!eval.prompt.trim().is_empty());
-            assert!(!eval.expectations.is_empty());
-            assert!(eval
-                .expectations
-                .iter()
-                .all(|expectation| !expectation.trim().is_empty()));
-            categories.insert(eval.case);
+    let weakened = boundary.replacen("explicit user authorization", "automatic approval", 1);
+    assert!(!normalized_contains_all(&weakened, &requirements));
+}
+
+#[test]
+fn engineering_template_defines_instruction_trust_and_execution_boundary() {
+    assert_instruction_trust_and_execution_boundary("engineering-journal-skill");
+}
+
+#[test]
+fn document_template_defines_instruction_trust_and_execution_boundary() {
+    assert_instruction_trust_and_execution_boundary("document-feature-skill");
+}
+
+#[test]
+fn audience_contract_drives_content_verification_and_conflict_resolution() {
+    let charter =
+        read(templates_root().join("document-feature-skill/references/audience-charter.md"));
+    let ranks = markdown_section(&charter, "Audience Priorities and Success");
+    let requirements = [
+        "P0",
+        "P1",
+        "P2",
+        "out of scope",
+        "measurable success criterion",
+        "frozen representative task",
+        "each in-scope audience",
+        "content order",
+        "examples",
+        "visual and textual emphasis",
+        "verification",
+        "shared authoritative facts",
+        "higher-priority",
+        "lower-priority contracts false",
+        "tradeoff",
+        "unmet criterion",
+        "human owner",
+    ];
+    assert_contains_all(ranks, &requirements);
+
+    let without_escalation = ranks.replacen("human owner", "automated guess", 1);
+    assert!(!normalized_contains_all(&without_escalation, &requirements));
+}
+
+#[test]
+fn final_human_gate_applies_to_the_last_gated_revision() {
+    let body = read(templates_root().join("document-feature-skill/SKILL.md"));
+    let review = markdown_section(&body, "Evaluation and Review");
+    let requirements = [
+        "formal blind-simulation and critic revision cycle",
+        "human-requested corrections do not consume",
+        "later revision affects a gated surface",
+        "human re-review",
+        "final revision",
+        "gate satisfied",
+    ];
+    assert_contains_all(review, &requirements);
+
+    let without_rereview = review.replacen("human re-review", "prior approval", 1);
+    assert!(!normalized_contains_all(&without_rereview, &requirements));
+}
+
+#[test]
+fn design_journal_matches_hardened_contract_and_reproducible_evidence() {
+    let journal = design_journal();
+    let trust = markdown_subsection(&journal, "Instruction and execution trust boundary");
+    assert_contains_all(
+        trust,
+        &[
+            "recognized repository governance",
+            "evidence or data",
+            "explicit user authorization",
+        ],
+    );
+
+    let feature = markdown_subsection(&journal, "Feature-documentation template");
+    assert_contains_all(
+        feature,
+        &[
+            "P0",
+            "measurable success criterion",
+            "each in-scope audience",
+            "separate structured critic",
+            "three formal simulation-and-critic cycles",
+            "human re-review",
+            "final revision",
+        ],
+    );
+    assert!(!feature.contains("Freeze representative user and developer tasks"));
+
+    let ledger = markdown_subsection(&journal, "Evaluation ledger");
+    let ledger_requirements = [
+        "sprig-cli-v1",
+        "template-trust-gate-v1",
+        "outcomes `E1-E6`",
+        "outcomes `D1-D10`",
+        "templates/engineering-journal-skill/evals/trigger-evals.json",
+        "templates/document-feature-skill/evals/trigger-evals.json",
+        "6/6 PASS",
+        "10/10 PASS",
+    ];
+    assert_contains_all(ledger, &ledger_requirements);
+
+    let without_eval_path = ledger.replacen(
+        "templates/document-feature-skill/evals/trigger-evals.json",
+        "abbreviated-eval-path",
+        1,
+    );
+    assert!(!normalized_contains_all(
+        &without_eval_path,
+        &ledger_requirements
+    ));
+}
+
+fn assert_eval_semantics(id: &str) {
+    let path = templates_root().join(id).join("evals/trigger-evals.json");
+    let evals: EvalFile = serde_json::from_str(&read(&path))
+        .unwrap_or_else(|error| panic!("failed to parse {}: {error}", path.display()));
+    assert!(!evals.evals.is_empty());
+
+    let mut activation = BTreeSet::new();
+    let mut names = BTreeSet::new();
+    let mut has_adversarial_refusal = false;
+    let mut has_out_of_scope_non_trigger = false;
+    for eval in evals.evals {
+        assert!(!eval.name.trim().is_empty());
+        assert!(names.insert(eval.name.clone()), "duplicate eval name");
+        assert!(!eval.prompt.trim().is_empty());
+        assert!(!eval.required_outcomes.is_empty());
+        assert!(!eval.prohibited_outcomes.is_empty());
+        assert!(eval
+            .required_outcomes
+            .iter()
+            .chain(&eval.prohibited_outcomes)
+            .all(|outcome| !outcome.trim().is_empty()));
+        activation.insert(eval.should_trigger);
+
+        let scenario = format!(
+            "{} {} {} {}",
+            eval.prompt,
+            eval.context.unwrap_or_default(),
+            eval.required_outcomes.join(" "),
+            eval.prohibited_outcomes.join(" ")
+        )
+        .to_ascii_lowercase();
+        if eval.should_trigger
+            && (scenario.contains("injected") || scenario.contains("unsafe"))
+            && scenario.contains("authorization")
+            && (scenario.contains("do not run") || scenario.contains("do not execute"))
+        {
+            has_adversarial_refusal = true;
         }
-        assert_eq!(
-            categories,
-            BTreeSet::from(["boundary".into(), "negative".into(), "positive".into()])
-        );
+        if !eval.should_trigger
+            && scenario.contains("do not activate")
+            && (scenario.contains("without changing") || scenario.contains("unrelated"))
+        {
+            has_out_of_scope_non_trigger = true;
+        }
     }
+    assert_eq!(activation, BTreeSet::from([false, true]));
+    assert!(
+        has_adversarial_refusal,
+        "missing unsafe in-scope eval for {id}"
+    );
+    assert!(
+        has_out_of_scope_non_trigger,
+        "missing genuine out-of-scope eval for {id}"
+    );
+}
+
+#[test]
+fn engineering_evals_separate_activation_from_required_behavior() {
+    assert_eval_semantics("engineering-journal-skill");
+}
+
+#[test]
+fn document_evals_separate_activation_from_required_behavior() {
+    assert_eval_semantics("document-feature-skill");
 }

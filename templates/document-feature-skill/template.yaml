@@ -9,11 +9,11 @@ compatibility:
   - claude-code
 files:
   - path: SKILL.md
-    sha256: e25dae10f7fefc3338dcb2402f9748d92c8c0101b4762490d7f32f88677fda2f
+    sha256: 8850a3474244fc849c971735bde6f8012c7eaec8c2827876b3d8913d6814cb25
     merge_strategy: three-way
   - path: references/audience-charter.md
-    sha256: 563c53c34a418d9b5314b7dc1c30ab496058136c336bfd3886080dac6afc9ad4
+    sha256: 5113f77e70bffe7016e2e07c24a5bfc07fa9c9722f716b082e7167a0042b2579
     merge_strategy: three-way
   - path: evals/trigger-evals.json
-    sha256: 975f64337db0b6cedbe7917ca955e1b182aec3ded41531d889028d72cedb74a1
+    sha256: 0ce577ea705261d1dab2e6d228890e503605554a19c4c957702c13d81b4dfb82
     merge_strategy: preserve-local
