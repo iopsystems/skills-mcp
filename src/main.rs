@@ -375,14 +375,16 @@ impl ServerHandler for SkillsServer {
                 website_url: None,
             },
             instructions: Some(
-                "This server exposes three kinds of tools. Skill tools \
-                 (catchup, plan-feature, ...) return instruction text \
-                 to follow. Template tools (skill_catalog, skill_template_get) \
-                 provide read-only access to embedded catalog metadata and declared \
-                 template files; they never fetch, write, or expose undeclared files. \
-                 Vault tools (vault_search, vault_edges, vault_reindex) \
-                 query a SQLite index of the knowledge-iop vault and return \
-                 structured JSON."
+                "This server exposes three tool families. The instructional skill tools \
+                 (catchup, plan-feature, ...) return instruction text to follow. The \
+                 catalog and retrieval tools are read-only: skill_catalog lists active \
+                 skill and installable template metadata, while skill_template_get returns \
+                 declared embedded template files; neither fetches, writes, or exposes \
+                 undeclared files. The vault programmatic tools query a SQLite index of the \
+                 knowledge-iop vault and return structured JSON: vault_search searches \
+                 artifacts, vault_edges traverses relationships, vault_reindex rebuilds the \
+                 index, vault_check_transition validates proposed status changes, and \
+                 vault_reflect produces graph-hygiene reports."
                     .to_string(),
             ),
         }
@@ -405,24 +407,31 @@ impl ServerHandler for SkillsServer {
         request: CallToolRequestParams,
         _context: RequestContext<RoleServer>,
     ) -> Result<CallToolResult, McpError> {
-        match request.name.as_ref() {
+        self.route_tool(request.name.as_ref(), request.arguments)
+            .await
+    }
+}
+
+impl SkillsServer {
+    async fn route_tool(
+        &self,
+        name: &str,
+        arguments: Option<serde_json::Map<String, Value>>,
+    ) -> Result<CallToolResult, McpError> {
+        match name {
             "skill_catalog" => {
-                if request
-                    .arguments
-                    .as_ref()
-                    .is_some_and(|args| !args.is_empty())
-                {
+                if arguments.as_ref().is_some_and(|args| !args.is_empty()) {
                     Ok(tool_err("skill_catalog does not accept arguments"))
                 } else {
                     self.handle_skill_catalog().await
                 }
             }
-            "skill_template_get" => self.handle_skill_template_get(request.arguments).await,
-            "vault_search" => self.handle_vault_search(request.arguments).await,
-            "vault_edges" => self.handle_vault_edges(request.arguments).await,
+            "skill_template_get" => self.handle_skill_template_get(arguments).await,
+            "vault_search" => self.handle_vault_search(arguments).await,
+            "vault_edges" => self.handle_vault_edges(arguments).await,
             "vault_reindex" => self.handle_vault_reindex().await,
-            "vault_check_transition" => self.handle_vault_check_transition(request.arguments).await,
-            "vault_reflect" => self.handle_vault_reflect(request.arguments).await,
+            "vault_check_transition" => self.handle_vault_check_transition(arguments).await,
+            "vault_reflect" => self.handle_vault_reflect(arguments).await,
             name => match self.find_skill(name) {
                 Some(skill) => Ok(CallToolResult::success(vec![Content::text(
                     skill.body.clone(),
@@ -433,9 +442,7 @@ impl ServerHandler for SkillsServer {
             },
         }
     }
-}
 
-impl SkillsServer {
     async fn handle_skill_catalog(&self) -> Result<CallToolResult, McpError> {
         let mut items = self
             .skills
@@ -728,6 +735,30 @@ mod tests {
     }
 
     #[test]
+    fn server_instructions_describe_every_tool_family_and_vault_tool() {
+        let instructions = test_server()
+            .get_info()
+            .instructions
+            .expect("server instructions should be present");
+
+        for required in [
+            "instructional skill tools",
+            "skill_catalog",
+            "skill_template_get",
+            "vault_search",
+            "vault_edges",
+            "vault_reindex",
+            "vault_check_transition",
+            "vault_reflect",
+        ] {
+            assert!(
+                instructions.contains(required),
+                "server instructions missing {required}"
+            );
+        }
+    }
+
+    #[test]
     fn skill_template_tools_have_exact_read_only_descriptions_and_schemas() {
         let tools = test_server().listed_tools();
         let catalog = tools
@@ -903,6 +934,26 @@ mod tests {
             assert_eq!(result.is_error, Some(true));
             assert!(!result.content.is_empty());
         }
+    }
+
+    #[tokio::test]
+    async fn call_tool_routing_keeps_programmatic_tools_ahead_of_inert_template_ids() {
+        let server = test_server();
+
+        let catalog = server.route_tool("skill_catalog", None).await.unwrap();
+        assert_eq!(catalog.is_error, Some(false));
+
+        let template = server
+            .route_tool("document-feature-skill", None)
+            .await
+            .unwrap();
+        assert_eq!(template.is_error, Some(true));
+        assert!(template.content.iter().any(|content| {
+            serde_json::to_value(content)
+                .ok()
+                .and_then(|value| value["text"].as_str().map(str::to_owned))
+                .is_some_and(|text| text.contains("unknown tool: document-feature-skill"))
+        }));
     }
 
     #[test]
