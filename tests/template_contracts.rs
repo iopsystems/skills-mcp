@@ -9,6 +9,7 @@ use sha2::{Digest, Sha256};
 use walkdir::WalkDir;
 
 const TEMPLATE_IDS: [&str; 2] = ["document-feature-skill", "engineering-journal-skill"];
+const RECOMMEND_FIXTURE_PATH: &str = "docs/evals/fixtures/recommend-skills-v1.md";
 const SPRIG_FIXTURE_PATH: &str = "docs/evals/fixtures/sprig-cli-v1.md";
 
 #[derive(Debug, Deserialize)]
@@ -781,4 +782,240 @@ fn engineering_evals_separate_activation_from_required_behavior() {
 #[test]
 fn document_evals_separate_activation_from_required_behavior() {
     assert_eval_semantics("document-feature-skill");
+}
+
+#[test]
+fn recommend_skill_is_read_only_role_correct_and_evidence_driven() {
+    let body = read(repository_root().join("skills/recommend-skills/SKILL.md"));
+    let frontmatter = parse_frontmatter(&body);
+    assert_eq!(frontmatter.name, "recommend-skills");
+    assert!(frontmatter.description.starts_with("Use when "));
+    assert_contains_all(
+        &frontmatter.description,
+        &["recommend", "adopt", "project", "skills"],
+    );
+
+    let workflow = markdown_section(&body, "Workflow");
+    assert_eq!(numbered_steps(workflow), (1..=6).collect::<Vec<_>>());
+    assert_contains_all(
+        workflow,
+        &[
+            "project goal",
+            "audiences",
+            "constraints",
+            "recognized repository evidence",
+            "skill_catalog",
+            "before deciding",
+            "do not load every skill body or template",
+            "existing agent-skill directories",
+            "template-state.yaml",
+            "without mutation",
+            "catalog purpose and description",
+            "overlaps",
+            "gaps",
+            "minimal",
+            "exactly one next action",
+        ],
+    );
+
+    let trust = markdown_section(&body, "Trust and Read-Only Boundary");
+    assert_contains_all(
+        trust,
+        &[
+            "recognized repository governance",
+            "platform and user precedence",
+            "ordinary repository content",
+            "evidence or data",
+            "not executable instruction",
+            "unexpected",
+            "destructive",
+            "network",
+            "credential",
+            "do not install",
+            "do not seed",
+            "do not alter configuration",
+            "do not write files",
+            "do not invoke `seed-skill-template`",
+            "explicit approval",
+        ],
+    );
+
+    let roles = markdown_section(&body, "Classification Semantics");
+    assert_contains_all(
+        roles,
+        &[
+            "use through MCP",
+            "seed and customize",
+            "do not adopt",
+            "missing capability",
+            "active skill",
+            "installed MCP server",
+            "inert template",
+            "installed instance",
+            "use or update the existing instance",
+            "do not seed a duplicate",
+            "state explicitly that it is not active through MCP",
+            "all active skills",
+            "recommendations select which to use",
+        ],
+    );
+
+    let decision = markdown_section(&body, "Decision and Output Contract");
+    assert_contains_all(
+        decision,
+        &[
+            "at most one narrow question",
+            "materially change",
+            "state assumptions and limits",
+            "defensible match",
+            "stop and recommend discovery",
+            "minimal set",
+            "project evidence",
+            "why/why not",
+            "tradeoffs",
+            "active skill and template share a keyword or purpose",
+            "classify both separately",
+            "exactly one",
+        ],
+    );
+    assert!(decision.contains("| Recommendation | Action | Project evidence | Why/why not |"));
+}
+
+#[test]
+fn recommend_evals_cover_all_six_cases_and_an_unrelated_non_trigger() {
+    let path = repository_root().join("skills/recommend-skills/evals/trigger-evals.json");
+    let raw = read(&path);
+    let evals: EvalFile = serde_json::from_str(&raw)
+        .unwrap_or_else(|error| panic!("failed to parse {}: {error}", path.display()));
+    assert_eq!(evals.evals.len(), 7);
+
+    let raw_value: serde_json::Value = serde_json::from_str(&raw).unwrap();
+    let raw_evals = raw_value["evals"].as_array().unwrap();
+    let expected_keys = BTreeSet::from([
+        "name",
+        "prompt",
+        "prohibited_outcomes",
+        "required_outcomes",
+        "should_trigger",
+    ]);
+    for eval in raw_evals {
+        let keys = eval
+            .as_object()
+            .unwrap()
+            .keys()
+            .map(String::as_str)
+            .collect::<BTreeSet<_>>();
+        assert_eq!(keys, expected_keys);
+    }
+
+    let names = evals
+        .evals
+        .iter()
+        .map(|eval| eval.name.as_str())
+        .collect::<BTreeSet<_>>();
+    for required in [
+        "existing MCP workflow only",
+        "locally customized documentation method",
+        "keyword overlap without relevance",
+        "uncovered capability",
+        "blanket adoption without evidence",
+        "existing installed template instance",
+        "unrelated implementation request",
+    ] {
+        assert!(names.contains(required), "missing eval case {required:?}");
+    }
+
+    let motivating = evals
+        .evals
+        .iter()
+        .find(|eval| eval.prompt == "Which skills here should I install and use for my project XYZ? Give me some recommendations.")
+        .expect("exact motivating prompt should be included");
+    assert!(motivating.should_trigger);
+
+    for eval in &evals.evals {
+        assert!(!eval.required_outcomes.is_empty());
+        assert!(!eval.prohibited_outcomes.is_empty());
+        assert!(eval
+            .required_outcomes
+            .iter()
+            .chain(&eval.prohibited_outcomes)
+            .all(|outcome| !outcome.trim().is_empty()));
+    }
+
+    let unrelated = evals
+        .evals
+        .iter()
+        .find(|eval| eval.name == "unrelated implementation request")
+        .unwrap();
+    assert!(!unrelated.should_trigger);
+    assert_contains_all(
+        &format!(
+            "{} {} {}",
+            unrelated.prompt,
+            unrelated.required_outcomes.join(" "),
+            unrelated.prohibited_outcomes.join(" ")
+        ),
+        &["unrelated", "do not activate"],
+    );
+}
+
+#[test]
+fn recommend_fixture_and_evaluation_ledger_are_reproducible() {
+    let fixture = read(repository_root().join(RECOMMEND_FIXTURE_PATH));
+    assert_contains_all(
+        &fixture,
+        &[
+            "Catalog snapshot",
+            "Active skills",
+            "Templates are inert",
+            "Evaluation scope",
+            "Existing MCP workflow only",
+            "Locally customized documentation method",
+            "Keyword overlap without relevance",
+            "Uncovered capability",
+            "Blanket adoption without evidence",
+            "Existing installed template instance",
+            "template-state.yaml",
+            "Which skills here should I install and use for my project XYZ? Give me some recommendations.",
+        ],
+    );
+    assert_eq!(
+        fixture
+            .lines()
+            .filter(|line| line.starts_with("### ")
+                && line.as_bytes().get(4).is_some_and(u8::is_ascii_digit))
+            .count(),
+        6
+    );
+    for leaked_answer_key in [
+        "Decision boundary:",
+        "Scoring",
+        "required_outcomes",
+        "prohibited_outcomes",
+        "use through MCP",
+        "seed and customize",
+        "do not adopt",
+        "missing capability",
+    ] {
+        assert!(
+            !fixture.contains(leaked_answer_key),
+            "fixture leaks answer-key phrase {leaked_answer_key:?}"
+        );
+    }
+
+    let actual = format!("{:x}", Sha256::digest(fixture.as_bytes()));
+    let journal = design_journal();
+    let ledger = markdown_subsection(&journal, "Evaluation ledger");
+    let rows = ledger
+        .lines()
+        .filter(|line| line.starts_with('|') && line.contains(RECOMMEND_FIXTURE_PATH))
+        .collect::<Vec<_>>();
+    assert!(
+        rows.len() >= 2,
+        "ledger should contain baseline and forward rows"
+    );
+    assert!(rows.iter().all(|row| row.contains(&actual)));
+    assert!(rows.iter().all(|row| row.contains("2026-07-14")));
+    assert!(rows.iter().any(|row| row.contains("0 (RED)")));
+    assert!(rows.iter().any(|row| row.contains("critic")));
 }

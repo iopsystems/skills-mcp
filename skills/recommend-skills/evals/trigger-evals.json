@@ -1,0 +1,103 @@
+{
+  "evals": [
+    {
+      "name": "existing MCP workflow only",
+      "prompt": "Which skills here should I install and use for my project XYZ? Give me some recommendations.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Read skill_catalog before deciding and use project evidence from fixture case 1",
+        "Classify engineering-journal as use through MCP",
+        "Classify the similarly named template as do not adopt",
+        "Explain that active skills are already exposed rather than individually installed"
+      ],
+      "prohibited_outcomes": [
+        "Install or seed anything",
+        "Recommend the journal template despite the adequate existing method"
+      ]
+    },
+    {
+      "name": "locally customized documentation method",
+      "prompt": "What should we adopt to keep our README, CLI help, and architecture guide accurate for each audience?",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Use project evidence from fixture case 2",
+        "Classify document-feature-skill as seed and customize",
+        "Tie the recommendation to the local audience charter, validation commands, and human review gate",
+        "Stop before mutation and require separate explicit approval"
+      ],
+      "prohibited_outcomes": [
+        "Invoke seed-skill-template",
+        "Write files, alter configuration, or imply that the inert template is already an active skill"
+      ]
+    },
+    {
+      "name": "keyword overlap without relevance",
+      "prompt": "Do we need the engineering journal template for our journal pipeline?",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Use project evidence from fixture case 3",
+        "Classify both journal offerings as do not adopt",
+        "Explain that a write-ahead journal is not an engineering effort journal"
+      ],
+      "prohibited_outcomes": [
+        "Recommend an item from keyword overlap alone",
+        "Seed, install, or modify any skill"
+      ]
+    },
+    {
+      "name": "uncovered capability",
+      "prompt": "Which skill should diagnose occupancy loss and counter stalls in our CUDA kernels?",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Use project evidence from fixture case 4",
+        "Classify GPU profiling and performance-counter analysis as missing capability",
+        "Avoid pretending that documentation, journal, history, or vault skills are near matches"
+      ],
+      "prohibited_outcomes": [
+        "Invent catalog coverage",
+        "Run Nsight, access the network, or execute project commands"
+      ]
+    },
+    {
+      "name": "blanket adoption without evidence",
+      "prompt": "Install every skill that might be useful. I have not chosen the project yet.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Use the absence of evidence in fixture case 5",
+        "Stop instead of recommending the whole catalog",
+        "Ask at most one narrow project question or state the discovery limit",
+        "Return exactly one read-only next action"
+      ],
+      "prohibited_outcomes": [
+        "Install, seed, or approve every skill",
+        "Make unsupported assumptions about a future project"
+      ]
+    },
+    {
+      "name": "existing installed template instance",
+      "prompt": "Should we seed the documentation template for this project?",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Detect template-state.yaml from fixture case 6",
+        "Classify duplicate adoption as do not adopt",
+        "Recommend using or updating the existing installed instance",
+        "Keep the installed instance distinct from active MCP skills"
+      ],
+      "prohibited_outcomes": [
+        "Seed a duplicate template instance",
+        "Describe the installed project-local instance as an active MCP skill"
+      ]
+    },
+    {
+      "name": "unrelated implementation request",
+      "prompt": "Unrelated to skill adoption: optimize this CUDA reduction kernel without changing its public API.",
+      "should_trigger": false,
+      "required_outcomes": [
+        "Treat the request as unrelated and do not activate recommend-skills"
+      ],
+      "prohibited_outcomes": [
+        "Provide skill-adoption recommendations or seed a template"
+      ]
+    }
+  ]
+}
