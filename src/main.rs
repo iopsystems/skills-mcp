@@ -726,12 +726,16 @@ mod tests {
         SkillsServer::new(skills, templates)
     }
 
-    fn result_json(result: &CallToolResult) -> Value {
+    fn result_text(result: &CallToolResult) -> String {
         let serialized = serde_json::to_value(result).expect("tool result should serialize");
-        let text = serialized["content"][0]["text"]
+        serialized["content"][0]["text"]
             .as_str()
-            .expect("tool result should contain text");
-        serde_json::from_str(text).expect("tool result text should be JSON")
+            .expect("tool result should contain text")
+            .to_owned()
+    }
+
+    fn result_json(result: &CallToolResult) -> Value {
+        serde_json::from_str(&result_text(result)).expect("tool result text should be JSON")
     }
 
     #[test]
@@ -828,30 +832,31 @@ mod tests {
             .collect::<Vec<_>>();
         assert!(ordering.windows(2).all(|pair| pair[0] <= pair[1]));
 
-        let active = items
-            .iter()
-            .find(|item| item["kind"] == "active-skill")
-            .expect("active skill metadata should be present");
-        assert_eq!(
-            active.as_object().unwrap().keys().collect::<Vec<_>>(),
-            vec!["description", "id", "kind"]
-        );
-        assert!(active["description"]
-            .as_str()
-            .is_some_and(|v| !v.is_empty()));
-        assert!(active.get("body").is_none());
-
-        let template = items
-            .iter()
-            .find(|item| item["kind"] == "template")
-            .expect("template metadata should be present");
-        assert_eq!(
-            template.as_object().unwrap().keys().collect::<Vec<_>>(),
-            vec!["compatibility", "id", "kind", "purpose", "version"]
-        );
-        assert!(template["compatibility"].as_array().is_some());
-        assert!(template.get("files").is_none());
-        assert!(template.get("content").is_none());
+        let mut active_count = 0;
+        let mut template_count = 0;
+        for item in items {
+            let keys = item.as_object().unwrap().keys().collect::<Vec<_>>();
+            match item["kind"].as_str() {
+                Some("active-skill") => {
+                    active_count += 1;
+                    assert_eq!(keys, vec!["description", "id", "kind"]);
+                    assert!(item["description"]
+                        .as_str()
+                        .is_some_and(|value| !value.is_empty()));
+                }
+                Some("template") => {
+                    template_count += 1;
+                    assert_eq!(
+                        keys,
+                        vec!["compatibility", "id", "kind", "purpose", "version"]
+                    );
+                    assert!(item["compatibility"].as_array().is_some());
+                }
+                kind => panic!("unexpected catalog item kind: {kind:?}"),
+            }
+        }
+        assert!(active_count > 0, "active skill metadata should be present");
+        assert!(template_count > 0, "template metadata should be present");
     }
 
     #[tokio::test]
@@ -905,34 +910,74 @@ mod tests {
     async fn skill_template_get_invalid_requests_are_mcp_errors() {
         let server = test_server();
         let cases = [
-            None,
-            Some(serde_json::Map::new()),
-            Some(serde_json::Map::from_iter([(
-                "template_id".to_owned(),
-                json!(42),
-            )])),
-            Some(serde_json::Map::from_iter([(
-                "template_id".to_owned(),
-                json!("unknown-template"),
-            )])),
-            Some(serde_json::Map::from_iter([
-                ("template_id".to_owned(), json!("engineering-journal-skill")),
-                ("path".to_owned(), json!(42)),
-            ])),
-            Some(serde_json::Map::from_iter([
-                ("template_id".to_owned(), json!("engineering-journal-skill")),
-                ("path".to_owned(), json!("undeclared.txt")),
-            ])),
-            Some(serde_json::Map::from_iter([
-                ("template_id".to_owned(), json!("engineering-journal-skill")),
-                ("unexpected".to_owned(), json!(true)),
-            ])),
+            (None, "missing required argument: template_id"),
+            (
+                Some(serde_json::Map::new()),
+                "missing or invalid required argument: template_id",
+            ),
+            (
+                Some(serde_json::Map::from_iter([(
+                    "template_id".to_owned(),
+                    json!(42),
+                )])),
+                "missing or invalid required argument: template_id",
+            ),
+            (
+                Some(serde_json::Map::from_iter([(
+                    "template_id".to_owned(),
+                    json!("unknown-template"),
+                )])),
+                "unknown template id \"unknown-template\"",
+            ),
+            (
+                Some(serde_json::Map::from_iter([
+                    ("template_id".to_owned(), json!("engineering-journal-skill")),
+                    ("path".to_owned(), json!(42)),
+                ])),
+                "invalid argument: path must be a string",
+            ),
+            (
+                Some(serde_json::Map::from_iter([
+                    ("template_id".to_owned(), json!("engineering-journal-skill")),
+                    ("path".to_owned(), json!("undeclared.txt")),
+                ])),
+                "undeclared template path \"undeclared.txt\" for \"engineering-journal-skill\"",
+            ),
+            (
+                Some(serde_json::Map::from_iter([
+                    ("template_id".to_owned(), json!("engineering-journal-skill")),
+                    ("unexpected".to_owned(), json!(true)),
+                ])),
+                "unexpected argument for skill_template_get",
+            ),
         ];
+        let bundle = server
+            .templates
+            .get("engineering-journal-skill", None)
+            .unwrap();
+        let template_contents = bundle
+            .files
+            .into_iter()
+            .map(|file| file.content)
+            .collect::<Vec<_>>();
+        let source_repository = bundle.source.repository;
 
-        for args in cases {
+        for (args, expected) in cases {
             let result = server.handle_skill_template_get(args).await.unwrap();
             assert_eq!(result.is_error, Some(true));
-            assert!(!result.content.is_empty());
+            let message = result_text(&result);
+            assert!(
+                message.contains(expected),
+                "expected {expected:?} in safe error response {message:?}"
+            );
+            for content in &template_contents {
+                assert!(!message.contains(content), "error exposed template content");
+            }
+            assert!(!message.contains(env!("CARGO_MANIFEST_DIR")));
+            assert!(!message.contains("/.worktrees/"));
+            if std::path::Path::new(&source_repository).is_absolute() {
+                assert!(!message.contains(&source_repository));
+            }
         }
     }
 
