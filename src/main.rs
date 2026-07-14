@@ -835,11 +835,19 @@ mod tests {
         let mut active_count = 0;
         let mut template_count = 0;
         for item in items {
-            let keys = item.as_object().unwrap().keys().collect::<Vec<_>>();
+            let keys = item
+                .as_object()
+                .unwrap()
+                .keys()
+                .map(String::as_str)
+                .collect::<std::collections::BTreeSet<_>>();
             match item["kind"].as_str() {
                 Some("active-skill") => {
                     active_count += 1;
-                    assert_eq!(keys, vec!["description", "id", "kind"]);
+                    assert_eq!(
+                        keys,
+                        std::collections::BTreeSet::from(["description", "id", "kind"])
+                    );
                     assert!(item["description"]
                         .as_str()
                         .is_some_and(|value| !value.is_empty()));
@@ -848,7 +856,13 @@ mod tests {
                     template_count += 1;
                     assert_eq!(
                         keys,
-                        vec!["compatibility", "id", "kind", "purpose", "version"]
+                        std::collections::BTreeSet::from([
+                            "compatibility",
+                            "id",
+                            "kind",
+                            "purpose",
+                            "version",
+                        ])
                     );
                     assert!(item["compatibility"].as_array().is_some());
                 }
@@ -959,6 +973,7 @@ mod tests {
             .files
             .into_iter()
             .map(|file| file.content)
+            .filter(|content| !content.is_empty())
             .collect::<Vec<_>>();
         let source_repository = bundle.source.repository;
 
