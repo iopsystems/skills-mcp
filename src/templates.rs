@@ -9,18 +9,21 @@ use sha2::{Digest, Sha256};
 const SCHEMA_VERSION: u32 = 1;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct CatalogIndex {
     pub schema_version: u32,
     pub templates: Vec<CatalogEntry>,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct CatalogEntry {
     pub id: String,
     pub manifest: String,
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct TemplateManifest {
     pub schema_version: u32,
     pub id: String,
@@ -32,6 +35,7 @@ pub struct TemplateManifest {
 }
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+#[serde(deny_unknown_fields)]
 pub struct TemplateFile {
     pub path: String,
     pub sha256: String,
@@ -394,9 +398,9 @@ mod tests {
     }
 
     fn error_for(catalog: &str, files: BTreeMap<String, Vec<u8>>) -> String {
-        load_registry(catalog, files, test_source())
-            .expect_err("fixture should be rejected")
-            .to_string()
+        let error =
+            load_registry(catalog, files, test_source()).expect_err("fixture should be rejected");
+        format!("{error:#}")
     }
 
     #[test]
@@ -462,6 +466,30 @@ mod tests {
         );
 
         assert!(error_for(&duplicate, files).contains("duplicate catalog template id"));
+    }
+
+    #[test]
+    fn rejects_unknown_catalog_fields() {
+        let (catalog, files) = valid_fixture();
+        let catalog = format!("{catalog}unexpected: true\n");
+
+        assert!(error_for(&catalog, files).contains("unknown field"));
+    }
+
+    #[test]
+    fn rejects_unknown_manifest_fields() {
+        let (catalog, mut files) = valid_fixture();
+        let raw = String::from_utf8(files.remove("starter/manifest.yaml").unwrap()).unwrap();
+        files.insert(
+            "starter/manifest.yaml".to_owned(),
+            raw.replace(
+                "purpose: Test template",
+                "purpose: Test template\nunexpected: true",
+            )
+            .into_bytes(),
+        );
+
+        assert!(error_for(&catalog, files).contains("unknown field"));
     }
 
     #[test]
