@@ -1,0 +1,6 @@
+schema_version: 1
+templates:
+  - id: document-feature-skill
+    manifest: document-feature-skill/template.yaml
+  - id: engineering-journal-skill
+    manifest: engineering-journal-skill/template.yaml

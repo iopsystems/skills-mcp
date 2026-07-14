@@ -1,0 +1,19 @@
+schema_version: 1
+id: engineering-journal-skill
+version: 0.1.0
+purpose: Adapt a durable engineering journal workflow to project-specific conventions.
+entrypoint: SKILL.md
+compatibility:
+  - agent-skills-common-subset
+  - codex
+  - claude-code
+files:
+  - path: SKILL.md
+    sha256: 79d6f1da51798989afa1c8a790475db8d052d62b21d877a5c9d7b09ff2552526
+    merge_strategy: three-way
+  - path: references/project-profile.md
+    sha256: 2750373686dee8d42ad0c0fbb5065d42f9b0a3b5270d5921cb17e11bf3b39d0d
+    merge_strategy: three-way
+  - path: evals/trigger-evals.json
+    sha256: c0a6ecafb346dd365dd856c763a17a881ee090550e91c91fe6749a1fc9f78022
+    merge_strategy: preserve-local

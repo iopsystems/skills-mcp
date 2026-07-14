@@ -1,0 +1,19 @@
+schema_version: 1
+id: document-feature-skill
+version: 0.1.0
+purpose: Adapt a source-backed feature documentation workflow to project audiences and surfaces.
+entrypoint: SKILL.md
+compatibility:
+  - agent-skills-common-subset
+  - codex
+  - claude-code
+files:
+  - path: SKILL.md
+    sha256: e25dae10f7fefc3338dcb2402f9748d92c8c0101b4762490d7f32f88677fda2f
+    merge_strategy: three-way
+  - path: references/audience-charter.md
+    sha256: 563c53c34a418d9b5314b7dc1c30ab496058136c336bfd3886080dac6afc9ad4
+    merge_strategy: three-way
+  - path: evals/trigger-evals.json
+    sha256: 975f64337db0b6cedbe7917ca955e1b182aec3ded41531d889028d72cedb74a1
+    merge_strategy: preserve-local

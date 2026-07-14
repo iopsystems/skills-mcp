@@ -1,7 +1,7 @@
 ---
 status: open
 opened: 2026-07-13
-updated: 2026-07-13
+updated: 2026-07-14
 ---
 
 # Skill templates and project documentation
@@ -91,6 +91,57 @@ Cursor, Windsurf, and OpenCode also recognize it. Claude Code uses
 `.claude/skills` and documents support for symlinked skill directories. The
 installed instance will use the common Agent Skills subset and verify the chosen
 compatibility layout rather than assume it works.
+
+### Template-authoring baseline
+
+On 2026-07-14, two isolated agents received the same small Rust CLI fixture and
+no proposed template content. Both grounded CLI claims in parser, module, test,
+and rendered-help evidence and required human review for an architecture diagram.
+The baseline also exposed the gaps the templates must close:
+
+- one agent invented `Open` and `Closed` lifecycle states, while the other split
+  one effort across separate open and close entries;
+- both selected Mermaid rather than an authoritative DOT source with a committed
+  SVG and textual equivalent;
+- neither enforced a separate blind simulation and structured critic; and
+- after three repeated comprehension failures, both proposed more documentation
+  work or sign-off rather than stopping at a capped revision loop and reporting
+  recurring ambiguity as a design smell.
+
+Stable expectations were to preserve one indexed journal record, cite exact
+verification commands and results, map documentation to authoritative sources,
+cover defaults and failure behavior, and reserve perceptual architecture review
+for a human. These observations are the RED evidence for template authoring;
+agent transcripts are intentionally not retained.
+
+### Template forward and critic evidence
+
+Fresh isolated agents then received one template at a time with the frozen
+fixture. The engineering-journal run filled repository-specific profile fields,
+selected intent-first mode, preserved one entry and the four lifecycle states,
+tied closure to exact implementation and command evidence, reconciled only
+configured derived documents, and avoided silent backlog or brief creation. A
+separate critic found no concrete miss against the frozen journal expectations.
+
+The feature-documentation run independently ranked all four audiences, froze
+user, failure, and developer tasks, traced claims to parser, code, tests, and
+rendered help, prescribed authoritative DOT with an adjacent SVG and textual
+equivalent, required human review for the architecture diagram, and stopped the
+simulation-and-critic loop at three unsuccessful rounds with a design-smell
+report. Its separate critic also found no concrete template-caused miss.
+
+The evaluations support agent comprehension of the two base workflows; they do
+not establish human usability. Installation-time paths, project validation
+commands, audience ranks, diagram tooling, and named human reviewers remain
+deliberately unresolved until each project profile or charter is filled from
+local evidence.
+
+A final independent structural review found one ambiguity after those behavioral
+critics: “lifecycle extensions” could be read as permission for a fifth status.
+The template now fixes the four status values and limits project extensions to
+metadata or stricter transition rules. Contract coverage was also tightened for
+two-field skill frontmatter, relative supporting-file links, common-subset
+compatibility, and the ordered ten-step documentation algorithm.
 
 ## Design and Implementation
 

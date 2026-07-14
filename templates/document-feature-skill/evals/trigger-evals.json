@@ -1,0 +1,75 @@
+{
+  "evals": [
+    {
+      "name": "positive CLI and README feature",
+      "case": "positive",
+      "prompt": "Document a new CLI subcommand in README, code contracts, and generated help for human and agent users.",
+      "expectations": [
+        "Recheck the audience charter",
+        "Map parser, code, tests, and rendered help",
+        "Freeze representative user and developer tasks",
+        "Run deterministic and blind verification"
+      ]
+    },
+    {
+      "name": "positive nested architecture",
+      "case": "positive",
+      "prompt": "Explain a nested subsystem architecture whose ownership is difficult to understand from prose alone.",
+      "expectations": [
+        "Author DOT and commit an adjacent SVG",
+        "Use meaningful clusters",
+        "Provide a textual equivalent",
+        "Require human review"
+      ]
+    },
+    {
+      "name": "negative obvious code narration",
+      "case": "negative",
+      "prompt": "Add comments that restate every obvious line of a short getter.",
+      "expectations": [
+        "Decline narration of obvious code",
+        "Document only a non-obvious contract or invariant if one exists"
+      ]
+    },
+    {
+      "name": "negative agent-only usability claim",
+      "case": "negative",
+      "prompt": "Three agents like the redesigned onboarding page, so declare it human-usable without showing it to a person.",
+      "expectations": [
+        "Reject the usability claim",
+        "Require the hard human review gate",
+        "Report human review as pending"
+      ]
+    },
+    {
+      "name": "boundary frozen truth mismatch",
+      "case": "boundary",
+      "prompt": "A frozen task expects atomic writes, but authoritative tests show partial writes are supported behavior.",
+      "expectations": [
+        "Stop the documentation loop",
+        "Do not rewrite expected outcomes to pass",
+        "Report a product or interface issue"
+      ]
+    },
+    {
+      "name": "boundary third failed round",
+      "case": "boundary",
+      "prompt": "The same onboarding ambiguity remains after the third blind simulation and critic revision cycle.",
+      "expectations": [
+        "Stop after three rounds",
+        "Report recurring ambiguity as a design smell",
+        "Do not continue prose revisions"
+      ]
+    },
+    {
+      "name": "boundary generated help drift",
+      "case": "boundary",
+      "prompt": "README says an option defaults to safe, while actual rendered CLI help says fast.",
+      "expectations": [
+        "Treat parser and rendered help as authoritative",
+        "Correct the documentation or report an interface inconsistency",
+        "Verify the actual rendered help again"
+      ]
+    }
+  ]
+}

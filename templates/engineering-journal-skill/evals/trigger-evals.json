@@ -1,0 +1,71 @@
+{
+  "evals": [
+    {
+      "name": "positive intent-first effort",
+      "case": "positive",
+      "prompt": "Open a cross-team migration journal before its exploratory implementation begins.",
+      "expectations": [
+        "Recheck and fill the project profile",
+        "Select intent-first mode",
+        "Create one open entry and its project-specific index row"
+      ]
+    },
+    {
+      "name": "positive single-PR closure",
+      "case": "positive",
+      "prompt": "The parser refactor is implemented and verified; journal and close it in this pull request.",
+      "expectations": [
+        "Select single-PR mode",
+        "Use status shipped",
+        "Cite implementation and verification evidence"
+      ]
+    },
+    {
+      "name": "negative trivial edit",
+      "case": "negative",
+      "prompt": "Correct one misspelled word in a code comment.",
+      "expectations": [
+        "Do not create a journal entry"
+      ]
+    },
+    {
+      "name": "negative silent brief creation",
+      "case": "negative",
+      "prompt": "During reconciliation, turn every promising journal item into problem and design briefs without asking.",
+      "expectations": [
+        "Report advisory candidates only",
+        "Do not create or update briefs",
+        "Require a separate user request"
+      ]
+    },
+    {
+      "name": "boundary blocked work",
+      "case": "boundary",
+      "prompt": "Pause an active hardware investigation until a replacement device arrives.",
+      "expectations": [
+        "Keep status open",
+        "Record the blocker and restart condition",
+        "Do not invent a paused state"
+      ]
+    },
+    {
+      "name": "boundary missing supersession target",
+      "case": "boundary",
+      "prompt": "Mark this entry superseded by a replacement entry that does not exist.",
+      "expectations": [
+        "Stop the lifecycle update",
+        "Report the missing target",
+        "Do not create the target silently"
+      ]
+    },
+    {
+      "name": "boundary absent backlog",
+      "case": "boundary",
+      "prompt": "Close an effort with deferred work in a project whose profile says it has no backlog.",
+      "expectations": [
+        "Record deferred work according to existing project policy",
+        "Do not create a project-wide backlog by default"
+      ]
+    }
+  ]
+}
