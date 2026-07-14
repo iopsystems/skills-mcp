@@ -9,6 +9,7 @@ use sha2::{Digest, Sha256};
 use walkdir::WalkDir;
 
 const TEMPLATE_IDS: [&str; 2] = ["document-feature-skill", "engineering-journal-skill"];
+const SPRIG_FIXTURE_PATH: &str = "docs/evals/fixtures/sprig-cli-v1.md";
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -133,7 +134,6 @@ fn parse_frontmatter(body: &str) -> SkillFrontmatter {
     let (yaml, _) = body
         .split_once("\n---\n")
         .expect("skill frontmatter should have a closing fence");
-    assert!(yaml.len() <= 1024, "skill frontmatter must remain portable");
     serde_yaml::from_str(yaml).expect("skill frontmatter should contain only typed fields")
 }
 
@@ -194,6 +194,24 @@ fn normalized_contains_all(body: &str, phrases: &[&str]) -> bool {
             .to_ascii_lowercase();
         body.contains(&phrase)
     })
+}
+
+fn is_portable_skill_name(name: &str) -> bool {
+    let length = name.len();
+    if !(1..=64).contains(&length) || !name.is_ascii() {
+        return false;
+    }
+
+    name.split('-').all(|component| {
+        !component.is_empty()
+            && component
+                .bytes()
+                .all(|byte| byte.is_ascii_lowercase() || byte.is_ascii_digit())
+    })
+}
+
+fn is_portable_description(description: &str) -> bool {
+    (1..=1024).contains(&description.chars().count())
 }
 
 #[test]
@@ -281,13 +299,9 @@ fn skill_templates_use_portable_structure_and_relative_support_links() {
         let template_root = templates_root().join(&template_id);
         let skill = read(template_root.join("SKILL.md"));
         let frontmatter = parse_frontmatter(&skill);
-        assert!(!frontmatter.name.trim().is_empty());
-        assert!(!frontmatter.description.trim().is_empty());
+        assert!(is_portable_skill_name(&frontmatter.name));
+        assert!(is_portable_description(&frontmatter.description));
         assert!(frontmatter.description.starts_with("Use when "));
-        assert!(frontmatter
-            .name
-            .bytes()
-            .all(|byte| byte.is_ascii_alphanumeric() || byte == b'-'));
         assert_ne!(frontmatter.name, template_id);
 
         let installed_root = tempfile::tempdir().unwrap();
@@ -314,6 +328,27 @@ fn skill_templates_use_portable_structure_and_relative_support_links() {
             );
         }
     }
+
+    for invalid in [
+        "",
+        "Uppercase",
+        "leading-",
+        "-trailing",
+        "two--hyphens",
+        "under_score",
+        "nonascii-é",
+        "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+    ] {
+        assert!(!is_portable_skill_name(invalid), "accepted {invalid:?}");
+    }
+    assert!(is_portable_skill_name("a"));
+    assert!(is_portable_skill_name(
+        "a234567890123456789012345678901234567890123456789012345678901234"
+    ));
+    assert!(!is_portable_description(""));
+    assert!(is_portable_description("a"));
+    assert!(is_portable_description(&"é".repeat(1024)));
+    assert!(!is_portable_description(&"a".repeat(1025)));
 }
 
 #[test]
@@ -329,7 +364,7 @@ fn feature_workflow_has_exactly_ten_ordered_semantic_steps() {
             "blind task simulations",
             "separate structured critic",
             "risk-based human review",
-            "at most three formal",
+            "three unsuccessful formal cycles",
         ],
     );
 
@@ -519,6 +554,118 @@ fn final_human_gate_applies_to_the_last_gated_revision() {
 }
 
 #[test]
+fn document_template_uses_formal_cycle_terminology_consistently() {
+    let body = read(templates_root().join("document-feature-skill/SKILL.md"));
+    assert_contains_all(&body, &["three unsuccessful formal cycles"]);
+    assert!(!body.contains("three unsuccessful revision rounds"));
+    assert!(!body.contains("at most three formal"));
+    assert!(!body.contains("these formal cycles at three"));
+    assert!(!body.contains("the third formal cycle"));
+
+    let journal = design_journal();
+    assert_contains_all(&journal, &["three unsuccessful formal cycles"]);
+    assert!(!journal.contains("three unsuccessful rounds"));
+    assert!(!journal.contains("at most three formal"));
+    assert!(!journal.contains("three formal simulation-and-critic cycles"));
+    assert!(!journal.contains("third formal cycle"));
+}
+
+#[test]
+fn sprig_fixture_and_ledger_digest_are_reproducible() {
+    let fixture = read(repository_root().join(SPRIG_FIXTURE_PATH));
+    assert_contains_all(
+        &fixture,
+        &[
+            "Repository Facts",
+            "README.md",
+            "src/main.rs",
+            "clap",
+            "src/config.rs",
+            "src/engine/mod.rs",
+            "tests/cli.rs",
+            "docs/journal/index.md",
+            "sprig sync [--mode check|apply] [--format text|json] <CONFIG>",
+            "mode=check",
+            "format=text",
+            "YAML file path",
+            "missing config",
+            "exit 2",
+            "invalid schema",
+            "exit 3",
+            "partial",
+            "exit 4",
+            "actual rendered help",
+            "Usage: sprig sync [OPTIONS] <CONFIG>",
+            "status: open",
+            "status: shipped",
+            "status: no-go",
+            "status: superseded",
+            "Opened | Effort | Status",
+            "cargo test --locked",
+            "Task Group 1: Journal Lifecycle",
+            "Task Group 2: CLI and Architecture Documentation",
+            "Task Group 3: Diagram Human Review",
+            "Task Group 4: Repeated Comprehension Failures",
+        ],
+    );
+
+    assert_eq!(
+        fixture
+            .lines()
+            .filter(|line| line.starts_with("### Task Group "))
+            .count(),
+        4
+    );
+    assert_contains_all(
+        markdown_subsection(&fixture, "Task Group 1: Journal Lifecycle"),
+        &[
+            "docs/journal/2026-07-14-atomic-apply.md",
+            "status: open",
+            "status: shipped",
+            "docs/journal/index.md",
+            "Opened | Effort | Status",
+            "cargo test --locked",
+        ],
+    );
+    assert_contains_all(
+        markdown_subsection(&fixture, "Task Group 2: CLI and Architecture Documentation"),
+        &[
+            "YAML file path",
+            "actual rendered help",
+            "mode=check",
+            "format=text",
+            "exit 2",
+            "exit 3",
+            "exit 4",
+            "parse/plan/apply",
+        ],
+    );
+    assert_contains_all(
+        markdown_subsection(&fixture, "Task Group 3: Diagram Human Review"),
+        &["human review", "agent checks"],
+    );
+    assert_contains_all(
+        markdown_subsection(&fixture, "Task Group 4: Repeated Comprehension Failures"),
+        &["three", "stop", "ambiguity"],
+    );
+
+    let actual = format!("{:x}", Sha256::digest(fixture.as_bytes()));
+    let ledger = markdown_subsection(&design_journal(), "Evaluation ledger").to_owned();
+    let row = ledger
+        .lines()
+        .find(|line| line.starts_with('|') && line.contains(SPRIG_FIXTURE_PATH))
+        .expect("ledger should contain the exact fixture path");
+    assert!(
+        row.contains(&actual),
+        "ledger digest does not match fixture"
+    );
+    assert_eq!(actual.len(), 64);
+    assert!(actual
+        .bytes()
+        .all(|byte| byte.is_ascii_digit() || (b'a'..=b'f').contains(&byte)));
+}
+
+#[test]
 fn design_journal_matches_hardened_contract_and_reproducible_evidence() {
     let journal = design_journal();
     let trust = markdown_subsection(&journal, "Instruction and execution trust boundary");
@@ -539,7 +686,7 @@ fn design_journal_matches_hardened_contract_and_reproducible_evidence() {
             "measurable success criterion",
             "each in-scope audience",
             "separate structured critic",
-            "three formal simulation-and-critic cycles",
+            "three unsuccessful formal cycles",
             "human re-review",
             "final revision",
         ],

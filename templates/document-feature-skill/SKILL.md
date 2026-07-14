@@ -59,8 +59,8 @@ Follow these steps in order:
    authoritative code.
 7. Run blind task simulations plus a separate structured critic.
 8. Apply risk-based human review to the current gated surfaces.
-9. Revise only specific findings for at most three formal blind-simulation and
-   critic cycles; obtain human re-review of any later gated change.
+9. Revise only specific findings until they pass or three unsuccessful formal
+   cycles complete; obtain human re-review of any later gated change.
 10. Report evidence and unresolved interface or architecture problems only after
     the final gate status is known.
 
@@ -72,7 +72,7 @@ answer to make documentation pass.
 Blind simulations receive the documentation and frozen tasks, not authoring
 history or hints. The separate structured critic receives the output, frozen
 expectations, and relevant documentation. Do not let the author self-certify both
-roles. Fix concrete findings only. After three unsuccessful revision rounds,
+roles. Fix concrete findings only. After three unsuccessful formal cycles,
 stop and report the recurring ambiguity as a design smell rather than continuing
 to polish prose.
 
@@ -169,9 +169,10 @@ structured critic. Classify concrete misses by audience, source, surface, and
 risk. Revise only supported findings and rerun affected deterministic and blind
 checks. One formal blind-simulation and critic revision cycle consists of a blind
 simulation, separate critic, specific revision, and affected verification. Cap
-these formal cycles at three. Human-requested corrections do not consume that
-cap, but they still require affected deterministic checks and must not silently
-change frozen expected outcomes.
+the loop by stopping when evaluation passes or after three unsuccessful formal
+cycles. Human-requested corrections do not consume that cap, but they still
+require affected deterministic checks and must not silently change frozen
+expected outcomes.
 
 Use risk-based human review. The following are hard human review gates:
 
@@ -185,10 +186,10 @@ Human review is not replaceable by agent consensus. Agent checks never prove
 human usability. Record the requested review, decision, reviewed revision, and
 unresolved comments. If any later revision affects a gated surface, its prior
 approval no longer covers the changed result: obtain human re-review. This
-includes a human-requested correction after the third formal cycle. Do not claim
-the final gate satisfied or claim usability until the final revision of every
-affected gated surface has human approval. If that review has not occurred,
-report it as pending.
+includes a human-requested correction after the third unsuccessful formal cycle.
+Do not claim the final gate satisfied or claim usability until the final revision
+of every affected gated surface has human approval. If that review has not
+occurred, report it as pending.
 
 ## Final Report
 

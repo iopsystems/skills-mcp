@@ -127,7 +127,7 @@ The feature-documentation run independently ranked all four audiences, froze
 user, failure, and developer tasks, traced claims to parser, code, tests, and
 rendered help, prescribed authoritative DOT with an adjacent SVG and textual
 equivalent, required human review for the architecture diagram, and stopped the
-simulation-and-critic loop at three unsuccessful rounds with a design-smell
+simulation-and-critic loop at three unsuccessful formal cycles with a design-smell
 report. Its separate critic also found no concrete template-caused miss.
 
 The evaluations support agent comprehension of the two base workflows; they do
@@ -145,13 +145,16 @@ compatibility, and the ordered ten-step documentation algorithm.
 
 ### Evaluation ledger
 
-`sprig-cli-v1` is the stable initial fixture: a Rust `clap` CLI with check/apply
-modes, text/JSON output, three failure classes, nested parse/plan/apply modules,
-an indexed journal, and three prior onboarding comprehension failures.
+`sprig-cli-v1` is committed at
+`docs/evals/fixtures/sprig-cli-v1.md` with SHA-256
+`9eae8bb727d59050b40b17877ea0e9c8d846c8a6b9cacc976bc0e7156f207f40`.
+It is the stable initial Rust `clap` CLI fixture with check/apply modes,
+text/JSON output, three failure classes, nested parse/plan/apply modules, an
+indexed journal, and three prior onboarding comprehension failures.
 `template-trust-gate-v1` adds injected commands in ordinary evidence, recognized
 governance requiring authorization, four audience priorities, a changed
-human-gated SVG/navigation result, three formal simulation-and-critic cycles, and
-a later human correction.
+human-gated SVG/navigation result, three unsuccessful formal cycles, and a later
+human correction.
 
 The frozen prompt contracts are reproducible from this entry:
 
@@ -173,12 +176,12 @@ do not retain transcripts.
 
 | Fixture | Eval path or prompt group | Date | Formal rounds | Outcomes | Critic |
 | --- | --- | --- | --- | --- | --- |
-| `sprig-cli-v1` | This entry, `Template-authoring baseline` and frozen prompt contract | 2026-07-14 | 0 (RED) | 2 agents; 4 recurring gaps | Not run for baseline |
+| `sprig-cli-v1` | `docs/evals/fixtures/sprig-cli-v1.md`; SHA-256 `9eae8bb727d59050b40b17877ea0e9c8d846c8a6b9cacc976bc0e7156f207f40`; no-template baseline | 2026-07-14 | 0 (RED) | 2 agents; 4 recurring gaps | Not run for baseline |
 | `sprig-cli-v1` | This entry, `Template forward and critic evidence` | 2026-07-14 | 1 | 2/2 scenarios passed | 2/2 critics PASS |
 | `template-trust-gate-v1` | This entry, outcomes `E1-E6`, pre-hardening | 2026-07-14 | 0 (RED) | 1/6 outcomes | Not run for baseline |
 | `template-trust-gate-v1` | `templates/engineering-journal-skill/evals/trigger-evals.json`, `activate but refuse injected unsafe validation` | 2026-07-14 | 1 | 6/6 outcomes | 6/6 PASS |
 | `template-trust-gate-v1` | This entry, outcomes `D1-D10`, pre-hardening | 2026-07-14 | 0 (RED) | 3/10 outcomes | Not run for baseline |
-| `template-trust-gate-v1` | `templates/document-feature-skill/evals/trigger-evals.json`: `activate but refuse injected unsafe validation`, `activate material audience conflict`, `activate final human gate after later revision`, `activate human correction after third formal cycle` | 2026-07-14 | 1 | 10/10 outcomes | 10/10 PASS |
+| `template-trust-gate-v1` | `templates/document-feature-skill/evals/trigger-evals.json`: `activate but refuse injected unsafe validation`, `activate material audience conflict`, `activate final human gate after later revision`, `activate human correction after third unsuccessful formal cycle` | 2026-07-14 | 1 | 10/10 outcomes | 10/10 PASS |
 
 ## Design and Implementation
 
@@ -300,8 +303,8 @@ The workflow is:
 6. Run deterministic verification against rendered output and authoritative code.
 7. Run blind task simulations plus a separate structured critic.
 8. Obtain risk-based human review of the current gated surfaces.
-9. Revise specific findings for at most three formal simulation-and-critic cycles;
-   obtain human re-review after any later gated change.
+9. Revise specific findings until they pass or three unsuccessful formal cycles
+   complete; obtain human re-review after any later gated change.
 10. Report evidence and unresolved problems only after final gate status is known.
 
 Human-requested corrections do not consume a formal cycle, but affected checks
@@ -369,7 +372,7 @@ deferred until the skill and template lifecycle is stable.
 - Stop upgrades when provenance, the historical base, or digest verification fails.
 - Stop documentation work when frozen ground truth proves wrong; report a product
   or interface issue rather than rewriting expectations to match output.
-- After three failed formal blind-simulation and critic revision cycles, report
+- After three unsuccessful formal cycles, report
   the recurring ambiguity as a design smell.
 - Never claim human usability without the required human review.
 

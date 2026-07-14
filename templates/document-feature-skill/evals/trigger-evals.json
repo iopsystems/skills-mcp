@@ -83,8 +83,8 @@
       ]
     },
     {
-      "name": "activate human correction after third formal cycle",
-      "prompt": "After three formal blind-simulation and critic revision cycles, a human requests a label correction to the gated workflow diagram.",
+      "name": "activate human correction after third unsuccessful formal cycle",
+      "prompt": "After three unsuccessful formal cycles, a human requests a label correction to the gated workflow diagram.",
       "should_trigger": true,
       "required_outcomes": [
         "Apply the supported correction without counting a fourth formal cycle",
