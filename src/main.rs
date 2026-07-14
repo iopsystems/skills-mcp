@@ -15,6 +15,8 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 use tokio::sync::Mutex;
 
+#[allow(dead_code)] // The registry is wired into MCP tools in the follow-up task.
+mod templates;
 mod vault;
 
 use vault::{Direction, Index, SearchFilters};
