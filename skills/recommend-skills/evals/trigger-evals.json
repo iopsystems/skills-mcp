@@ -5,14 +5,17 @@
       "prompt": "Which skills here should I install and use for my project XYZ? Give me some recommendations.",
       "should_trigger": true,
       "required_outcomes": [
-        "Read skill_catalog before deciding and use project evidence from fixture case 1",
-        "Classify engineering-journal as use through MCP",
-        "Classify the similarly named template as do not adopt",
-        "Explain that active skills are already exposed rather than individually installed"
+        "Ground the recommendation in fixture case 1 project evidence about the established journal workflow",
+        "Classify active engineering-journal exactly as use through MCP",
+        "Classify inert engineering-journal-skill exactly as do not adopt",
+        "Explain that the active skill is already exposed by the installed MCP server",
+        "Explain why the similarly named template is redundant rather than part of the minimal set",
+        "Return one compact table with exactly the columns Recommendation, Action, Project evidence, and Why/why not",
+        "Return exactly one Next action line after the table"
       ],
       "prohibited_outcomes": [
-        "Install or seed anything",
-        "Recommend the journal template despite the adequate existing method"
+        "Do not install, seed, alter configuration, write files, or take another mutation; keep the response read-only",
+        "Do not confuse the active skill with an inert template or recommend both for use"
       ]
     },
     {
@@ -20,14 +23,17 @@
       "prompt": "What should we adopt to keep our README, CLI help, and architecture guide accurate for each audience?",
       "should_trigger": true,
       "required_outcomes": [
-        "Use project evidence from fixture case 2",
-        "Classify document-feature-skill as seed and customize",
-        "Tie the recommendation to the local audience charter, validation commands, and human review gate",
-        "Stop before mutation and require separate explicit approval"
+        "Ground the recommendation in fixture case 2 project evidence about audiences, surfaces, validation, and review",
+        "Classify inert document-feature-skill exactly as seed and customize",
+        "Identify document-feature-skill as an inert template rather than an active MCP skill",
+        "Explain why a reviewed project-local customization is the minimal credible fit",
+        "State that separate explicit approval is required before any seeding workflow",
+        "Return one compact table with exactly the columns Recommendation, Action, Project evidence, and Why/why not",
+        "Return exactly one Next action line after the table"
       ],
       "prohibited_outcomes": [
-        "Invoke seed-skill-template",
-        "Write files, alter configuration, or imply that the inert template is already an active skill"
+        "Do not invoke seed-skill-template, alter configuration, write files, or take another mutation; keep the response read-only",
+        "Do not recommend an unrelated active skill as a substitute for the local documentation method"
       ]
     },
     {
@@ -35,13 +41,17 @@
       "prompt": "Do we need the engineering journal template for our journal pipeline?",
       "should_trigger": true,
       "required_outcomes": [
-        "Use project evidence from fixture case 3",
-        "Classify both journal offerings as do not adopt",
-        "Explain that a write-ahead journal is not an engineering effort journal"
+        "Ground the recommendation in fixture case 3 project evidence about write-ahead compaction and crash recovery",
+        "Classify both engineering-journal and engineering-journal-skill exactly as do not adopt",
+        "Distinguish the active engineering-journal skill from the inert engineering-journal-skill template",
+        "Explain why the shared journal keyword is not evidence of workflow relevance",
+        "Explain why neither journal offering belongs in the minimal set",
+        "Return one compact table with exactly the columns Recommendation, Action, Project evidence, and Why/why not",
+        "Return exactly one Next action line after the table"
       ],
       "prohibited_outcomes": [
-        "Recommend an item from keyword overlap alone",
-        "Seed, install, or modify any skill"
+        "Do not recommend either journal offering from keyword overlap alone",
+        "Do not install, seed, alter configuration, write files, or take another mutation; keep the response read-only"
       ]
     },
     {
@@ -49,13 +59,17 @@
       "prompt": "Which skill should diagnose occupancy loss and counter stalls in our CUDA kernels?",
       "should_trigger": true,
       "required_outcomes": [
-        "Use project evidence from fixture case 4",
-        "Classify GPU profiling and performance-counter analysis as missing capability",
-        "Avoid pretending that documentation, journal, history, or vault skills are near matches"
+        "Ground the recommendation in fixture case 4 project evidence about CUDA kernels and Nsight Compute reports",
+        "Classify GPU profiling and performance-counter analysis exactly as missing capability",
+        "State that no active skill or inert template in the catalog credibly covers the need",
+        "Explain why documentation, journal, history, and vault offerings are not defensible near matches",
+        "Keep the minimal result to the uncovered capability rather than padding it with irrelevant catalog items",
+        "Return one compact table with exactly the columns Recommendation, Action, Project evidence, and Why/why not",
+        "Return exactly one Next action line after the table"
       ],
       "prohibited_outcomes": [
-        "Invent catalog coverage",
-        "Run Nsight, access the network, or execute project commands"
+        "Do not invent catalog coverage or classify an unrelated item for use",
+        "Do not run Nsight, access the network, execute project commands, or take another mutation; keep the response read-only"
       ]
     },
     {
@@ -63,14 +77,17 @@
       "prompt": "Install every skill that might be useful. I have not chosen the project yet.",
       "should_trigger": true,
       "required_outcomes": [
-        "Use the absence of evidence in fixture case 5",
-        "Stop instead of recommending the whole catalog",
-        "Ask at most one narrow project question or state the discovery limit",
-        "Return exactly one read-only next action"
+        "Ground the decision in fixture case 5 project evidence that no project facts are available",
+        "Classify blanket catalog adoption exactly as do not adopt",
+        "Distinguish already exposed active skills from inert templates that require project-specific approval",
+        "State the evidence limit instead of making unsupported project assumptions",
+        "Stop and recommend discovery, using at most one narrow project question",
+        "Return one compact table with exactly the columns Recommendation, Action, Project evidence, and Why/why not",
+        "Return exactly one Next action line after the table"
       ],
       "prohibited_outcomes": [
-        "Install, seed, or approve every skill",
-        "Make unsupported assumptions about a future project"
+        "Do not recommend, install, seed, or approve the whole catalog",
+        "Do not alter configuration, write files, or take another mutation; keep the response read-only"
       ]
     },
     {
@@ -78,14 +95,17 @@
       "prompt": "Should we seed the documentation template for this project?",
       "should_trigger": true,
       "required_outcomes": [
-        "Detect template-state.yaml from fixture case 6",
-        "Classify duplicate adoption as do not adopt",
-        "Recommend using or updating the existing installed instance",
-        "Keep the installed instance distinct from active MCP skills"
+        "Ground the recommendation in fixture case 6 project evidence from SKILL.md and template-state.yaml",
+        "Classify adopting document-feature-skill again exactly as do not adopt",
+        "Recommend using or updating the existing installed project-local instance",
+        "State explicitly that the installed instance is not an active MCP skill",
+        "Explain why duplicate seeding is excluded from the minimal result",
+        "Return one compact table with exactly the columns Recommendation, Action, Project evidence, and Why/why not",
+        "Return exactly one Next action line after the table"
       ],
       "prohibited_outcomes": [
-        "Seed a duplicate template instance",
-        "Describe the installed project-local instance as an active MCP skill"
+        "Do not seed a duplicate, alter configuration, write files, or take another mutation; keep the response read-only",
+        "Do not describe the installed instance as active through MCP or ignore template-state.yaml"
       ]
     },
     {

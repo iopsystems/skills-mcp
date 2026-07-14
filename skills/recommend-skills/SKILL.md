@@ -64,6 +64,14 @@ why/why not and meaningful tradeoffs. Use an Action value that is exactly one of
 When an active skill and template share a keyword or purpose that could confuse the decision, classify both
 separately; do not let one row stand in for the other.
 
+In every catalog row, state its role explicitly: active skill, inert template, or installed project-local instance.
+Make the Project evidence cell cover every material fact supporting the decision, including distinct requested
+surfaces, constraints, and existing state. For a `missing capability`, state that no relevant active skill or inert
+template covers the need; mention installed-instance coverage only when inspected evidence supports that claim.
+For `seed and customize`, say explicitly why the template is the minimal credible fit. When distinguishing active
+skills from inert templates, state that templates require project-specific approval. When an installed instance has
+both files, cite both `SKILL.md` and `template-state.yaml` as evidence.
+
 | Recommendation | Action | Project evidence | Why/why not |
 | --- | --- | --- | --- |
 | `<catalog item or uncovered need>` | `<exact classification label>` | `<specific fact or stated limit>` | `<fit, exclusion, or tradeoff>` |

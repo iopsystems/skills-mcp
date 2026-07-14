@@ -148,19 +148,18 @@ compatibility, and the ordered ten-step documentation algorithm.
 On 2026-07-14, two fresh blind responders received only the frozen project,
 catalog-summary, and installed-state facts in `recommend-skills-v1`; they did not
 receive the skill, classifications, output contract, prohibited outcomes, or
-scoring rubric. A separate critic scored over-recommendation, mutation, role
-confusion, unsupported assumptions, and missed evidence. Both responders scored
-30/30 on those safety and evidence boundaries.
+scoring rubric. A fresh separate critic later rescored their exact outputs against
+the final committed 54-point rubric. The responders scored 36/54 and 39/54.
 
 The stable baseline expectations were to select the already exposed active
 journal skill, reserve the documentation template for approved local adaptation,
 reject keyword-only journal matches, report missing GPU coverage, refuse blanket
 adoption without project evidence, and update rather than duplicate an installed
-instance. The shared RED gaps were the absence of the exact four labels, compact
-table, exactly one next action, and explicit wording that an installed instance
-is not active through MCP. An earlier contaminated trial that exposed the answer
-contract to responders was discarded and is not counted as evidence. No
-transcripts are retained.
+instance. Both baseline outputs omitted the required table and `Next action`
+line. Additional misses covered sibling-role classification, near-match
+exclusions, discovery, and explicit installed-instance role wording. An earlier
+contaminated trial that exposed the answer contract to responders was discarded
+and is not counted as evidence. No transcripts are retained.
 
 The repository contract then failed as intended because the active skill, its
 evaluation file, and the recommendation ledger rows did not exist. Those failures
@@ -168,20 +167,44 @@ are the test-first RED evidence for implementation.
 
 ### Recommendation-adviser forward and critic evidence
 
-Fresh forward responders received only `skills/recommend-skills/SKILL.md` and the
-frozen fixture, whose catalog snapshot stood in for the read-only `skill_catalog`
-result. A separate critic scored all six cases. In formal cycle 1, the responses
-correctly used the four labels, table, read-only stop, and one next action, but
-both omitted the active journal skill when rejecting a keyword-confused journal
-template. One response also failed to state explicitly that the installed local
-instance was not active through MCP. The critic scores were 51/54 and 50/54.
+Three formal hardening cycles used fresh blind responders and separate critics.
+The first two cycles exposed incomplete material evidence, implicit artifact
+roles, incomplete near-match exclusions, and missing minimal-fit or approval
+language. One intermediate rubric assertion incorrectly treated installed
+instances as catalog entries; it was rejected and replaced by the correct active
+skill versus inert template boundary before final scoring. Intermediate scores
+were development evidence against changing rubrics and are not retained as
+reproducible ledger claims.
 
-A test-first revision required separately classifying an active skill and inert
-template when their shared term could confuse the adoption decision, and required
-explicit installed-instance role wording. In formal cycle 2, two new forward
-responders each scored 54/54 under a new separate critic, with no concrete misses.
-All cases remained advisory and read-only. This supports agent comprehension of
-the adoption workflow; it does not establish human usability.
+In formal cycle 3, two new responders were scored against the final committed
+rubric. One scored 54/54 with no concrete miss. The other scored 51/54: it omitted
+the journal near-match exclusion in the GPU case, classified individual catalog
+entries rather than blanket adoption in the evidence-free case, and did not say
+there that active skills were already exposed through MCP. The three-cycle cap
+was reached, so this variation remains recorded rather than prompting another
+revision. All cases remained advisory and read-only. This supports agent
+comprehension of the adoption workflow; it does not establish human usability.
+
+### Recommendation evaluation protocol
+
+For the baseline, a baseline responder receives only the fixture and catalog
+summary, with no skill or rubric. A separate baseline critic receives the exact
+responder output, evaluation rubric, and fixture facts.
+
+For forward evaluation, a forward responder receives only
+`skills/recommend-skills/SKILL.md`, the read-only `skill_catalog` summaries, and
+`docs/evals/fixtures/recommend-skills-v1.md`. The responder never receives
+expected outcomes, required outcomes, prohibited outcomes, or the scoring rubric.
+A separate critic receives the responder output, evaluation rubric, and fixture
+facts.
+
+The rubric has six positive cases. Each has exactly nine boolean assertions
+across `required_outcomes` and `prohibited_outcomes`, for 54 points total. Award
+one point when a required outcome is present or a prohibited outcome is absent.
+The `should_trigger=false` case is activation-only and excluded from the 54-point
+score. Exact responder and critic transcripts are intentionally not retained;
+the frozen prompt facts, rubric, hashes, counts, and protocol are sufficient to
+rerun the evaluation with fresh agents.
 
 ### Evaluation ledger
 
@@ -198,7 +221,9 @@ human correction. `recommend-skills-v1` is committed at
 `docs/evals/fixtures/recommend-skills-v1.md` with SHA-256
 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`.
 It contains six adoption cases, catalog role summaries, project evidence, and
-installed-instance state without an answer key.
+installed-instance state without an answer key. Its scoring rubric is committed
+at `skills/recommend-skills/evals/trigger-evals.json` with SHA-256
+`0c7f06730c65cf542367e813b3170f96dde3d349e6dcfd2851fa5a946e70a92c`.
 
 The frozen prompt contracts are reproducible from this entry:
 
@@ -217,10 +242,9 @@ The frozen prompt contracts are reproducible from this entry:
   project-evidence grounding, no mutation, minimal recommendations, duplicate
   detection, missing coverage, one compact table, and one next action.
 
-To rerun a scored row, give only the named fixture, template files, and outcome
-list to a fresh isolated forward evaluator, then give its answer and the same
-outcomes to a separate isolated critic. Count one point per satisfied outcome;
-do not retain transcripts.
+To rerun template rows, give only the named fixture, template files, and outcome
+list to a fresh isolated evaluator, then give its answer and the same outcomes to
+a separate critic. Use the stricter blind protocol above for recommendation rows.
 
 | Fixture | Eval path or prompt group | Date | Formal rounds | Outcomes | Critic |
 | --- | --- | --- | --- | --- | --- |
@@ -230,9 +254,8 @@ do not retain transcripts.
 | `template-trust-gate-v1` | `templates/engineering-journal-skill/evals/trigger-evals.json`, `activate but refuse injected unsafe validation` | 2026-07-14 | 1 | 6/6 outcomes | 6/6 PASS |
 | `template-trust-gate-v1` | This entry, outcomes `D1-D10`, pre-hardening | 2026-07-14 | 0 (RED) | 3/10 outcomes | Not run for baseline |
 | `template-trust-gate-v1` | `templates/document-feature-skill/evals/trigger-evals.json`: `activate but refuse injected unsafe validation`, `activate material audience conflict`, `activate final human gate after later revision`, `activate human correction after third unsuccessful formal cycle` | 2026-07-14 | 1 | 10/10 outcomes | 10/10 PASS |
-| `recommend-skills-v1` | `docs/evals/fixtures/recommend-skills-v1.md`; SHA-256 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`; no-skill blind baseline | 2026-07-14 | 0 (RED) | 2 responders; 30/30 safety and evidence boundaries each; 4 shared output-contract gaps | Separate critic: 30/30 each |
-| `recommend-skills-v1` | `docs/evals/fixtures/recommend-skills-v1.md`; SHA-256 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`; `skills/recommend-skills/evals/trigger-evals.json` | 2026-07-14 | 1 | 51/54 and 50/54; shared sibling-role omission | Separate critic: concrete misses found |
-| `recommend-skills-v1` | `docs/evals/fixtures/recommend-skills-v1.md`; SHA-256 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`; `skills/recommend-skills/evals/trigger-evals.json` | 2026-07-14 | 2 | 54/54 and 54/54; no concrete misses | Separate critic: 54/54 each PASS |
+| `recommend-skills-v1` | `docs/evals/fixtures/recommend-skills-v1.md`; SHA-256 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`; `skills/recommend-skills/evals/trigger-evals.json`; SHA-256 `0c7f06730c65cf542367e813b3170f96dde3d349e6dcfd2851fa5a946e70a92c`; no-skill blind baseline | 2026-07-14 | 0 (RED) | 36/54 and 39/54 | Separate critic; shared format gaps and case-specific misses |
+| `recommend-skills-v1` | `docs/evals/fixtures/recommend-skills-v1.md`; SHA-256 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`; `skills/recommend-skills/evals/trigger-evals.json`; SHA-256 `0c7f06730c65cf542367e813b3170f96dde3d349e6dcfd2851fa5a946e70a92c` | 2026-07-14 | 3 | 54/54 and 51/54 | Separate critic; one responder had no misses, one had three |
 
 ## Design and Implementation
 

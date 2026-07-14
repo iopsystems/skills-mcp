@@ -9,6 +9,7 @@ use sha2::{Digest, Sha256};
 use walkdir::WalkDir;
 
 const TEMPLATE_IDS: [&str; 2] = ["document-feature-skill", "engineering-journal-skill"];
+const RECOMMEND_EVAL_PATH: &str = "skills/recommend-skills/evals/trigger-evals.json";
 const RECOMMEND_FIXTURE_PATH: &str = "docs/evals/fixtures/recommend-skills-v1.md";
 const SPRIG_FIXTURE_PATH: &str = "docs/evals/fixtures/sprig-cli-v1.md";
 
@@ -875,6 +876,14 @@ fn recommend_skill_is_read_only_role_correct_and_evidence_driven() {
             "tradeoffs",
             "active skill and template share a keyword or purpose",
             "classify both separately",
+            "every catalog row",
+            "state its role explicitly",
+            "every material fact",
+            "missing capability",
+            "active skill or inert template covers the need",
+            "minimal credible fit",
+            "templates require project-specific approval",
+            "cite both `SKILL.md` and `template-state.yaml`",
             "exactly one",
         ],
     );
@@ -883,7 +892,7 @@ fn recommend_skill_is_read_only_role_correct_and_evidence_driven() {
 
 #[test]
 fn recommend_evals_cover_all_six_cases_and_an_unrelated_non_trigger() {
-    let path = repository_root().join("skills/recommend-skills/evals/trigger-evals.json");
+    let path = repository_root().join(RECOMMEND_EVAL_PATH);
     let raw = read(&path);
     let evals: EvalFile = serde_json::from_str(&raw)
         .unwrap_or_else(|error| panic!("failed to parse {}: {error}", path.display()));
@@ -941,6 +950,82 @@ fn recommend_evals_cover_all_six_cases_and_an_unrelated_non_trigger() {
             .chain(&eval.prohibited_outcomes)
             .all(|outcome| !outcome.trim().is_empty()));
     }
+
+    let positive = evals
+        .evals
+        .iter()
+        .filter(|eval| eval.should_trigger)
+        .collect::<Vec<_>>();
+    assert_eq!(positive.len(), 6);
+    assert_eq!(
+        positive
+            .iter()
+            .map(|eval| eval.required_outcomes.len() + eval.prohibited_outcomes.len())
+            .sum::<usize>(),
+        54
+    );
+    for eval in positive {
+        assert_eq!(
+            eval.required_outcomes.len() + eval.prohibited_outcomes.len(),
+            9,
+            "{} should define exactly nine scored assertions",
+            eval.name
+        );
+        let unique = eval
+            .required_outcomes
+            .iter()
+            .chain(&eval.prohibited_outcomes)
+            .collect::<BTreeSet<_>>();
+        assert_eq!(unique.len(), 9, "{} has redundant assertions", eval.name);
+        let rubric = eval
+            .required_outcomes
+            .iter()
+            .chain(&eval.prohibited_outcomes)
+            .cloned()
+            .collect::<Vec<_>>()
+            .join(" ");
+        assert_contains_all(
+            &rubric,
+            &[
+                "project evidence",
+                "read-only",
+                "Recommendation, Action, Project evidence, and Why/why not",
+                "exactly one Next action",
+            ],
+        );
+    }
+
+    let expected_classifications = BTreeMap::from([
+        (
+            "existing MCP workflow only",
+            vec!["use through MCP", "do not adopt"],
+        ),
+        (
+            "locally customized documentation method",
+            vec!["seed and customize"],
+        ),
+        ("keyword overlap without relevance", vec!["do not adopt"]),
+        ("uncovered capability", vec!["missing capability"]),
+        ("blanket adoption without evidence", vec!["do not adopt"]),
+        ("existing installed template instance", vec!["do not adopt"]),
+    ]);
+    for (name, classifications) in expected_classifications {
+        let eval = evals.evals.iter().find(|eval| eval.name == name).unwrap();
+        let rubric = eval.required_outcomes.join(" ");
+        assert_contains_all(&rubric, &classifications);
+    }
+    let uncovered = evals
+        .evals
+        .iter()
+        .find(|eval| eval.name == "uncovered capability")
+        .unwrap()
+        .required_outcomes
+        .join(" ");
+    assert_contains_all(
+        &uncovered,
+        &["no active skill or inert template in the catalog"],
+    );
+    assert!(!uncovered.contains("installed instance in the catalog"));
 
     let unrelated = evals
         .evals
@@ -1003,8 +1088,35 @@ fn recommend_fixture_and_evaluation_ledger_are_reproducible() {
         );
     }
 
-    let actual = format!("{:x}", Sha256::digest(fixture.as_bytes()));
+    let fixture_digest = format!("{:x}", Sha256::digest(fixture.as_bytes()));
+    let eval_digest = format!(
+        "{:x}",
+        Sha256::digest(read(repository_root().join(RECOMMEND_EVAL_PATH)).as_bytes())
+    );
     let journal = design_journal();
+    let protocol = markdown_subsection(&journal, "Recommendation evaluation protocol");
+    assert_contains_all(
+        protocol,
+        &[
+            "baseline responder receives only",
+            "fixture and catalog summary",
+            "no skill or rubric",
+            "separate baseline critic",
+            "forward responder receives only",
+            "skills/recommend-skills/SKILL.md",
+            "`skill_catalog` summaries",
+            "docs/evals/fixtures/recommend-skills-v1.md",
+            "never receives expected outcomes, required outcomes, prohibited outcomes, or the scoring rubric",
+            "separate critic receives the responder output, evaluation rubric, and fixture facts",
+            "six positive cases",
+            "nine boolean assertions",
+            "54",
+            "should_trigger=false",
+            "excluded",
+            "transcripts",
+            "not retained",
+        ],
+    );
     let ledger = markdown_subsection(&journal, "Evaluation ledger");
     let rows = ledger
         .lines()
@@ -1014,7 +1126,8 @@ fn recommend_fixture_and_evaluation_ledger_are_reproducible() {
         rows.len() >= 2,
         "ledger should contain baseline and forward rows"
     );
-    assert!(rows.iter().all(|row| row.contains(&actual)));
+    assert!(rows.iter().all(|row| row.contains(&fixture_digest)));
+    assert!(rows.iter().all(|row| row.contains(&eval_digest)));
     assert!(rows.iter().all(|row| row.contains("2026-07-14")));
     assert!(rows.iter().any(|row| row.contains("0 (RED)")));
     assert!(rows.iter().any(|row| row.contains("critic")));
