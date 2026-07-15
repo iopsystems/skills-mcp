@@ -1,0 +1,109 @@
+digraph skill_feedback_loop {
+  graph [
+    rankdir=TB,
+    bgcolor="transparent",
+    fontname="Helvetica",
+    fontsize=16,
+    label="From local learning to reviewed shared practice",
+    labelloc=t,
+    nodesep=0.42,
+    ranksep=0.72,
+    pad=0.25,
+    compound=true
+  ];
+  node [
+    shape=box,
+    style="rounded,filled",
+    fontname="Helvetica",
+    fontsize=11,
+    color="#355070",
+    fillcolor="#F4F7FB",
+    fontcolor="#172B4D",
+    margin="0.14,0.10"
+  ];
+  edge [color="#52667A", fontname="Helvetica", fontsize=9, fontcolor="#34495E"];
+
+  subgraph cluster_project {
+    label="Project experience";
+    color="#8DB3D3";
+    fillcolor="#F3F8FC";
+    style="rounded,filled";
+
+    experience [label="1  Capture a\nrepeatable lesson", fillcolor="#E7F2FB"];
+    candidate [label="Local skill or\ntemplate candidate"];
+    { rank=same; experience; candidate; }
+    experience -> candidate;
+
+    subgraph cluster_validation {
+      label="Local validation";
+      color="#8FC0A9";
+      fillcolor="#F0F8F4";
+      style="rounded,filled";
+
+      frozen [label="2a  Freeze tasks\nand outcomes", fillcolor="#E2F2E9"];
+      checks [label="2b  Run deterministic\nchecks", fillcolor="#E2F2E9"];
+      evaluation [label="2c  Blind simulation\n+ separate critic", fillcolor="#E2F2E9"];
+      { rank=same; frozen; checks; evaluation; }
+      frozen -> checks -> evaluation;
+    }
+
+    candidate -> frozen;
+  }
+
+  human_gate [
+    label="3  Human review gate\nfor perceptual surfaces",
+    shape=diamond,
+    style="filled",
+    color="#B35C44",
+    fillcolor="#FCE8E3",
+    fontcolor="#6B2F20"
+  ];
+  evaluation -> human_gate;
+  human_gate -> candidate [label=" revise", color="#B35C44", constraint=false];
+
+  subgraph cluster_shared {
+    label="Shared repository";
+    color="#B39DDB";
+    fillcolor="#F7F3FB";
+    style="rounded,filled";
+
+    shared [label="4  Reviewed active skill\nor inert template", fillcolor="#EEE6F7"];
+    catalog [label="Read-only catalog\nand retrieval"];
+    { rank=same; shared; catalog; }
+    shared -> catalog;
+  }
+  human_gate -> shared [label=" approved"];
+
+  subgraph cluster_reuse {
+    label="Project reuse";
+    color="#E0B36A";
+    fillcolor="#FFF8ED";
+    style="rounded,filled";
+
+    use [label="5a  Use active skill\nthrough MCP", fillcolor="#FFF0D4"];
+    seed [label="5b  Seed and customize\nwith approval", fillcolor="#FFF0D4"];
+    { rank=same; use; seed; }
+  }
+  catalog -> use;
+  catalog -> seed;
+
+  subgraph cluster_observation {
+    label="Observed customization";
+    color="#D18B9B";
+    fillcolor="#FCF2F5";
+    style="rounded,filled";
+
+    observe [label="6  Compare declared\nlocal customizations", fillcolor="#F8E2E8"];
+    improvement [label="7  Propose a reviewed\nbase improvement", fillcolor="#F8E2E8"];
+    { rank=same; observe; improvement; }
+    observe -> improvement;
+  }
+  seed -> observe;
+  use -> observe [style=dashed, label=" lessons"];
+  improvement -> frozen [
+    label=" validate again",
+    lhead=cluster_validation,
+    color="#8A4F62",
+    constraint=false
+  ];
+}

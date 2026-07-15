@@ -2,7 +2,7 @@
 name = "iop-skills"
 version = "0.1.0"
 edition = "2021"
-description = "Single-binary MCP server that serves an embedded bundle of Claude skills over stdio."
+description = "Single-binary MCP server for embedded agent skills and workflows over stdio."
 license = "MIT OR Apache-2.0"
 
 [[bin]]

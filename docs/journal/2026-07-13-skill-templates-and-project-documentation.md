@@ -618,6 +618,150 @@ DOT-authored feedback-loop diagram from development experience through validatio
 organizational reuse, observed customization, and base improvement. Build, raw MCP,
 and maintainer reference material remains available later in the document.
 
+#### Frozen README comprehension tasks and expected outcomes
+
+The following tasks and expected outcomes were frozen on 2026-07-15 before the
+README rewrite. They remain fixed through deterministic checks, blind
+simulations, critic review, revision, and the final human gate.
+
+1. **Why care?** The reader should identify this repository as a way to reuse
+   proven engineering workflows across projects: use active skills immediately,
+   seed inert templates when a project-specific workflow is needed, and feed
+   reviewed local lessons back into shared bases.
+2. **Install from source.** The reader should identify Git, a current Rust
+   toolchain with Cargo, and an MCP-capable coding agent as prerequisites; use
+   exactly `cargo install --git https://github.com/iopsystems/skills-mcp --locked`
+   on Apple Silicon macOS or Linux; and understand that this is a networked
+   source build because no prebuilt package exists.
+3. **Ask for recommendations.** The reader should reproduce exactly: “which
+   skills here should I install and use for my project XYZ? Give me some
+   recommendations”.
+4. **Choose use versus seed.** The reader should explain that an active skill is
+   an invocable instruction exposed by the running MCP server, an inert template
+   is catalog content that is never directly invocable, and an installed
+   instance is a selectively seeded, locally customized, provenance-tracked copy
+   under a harness discovery path.
+5. **Contribute experience.** The reader should locate `skills/<name>/SKILL.md`
+   for an active skill, `templates/<id>/` plus `templates/catalog.yaml` for an
+   inert base, the engineering journal for durable evidence, and the relevant
+   contract/evaluation and full validation commands; they should preserve the
+   active/inert boundary and obtain human review for perceptual changes.
+6. **Find deeper interfaces and limits.** The reader should locate raw MCP and
+   architecture/layout reference later in the README, validation commands in the
+   contribution and maintainer sections, and current source-only packaging limits
+   plus future distribution work in `docs/assumptions-and-limitations.md` and
+   `docs/roadmap.md`.
+7. **Trace the feedback loop.** The reader should describe this sequence from the
+   diagram and its exact textual equivalent: project experience produces a local
+   candidate; frozen tasks, deterministic checks, and blind/critic evaluation
+   validate it; a human reviews perceptual surfaces; an approved active skill or
+   inert template enters the shared repository; projects use or seed it; observed
+   customizations provide evidence; and a reviewed base improvement re-enters
+   validation rather than updating the base automatically.
+
+#### README implementation and pre-human-gate evidence
+
+Task 8 followed the installed project-specific `document-feature` workflow. The
+repository documentation contract was written first. Its initial run had seven
+expected failures against the old README and absent diagram/script; the existing
+local-link check passed. Implementation then added the human-first README,
+authoritative `docs/skill-feedback-loop.dot`, adjacent rendered SVG,
+`scripts/render-diagrams.sh`, repository documentation tests, CI Graphviz setup,
+and the portable Cargo description.
+
+The final pre-review DOT SHA-256 is
+`a30f2b49c242dbf1c7c875938e1124efbdee2793edba43b89644004efc7cff18`.
+The SVG embeds that source marker. The render script was exercised in both render
+and `--check` modes; check mode rerendered to temporary files and compared the
+committed bytes without replacing them.
+
+Deterministic verification on 2026-07-15 passed with these exact commands:
+
+- `./scripts/render-diagrams.sh` and
+  `./scripts/render-diagrams.sh --check`;
+- `dot -Tsvg docs/skill-feedback-loop.dot -o /tmp/skill-feedback-loop.svg`;
+- `cargo fmt --all -- --check`;
+- `cargo clippy --all-targets --locked -- -D warnings`;
+- `cargo test --test repository_documentation --locked` — 8/8 passed;
+- `cargo test --locked` — 125/125 passed;
+- `cargo build --release --locked`;
+- `./scripts/mcp-smoke.sh` — passed with three retrieved template files and
+  aggregate SHA-256
+  `cb18b1580d31580c63fa14d34c8a2438ebe55e4a67726e73c80be2a5369e423e`;
+  and
+- `git diff --check`.
+
+One formal blind-comprehension round used four fresh isolated readers that
+received only the README, one each for the human-user, agent-user, human-developer,
+and coding-agent perspectives. Across the assigned prompts, they recovered all
+seven frozen outcomes: motivation, source installation and recovery, the exact
+recommendation question, the three adoption roles, contribution paths and gates,
+deeper reference locations, and the full feedback loop. They also identified
+optional deeper-maintainer details not required by the frozen tasks, including a
+minimum Rust version, tested Linux matrix, client-specific setup, exact schemas,
+digest-update tooling, evaluation harness details, and contribution ownership.
+
+A fresh separate critic received the README, frozen outcomes, and the four blind
+answers. It returned `PASS`: no frozen-outcome failure warranted a README revision.
+Therefore the formal revision count is zero and no second agent round was run.
+The transcripts are intentionally not retained; this is nondeterministic
+comprehension evidence, not proof of human usability.
+
+The repository owner reviewed the complete README diff and rendered SVG on
+2026-07-15 and responded `looks good`. That approval closes the information
+hierarchy, first-use path, diagram clarity and prominence, numbered textual
+equivalent, internal-user motivation and contribution narrative, and
+human-versus-agent balance gates for exactly these revisions:
+
+- README SHA-256
+  `ee6b0c7179d287e97e320921ed5bcc5fc760738695d244d85bb61678075b0617`;
+- DOT SHA-256
+  `a30f2b49c242dbf1c7c875938e1124efbdee2793edba43b89644004efc7cff18`;
+  and
+- SVG SHA-256
+  `652ce76c36d5678834d7b038a045b673672e98eb7d08646513e6aac067bf33f6`.
+
+This records human approval of the reviewed perceptual result; it does not turn
+agent evaluation into human evidence or claim that every future reader will find
+the documentation usable. Any later change to the README, DOT, or SVG invalidates
+this approval and requires affected deterministic checks and human re-review.
+
+The final quality review then found that the raw-debug section built
+`target/debug/iop-skills` but invoked `target/release/iop-skills`. A new focused
+contract failed on that mismatch before the README was corrected to invoke the
+debug binary. Because the README changed after approval, the README approval above
+is invalidated and human re-review of the new final README revision is pending.
+The DOT and SVG bytes did not change, so their recorded approvals and hashes remain
+current.
+
+The same review found that byte-for-byte SVG comparison coupled CI to the local
+Graphviz version and that temporary SVG mode `0600` survived the atomic rename.
+The script contract failed first, then `--check` was made renderer-independent: it
+requires successful DOT rendering and an exact committed source-digest marker but
+does not compare Graphviz-specific SVG serialization. Render mode now applies
+mode `0644` before its atomic rename, and the current SVG permissions were
+normalized without changing its bytes. These script-only fixes do not alter the
+human-gated visual.
+
+The first re-review then caught one residual wording mismatch: the corrected
+debug-path example still called itself a release-binary example. A focused
+contract failed before that phrase was changed to `debug binary`. The final
+quality re-review returned `PASS`. The new README candidate SHA-256 is
+`18489aebead92b0fe6604bf7d69ef0d25619b0008360b2828ffae7b05ec81ebd`;
+human re-review of that exact README revision remains pending. The DOT and SVG
+hashes remain unchanged from the approved revisions above.
+
+The repository owner explicitly approved the revised README on 2026-07-15. The
+final README gate therefore applies to SHA-256
+`18489aebead92b0fe6604bf7d69ef0d25619b0008360b2828ffae7b05ec81ebd`.
+The prior visual approval remains valid because neither gated visual changed:
+the DOT remains
+`a30f2b49c242dbf1c7c875938e1124efbdee2793edba43b89644004efc7cff18`
+and the SVG remains
+`652ce76c36d5678834d7b038a045b673672e98eb7d08646513e6aac067bf33f6`.
+These are the final human-reviewed Task 8 revisions. Any later change to one of
+them requires affected verification and human re-review.
+
 ### Distribution direction
 
 The current supported installation is a source build. The first packaging target
