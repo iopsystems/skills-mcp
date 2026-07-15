@@ -67,12 +67,19 @@ obtain new approval before mutation.
    approval of bytes that will be written. Check every destination component with no-follow metadata. Surface
    existing files, directories, symlinks, external targets, and portability limits. Obtain explicit write-plan
    approval.
-7. Only after that approval, create the new directory, declared files, reviewed customizations, and
-   `template-state.yaml`. Do not overwrite any existing file, directory, or symlink. On any destination conflict,
-   stop and show a merge or alternate-destination plan for new approval. Preserve local-only files.
+7. Only after that approval, execute the approved operations one operation at a time. Immediately before each
+   directory or file mutation, re-check every destination component with no-follow metadata and require its type,
+   identity, and absent-or-present status to match the approved plan and the preceding operation. Use exclusive
+   creation: create each new directory as one component with an operation that fails if it exists, and create every
+   declared file and `template-state.yaml` with create-new or `O_EXCL` equivalent semantics. Never truncate or replace
+   an existing object. Do not overwrite any existing file, directory, or symlink. If a check fails, creation reports a
+   conflict, or path identity changes, fail closed, report every path already created, and show a revised plan for new
+   approval. Preserve local-only files.
 8. Create cross-harness links only when included in the approved plan and allowed by Harness Layout Rules. Use
-   relative links. Re-check the parent and destination immediately before creation, then verify resolution and
-   discovery without traversing outside the root.
+   relative links. Immediately before each link mutation, re-check every destination component with no-follow
+   metadata and require the parent identities and absent link path to match the approved plan. Link creation must fail
+   if the link path exists; never unlink or replace an object to make room. Then verify the stored relative link text,
+   resolution, and discovery without traversing outside the root.
 9. Run the approved structural validation and behavioral validation. Read back `template-state.yaml`, revalidate its
    exact schema, verify the recorded base hashes against the retrieved clean base, and recompute installed file hashes
    against the approved final contents. Verify skill discovery, link resolution, project-specific commands, and
@@ -145,12 +152,18 @@ default. Never invent a date, UUID, hash, source fact, customization, validation
    the upgrade result.
 7. Never overwrite unresolved conflicts. Never infer customization intent. Stop for user direction when a semantic or
    textual conflict remains, then prepare a revised plan for approval.
-8. Apply only the approved paths and bytes. Re-check destinations immediately before writing. Validate the merged
-   behavior first. Only after successful validation, write the exact approved state update containing template
-   version, source, base hashes and file records, `last_upgraded_at`, and customization declarations. Keep
-   `instance_id` and `installed_at` unchanged. Read back `template-state.yaml`, revalidate the final state schema,
-   verify the recorded new-base hashes, and recompute installed file hashes against the approved merged contents.
-   Report any final read-back failure without claiming completion.
+8. Apply only the approved paths and bytes, one operation at a time. Immediately before each directory, file,
+   state-file, or link mutation, re-check every destination component with no-follow metadata and require its type,
+   identity, and digest or link text to match the reviewed plan. Fail closed if any path identity changes. Create every
+   new object exclusively. For a reviewed replacement, create the staged sibling with create-new or `O_EXCL`
+   equivalent semantics, validate its exact bytes, and atomically replace the destination only if the immediate
+   no-follow re-check still matches the reviewed object; never truncate in place. Validate the merged behavior first.
+   Only after successful validation, apply the exact approved state update using the same staged, exclusive, checked
+   replacement protocol. The state must contain template version, source, base hashes and file records,
+   `last_upgraded_at`, and customization declarations. Keep `instance_id` and `installed_at` unchanged. Read back
+   `template-state.yaml`, revalidate the final state schema, verify the recorded new-base hashes, and recompute
+   installed file hashes against the approved merged contents. Report any final read-back failure without claiming
+   completion; any changed path requires a revised plan and new approval.
 
 ## Stop Conditions
 
