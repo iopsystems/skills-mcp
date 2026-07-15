@@ -37,5 +37,8 @@ jobs:
       - name: cargo test
         run: cargo test --locked
 
+      - name: MCP smoke test
+        run: ./scripts/mcp-smoke.sh
+
       - name: cargo build --release
         run: cargo build --release --locked

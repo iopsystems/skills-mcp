@@ -215,6 +215,33 @@ fn is_portable_description(description: &str) -> bool {
 }
 
 #[test]
+fn mcp_smoke_exercises_the_public_skill_and_template_boundary() {
+    let script = read(repository_root().join("scripts/mcp-smoke.sh"));
+
+    assert_contains_all(
+        &script,
+        &[
+            "set -euo pipefail",
+            "mktemp",
+            "trap cleanup exit",
+            "notifications/initialized",
+            "tools/list",
+            "skill_catalog",
+            "skill_template_get",
+            "recommend-skills",
+            "seed-skill-template",
+            "document-feature-skill",
+            "engineering-journal-skill",
+            "SKILL.md",
+            "aggregate_sha256",
+            "manifest_records",
+            "returned_records",
+            "server did not exit after stdin closed",
+        ],
+    );
+}
+
+#[test]
 fn catalog_contains_exactly_the_approved_inert_templates() {
     let catalog = catalog();
     assert_eq!(catalog.schema_version, 1);
