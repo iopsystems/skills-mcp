@@ -1,0 +1,26 @@
+{
+  "active_skills": [
+    {
+      "name": "engineering-journal",
+      "purpose": "Maintain durable repository-local records for non-trivial engineering or research efforts."
+    },
+    {
+      "name": "catchup",
+      "purpose": "Summarize recent repository development activity."
+    },
+    {
+      "name": "vault-search",
+      "purpose": "Query an existing knowledge-iop vault before drafting vault artifacts."
+    }
+  ],
+  "templates": [
+    {
+      "template_id": "document-feature-skill",
+      "purpose": "Adapt source-backed feature documentation to project audiences and documentation surfaces."
+    },
+    {
+      "template_id": "engineering-journal-skill",
+      "purpose": "Adapt a durable engineering journal workflow to project-specific conventions."
+    }
+  ]
+}

@@ -1027,6 +1027,7 @@ mod tests {
         assert!(!names.contains(&"engineering-journal-skill"));
         assert!(!names.contains(&"document-feature-skill"));
         assert!(names.contains(&"engineering-journal"));
+        assert!(names.contains(&"recommend-skills"));
         assert!(names.contains(&"catchup"));
         assert!(names.contains(&"vault_search"));
         assert!(names.contains(&"vault_reflect"));
