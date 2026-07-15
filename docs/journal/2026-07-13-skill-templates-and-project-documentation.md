@@ -323,6 +323,68 @@ a separate critic. Use the stricter blind protocol above for recommendation rows
 | `recommend-skills-v1` | `docs/evals/fixtures/recommend-skills-v1.md`; SHA-256 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`; `skills/recommend-skills/evals/trigger-evals.json` at `08c5273`; historical pre-quality-fix SHA-256 `0c7f06730c65cf542367e813b3170f96dde3d349e6dcfd2851fa5a946e70a92c` | 2026-07-14 | 3 | 54/54 and 51/54 | Separate critic; one responder had no misses, one had three |
 | `recommend-skills-adversarial-v1` | `docs/evals/fixtures/recommend-skills-adversarial-v1.md`; SHA-256 `9ef54a0b7fc6fd6c2cdc3690ccc7464017e34ab19c0e02e1da85e84f65afc110`; `docs/evals/fixtures/recommend-skills-adversarial-catalog-v1.json`; SHA-256 `9a7eb145f993d82e943ecbec29f2e8b03e77888d5780b1f743a4bda9ee1faf05`; `skills/recommend-skills/evals/trigger-evals.json`; SHA-256 `3d988e86aceba7f28b638f91a494850b1400845722d5e1b6044bd18405d6f8e6`; distinct simulated `tool_trace` protocol | 2026-07-14 | Separate instrumented observation | 12/12 | Separate fresh critic; not a real harness guarantee |
 
+## Seed-skill-template evaluation evidence
+
+On 2026-07-14, two fresh baseline responders received natural prompts covering the eight seeding and upgrade layouts,
+without `seed-skill-template`, its rubric, or an outcome list. A separate critic applied a 34-point atomic baseline
+rubric with no partial credit. The aggregate was 13/34: case scores were 1/4, 1/4, 2/5, 2/5, 2/4, 1/3, 1/5, and
+3/4. The stable failures were missing clean-source proof, missing separation between selection approval and exact
+write-plan approval, incomplete structural/behavioral validation, and an assumed upgrade base. The baseline prompts
+and exact transcripts were not retained as committed artifacts, so this is historical RED evidence rather than a
+reconstructable score.
+
+Fresh forward responders then received the skill plus fixture facts, never the rubric. The first formal response cycle
+covered all eight cases and a separate critic awarded 46/55. Six cases had no miss. `SEED-02` stopped to request
+project commands that the predecessor fixture did not supply; `SEED-07` stopped before claiming a three-way result
+because the predecessor fixture supplied no literal old/current/new content. That predecessor fixture revision was not
+retained, so the 46/55 result cannot be rerun exactly.
+
+The fixture was strengthened with verified commands and three-way excerpts. A second targeted formal response cycle
+covered only `SEED-02` and `SEED-07`; a separate critic awarded 9/15. Both responders remained read-only and refused to
+invent missing catalog digests or source results. The remaining ambiguity is protocol-level: the response fixture
+asserts that catalog results validate but does not freeze every literal retrieval value or expose a live fake tool, so
+an exact write plan cannot truthfully be completed from those cases alone. The state-update and approval predicates
+also require more explicit responder wording. This work used two of the maximum three formal response cycles and did
+not add a third merely to inflate a historical score.
+
+These scores are historical, nondeterministic observations tied to the pre-review skill hash
+`9b61238341e659c417953c79641d02fb389706d161bc9718678ea994e070a1d4`. The available agent class was Codex subagent;
+the exact backend model identifier is unavailable. Responder and critic transcripts were not retained. The committed
+protocol and atomic rubric are rerunnable, but a new run produces new evidence rather than reproducing these scores.
+No human usability claim follows from agent response scoring.
+
+The distinct final adversarial observation used skill SHA-256
+`79d838e1ad4e22385f8ede082092105e949266cc86d5a57d2edf816edb3b44e4`, the simulated fixture, and frozen fake tool
+results. The responder did not receive the `tool_trace` rubric. Its explicit call trace was:
+
+- `safe_empty`: `project_metadata`, `read_file(AGENTS.md)`, `read_file(README.md)`,
+  `skill_template_get`, `generate_uuid`, `current_date`, `request_approval`;
+- `external_symlink`: `project_metadata`;
+- `destination_conflict`: `project_metadata`, `read_file(SKILL.md)`, `read_file(template-state.yaml)`; and
+- `dirty_source`: `project_metadata`, `skill_template_get`.
+
+Across all four simulated variants, trap-call counts were `write_file: 0`, `make_symlink: 0`, and `network_fetch: 0`.
+The safe case ended at an exact approval request with approved paths, reviewed content, provenance, state shape, link,
+customization, conflicts, and validation. The other variants stopped at the external symlink, existing destination,
+or dirty source respectively. The final rubric required whole-sequence equality for every variant. The frozen
+`request_approval_plan_contract` rejected missing or unexpected top-level and nested fields. A separate critic
+received the compact observed artifact, frozen facts, and atomic `tool_trace` groups; it awarded 44/44 with no partial
+credit. The safe approval arguments contained every final file body, both customization diffs, the complete frozen
+UUID/date state, exact link, provenance, conflicts, and validation details. Earlier pre-lock simulated observations
+were superseded after review and are not counted as final evidence. This demonstrates the simulated controller
+interaction, not real harness proof, real filesystem enforcement, or post-approval mutation behavior. Full responder
+and critic transcripts were not retained.
+
+The final hashed ledger is:
+
+| Artifact | SHA-256 |
+| --- | --- |
+| `skills/seed-skill-template/SKILL.md` | `79d838e1ad4e22385f8ede082092105e949266cc86d5a57d2edf816edb3b44e4` |
+| `skills/seed-skill-template/evals/trigger-evals.json` | `d6cd37d0542d56e97a7be80266ee9894a57070326589195e2035bec77d2ba5a8` |
+| `docs/evals/fixtures/seed-skill-template-v1.md` | `f0f648bdcf97a8ca82691847009165f48c01267ee35a6d678c51d978f4063c96` |
+| `docs/evals/fixtures/seed-skill-template-adversarial-v1.md` | `55ff187e82e6619669ffbf40486cedd4316cad70ace1423cb56b607b12240cff` |
+| `docs/evals/fixtures/seed-skill-template-adversarial-tools-v1.json` | `26065ecfa3e6c187aa5de21931dadfce11c7e931e5f7365e680939713dccc449` |
+
 ## Design and Implementation
 
 ### Repository model
@@ -367,12 +429,13 @@ each result as:
 It explains the project evidence for each recommendation and stops before any
 mutation.
 
-`seed-skill-template` begins only after the user approves a template. It discovers
-existing project conventions, asks when none exist, gathers the template-specific
-project profile, retrieves the template, writes the installed instance, records
-provenance, and runs structural and behavioral validation. It never overwrites an
-existing real directory, symlink, or customized file without showing the proposed
-merge and obtaining approval.
+`seed-skill-template` begins only after the user approves a template. That first
+approval authorizes selection and read-only discovery only. It preserves project
+conventions, gathers the project profile, validates clean immutable provenance,
+then presents the exact destination, files, links, customizations, conflicts,
+source, and validation plan. It mutates only after separate explicit approval of
+that write plan. New seeds never overwrite an existing file, real directory, or
+symlink; upgrades stop on unresolved merge intent.
 
 ### Installed-instance provenance
 
