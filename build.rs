@@ -21,6 +21,8 @@ fn main() {
         git_output(
             &manifest_dir,
             &[
+                // Dirty provenance is intentionally scoped to the bytes embedded
+                // in the template bundle, not unrelated skills or Rust sources.
                 "status",
                 "--porcelain",
                 "--untracked-files=all",

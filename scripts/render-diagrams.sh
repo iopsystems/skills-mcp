@@ -38,6 +38,8 @@ cleanup() {
 trap cleanup EXIT HUP INT TERM
 
 DIGEST=$(sha256_file "$DOT_SOURCE")
+# Check mode renders too: the temporary output is disposable, but a successful
+# render proves the authoritative DOT still parses with Graphviz.
 dot -Tsvg "$DOT_SOURCE" -o "$TMP_SVG"
 awk -v marker="<!-- source-sha256: $DIGEST -->" '
   { print }

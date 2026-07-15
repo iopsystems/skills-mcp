@@ -83,6 +83,16 @@ fn validate_skill_names(skills: &[LoadedSkill]) -> Result<()> {
             );
         }
     }
+    let templates = templates::TemplateRegistry::from_dir(&TEMPLATES)
+        .context("failed to validate template IDs against exposed tool names")?;
+    for template in templates.summaries() {
+        if !names.insert(template.id.clone()) {
+            bail!(
+                "template ID {:?} collides with another catalog or exposed tool name",
+                template.id
+            );
+        }
+    }
     Ok(())
 }
 
@@ -803,6 +813,13 @@ mod tests {
             body: "collision".to_owned(),
         }];
         assert!(validate_skill_names(&collision).is_err());
+
+        let template_collision = vec![LoadedSkill {
+            name: "document-feature-skill".to_owned(),
+            description: "collision".to_owned(),
+            body: "collision".to_owned(),
+        }];
+        assert!(validate_skill_names(&template_collision).is_err());
     }
 
     #[test]
