@@ -1,7 +1,7 @@
 ---
-status: open
+status: shipped
 opened: 2026-07-13
-updated: 2026-07-14
+updated: 2026-07-15
 ---
 
 # Skill templates and project documentation
@@ -806,8 +806,127 @@ Verification includes:
 
 ## Outcome
 
-Open. Design decisions are approved in discussion; implementation and verification
-have not started.
+Shipped on 2026-07-15. The repository now separates invocable active skills,
+inert reusable templates, and provenance-tracked installed instances. It exposes
+validated read-only catalog and retrieval tools, supplies read-only recommendation
+and approval-gated seeding workflows, ships the two initial templates, dogfoods a
+customized feature-documentation instance, and uses that instance for the
+human-approved README and DOT/SVG feedback-loop documentation.
+
+### Shipped implementation
+
+- Template parsing, path and digest validation, build provenance, and embedded
+  retrieval live in `build.rs`, `src/templates.rs`, `src/main.rs`,
+  `templates/catalog.yaml`, and each `templates/*/template.yaml`.
+- The two active workflows are `skills/recommend-skills/SKILL.md` and
+  `skills/seed-skill-template/SKILL.md`, with their trigger evaluations and
+  frozen fixtures under `skills/*/evals/` and `docs/evals/fixtures/`.
+- The inert bases are `templates/engineering-journal-skill/` and
+  `templates/document-feature-skill/`. They are catalog content, not active MCP
+  skill tools.
+- The dogfood instance is `.agents/skills/document-feature/`. Its
+  `template-state.yaml` records source commit
+  `ade485632adf335661fdede554e9de548fed1648`, template version `0.1.0`, base
+  aggregate SHA-256
+  `cb18b1580d31580c63fa14d34c8a2438ebe55e4a67726e73c80be2a5369e423e`,
+  per-file digests, merge strategies, and the declared audience-charter
+  customization. `.claude/skills` remains a real directory with the relative
+  per-skill link `document-feature -> ../../.agents/skills/document-feature`.
+- The human-facing dogfood result is `README.md`, with authoritative
+  `docs/skill-feedback-loop.dot`, rendered `docs/skill-feedback-loop.svg`, and
+  `scripts/render-diagrams.sh` enforcing parseability and source-marker
+  freshness.
+
+### Commit evidence
+
+The implementation is preserved as reviewable milestones on
+`codex/skill-template-system`:
+
+| Milestone | Commits |
+| --- | --- |
+| Executable plan, later absorbed into this journal | `116db96` |
+| Registry and clean build provenance | `12c3449`, `f1c5bab` |
+| Initial templates and hardened contracts | `261056d`, `d0b1b0e`, `eed8e7e` |
+| Read-only MCP template tools and routing contracts | `2ceb2fc`, `512ac97`, `7adbf10`, `b1a0108` |
+| Recommendation workflow and evaluation hardening | `ac26ba8`, `08c5273`, `84e1b82`, `62e2910` |
+| Seeder workflow, filesystem evidence, and postapproval hardening | `d8c7e33`, `8cc393e`, `54aa5b8` |
+| Embedded-surface smoke and contract coverage | `ade4856` |
+| Provenance-tracked dogfood installation | `79a4543` |
+| Human-approved README and visual | `a668049` |
+
+The closure itself is committed as `Close skill template system journal` after
+the verification below. A pull request is intentionally not recorded here
+because publication follows this closure commit; the eventual PR and immutable
+closure hash remain discoverable from Git history rather than being guessed in
+advance.
+
+### Final verification
+
+The full clean-tree matrix was rerun on 2026-07-15 after closure reconciliation:
+
+- `./scripts/render-diagrams.sh --check` — passed;
+- `cargo fmt --all -- --check` — passed;
+- `cargo clippy --all-targets --locked -- -D warnings` — passed;
+- `cargo test --locked` — 128/128 passed;
+- `cargo build --release --locked` — passed;
+- `./scripts/mcp-smoke.sh` — passed, including catalog listing and retrieval of
+  all three declared files for `document-feature-skill`; and
+- `git diff --check` — passed.
+
+These deterministic results cover schema, path, digest, tool, skill, installed
+instance, README, link, and diagram contracts. The matrix does not convert the
+nondeterministic agent observations or human review into deterministic proof.
+
+### Behavioral evaluation summary
+
+The detailed baseline, forward, critic, filesystem, and postapproval observations
+remain in the evidence sections above and in the hashed fixtures. In summary:
+
+- both templates closed all frozen forward expectations and received separate
+  critics with no concrete miss; their baseline exposed lifecycle, DOT/SVG,
+  critic, and revision-cap gaps;
+- the recommendation baseline scored 36/54 and 39/54, while the capped historical
+  final cycle scored 54/54 and 51/54; a distinct simulated adversarial tool trace
+  scored 12/12;
+- the seeder baseline scored 13/34; its final simulated approval-boundary trace
+  scored 44/44, its disposable-tree preapproval observation scored 8/8, and its
+  direct postapproval runner exercised successful new/upgrade writes, semantic
+  sanitization, delayed reapproval, and two rejected races; and
+- four blind README readers recovered all seven frozen comprehension outcomes,
+  and the separate critic returned `PASS` without an agent-driven revision.
+
+The retained scores are historical observations under the exact hashes and
+limitations already recorded above. They are not claims about every model,
+harness, project, or human reader.
+
+### Human review
+
+The repository owner reviewed the rendered workflow visual and complete README
+diff, then explicitly approved the revised README on 2026-07-15 after the final
+debug-binary wording correction. The approved hashes are recorded in the README
+dogfood evidence above. No gated README, DOT, or SVG bytes changed during this
+closure, so that approval remains current.
+
+### Unresolved limitations and reopen conditions
+
+- Reopen cross-harness validation when a functioning Codex project-skill launcher
+  is available or authenticated Claude Code can test discovery. The attempted
+  Codex launch failed for a missing platform binary; Claude Code 2.1.202 bare mode
+  did not discover either the directory-link or per-skill-link layout, and normal
+  mode required login. The repository therefore records the compatibility layout,
+  not a discovery guarantee.
+- Reopen seeder mutation design if real deployments cannot provide a guard shared
+  by all mutation participants or compare-and-swap replacement. The direct runner
+  demonstrates disposable-fixture behavior, not a kernel-level race proof.
+- Reopen distribution work when Apple Silicon macOS release artifacts and a Linux
+  architecture target are selected. No prebuilt binary, Homebrew package, or
+  plugin-marketplace bundle ships in this stage.
+- Reopen template evolution only through an explicitly authorized repository set
+  and reviewed survey. No telemetry, automatic cross-project scan, or automatic
+  promotion of local customization was added.
+- Reopen catalog scope when adoption evidence shows that two embedded templates
+  need search, version selection, or a remote registry. The current APIs remain
+  intentionally read-only and small.
 
 ## Derived Documents
 

@@ -207,6 +207,67 @@ fn cargo_description_is_agent_portable() {
     assert!(!cargo.contains("bundle of Claude skills"));
 }
 
+#[test]
+fn shipped_template_system_journal_has_closure_evidence() {
+    let journal = read("docs/journal/2026-07-13-skill-templates-and-project-documentation.md");
+
+    assert!(journal.starts_with("---\nstatus: shipped\n"));
+    for evidence in [
+        "### Shipped implementation",
+        "### Commit evidence",
+        "### Final verification",
+        "### Behavioral evaluation summary",
+        "### Human review",
+        "### Unresolved limitations and reopen conditions",
+        "src/templates.rs",
+        "src/main.rs",
+        "skills/recommend-skills/SKILL.md",
+        "skills/seed-skill-template/SKILL.md",
+        "templates/engineering-journal-skill/",
+        "templates/document-feature-skill/",
+        ".agents/skills/document-feature/",
+        "docs/skill-feedback-loop.dot",
+        "docs/skill-feedback-loop.svg",
+        "./scripts/render-diagrams.sh --check",
+        "cargo clippy --all-targets --locked -- -D warnings",
+        "cargo test --locked",
+        "cargo build --release --locked",
+        "./scripts/mcp-smoke.sh",
+        "128/128 passed",
+        "explicitly approved the revised README",
+    ] {
+        assert!(journal.contains(evidence), "journal missing {evidence:?}");
+    }
+
+    let index = read("docs/journal/README.md");
+    assert!(index.contains(
+        "[Skill templates and project documentation](2026-07-13-skill-templates-and-project-documentation.md) | shipped"
+    ));
+}
+
+#[test]
+fn initial_template_system_backlog_is_reconciled_and_temporary_plan_is_gone() {
+    let backlog = read("docs/backlog.md");
+    let now = backlog
+        .split_once("## Now: Initial template system")
+        .expect("initial template-system backlog")
+        .1
+        .split_once("## Next: Distribution")
+        .expect("distribution backlog follows initial work")
+        .0;
+    assert!(
+        !now.contains("- [ ]"),
+        "completed initial template-system items must be checked"
+    );
+    assert!(now.contains("- [x]"));
+    assert!(
+        !root()
+            .join("docs/superpowers/plans/2026-07-13-skill-template-system.md")
+            .exists(),
+        "temporary implementation plan should be removed after journal closure"
+    );
+}
+
 fn markdown_targets(markdown: &str) -> Vec<String> {
     let bytes = markdown.as_bytes();
     let mut targets = Vec::new();

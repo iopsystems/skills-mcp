@@ -6,33 +6,33 @@ boundaries.
 
 ## Now: Initial template system
 
-- [ ] Add failing Rust contract tests for template manifest loading, catalog
+- [x] Add failing Rust contract tests for template manifest loading, catalog
   combination, digest validation, duplicate IDs, and path-boundary enforcement.
-- [ ] Add failing MCP contract tests for `skill_catalog` and
+- [x] Add failing MCP contract tests for `skill_catalog` and
   `skill_template_get`.
-- [ ] Define `templates/catalog.yaml` and a versioned `template.yaml` schema.
-- [ ] Create and validate the engineering-journal skill template.
-- [ ] Establish baseline scenarios, then create and validate the
+- [x] Define `templates/catalog.yaml` and a versioned `template.yaml` schema.
+- [x] Create and validate the engineering-journal skill template.
+- [x] Establish baseline scenarios, then create and validate the
   feature-documentation skill template.
-- [ ] Establish baseline scenarios, then create and validate `recommend-skills`.
-- [ ] Establish baseline scenarios, then create and validate
+- [x] Establish baseline scenarios, then create and validate `recommend-skills`.
+- [x] Establish baseline scenarios, then create and validate
   `seed-skill-template`.
-- [ ] Implement the two read-only template tools and keep mutation in the seeder
+- [x] Implement the two read-only template tools and keep mutation in the seeder
   workflow.
-- [ ] Install a provenance-tracked feature-documentation instance under
+- [x] Install a provenance-tracked feature-documentation instance under
   `.agents/skills` in this repository.
-- [ ] Test a relative `.claude/skills` directory symlink with current Codex and
+- [x] Test a relative `.claude/skills` directory symlink with current Codex and
   Claude Code; fall back to per-skill links if directory discovery or reload fails.
-- [ ] Use the installed instance to redesign the repository README.
-- [ ] Author the README workflow diagram in DOT, commit its SVG, and provide a
+- [x] Use the installed instance to redesign the repository README.
+- [x] Author the README workflow diagram in DOT, commit its SVG, and provide a
   textual counterpart.
-- [ ] Run deterministic README, diagram, CLI, and link checks.
-- [ ] Run isolated user and developer comprehension tests and structured critics.
-- [ ] Obtain human approval for the README structure, narrative, and rendered
+- [x] Run deterministic README, diagram, CLI, and link checks.
+- [x] Run isolated user and developer comprehension tests and structured critics.
+- [x] Obtain human approval for the README structure, narrative, and rendered
   diagram.
-- [ ] Run formatting, linting, unit tests, release build, and MCP list/call smoke
+- [x] Run formatting, linting, unit tests, release build, and MCP list/call smoke
   tests.
-- [ ] Close the engineering journal entry with implementation and verification
+- [x] Close the engineering journal entry with implementation and verification
   evidence and reconcile this backlog.
 
 ## Next: Distribution

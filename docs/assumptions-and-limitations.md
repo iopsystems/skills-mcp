@@ -38,9 +38,12 @@ silently convert a limitation into an implied guarantee.
 
 - `.agents/skills` is the default canonical project location because it currently
   has the broadest support among common coding harnesses.
-- Claude Code currently requires `.claude/skills`. A relative directory symlink to
-  `.agents/skills` is preferred when the project has no existing Claude-specific
-  skill directory and all installed skills use the common Agent Skills subset.
+- Claude Code currently requires `.claude/skills`. This repository preserves it
+  as a real directory and links the individual `document-feature` skill to the
+  canonical `.agents/skills` instance. Claude Code 2.1.202 bare mode did not
+  discover the skill through either a directory-level or per-skill link during
+  the dogfood run, while normal mode required authentication; the layout is
+  therefore compatibility scaffolding, not verified discovery.
 - Vendor behavior and discovery paths may change. Installation validates the
   harnesses available in the project environment instead of treating documentation
   claims as proof.
