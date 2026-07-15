@@ -183,6 +183,10 @@ fn dot_and_svg_are_current_and_renderable() {
 #[test]
 fn render_script_and_ci_enforce_portable_freshness_checks() {
     let script = read("scripts/render-diagrams.sh");
+    let svg_digest = format!(
+        "{:x}",
+        Sha256::digest(fs::read(root().join("docs/skill-feedback-loop.svg")).unwrap())
+    );
     assert!(script.starts_with("#!/bin/sh\n"));
     assert!(script.contains("--check"));
     assert!(script.contains("shasum -a 256"));
@@ -190,6 +194,10 @@ fn render_script_and_ci_enforce_portable_freshness_checks() {
     assert!(script.contains("mktemp"));
     assert!(script.contains("mv"));
     assert!(script.contains("chmod 0644"));
+    let approved_svg_hash = read("docs/skill-feedback-loop.svg.sha256");
+    assert_eq!(approved_svg_hash.trim(), svg_digest);
+    assert!(script.contains("APPROVED_SVG_SHA256_FILE"));
+    assert!(script.contains("approved SVG hash changed"));
     assert!(
         !script.contains("cmp -s"),
         "freshness must not depend on Graphviz-version-specific SVG bytes"
@@ -208,12 +216,12 @@ fn cargo_description_is_agent_portable() {
 }
 
 #[test]
-fn shipped_template_system_journal_has_closure_evidence() {
+fn open_template_system_journal_has_review_and_verification_evidence() {
     let journal = read("docs/journal/2026-07-13-skill-templates-and-project-documentation.md");
 
-    assert!(journal.starts_with("---\nstatus: shipped\n"));
+    assert!(journal.starts_with("---\nstatus: open\n"));
     for evidence in [
-        "### Shipped implementation",
+        "### Implemented surface",
         "### Commit evidence",
         "### Final verification",
         "### Behavioral evaluation summary",
@@ -233,20 +241,23 @@ fn shipped_template_system_journal_has_closure_evidence() {
         "cargo test --locked",
         "cargo build --release --locked",
         "./scripts/mcp-smoke.sh",
-        "128/128 passed",
+        "131/131 passed",
         "explicitly approved the revised README",
+        "original cross-harness criterion remains unmet",
+        "cooperative project writers",
+        "Live Codex and Claude Code discovery remains open",
     ] {
         assert!(journal.contains(evidence), "journal missing {evidence:?}");
     }
 
     let index = read("docs/journal/README.md");
     assert!(index.contains(
-        "[Skill templates and project documentation](2026-07-13-skill-templates-and-project-documentation.md) | shipped"
+        "[Skill templates and project documentation](2026-07-13-skill-templates-and-project-documentation.md) | open"
     ));
 }
 
 #[test]
-fn initial_template_system_backlog_is_reconciled_and_temporary_plan_is_gone() {
+fn initial_template_system_backlog_is_honest_and_temporary_plan_is_gone() {
     let backlog = read("docs/backlog.md");
     let now = backlog
         .split_once("## Now: Initial template system")
@@ -255,11 +266,9 @@ fn initial_template_system_backlog_is_reconciled_and_temporary_plan_is_gone() {
         .split_once("## Next: Distribution")
         .expect("distribution backlog follows initial work")
         .0;
-    assert!(
-        !now.contains("- [ ]"),
-        "completed initial template-system items must be checked"
-    );
     assert!(now.contains("- [x]"));
+    assert!(now.contains("- [ ] Verify live Codex and Claude Code discovery"));
+    assert!(now.contains("- [ ] Close the engineering journal entry"));
     assert!(
         !root()
             .join("docs/superpowers/plans/2026-07-13-skill-template-system.md")

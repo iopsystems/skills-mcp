@@ -1,6 +1,6 @@
 use std::{borrow::Cow, path::PathBuf, sync::Arc};
 
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use include_dir::{include_dir, Dir, File};
 use rmcp::{
     model::{
@@ -64,7 +64,26 @@ fn load_skills() -> Result<Vec<LoadedSkill>> {
         });
     }
     out.sort_by(|a, b| a.name.cmp(&b.name));
+    validate_skill_names(&out)?;
     Ok(out)
+}
+
+fn validate_skill_names(skills: &[LoadedSkill]) -> Result<()> {
+    let mut names = std::collections::BTreeSet::new();
+    for tool in programmatic_tools() {
+        if !names.insert(tool.name.into_owned()) {
+            bail!("duplicate built-in programmatic tool name");
+        }
+    }
+    for skill in skills {
+        if !names.insert(skill.name.clone()) {
+            bail!(
+                "active skill name {:?} collides with another exposed tool",
+                skill.name
+            );
+        }
+    }
+    Ok(())
 }
 
 fn find_skill_md<'a>(dir: &'a Dir<'a>) -> Option<&'a File<'a>> {
@@ -760,6 +779,30 @@ mod tests {
                 "server instructions missing {required}"
             );
         }
+    }
+
+    #[test]
+    fn active_skill_names_cannot_collide_with_each_other_or_programmatic_tools() {
+        let duplicate = vec![
+            LoadedSkill {
+                name: "example".to_owned(),
+                description: "first".to_owned(),
+                body: "first".to_owned(),
+            },
+            LoadedSkill {
+                name: "example".to_owned(),
+                description: "second".to_owned(),
+                body: "second".to_owned(),
+            },
+        ];
+        assert!(validate_skill_names(&duplicate).is_err());
+
+        let collision = vec![LoadedSkill {
+            name: "skill_catalog".to_owned(),
+            description: "collision".to_owned(),
+            body: "collision".to_owned(),
+        }];
+        assert!(validate_skill_names(&collision).is_err());
     }
 
     #[test]

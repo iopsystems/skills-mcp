@@ -21,8 +21,9 @@ boundaries.
   workflow.
 - [x] Install a provenance-tracked feature-documentation instance under
   `.agents/skills` in this repository.
-- [x] Test a relative `.claude/skills` directory symlink with current Codex and
-  Claude Code; fall back to per-skill links if directory discovery or reload fails.
+- [ ] Verify live Codex and Claude Code discovery of one canonical installed
+  instance; current attempts record the approved per-skill fallback but no
+  successful discovery in either available harness.
 - [x] Use the installed instance to redesign the repository README.
 - [x] Author the README workflow diagram in DOT, commit its SVG, and provide a
   textual counterpart.
@@ -32,7 +33,7 @@ boundaries.
   diagram.
 - [x] Run formatting, linting, unit tests, release build, and MCP list/call smoke
   tests.
-- [x] Close the engineering journal entry with implementation and verification
+- [ ] Close the engineering journal entry with implementation and verification
   evidence and reconcile this backlog.
 
 ## Next: Distribution

@@ -1,5 +1,5 @@
 ---
-status: shipped
+status: open
 opened: 2026-07-13
 updated: 2026-07-15
 ---
@@ -31,9 +31,10 @@ Ship the initial system when:
 - `recommend-skills` can inspect a project and distinguish active skills to use,
   templates to seed, irrelevant choices, and missing coverage without mutating the
   project.
-- `seed-skill-template` can customize a selected template, preserve an established
-  agent-directory convention, and record enough provenance for later comparison
-  and upgrade.
+- `seed-skill-template` can prepare an exact customized installation or upgrade
+  plan, preserve an established agent-directory convention, record enough
+  provenance for later comparison, and fail closed unless the execution
+  environment supplies the required race-safe mutation primitives.
 - Engineering-journal and feature-documentation templates both validate and carry
   trigger evaluation cases.
 - A project-local feature-documentation instance works in Codex and Claude Code
@@ -43,13 +44,21 @@ Ship the initial system when:
   presentation receives human approval.
 - Rust tests, formatting, linting, release build, and MCP list/call smoke tests pass.
 
+The original cross-harness criterion remains unmet. The Codex launcher was
+unavailable, and Claude Code did not discover either tested link layout in bare
+mode while normal mode required authentication. The repository owner approved the
+real-directory/per-skill-link fallback as the compatibility layout, not as proof
+of live discovery. Keep this journal open until both harnesses discover the same
+canonical instance or the owner explicitly revises the ship criterion based on
+new evidence.
+
 ## Scope
 
 ### Initial deliverables
 
 - `skills/recommend-skills/SKILL.md`, a read-only adoption adviser.
-- `skills/seed-skill-template/SKILL.md`, the mutating installation and upgrade
-  workflow.
+- `skills/seed-skill-template/SKILL.md`, the approval-gated installation and
+  upgrade planning workflow with a fail-closed mutation contract.
 - `skill_catalog`, a read-only combined active-skill and template catalog tool.
 - `skill_template_get`, a read-only tool restricted to files declared by a valid
   template manifest.
@@ -406,12 +415,12 @@ and the final per-case responder and critic outputs are retained while internal 
 transcripts were unavailable. The observation therefore supports preapproval filesystem preservation in these
 disposable trees only.
 
-A later 2026-07-14 direct eval runner exercised actual postapproval mutations under the current skill hash
-`86dc2cbb40e71a1c8152c8380e9749c549b00d08ee8950c7bf835a0aab4832b8`. The uncommitted helper was confined to ignored
-`target/` scratch and had SHA-256 `739f986127d39351970b3c47dbb12036b40b44802a3d1f543951267142b50eb3`;
+A 2026-07-15 direct eval runner refreshed the actual postapproval mutations under the current skill hash
+`dc64f415b6614b586b7f04507e4be4ae0650663be1a2b34228629573adb01fbe`. The uncommitted helper was confined to ignored
+`target/` scratch and had SHA-256 `13233cfc3b9adf7409170fa2936791481063c108d7e7e9a2138ab989c581ebf7`;
 the committed protocol and result retain its scope, exact approval artifacts, ordered primitive traces, manifests,
-final bytes, and helper digest. Subagents were unavailable because workspace credits were exhausted, so this run had
-no independent responder or critic.
+final bytes, and helper digest. This deterministic refresh used the direct runner, so it had no independent responder
+or critic.
 
 `POST-NEW-SUCCESS`, `POST-UPGRADE-SUCCESS`, `SEMANTIC-CURL-SANITIZE`, and `DELAY-REAPPROVAL` installed successfully.
 The postapproval new seed used descriptor-relative exclusive directory/file creation and a relative link. The
@@ -428,22 +437,23 @@ first approved state bytes, retained the valid UUID, recorded a different plan d
 approval, and only then installed.
 
 This direct eval runner demonstrates real filesystem effects only in disposable fixture roots. It is not real
-harness enforcement, a kernel proof, or evidence that advisory locking controls non-cooperating processes. The
-production protocol therefore requires a guard that covers every mutation participant or a compare-and-swap
-replacement and fails closed when neither is available.
+harness enforcement or a kernel proof. The production protocol coordinates cooperative project writers with a
+project-scoped lock and retains descriptor-relative no-follow operations, exclusive creation, staging, and immediate
+identity and digest checks. An uncooperative local writer can ignore that lock and remains a residual threat outside
+the workflow's guarantee; detected identity or digest changes still stop before replacement.
 
 The final hashed ledger is:
 
 | Artifact | SHA-256 |
 | --- | --- |
-| `skills/seed-skill-template/SKILL.md` | `86dc2cbb40e71a1c8152c8380e9749c549b00d08ee8950c7bf835a0aab4832b8` |
+| `skills/seed-skill-template/SKILL.md` | `dc64f415b6614b586b7f04507e4be4ae0650663be1a2b34228629573adb01fbe` |
 | `skills/seed-skill-template/evals/trigger-evals.json` | `d6cd37d0542d56e97a7be80266ee9894a57070326589195e2035bec77d2ba5a8` |
 | `docs/evals/fixtures/seed-skill-template-v1.md` | `f0f648bdcf97a8ca82691847009165f48c01267ee35a6d678c51d978f4063c96` |
 | `docs/evals/fixtures/seed-skill-template-adversarial-v1.md` | `55ff187e82e6619669ffbf40486cedd4316cad70ace1423cb56b607b12240cff` |
 | `docs/evals/fixtures/seed-skill-template-adversarial-tools-v1.json` | `26065ecfa3e6c187aa5de21931dadfce11c7e931e5f7365e680939713dccc449` |
 | `docs/evals/fixtures/seed-skill-template-filesystem-observation-v1.json` | `b3326b4db1d1459268bade2f3d6beaac510214517053c396527c34a642d0d8f8` |
 | `docs/evals/fixtures/seed-skill-template-filesystem-protocol-v1.md` | `2ae742f8e5f8bbcf12e6de032409a2ad0ad269bd433da9be0f867c102440c2fd` |
-| `docs/evals/fixtures/seed-skill-template-postapproval-observation-v1.json` | `341863521704f52a4158b4edcf263ddbc81cd393240b1558492586e04c6dced2` |
+| `docs/evals/fixtures/seed-skill-template-postapproval-observation-v1.json` | `90e2e5b9e02806134e27615e053949d7b6ca0eb439f2d6f9bbbca40b2f3497b1` |
 | `docs/evals/fixtures/seed-skill-template-postapproval-protocol-v1.md` | `6e249268021e2b3f3c1bff023d8f182411d2d016d80b85bbecb30a8895568cf0` |
 
 ## Design and Implementation
@@ -495,8 +505,11 @@ approval authorizes selection and read-only discovery only. It preserves project
 conventions, gathers the project profile, validates clean immutable provenance,
 then presents the exact destination, files, links, customizations, conflicts,
 source, and validation plan. It mutates only after separate explicit approval of
-that write plan. New seeds never overwrite an existing file, real directory, or
-symlink; upgrades stop on unresolved merge intent.
+that write plan, using descriptor-relative no-follow operations, exclusive
+creation or staging, a lock honored by cooperative project writers, and immediate
+identity and digest checks. New seeds never overwrite an existing file, real
+directory, or symlink; upgrades stop on unresolved merge intent. An uncooperative
+local writer remains a documented residual threat rather than an excluded actor.
 
 ### Installed-instance provenance
 
@@ -806,14 +819,16 @@ Verification includes:
 
 ## Outcome
 
-Shipped on 2026-07-15. The repository now separates invocable active skills,
+Implementation is ready for pull-request review, but the journal remains open.
+The repository now separates invocable active skills,
 inert reusable templates, and provenance-tracked installed instances. It exposes
 validated read-only catalog and retrieval tools, supplies read-only recommendation
-and approval-gated seeding workflows, ships the two initial templates, dogfoods a
+and approval-gated seeding, includes the two initial templates, dogfoods a
 customized feature-documentation instance, and uses that instance for the
-human-approved README and DOT/SVG feedback-loop documentation.
+human-approved README and DOT/SVG feedback-loop documentation. Live Codex and
+Claude Code discovery from that canonical instance is still a ship blocker.
 
-### Shipped implementation
+### Implemented surface
 
 - Template parsing, path and digest validation, build provenance, and embedded
   retrieval live in `build.rs`, `src/templates.rs`, `src/main.rs`,
@@ -854,11 +869,11 @@ The implementation is preserved as reviewable milestones on
 | Provenance-tracked dogfood installation | `79a4543` |
 | Human-approved README and visual | `a668049` |
 
-The closure itself is committed as `Close skill template system journal` after
-the verification below. A pull request is intentionally not recorded here
-because publication follows this closure commit; the eventual PR and immutable
-closure hash remain discoverable from Git history rather than being guessed in
-advance.
+Commit `7a3301c` attempted closure before the independent final review identified
+the unmet cross-harness criterion and reopened this entry. The review fixes are
+committed separately so the correction remains visible. A pull request is not yet
+recorded here; the eventual PR and immutable fix hash remain discoverable from Git
+history rather than being guessed in advance.
 
 ### Final verification
 
@@ -867,7 +882,7 @@ The full clean-tree matrix was rerun on 2026-07-15 after closure reconciliation:
 - `./scripts/render-diagrams.sh --check` — passed;
 - `cargo fmt --all -- --check` — passed;
 - `cargo clippy --all-targets --locked -- -D warnings` — passed;
-- `cargo test --locked` — 128/128 passed;
+- `cargo test --locked` — 131/131 passed;
 - `cargo build --release --locked` — passed;
 - `./scripts/mcp-smoke.sh` — passed, including catalog listing and retrieval of
   all three declared files for `document-feature-skill`; and
@@ -876,6 +891,28 @@ The full clean-tree matrix was rerun on 2026-07-15 after closure reconciliation:
 These deterministic results cover schema, path, digest, tool, skill, installed
 instance, README, link, and diagram contracts. The matrix does not convert the
 nondeterministic agent observations or human review into deterministic proof.
+
+### Independent final review
+
+The independent branch-wide review against merge base `8580401` found five
+actionable issues. The follow-up changes:
+
+- derive and normalize GitHub repository identity from `remote.origin.url`, so a
+  fork reports its fork URL and an unverifiable origin reports `UNKNOWN` with
+  `dirty: true` instead of falsely claiming the official repository;
+- scope the seeder's namespace lock to cooperative project writers while
+  preserving descriptor-relative no-follow operations, exclusive creation,
+  staging, immediate preconditions, and safe stops for detected races;
+- keep this entry and Stage 1 open because live dual-harness discovery is not
+  verified;
+- add `docs/skill-feedback-loop.svg.sha256` as the version-independent human
+  approval contract checked separately from successful DOT rendering and the DOT
+  source marker; and
+- reject active-skill names that collide with another active skill or any
+  programmatic MCP tool before the server starts.
+
+The approved `README.md`, `docs/skill-feedback-loop.dot`, and
+`docs/skill-feedback-loop.svg` bytes did not change in this follow-up.
 
 ### Behavioral evaluation summary
 
@@ -909,15 +946,17 @@ closure, so that approval remains current.
 
 ### Unresolved limitations and reopen conditions
 
-- Reopen cross-harness validation when a functioning Codex project-skill launcher
-  is available or authenticated Claude Code can test discovery. The attempted
+- Live Codex and Claude Code discovery remains open. Resume it when a functioning
+  Codex project-skill launcher is available and authenticated Claude Code can test
+  discovery. The attempted
   Codex launch failed for a missing platform binary; Claude Code 2.1.202 bare mode
   did not discover either the directory-link or per-skill-link layout, and normal
   mode required login. The repository therefore records the compatibility layout,
   not a discovery guarantee.
-- Reopen seeder mutation design if real deployments cannot provide a guard shared
-  by all mutation participants or compare-and-swap replacement. The direct runner
-  demonstrates disposable-fixture behavior, not a kernel-level race proof.
+- The seeder coordinates cooperative project writers but cannot exclude an
+  uncooperative local writer. Descriptor-relative operations, exclusive creation,
+  staged replacement, and immediate identity and digest checks safe-stop on the
+  changes they detect; they do not provide a linearizable all-writer guarantee.
 - Reopen distribution work when Apple Silicon macOS release artifacts and a Linux
   architecture target are selected. No prebuilt binary, Homebrew package, or
   plugin-marketplace bundle ships in this stage.

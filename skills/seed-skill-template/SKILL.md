@@ -67,18 +67,19 @@ no-follow descriptor-relative `openat` or `openat2` operations; when available, 
 `RESOLVE_NO_SYMLINKS`. Verify every parent descriptor with `fstat`. Never concatenate a pathname and then mutate it,
 and never use a check-then-use pathname sequence.
 
-Hold a kernel-enforced scope guard or a verified exclusive namespace lock from final descriptor verification through
-all mutation and read-back checks. Require a guard that covers every mutation participant that can rename or replace an
-approved component. Fail closed when unavailable or when another writer cannot be excluded. Use descriptor-relative
-`mkdirat`, `openat` with `O_CREAT|O_EXCL|O_NOFOLLOW`, and `symlinkat` or no-clobber `linkat` operations for new
-objects. Each operation must fail when its leaf already exists.
+Hold a project-scoped exclusive namespace lock from final descriptor verification through all mutation and read-back
+checks, and require every cooperative project writer used by this workflow to honor it. This coordinates cooperative
+project writers; it does not exclude an uncooperative local writer that ignores the lock. Use descriptor-relative
+`mkdirat`, `openat` with `O_CREAT|O_EXCL|O_NOFOLLOW`, and `symlinkat` or no-clobber `linkat` operations for new objects.
+Each operation must fail when its leaf already exists.
 
-For a reviewed upgrade replacement, require either a compare-and-swap replacement primitive bound to the verified
-device, inode, and digest or the verified exclusive namespace lock held continuously across identity comparison,
-exclusive sibling staging, validation, and a descriptor-relative `renameat`-style atomic replacement. Never truncate
-in place. Revalidate the descriptor chain after each operation and before activation. If a component mapping,
-identity, digest, or link text changes, stop, preserve evidence of paths already changed, and require a revised plan;
-do not follow the replacement or silently clean up.
+For a reviewed upgrade replacement, hold that cooperative lock continuously across identity and digest comparison,
+exclusive sibling staging, validation, the final immediate precondition check, and a descriptor-relative
+`renameat`-style atomic replacement. Never truncate in place. Revalidate the descriptor chain after each operation and
+before activation. If identity or digest changes, stop before replacement, preserve evidence of paths already changed,
+and require a revised plan; do not follow the replacement or silently clean up. An uncooperative local writer can race
+after the final check. Treat that as a residual threat outside this workflow's guarantee, never as a linearizable
+compare-and-swap claim.
 
 ## Approval Freshness
 
@@ -120,8 +121,8 @@ mutation. No earlier approval authorizes refreshed bytes.
    declared file and `template-state.yaml` with create-new or `O_EXCL` equivalent semantics. Never truncate or replace
    an existing object. Do not overwrite any existing file, directory, or symlink. If a check fails, creation reports a
    conflict, or path identity changes, fail closed, report every path already created, and show a revised plan for new
-   approval. Descriptor-relative primitives and the held scope guard are mandatory; a pathname-only recheck is not a
-   substitute. Preserve local-only files.
+   approval. Descriptor-relative primitives, the cooperative lock, and the immediate checks are mandatory; a
+   pathname-only recheck is not a substitute. Preserve local-only files.
 8. Create cross-harness links only when included in the approved plan and allowed by Harness Layout Rules. Use
    relative links. Immediately before each link mutation, re-check every destination component through retained
    descriptors with no-follow metadata and require the parent identities and absent link path to match the approved

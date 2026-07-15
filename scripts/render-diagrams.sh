@@ -4,6 +4,7 @@ set -eu
 ROOT_DIR=$(CDPATH= cd -- "$(dirname -- "$0")/.." && pwd)
 DOT_SOURCE="$ROOT_DIR/docs/skill-feedback-loop.dot"
 SVG_TARGET="$ROOT_DIR/docs/skill-feedback-loop.svg"
+APPROVED_SVG_SHA256_FILE="$ROOT_DIR/docs/skill-feedback-loop.svg.sha256"
 MODE=render
 
 if [ "${1-}" = "--check" ]; then
@@ -52,9 +53,30 @@ if [ "$MODE" = check ]; then
     printf 'render-diagrams: source digest marker is stale\n' >&2
     exit 1
   }
+  [ -f "$APPROVED_SVG_SHA256_FILE" ] || {
+    printf 'render-diagrams: missing approved SVG hash file\n' >&2
+    exit 1
+  }
+  EXPECTED_SVG_SHA256=$(sed -n '1p' "$APPROVED_SVG_SHA256_FILE")
+  [ "${#EXPECTED_SVG_SHA256}" -eq 64 ] || {
+    printf 'render-diagrams: approved SVG hash must be 64 lowercase hexadecimal characters\n' >&2
+    exit 1
+  }
+  case "$EXPECTED_SVG_SHA256" in
+    *[!0-9a-f]*)
+      printf 'render-diagrams: approved SVG hash must be 64 lowercase hexadecimal characters\n' >&2
+      exit 1
+      ;;
+  esac
+  ACTUAL_SVG_SHA256=$(sha256_file "$SVG_TARGET")
+  [ "$ACTUAL_SVG_SHA256" = "$EXPECTED_SVG_SHA256" ] || {
+    printf 'render-diagrams: approved SVG hash changed; render and obtain human review before updating the expected hash\n' >&2
+    exit 1
+  }
   printf 'render-diagrams: SVG is current (%s)\n' "$DIGEST"
 else
   chmod 0644 "$TMP_MARKED"
   mv "$TMP_MARKED" "$SVG_TARGET"
-  printf 'render-diagrams: rendered %s (%s)\n' "$SVG_TARGET" "$DIGEST"
+  printf 'render-diagrams: rendered %s (%s); human review must update %s separately\n' \
+    "$SVG_TARGET" "$DIGEST" "$APPROVED_SVG_SHA256_FILE"
 fi

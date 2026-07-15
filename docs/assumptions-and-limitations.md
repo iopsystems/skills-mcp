@@ -33,6 +33,11 @@ silently convert a limitation into an implied guarantee.
   but their intent may require human interpretation.
 - Upgrades stop on missing history, digest mismatch, or unresolved merge conflict;
   they never infer or overwrite silently.
+- The active seeder uses descriptor-relative no-follow operations, exclusive
+  creation or staging, immediate identity and digest checks, and a project-scoped
+  lock honored by cooperative project writers. An uncooperative local writer can
+  ignore the lock and remains a residual threat; detected changes stop safely, but
+  the workflow does not claim linearizable exclusion of every local process.
 
 ## Harness portability
 
