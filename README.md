@@ -1,112 +1,250 @@
 # iop-skills
 
-A single-binary [Model Context Protocol](https://modelcontextprotocol.io) server
-that ships a bundle of Claude skills embedded at compile time. Each skill under
-`skills/<name>/SKILL.md` is exposed as an MCP tool whose invocation returns the
-skill body for the model to follow.
+`iop-skills` is a source-built [Model Context Protocol](https://modelcontextprotocol.io)
+server and a shared library of agent workflows. It helps teams reuse engineering
+practice that has already worked in real projects while preserving the judgment,
+validation, and human review needed to adapt that practice safely.
 
-## Layout
+## Why use this repository
 
+Use it when you want an agent to follow a repeatable workflow—such as keeping an
+engineering journal, recommending relevant skills, or documenting a feature—or
+when a project needs its own customized version of a shared workflow.
+
+Installing the server exposes every **active skill** as an MCP tool. The repository
+also carries **inert templates** that are never invoked directly: an agent can
+selectively seed one into a project, customize it, and record its provenance. This
+creates two short paths:
+
+- install the server, ask which skills fit your project, and use active skills;
+- contribute a lesson from project experience as a new or improved skill or
+  template.
+
+The current distribution is source-only. There is no prebuilt binary, bundle,
+Homebrew package, or coding-agent plugin yet.
+
+## How project lessons become shared skills
+
+![Skill feedback loop](docs/skill-feedback-loop.svg)
+
+The diagram is a quick visual map. This numbered workflow is its exact textual
+equivalent:
+
+1. **Capture project experience** as a local skill or template candidate when a
+   useful lesson repeats.
+2. **Validate the candidate** by freezing tasks and outcomes, running deterministic
+   checks, and using blind simulations plus a separate critic.
+3. **Pass the human review gate** for diagrams, onboarding, navigation, and other
+   perceptual surfaces; revise and re-review when needed.
+4. **Share an active skill or inert template** in the repository only after the
+   applicable checks and review pass; the read-only catalog exposes its metadata.
+5. **Use or seed it in projects**: invoke active skills through MCP, or seed and
+   customize an inert template after approval.
+6. **Observe local customization** through explicit, authorized comparison of
+   declared instance changes—never hidden telemetry or automatic edits.
+7. **Propose a reviewed base improvement** when recurring evidence supports it,
+   then send the proposal through validation again rather than changing the base
+   automatically.
+
+The DOT source is authoritative at
+[`docs/skill-feedback-loop.dot`](docs/skill-feedback-loop.dot); the SVG is rendered
+beside it and checked for freshness in CI.
+
+## Install from source
+
+### Prerequisites
+
+- Git;
+- a current [Rust toolchain](https://rustup.rs/) with Cargo; and
+- an MCP-capable coding agent or client.
+
+Apple Silicon macOS is the most common environment; Linux is also supported for
+source builds. Install the current repository version with:
+
+```sh
+cargo install --git https://github.com/iopsystems/skills-mcp --locked
 ```
-iop-skills/
-├── Cargo.toml
-├── src/
-│   └── main.rs
-└── skills/
-    └── <skill-name>/
-        └── SKILL.md   # YAML frontmatter (name, description) + markdown body
+
+This command accesses the network, compiles Rust locally, and installs
+`iop-skills` into Cargo's binary directory (normally `$HOME/.cargo/bin`). Confirm
+that directory is on `PATH`:
+
+```sh
+command -v iop-skills
 ```
 
-`SKILL.md` frontmatter:
+If compilation fails, first update the Rust toolchain and retry. For contributor
+builds from a checkout, use `cargo build --locked`; the debug binary is
+`target/debug/iop-skills`.
 
-```markdown
----
-name: <tool-name>
-description: <one-line description used as the MCP tool description>
----
-
-<body — returned verbatim to the model when the tool is invoked>
-```
-
-## Build
-
-```
-cargo build --release
-```
-
-The result is a single static-ish binary at `target/release/iop-skills`; all
-skill content is baked in via `include_dir!`, so no sidecar files are needed.
-
-## Run (stdio)
-
-Configure your MCP client (e.g. Claude Code) to spawn the binary. The JSON
-key is the display name — pick whatever you want:
+Configure an MCP client to spawn the installed binary. Replace the command with
+the absolute path printed by `command -v iop-skills` if the client does not inherit
+your shell `PATH`:
 
 ```json
 {
   "mcpServers": {
     "iop-skills": {
-      "command": "/path/to/iop-skills"
+      "command": "/absolute/path/to/iop-skills"
     }
   }
 }
 ```
 
-## Adding a skill
+Restart or reconnect the client, list its MCP tools, and confirm that
+`skill_catalog` is present. If it is missing, run the command path directly from a
+terminal to check that it starts, then inspect the client's MCP logs for its
+effective `PATH` and configuration.
 
-1. Create `skills/<your-skill>/SKILL.md` with the frontmatter above.
-2. Rebuild. The skill is picked up automatically.
+## Ask for recommendations and use an active skill
 
-## Manual testing
+Once the server is connected, ask your agent exactly:
 
-The server speaks MCP over stdio, so any MCP-capable client can drive it. A
-few ways to exercise it by hand:
+> which skills here should I install and use for my project XYZ? Give me some recommendations
 
-### Option 1: MCP Inspector (recommended for exploration)
+Replace `XYZ` with your project and relevant constraints. The active
+`recommend-skills` workflow inspects local project evidence and calls the read-only
+`skill_catalog`; it ranks a minimal set as **use through MCP**, **seed and customize locally**,
+**do not adopt**, or **missing capability**. It does not install or modify anything.
 
-The official [MCP Inspector](https://github.com/modelcontextprotocol/inspector)
-gives you a browser UI over the server — list tools, inspect schemas, and
-invoke them with arbitrary arguments:
+To use a recommended active skill, ask the connected agent to invoke that named MCP
+tool. The tool returns the workflow instructions for the agent to follow. Active
+skills are already exposed by the installed server, so they do not need to be
+copied into the project.
 
+## Active skill, inert template, or installed instance?
+
+| Active skill | Inert template | Installed instance |
+| --- | --- | --- |
+| Invocable instruction exposed by the MCP server | Read-only catalog content, never directly invocable | Project-local copy under a harness discovery path |
+| Lives at `skills/<name>/SKILL.md` | Lives at `templates/<id>/` and is indexed by `templates/catalog.yaml` | Usually lives at `.agents/skills/<name>/` |
+| Use through MCP without copying it | Seed and customize locally only when the project needs adaptation | Use the customized workflow through the project's harness |
+| Updated with the server repository | Retrieved only from its declared manifest files | Tracks base version, immutable commit, digests, and local customizations in `template-state.yaml` |
+
+Current adoption surfaces include:
+
+| Kind | IDs | Purpose |
+| --- | --- | --- |
+| Active skills | `recommend-skills`, `seed-skill-template`, `engineering-journal`, plus inquiry and vault workflows | Invocable shared workflows |
+| Inert templates | `document-feature-skill`, `engineering-journal-skill` | Project-specific workflow bases |
+| Installed instance in this repository | `.agents/skills/document-feature/` | Customized documentation workflow used to produce this README |
+
+Use `skill_catalog` for the complete current active-skill and template metadata.
+Use `skill_template_get` to retrieve only a template's manifest-declared files.
+
+## Seed and customize a template
+
+Ask the agent to invoke `seed-skill-template` after choosing a recommended
+template. Seeding is intentionally approval-gated:
+
+1. approve the template selection, which authorizes only read-only discovery;
+2. review the proposed destination, exact files, compatibility links,
+   customizations, source commit, conflicts, and validation;
+3. give separate explicit approval of that exact write plan before any mutation.
+
+The workflow refuses dirty or unknown source provenance and never overwrites an
+existing file, directory, or symlink. A new instance records a stable identity,
+base version, immutable source commit, digests, merge strategies, dates, and
+declared customizations in `template-state.yaml`. Upgrades compare the verified
+old base, current local instance, and new base; they stop on missing provenance,
+digest mismatch, or unresolved intent.
+
+## Contribute lessons and validate changes
+
+Concrete development experience is welcome. Choose the boundary that matches the
+lesson:
+
+- add or improve an invocable workflow at `skills/<name>/SKILL.md`;
+- add or improve an inert reusable base under `templates/<id>/`, update its
+  `template.yaml` digests, and register a new template in
+  `templates/catalog.yaml` when needed;
+- improve a project-local installed instance first when the lesson is not yet
+  general enough for the shared base.
+
+Record durable intent and evidence in
+[`docs/journal/`](docs/journal/README.md). Preserve the active/inert boundary, use
+test-driven development for deterministic contracts, and evaluate workflow
+changes with a baseline, fresh forward simulation, and separate critic. Human
+review is mandatory for diagrams, major hierarchy or navigation changes,
+onboarding narratives, and other perceptual results.
+
+Run the relevant focused test first, then the full local checks:
+
+```sh
+cargo fmt --all -- --check
+cargo clippy --all-targets --locked -- -D warnings
+cargo test --locked
+cargo build --release --locked
+./scripts/render-diagrams.sh --check
+./scripts/mcp-smoke.sh
 ```
-npx @modelcontextprotocol/inspector /path/to/iop-skills
+
+The smoke test requires `jq`; diagram checks require Graphviz `dot`.
+
+## Architecture and repository layout
+
+The server embeds active skills and validated template bytes at compile time and
+speaks MCP over standard input/output. No sidecar skill directory is required at
+runtime.
+
+| Path | Responsibility |
+| --- | --- |
+| `src/main.rs` | MCP initialization, tool schemas, routing, and responses |
+| `src/templates.rs` | Template manifest validation, safe retrieval, and aggregate digests |
+| `build.rs` | Build-time source repository, commit, and template dirty-state provenance |
+| `skills/` | Active, invocable skill instructions embedded as MCP tools |
+| `templates/` | Inert, manifest-declared bases embedded for read-only retrieval |
+| `.agents/skills/` | Project-local installed instances; not part of the MCP bundle |
+| `tests/` | Registry, tool, workflow, installed-instance, and documentation contracts |
+| `docs/journal/` | Durable implementation reasoning and evidence |
+
+The two programmatic adoption tools are deliberately read-only. `skill_catalog`
+combines active-skill metadata with inert-template summaries without returning
+bodies. `skill_template_get` returns only files declared by a validated manifest.
+Mutation remains in the approval-gated agent workflow, outside the Rust server.
+
+## Raw MCP smoke and debugging
+
+This project is an MCP stdio server rather than a flag-oriented CLI, so its
+rendered interface is the actual `initialize`, `tools/list`, and `tools/call`
+responses. Build and verify that interface with:
+
+```sh
+cargo build --locked
+./scripts/mcp-smoke.sh
 ```
 
-Open the URL it prints, click **Connect**, then **List Tools** to see every
-skill and vault tool. Pick one and hit **Run** to see the raw response.
+The smoke script starts one server session, initializes it, lists tools, calls
+`skill_catalog`, retrieves `document-feature-skill` with `skill_template_get`, and
+verifies the returned file and aggregate SHA-256 digests.
 
-### Option 2: Raw JSON-RPC over stdio
+For direct debugging, each MCP request is one JSON line. This example initializes
+the debug binary, lists tools, and calls `skill_catalog` in one session:
 
-Every MCP request is a single line of JSON written to stdin; responses come
-back on stdout. Useful for scripting or debugging without extra tooling.
-
-Initialize, list tools, and call the `catchup` skill in one session:
-
-```
+```sh
 (
-  printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-06-18","capabilities":{},"clientInfo":{"name":"manual","version":"0"}}}'
-  printf '%s\n' '{"jsonrpc":"2.0","method":"notifications/initialized"}'
-  printf '%s\n' '{"jsonrpc":"2.0","id":2,"method":"tools/list"}'
-  printf '%s\n' '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"catchup","arguments":{}}}'
-) | ./target/release/iop-skills
+  printf '%s\n' '{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"manual","version":"0.1.0"}}}'
+  printf '%s\n' '{"jsonrpc":"2.0","method":"notifications/initialized","params":{}}'
+  printf '%s\n' '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
+  printf '%s\n' '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"skill_catalog","arguments":{}}}'
+) | ./target/debug/iop-skills
 ```
 
-Each response is a JSON-RPC message on its own line. Pipe through `jq` to
-pretty-print:
+Responses are JSON lines on standard output. Pipe them through `jq` to inspect
+specific IDs; server diagnostics go to standard error.
 
-```
-... | ./target/release/iop-skills | jq -c 'select(.id)'
-```
+## Present limitations and roadmap
 
-Calling a vault tool works the same way — pass arguments under `params.arguments`:
+Today the project is source-only: there is no prebuilt bundle or binary and no
+automatic cross-project survey. Harness discovery can vary by coding agent, and
+template upgrades stop rather than guess when provenance or historical bases are
+unavailable. Agent evaluations provide comprehension evidence but never prove
+human usability.
 
-```json
-{"jsonrpc":"2.0","id":4,"method":"tools/call","params":{"name":"vault_search","arguments":{"type":"decision","limit":5}}}
-```
+See [assumptions and limitations](docs/assumptions-and-limitations.md) for the
+current boundaries. The [roadmap](docs/roadmap.md) covers checksummed Apple Silicon
+macOS and selected Linux artifacts, later Homebrew packaging, authorized adoption
+surveys, evidence-based template evolution, and eventual evaluation of plugin
+distribution.
 
-### Option 3: Claude Code
-
-Register the binary as an MCP server in your client config (see [Run
-(stdio)](#run-stdio) above), then in a session run `/mcp` to confirm
-`iop-skills` is connected and its tools are listed. Invoking any skill tool
-returns the skill body as a model message.
+The package is dual-licensed under MIT or Apache-2.0.

@@ -1,11 +1,12 @@
 use std::{borrow::Cow, path::PathBuf, sync::Arc};
 
-use anyhow::{Context, Result};
+use anyhow::{bail, Context, Result};
 use include_dir::{include_dir, Dir, File};
 use rmcp::{
     model::{
         CallToolRequestParams, CallToolResult, Content, Implementation, InitializeResult,
         ListToolsResult, PaginatedRequestParams, ProtocolVersion, ServerCapabilities, Tool,
+        ToolAnnotations,
     },
     service::RequestContext,
     transport::stdio,
@@ -15,11 +16,13 @@ use serde::Deserialize;
 use serde_json::{json, Value};
 use tokio::sync::Mutex;
 
+mod templates;
 mod vault;
 
 use vault::{Direction, Index, SearchFilters};
 
 static SKILLS: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/skills");
+static TEMPLATES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/templates");
 
 #[derive(Debug, Deserialize)]
 struct Frontmatter {
@@ -61,7 +64,36 @@ fn load_skills() -> Result<Vec<LoadedSkill>> {
         });
     }
     out.sort_by(|a, b| a.name.cmp(&b.name));
+    validate_skill_names(&out)?;
     Ok(out)
+}
+
+fn validate_skill_names(skills: &[LoadedSkill]) -> Result<()> {
+    let mut names = std::collections::BTreeSet::new();
+    for tool in programmatic_tools() {
+        if !names.insert(tool.name.into_owned()) {
+            bail!("duplicate built-in programmatic tool name");
+        }
+    }
+    for skill in skills {
+        if !names.insert(skill.name.clone()) {
+            bail!(
+                "active skill name {:?} collides with another exposed tool",
+                skill.name
+            );
+        }
+    }
+    let templates = templates::TemplateRegistry::from_dir(&TEMPLATES)
+        .context("failed to validate template IDs against exposed tool names")?;
+    for template in templates.summaries() {
+        if !names.insert(template.id.clone()) {
+            bail!(
+                "template ID {:?} collides with another catalog or exposed tool name",
+                template.id
+            );
+        }
+    }
+    Ok(())
 }
 
 fn find_skill_md<'a>(dir: &'a Dir<'a>) -> Option<&'a File<'a>> {
@@ -103,6 +135,40 @@ fn obj_schema(v: Value) -> Arc<serde_json::Map<String, Value>> {
 /// returning structured JSON. Complements the instructional skills.
 fn programmatic_tools() -> Vec<Tool> {
     vec![
+        Tool {
+            name: Cow::Borrowed("skill_catalog"),
+            title: None,
+            description: Some(Cow::Borrowed(
+                "List active skills and installable skill templates from the embedded catalog. Read-only; returns metadata only and never template contents.",
+            )),
+            input_schema: empty_schema(),
+            output_schema: None,
+            annotations: Some(ToolAnnotations::new().read_only(true)),
+            execution: None,
+            icons: None,
+            meta: None,
+        },
+        Tool {
+            name: Cow::Borrowed("skill_template_get"),
+            title: None,
+            description: Some(Cow::Borrowed(
+                "Retrieve an embedded skill template by template_id, optionally limited to one declared path. Read-only; never reads arbitrary filesystem paths.",
+            )),
+            input_schema: obj_schema(json!({
+                "type": "object",
+                "properties": {
+                    "template_id": {"type": "string"},
+                    "path": {"type": "string"}
+                },
+                "required": ["template_id"],
+                "additionalProperties": false
+            })),
+            output_schema: None,
+            annotations: Some(ToolAnnotations::new().read_only(true)),
+            execution: None,
+            icons: None,
+            meta: None,
+        },
         Tool {
             name: Cow::Borrowed("vault_search"),
             title: None,
@@ -243,6 +309,7 @@ fn programmatic_tools() -> Vec<Tool> {
 #[derive(Clone)]
 struct SkillsServer {
     skills: Arc<Vec<LoadedSkill>>,
+    templates: Arc<templates::TemplateRegistry>,
     /// Lazily-opened vault index, shared across tool calls. `None` means
     /// no vault was located; programmatic vault tools will error out.
     vault: Arc<Mutex<VaultState>>,
@@ -258,15 +325,38 @@ enum VaultState {
 }
 
 impl SkillsServer {
-    fn new(skills: Vec<LoadedSkill>) -> Self {
+    fn new(skills: Vec<LoadedSkill>, templates: templates::TemplateRegistry) -> Self {
         Self {
             skills: Arc::new(skills),
+            templates: Arc::new(templates),
             vault: Arc::new(Mutex::new(VaultState::Unresolved)),
         }
     }
 
     fn find_skill(&self, name: &str) -> Option<&LoadedSkill> {
         self.skills.iter().find(|s| s.name == name)
+    }
+
+    fn listed_tools(&self) -> Vec<Tool> {
+        let empty = empty_schema();
+        let mut tools: Vec<Tool> = self
+            .skills
+            .iter()
+            .map(|s| Tool {
+                name: Cow::Owned(s.name.clone()),
+                title: None,
+                description: Some(Cow::Owned(s.description.clone())),
+                input_schema: empty.clone(),
+                output_schema: None,
+                annotations: None,
+                execution: None,
+                icons: None,
+                meta: None,
+            })
+            .collect();
+        tools.extend(programmatic_tools());
+        tools.sort_by(|a, b| a.name.cmp(&b.name));
+        tools
     }
 
     /// Get a refreshed index, locating the vault on first use.
@@ -314,11 +404,16 @@ impl ServerHandler for SkillsServer {
                 website_url: None,
             },
             instructions: Some(
-                "This server exposes two kinds of tools. Skill tools \
-                 (catchup, plan-feature, ...) return instruction text \
-                 to follow. Vault tools (vault_search, vault_edges, vault_reindex) \
-                 query a SQLite index of the knowledge-iop vault and return \
-                 structured JSON."
+                "This server exposes three tool families. The instructional skill tools \
+                 (catchup, plan-feature, ...) return instruction text to follow. The \
+                 catalog and retrieval tools are read-only: skill_catalog lists active \
+                 skill and installable template metadata, while skill_template_get returns \
+                 declared embedded template files; neither fetches, writes, or exposes \
+                 undeclared files. The vault programmatic tools query a SQLite index of the \
+                 knowledge-iop vault and return structured JSON: vault_search searches \
+                 artifacts, vault_edges traverses relationships, vault_reindex rebuilds the \
+                 index, vault_check_transition validates proposed status changes, and \
+                 vault_reflect produces graph-hygiene reports."
                     .to_string(),
             ),
         }
@@ -329,26 +424,8 @@ impl ServerHandler for SkillsServer {
         _request: Option<PaginatedRequestParams>,
         _context: RequestContext<RoleServer>,
     ) -> Result<ListToolsResult, McpError> {
-        let empty = empty_schema();
-        let mut tools: Vec<Tool> = self
-            .skills
-            .iter()
-            .map(|s| Tool {
-                name: Cow::Owned(s.name.clone()),
-                title: None,
-                description: Some(Cow::Owned(s.description.clone())),
-                input_schema: empty.clone(),
-                output_schema: None,
-                annotations: None,
-                execution: None,
-                icons: None,
-                meta: None,
-            })
-            .collect();
-        tools.extend(programmatic_tools());
-        tools.sort_by(|a, b| a.name.cmp(&b.name));
         Ok(ListToolsResult {
-            tools,
+            tools: self.listed_tools(),
             next_cursor: None,
             meta: None,
         })
@@ -359,12 +436,31 @@ impl ServerHandler for SkillsServer {
         request: CallToolRequestParams,
         _context: RequestContext<RoleServer>,
     ) -> Result<CallToolResult, McpError> {
-        match request.name.as_ref() {
-            "vault_search" => self.handle_vault_search(request.arguments).await,
-            "vault_edges" => self.handle_vault_edges(request.arguments).await,
+        self.route_tool(request.name.as_ref(), request.arguments)
+            .await
+    }
+}
+
+impl SkillsServer {
+    async fn route_tool(
+        &self,
+        name: &str,
+        arguments: Option<serde_json::Map<String, Value>>,
+    ) -> Result<CallToolResult, McpError> {
+        match name {
+            "skill_catalog" => {
+                if arguments.as_ref().is_some_and(|args| !args.is_empty()) {
+                    Ok(tool_err("skill_catalog does not accept arguments"))
+                } else {
+                    self.handle_skill_catalog().await
+                }
+            }
+            "skill_template_get" => self.handle_skill_template_get(arguments).await,
+            "vault_search" => self.handle_vault_search(arguments).await,
+            "vault_edges" => self.handle_vault_edges(arguments).await,
             "vault_reindex" => self.handle_vault_reindex().await,
-            "vault_check_transition" => self.handle_vault_check_transition(request.arguments).await,
-            "vault_reflect" => self.handle_vault_reflect(request.arguments).await,
+            "vault_check_transition" => self.handle_vault_check_transition(arguments).await,
+            "vault_reflect" => self.handle_vault_reflect(arguments).await,
             name => match self.find_skill(name) {
                 Some(skill) => Ok(CallToolResult::success(vec![Content::text(
                     skill.body.clone(),
@@ -375,9 +471,71 @@ impl ServerHandler for SkillsServer {
             },
         }
     }
-}
 
-impl SkillsServer {
+    async fn handle_skill_catalog(&self) -> Result<CallToolResult, McpError> {
+        let mut items = self
+            .skills
+            .iter()
+            .map(|skill| {
+                json!({
+                    "kind": "active-skill",
+                    "id": skill.name,
+                    "description": skill.description,
+                })
+            })
+            .collect::<Vec<_>>();
+        items.extend(self.templates.summaries().into_iter().map(|template| {
+            json!({
+                "kind": "template",
+                "id": template.id,
+                "version": template.version,
+                "purpose": template.purpose,
+                "compatibility": template.compatibility,
+            })
+        }));
+        items.sort_by(|left, right| {
+            left["id"]
+                .as_str()
+                .cmp(&right["id"].as_str())
+                .then_with(|| left["kind"].as_str().cmp(&right["kind"].as_str()))
+        });
+
+        Ok(json_result(json!({
+            "schema_version": 1,
+            "items": items,
+        })))
+    }
+
+    async fn handle_skill_template_get(
+        &self,
+        args: Option<serde_json::Map<String, Value>>,
+    ) -> Result<CallToolResult, McpError> {
+        let Some(args) = args else {
+            return Ok(tool_err("missing required argument: template_id"));
+        };
+        if args.keys().any(|key| key != "template_id" && key != "path") {
+            return Ok(tool_err("unexpected argument for skill_template_get"));
+        }
+        let Some(template_id) = args.get("template_id").and_then(Value::as_str) else {
+            return Ok(tool_err(
+                "missing or invalid required argument: template_id",
+            ));
+        };
+        let path = match args.get("path") {
+            Some(Value::String(path)) => Some(path.as_str()),
+            Some(_) => return Ok(tool_err("invalid argument: path must be a string")),
+            None => None,
+        };
+
+        match self.templates.get(template_id, path) {
+            Ok(bundle) => match serde_json::to_value(bundle) {
+                Ok(value) => Ok(json_result(value)),
+                Err(error) => Ok(tool_err(format!("failed to serialize template: {error}"))),
+            },
+            Err(error) => Ok(tool_err(error.to_string())),
+        }
+    }
+
     async fn handle_vault_search(
         &self,
         args: Option<serde_json::Map<String, Value>>,
@@ -556,6 +714,10 @@ fn vault_err(msg: String) -> CallToolResult {
     CallToolResult::error(vec![Content::text(msg)])
 }
 
+fn tool_err(msg: impl Into<String>) -> CallToolResult {
+    CallToolResult::error(vec![Content::text(msg.into())])
+}
+
 #[tokio::main(flavor = "multi_thread", worker_threads = 2)]
 async fn main() -> Result<()> {
     tracing_subscriber::fmt()
@@ -568,9 +730,11 @@ async fn main() -> Result<()> {
         .init();
 
     let skills = load_skills().context("failed to load embedded skills")?;
+    let templates = templates::TemplateRegistry::from_dir(&TEMPLATES)
+        .context("failed to load embedded skill templates")?;
     tracing::info!(count = skills.len(), "loaded skills");
 
-    let service = SkillsServer::new(skills)
+    let service = SkillsServer::new(skills, templates)
         .serve(stdio())
         .await
         .context("failed to start MCP stdio service")?;
@@ -581,6 +745,356 @@ async fn main() -> Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
+
+    static TEST_TEMPLATES: Dir<'_> = include_dir!("$CARGO_MANIFEST_DIR/templates");
+
+    fn test_server() -> SkillsServer {
+        let skills = load_skills().expect("embedded skills should load");
+        let templates = templates::TemplateRegistry::from_dir(&TEST_TEMPLATES)
+            .expect("embedded templates should load");
+        SkillsServer::new(skills, templates)
+    }
+
+    fn result_text(result: &CallToolResult) -> String {
+        let serialized = serde_json::to_value(result).expect("tool result should serialize");
+        serialized["content"][0]["text"]
+            .as_str()
+            .expect("tool result should contain text")
+            .to_owned()
+    }
+
+    fn result_json(result: &CallToolResult) -> Value {
+        serde_json::from_str(&result_text(result)).expect("tool result text should be JSON")
+    }
+
+    #[test]
+    fn server_instructions_describe_every_tool_family_and_vault_tool() {
+        let instructions = test_server()
+            .get_info()
+            .instructions
+            .expect("server instructions should be present");
+
+        for required in [
+            "instructional skill tools",
+            "skill_catalog",
+            "skill_template_get",
+            "vault_search",
+            "vault_edges",
+            "vault_reindex",
+            "vault_check_transition",
+            "vault_reflect",
+        ] {
+            assert!(
+                instructions.contains(required),
+                "server instructions missing {required}"
+            );
+        }
+    }
+
+    #[test]
+    fn active_skill_names_cannot_collide_with_each_other_or_programmatic_tools() {
+        let duplicate = vec![
+            LoadedSkill {
+                name: "example".to_owned(),
+                description: "first".to_owned(),
+                body: "first".to_owned(),
+            },
+            LoadedSkill {
+                name: "example".to_owned(),
+                description: "second".to_owned(),
+                body: "second".to_owned(),
+            },
+        ];
+        assert!(validate_skill_names(&duplicate).is_err());
+
+        let collision = vec![LoadedSkill {
+            name: "skill_catalog".to_owned(),
+            description: "collision".to_owned(),
+            body: "collision".to_owned(),
+        }];
+        assert!(validate_skill_names(&collision).is_err());
+
+        let template_collision = vec![LoadedSkill {
+            name: "document-feature-skill".to_owned(),
+            description: "collision".to_owned(),
+            body: "collision".to_owned(),
+        }];
+        assert!(validate_skill_names(&template_collision).is_err());
+    }
+
+    #[test]
+    fn skill_template_tools_have_exact_read_only_descriptions_and_schemas() {
+        let tools = test_server().listed_tools();
+        let catalog = tools
+            .iter()
+            .find(|tool| tool.name == "skill_catalog")
+            .expect("skill_catalog should be listed");
+        assert_eq!(
+            catalog.description.as_deref(),
+            Some(
+                "List active skills and installable skill templates from the embedded catalog. Read-only; returns metadata only and never template contents."
+            )
+        );
+        assert_eq!(
+            Value::Object(catalog.input_schema.as_ref().clone()),
+            json!({
+                "type": "object",
+                "properties": {},
+                "additionalProperties": false
+            })
+        );
+        assert_eq!(
+            catalog.annotations.as_ref().and_then(|a| a.read_only_hint),
+            Some(true)
+        );
+
+        let get = tools
+            .iter()
+            .find(|tool| tool.name == "skill_template_get")
+            .expect("skill_template_get should be listed");
+        assert_eq!(
+            get.description.as_deref(),
+            Some(
+                "Retrieve an embedded skill template by template_id, optionally limited to one declared path. Read-only; never reads arbitrary filesystem paths."
+            )
+        );
+        assert_eq!(
+            Value::Object(get.input_schema.as_ref().clone()),
+            json!({
+                "type": "object",
+                "properties": {
+                    "template_id": {"type": "string"},
+                    "path": {"type": "string"}
+                },
+                "required": ["template_id"],
+                "additionalProperties": false
+            })
+        );
+        assert_eq!(
+            get.annotations.as_ref().and_then(|a| a.read_only_hint),
+            Some(true)
+        );
+    }
+
+    #[tokio::test]
+    async fn skill_catalog_combines_metadata_without_bodies_or_template_contents() {
+        let result = test_server().handle_skill_catalog().await.unwrap();
+        assert_eq!(result.is_error, Some(false));
+        let catalog = result_json(&result);
+        assert_eq!(catalog["schema_version"], 1);
+
+        let items = catalog["items"]
+            .as_array()
+            .expect("items should be an array");
+        let ordering = items
+            .iter()
+            .map(|item| (item["id"].as_str().unwrap(), item["kind"].as_str().unwrap()))
+            .collect::<Vec<_>>();
+        assert!(ordering.windows(2).all(|pair| pair[0] <= pair[1]));
+
+        let mut active_count = 0;
+        let mut template_count = 0;
+        for item in items {
+            let keys = item
+                .as_object()
+                .unwrap()
+                .keys()
+                .map(String::as_str)
+                .collect::<std::collections::BTreeSet<_>>();
+            match item["kind"].as_str() {
+                Some("active-skill") => {
+                    active_count += 1;
+                    assert_eq!(
+                        keys,
+                        std::collections::BTreeSet::from(["description", "id", "kind"])
+                    );
+                    assert!(item["description"]
+                        .as_str()
+                        .is_some_and(|value| !value.is_empty()));
+                }
+                Some("template") => {
+                    template_count += 1;
+                    assert_eq!(
+                        keys,
+                        std::collections::BTreeSet::from([
+                            "compatibility",
+                            "id",
+                            "kind",
+                            "purpose",
+                            "version",
+                        ])
+                    );
+                    assert!(item["compatibility"].as_array().is_some());
+                }
+                kind => panic!("unexpected catalog item kind: {kind:?}"),
+            }
+        }
+        assert!(active_count > 0, "active skill metadata should be present");
+        assert!(template_count > 0, "template metadata should be present");
+    }
+
+    #[tokio::test]
+    async fn skill_template_get_returns_full_bundle_and_single_declared_path() {
+        let server = test_server();
+        let full = server
+            .handle_skill_template_get(Some(serde_json::Map::from_iter([(
+                "template_id".to_owned(),
+                json!("engineering-journal-skill"),
+            )])))
+            .await
+            .unwrap();
+        assert_eq!(full.is_error, Some(false));
+        let bundle = result_json(&full);
+        assert_eq!(bundle["manifest"]["id"], "engineering-journal-skill");
+        assert!(bundle["source"]["repository"].as_str().is_some());
+        assert!(bundle["source"]["commit"].as_str().is_some());
+        assert!(bundle["source"]["dirty"].is_boolean());
+        assert_eq!(bundle["aggregate_sha256"].as_str().unwrap().len(), 64);
+        let declared = bundle["manifest"]["files"].as_array().unwrap();
+        let files = bundle["files"].as_array().unwrap();
+        assert_eq!(files.len(), declared.len());
+        let mut declared_paths = declared
+            .iter()
+            .map(|file| file["path"].as_str().unwrap())
+            .collect::<Vec<_>>();
+        declared_paths.sort_unstable();
+        assert_eq!(
+            files
+                .iter()
+                .map(|file| file["path"].as_str().unwrap())
+                .collect::<Vec<_>>(),
+            declared_paths
+        );
+        assert!(files.iter().all(|file| file["content"].is_string()));
+
+        let one = server
+            .handle_skill_template_get(Some(serde_json::Map::from_iter([
+                ("template_id".to_owned(), json!("engineering-journal-skill")),
+                ("path".to_owned(), json!("SKILL.md")),
+            ])))
+            .await
+            .unwrap();
+        assert_eq!(one.is_error, Some(false));
+        let one = result_json(&one);
+        assert_eq!(one["files"].as_array().unwrap().len(), 1);
+        assert_eq!(one["files"][0]["path"], "SKILL.md");
+    }
+
+    #[tokio::test]
+    async fn skill_template_get_invalid_requests_are_mcp_errors() {
+        let server = test_server();
+        let cases = [
+            (None, "missing required argument: template_id"),
+            (
+                Some(serde_json::Map::new()),
+                "missing or invalid required argument: template_id",
+            ),
+            (
+                Some(serde_json::Map::from_iter([(
+                    "template_id".to_owned(),
+                    json!(42),
+                )])),
+                "missing or invalid required argument: template_id",
+            ),
+            (
+                Some(serde_json::Map::from_iter([(
+                    "template_id".to_owned(),
+                    json!("unknown-template"),
+                )])),
+                "unknown template id \"unknown-template\"",
+            ),
+            (
+                Some(serde_json::Map::from_iter([
+                    ("template_id".to_owned(), json!("engineering-journal-skill")),
+                    ("path".to_owned(), json!(42)),
+                ])),
+                "invalid argument: path must be a string",
+            ),
+            (
+                Some(serde_json::Map::from_iter([
+                    ("template_id".to_owned(), json!("engineering-journal-skill")),
+                    ("path".to_owned(), json!("undeclared.txt")),
+                ])),
+                "undeclared template path \"undeclared.txt\" for \"engineering-journal-skill\"",
+            ),
+            (
+                Some(serde_json::Map::from_iter([
+                    ("template_id".to_owned(), json!("engineering-journal-skill")),
+                    ("unexpected".to_owned(), json!(true)),
+                ])),
+                "unexpected argument for skill_template_get",
+            ),
+        ];
+        let bundle = server
+            .templates
+            .get("engineering-journal-skill", None)
+            .unwrap();
+        let template_contents = bundle
+            .files
+            .into_iter()
+            .map(|file| file.content)
+            .filter(|content| !content.is_empty())
+            .collect::<Vec<_>>();
+        let source_repository = bundle.source.repository;
+
+        for (args, expected) in cases {
+            let result = server.handle_skill_template_get(args).await.unwrap();
+            assert_eq!(result.is_error, Some(true));
+            let message = result_text(&result);
+            assert!(
+                message.contains(expected),
+                "expected {expected:?} in safe error response {message:?}"
+            );
+            for content in &template_contents {
+                assert!(!message.contains(content), "error exposed template content");
+            }
+            assert!(!message.contains(env!("CARGO_MANIFEST_DIR")));
+            assert!(!message.contains("/.worktrees/"));
+            if std::path::Path::new(&source_repository).is_absolute() {
+                assert!(!message.contains(&source_repository));
+            }
+        }
+    }
+
+    #[tokio::test]
+    async fn call_tool_routing_keeps_programmatic_tools_ahead_of_inert_template_ids() {
+        let server = test_server();
+
+        let catalog = server.route_tool("skill_catalog", None).await.unwrap();
+        assert_eq!(catalog.is_error, Some(false));
+
+        let template = server
+            .route_tool("document-feature-skill", None)
+            .await
+            .unwrap();
+        assert_eq!(template.is_error, Some(true));
+        assert!(template.content.iter().any(|content| {
+            serde_json::to_value(content)
+                .ok()
+                .and_then(|value| value["text"].as_str().map(str::to_owned))
+                .is_some_and(|text| text.contains("unknown tool: document-feature-skill"))
+        }));
+    }
+
+    #[test]
+    fn skill_template_ids_are_inert_and_existing_tools_remain_listed() {
+        let tools = test_server().listed_tools();
+        let names = tools
+            .iter()
+            .map(|tool| tool.name.as_ref())
+            .collect::<Vec<_>>();
+
+        assert!(!names.contains(&"engineering-journal-skill"));
+        assert!(!names.contains(&"document-feature-skill"));
+        assert!(names.contains(&"engineering-journal"));
+        assert!(names.contains(&"recommend-skills"));
+        assert!(names.contains(&"seed-skill-template"));
+        assert!(names.contains(&"catchup"));
+        assert!(names.contains(&"vault_search"));
+        assert!(names.contains(&"vault_reflect"));
+        assert!(names.contains(&"skill_catalog"));
+        assert!(names.contains(&"skill_template_get"));
+    }
 
     #[test]
     fn engineering_journal_skill_is_embedded() {

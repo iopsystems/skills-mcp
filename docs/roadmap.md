@@ -4,15 +4,22 @@ This roadmap describes intended outcomes. [The backlog](backlog.md) owns concret
 work items, and [assumptions and limitations](assumptions-and-limitations.md)
 records the boundaries under which these stages are expected to work.
 
-## Stage 1: Skill templates and dogfood
+## Stage 1: Skill templates and dogfood (in implementation)
 
-Separate invocable skills from inert templates, add read-only catalog and template
-retrieval, and ship the first engineering-journal and feature-documentation
-templates. Provide read-only recommendations and provenance-aware seeding.
+The repository separates invocable skills from inert templates, provides read-only
+catalog and template retrieval, and ships the first engineering-journal and
+feature-documentation templates with read-only recommendations and
+provenance-aware seeding. Seeder mutations coordinate cooperative project writers
+and safe-stop on detected identity or digest changes; an uncooperative local writer
+remains outside that guarantee.
 
-Install the feature-documentation template in this repository and use it to make
-the README a strong internal entry point for installation, skill discovery, and
+The feature-documentation template is installed in this repository and produced
+the README as an internal entry point for installation, skill discovery, and
 contribution from development experience.
+
+The implementation is ready for pull-request review, but this stage remains open
+until live Codex and Claude Code discovery is verified from the same canonical
+installed instance or the repository owner explicitly revises that criterion.
 
 ## Stage 2: Low-friction distribution
 

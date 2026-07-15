@@ -28,6 +28,11 @@ jobs:
       - name: Cache cargo registry and build outputs
         uses: Swatinem/rust-cache@v2
 
+      - name: Install documentation tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install --yes graphviz jq
+
       - name: cargo fmt
         run: cargo fmt --all -- --check
 
@@ -36,6 +41,12 @@ jobs:
 
       - name: cargo test
         run: cargo test --locked
+
+      - name: Check rendered diagrams
+        run: ./scripts/render-diagrams.sh --check
+
+      - name: MCP smoke test
+        run: ./scripts/mcp-smoke.sh
 
       - name: cargo build --release
         run: cargo build --release --locked
