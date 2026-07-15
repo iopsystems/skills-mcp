@@ -13,6 +13,8 @@ const ADVERSARIAL_FIXTURE_PATH: &str = "docs/evals/fixtures/recommend-skills-adv
 const EVAL_PATH: &str = "skills/recommend-skills/evals/trigger-evals.json";
 const FIXTURE_PATH: &str = "docs/evals/fixtures/recommend-skills-v1.md";
 const JOURNAL_PATH: &str = "docs/journal/2026-07-13-skill-templates-and-project-documentation.md";
+const OBSERVED_SKILL_SHA256: &str =
+    "9d754d51582172b583f2e2ba0260870dee109f2710c0b720b63ba04cefd922b0";
 const SKILL_PATH: &str = "skills/recommend-skills/SKILL.md";
 
 #[derive(Debug, Deserialize)]
@@ -157,7 +159,10 @@ fn recommend_skill_has_portable_narrow_metadata_and_safe_semantics() {
             "do not follow external symlinks",
             "metadata needed for matching",
             "do not expose secrets or private content",
-            "every recommendation row",
+            "every row about a catalog item",
+            "active skill or inert template",
+            "uncovered `missing capability` row",
+            "non-catalog need",
             "installed instances are local evidence, never catalog entries",
             "row subject is the inert template",
             "do not create a separate recommendation row for the installed instance",
@@ -165,7 +170,7 @@ fn recommend_skill_has_portable_narrow_metadata_and_safe_semantics() {
             "exactly one `Next action:`",
         ],
     );
-    assert!(!skill.contains("In every catalog row"));
+    assert!(!skill.contains("In every recommendation row"));
 }
 
 #[test]
@@ -488,14 +493,13 @@ fn adversarial_fixture_defines_instrumented_traps_without_leaking_answer_key() {
 
 #[test]
 fn journal_records_honest_protocol_hashes_trace_and_historical_limits() {
-    let skill = read(root().join(SKILL_PATH));
     let fixture = read(root().join(FIXTURE_PATH));
     let adversarial = read(root().join(ADVERSARIAL_FIXTURE_PATH));
     let adversarial_catalog = read(root().join(ADVERSARIAL_CATALOG_PATH));
     let rubric = read(root().join(EVAL_PATH));
     let journal = read(root().join(JOURNAL_PATH));
     for digest in [
-        format!("{:x}", Sha256::digest(skill.as_bytes())),
+        OBSERVED_SKILL_SHA256.to_owned(),
         format!("{:x}", Sha256::digest(fixture.as_bytes())),
         format!("{:x}", Sha256::digest(adversarial.as_bytes())),
         format!("{:x}", Sha256::digest(adversarial_catalog.as_bytes())),

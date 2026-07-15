@@ -68,8 +68,9 @@ why/why not and meaningful tradeoffs. Use an Action value that is exactly one of
 When an active skill and template share a keyword or purpose that could confuse the decision, classify both
 separately; do not let one row stand in for the other.
 
-In every recommendation row, state the catalog item's role explicitly: active skill or inert template. Installed
-instances are local evidence, never catalog entries.
+For every row about a catalog item, state its role explicitly: active skill or inert template. Identify an uncovered
+`missing capability` row explicitly as a non-catalog need. Installed instances are local evidence, never catalog
+entries.
 Make the Project evidence cell cover every material fact supporting the decision, including distinct requested
 surfaces, constraints, and existing state. For a `missing capability`, state that no relevant active skill or inert
 template covers the need; mention installed-instance coverage only when inspected evidence supports that claim.
