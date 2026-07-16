@@ -44,7 +44,7 @@ impl Index {
         if vault_version != schema::SUPPORTED_SCHEMA_VERSION {
             return Err(anyhow!(
                 "vault SCHEMA.md is version {vault_version} but this build supports \
-                 version {}. Upgrade iop-skills or roll the vault schema.",
+                 version {}. Upgrade skills-mcp or roll the vault schema.",
                 schema::SUPPORTED_SCHEMA_VERSION
             ));
         }

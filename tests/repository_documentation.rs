@@ -64,8 +64,8 @@ fn readme_documents_mcp_configuration_contribution_and_limits() {
         "./scripts/mcp-smoke.sh",
         "cargo test --locked",
         "cargo clippy --all-targets --locked -- -D warnings",
-        "source-only",
-        "no prebuilt",
+        "brew install iopsystems/iop/skills-mcp",
+        "install.sh",
         "docs/roadmap.md",
         "docs/assumptions-and-limitations.md",
     ] {
@@ -81,7 +81,7 @@ fn raw_debug_example_invokes_the_binary_it_builds() {
         .expect("raw MCP section")
         .1;
     assert!(raw.contains("cargo build --locked"));
-    assert!(raw.contains("./target/debug/iop-skills"));
+    assert!(raw.contains("./target/debug/skills-mcp"));
     assert!(raw.contains("debug binary"));
     assert!(!raw.contains("release binary"));
 }

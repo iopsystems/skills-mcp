@@ -151,7 +151,7 @@ mod tests {
                 .unwrap()
                 .as_nanos();
             let path = env::temp_dir().join(format!(
-                "iop-skills-build-provenance-{}-{unique}",
+                "skills-mcp-build-provenance-{}-{unique}",
                 std::process::id()
             ));
             fs::create_dir_all(&path).unwrap();
