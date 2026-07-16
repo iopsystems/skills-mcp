@@ -52,15 +52,17 @@ beside it and checked for freshness in CI.
 
 ## Install with Homebrew
 
-The quickest way to get `skills-mcp` on Apple Silicon macOS or Linux is the IOP
-Systems Homebrew tap:
+The quickest way to get `skills-mcp` on Apple Silicon macOS or x86_64 Linux is
+the IOP Systems Homebrew tap:
 
 ```sh
 brew install iopsystems/iop/skills-mcp
 ```
 
-This installs a bottled (prebuilt) `skills-mcp` binary. Pass
-`--build-from-source` to compile it locally instead.
+This installs a bottled (prebuilt) `skills-mcp` binary. Bottles are published for
+Apple Silicon macOS (Sonoma and Sequoia) and x86_64 Linux; on other platforms
+Homebrew builds the same formula from source. Pass `--build-from-source` to
+compile locally on any platform.
 
 ### Install script
 

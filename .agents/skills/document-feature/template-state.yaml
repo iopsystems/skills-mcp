@@ -23,6 +23,6 @@ last_upgraded_at: null
 customizations:
   - path: references/audience-charter.md
     rationale: >-
-      Specializes audience priorities, source-only installation and contribution
-      paths, repository verification commands, DOT/SVG conventions, and mandatory
-      human review gates for iop-skills.
+      Specializes audience priorities, packaged and source installation and
+      contribution paths, repository verification commands, DOT/SVG conventions,
+      and mandatory human review gates for skills-mcp.

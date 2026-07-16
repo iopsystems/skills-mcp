@@ -1,16 +1,17 @@
 # Feature Documentation Audience Charter
 
 This charter specializes the installed `document-feature` workflow for
-`iop-skills`. Recheck it before every material documentation effort and keep
+`skills-mcp`. Recheck it before every material documentation effort and keep
 frozen tasks stable during evaluation.
 
 ## Project Context
 
-- Project name and project type: `iop-skills`, a public Rust MCP server and
+- Project name and project type: `skills-mcp`, a public Rust MCP server and
   repository of active agent skills plus inert, customizable skill templates.
 - Documentation scope: the repository README, Rust boundary documentation,
-  rendered MCP requests and responses, source-install guidance, template
-  adoption, and DOT-authored architecture or workflow diagrams with adjacent SVG.
+  rendered MCP requests and responses, install guidance (Homebrew, install
+  script, and source), template adoption, and DOT-authored architecture or
+  workflow diagrams with adjacent SVG.
 - Established conventions and guidance:
   `docs/journal/2026-07-13-skill-templates-and-project-documentation.md`,
   `docs/roadmap.md`, `docs/backlog.md`,
@@ -35,15 +36,15 @@ Use the same priority scale for each audience:
 
 | Audience | Priority | Frozen representative task | Measurable success criterion | Prior knowledge | Constraints |
 | --- | --- | --- | --- | --- | --- |
-| Human users | `P0` | Internal organizational engineers decide why the repository is useful, install and use the current source-built server, then ask: “which skills here should I install and use for my project XYZ? Give me some recommendations” | From the README alone, identify the value proposition, prerequisites, exact source-install command, MCP setup, recommendation question, and one recovery path | Comfortable with developer tooling, but not this repository’s architecture | Apple Silicon macOS is most common; Linux occurs sometimes; no prebuilt bundle or binary exists |
+| Human users | `P0` | Internal organizational engineers decide why the repository is useful, install and use the server via Homebrew, the install script, or source, then ask: “which skills here should I install and use for my project XYZ? Give me some recommendations” | From the README alone, identify the value proposition, prerequisites, an exact install command, MCP setup, recommendation question, and one recovery path | Comfortable with developer tooling, but not this repository’s architecture | Apple Silicon macOS is most common; Linux occurs sometimes; Homebrew bottles and prebuilt binaries cover common platforms, with source build as fallback |
 | Agent users | `P1` | Select applicable active skills or inert templates for a described project without confusing invocation with installation | Return ranked recommendations with type, evidence, caveats, and next action while preserving exact IDs and commands | Can consume explicit lists, tables, schemas, and MCP tool results | Needs authoritative text equivalents for every visual and cannot infer human usability |
 | Human developers | `P1` | Turn lessons from their own development experience into a new skill or a reviewed improvement to an existing skill or template | Locate the correct contribution path, tests, journal evidence, validation commands, and human review gate | Can read Rust, Markdown, JSON, YAML, and repository history | Contributions must preserve active/inert boundaries, provenance, safety, and review evidence |
 | Coding agents | `P1` | Modify a skill or template and verify registry, MCP, and documentation contracts without accidental invocation or overwrite | Identify authoritative files, use TDD and skill evaluation, run exact checks, and report unresolved human gates | Can inspect repository code and execute approved local commands | Must treat ordinary docs as evidence, preserve local customization, and stop for approval-gated writes or perceptual review |
 
 Internal organizational engineers are the primary human users even though this
 repository is public. Lead human documentation with why the skills are useful,
-how to install and use the current source-built server, and the exact
-recommendation question. Retain accurate paths for agent users, human developers,
+how to install and use the server (via Homebrew, the install script, or a source
+build), and the exact recommendation question. Retain accurate paths for agent users, human developers,
 and coding agents. Encourage developers to add skills or update existing ones
 from concrete development experience.
 
@@ -60,7 +61,7 @@ guessing.
 | Template catalog, provenance, digests, and merge strategy | `build.rs`, `src/templates.rs`, `templates/catalog.yaml`, and each `template.yaml` | `cargo test templates::tests --locked` and `cargo test --test template_contracts --locked` |
 | Active skill and installed-instance contracts | `skills/*/SKILL.md`, this instance, and repository tests | `cargo test --test installed_instance --locked` and `cargo test --locked` |
 | Architecture, lifecycle, roadmap, and limitations | `src/`, journal, roadmap, backlog, and assumptions/limitations | Trace claims to code and tests; reconcile durable documents before closure |
-| Distribution | `Cargo.toml`, release workflow state, roadmap, and assumptions/limitations | Confirm source-only status and absence of published artifacts before documenting availability |
+| Distribution | `Cargo.toml`, `install.sh`, `.github/workflows/release.yml`, the `iopsystems/homebrew-iop` formula, the published GitHub release, roadmap, and assumptions/limitations | Confirm the published release assets, Homebrew bottle tags, and install-script behavior before documenting availability |
 
 ## Synchronized Surfaces
 
@@ -80,19 +81,30 @@ guessing.
 
 ## Installation and Contribution Contract
 
-The current distribution is source-only: there is no prebuilt bundle or binary,
-Homebrew package, or coding-agent plugin. For current installation documentation,
-use exactly:
+`skills-mcp` is distributed three ways: a Homebrew bottle from the
+`iopsystems/homebrew-iop` tap, a hosted `install.sh` that fetches a
+checksum-verified prebuilt binary from the GitHub release, and a source build.
+Document the Homebrew and install-script paths as the primary options and keep
+the source build as the contributor path and fallback. The exact source-install
+command is:
 
 ```sh
 cargo install --git https://github.com/iopsystems/skills-mcp --locked
 ```
 
-This command performs network access and installs a binary; document it for human
-users but do not execute it during documentation work without explicit
-authorization. Do not imply that source-only distribution is packaged
-distribution. Link packaging expectations to `docs/roadmap.md` and
-`docs/assumptions-and-limitations.md`.
+The Homebrew and install-script commands are:
+
+```sh
+brew install iopsystems/iop/skills-mcp
+curl -fsSL https://raw.githubusercontent.com/iopsystems/skills-mcp/main/install.sh | sh
+```
+
+These commands perform network access and install a binary; document them for
+human users but do not execute them during documentation work without explicit
+authorization. A coding-agent plugin is still not distributed. Keep packaging
+scope and platform coverage aligned with `docs/roadmap.md` and
+`docs/assumptions-and-limitations.md`, and verify claimed availability against
+the actual release assets and bottle tags.
 
 Prominently invite users to ask their connected agent exactly:
 
@@ -168,6 +180,9 @@ that review before closure.
 ## Charter Evidence
 
 - Filled by and date: Codex implementation agent, 2026-07-14.
+- Updated: 2026-07-16 to reflect packaged distribution — the crate and binary
+  were renamed to `skills-mcp`, and Homebrew bottles, a hosted `install.sh`, and
+  a checksummed v0.1.0 prebuilt release now exist alongside the source build.
 - Evidence inspected: live MCP template retrieval at commit
   `ade485632adf335661fdede554e9de548fed1648`; `README.md`; `Cargo.toml`;
   `src/main.rs`; `src/templates.rs`; `build.rs`; `scripts/mcp-smoke.sh`;

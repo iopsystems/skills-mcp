@@ -90,11 +90,16 @@ silently convert a limitation into an implied guarantee.
 
 ## Distribution
 
-- There is currently no prebuilt bundle or binary. Users build the Rust binary from
-  source.
-- Apple Silicon macOS is the primary packaging target. Linux is used sometimes,
-  but its initial architecture matrix is not yet specified. Intel macOS is not an
-  initial commitment.
-- A Homebrew tap should consume trustworthy release artifacts or bottles; a formula
-  that merely makes every user compile Rust is not the desired end state.
+- Checksummed prebuilt binaries are published for Apple Silicon and Intel macOS
+  and for x86_64 and aarch64 Linux. The hosted `install.sh` verifies a SHA-256
+  checksum before installing and falls back to a source build when no prebuilt
+  binary matches the platform.
+- The `iopsystems/homebrew-iop` tap ships a `skills-mcp` formula. Bottles are
+  built by the tap CI for Apple Silicon macOS (Sonoma and Sequoia) and x86_64
+  Linux; other platforms — Intel macOS, aarch64 Linux, and macOS versions outside
+  that range — compile from source through the same formula.
+- Apple Silicon macOS remains the primary target and Linux is supported. Bottle
+  coverage is bounded by the tap's shared CI runner matrix rather than the
+  prebuilt-binary matrix, so the two install paths cover slightly different
+  platform sets by design.
 - Coding-agent plugin platforms are intentionally deferred.
