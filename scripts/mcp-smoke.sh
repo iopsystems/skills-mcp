@@ -2,8 +2,8 @@
 set -euo pipefail
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-BINARY="$ROOT_DIR/target/debug/iop-skills"
-TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/iop-skills-mcp-smoke.XXXXXX")
+BINARY="$ROOT_DIR/target/debug/skills-mcp"
+TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/skills-mcp-smoke.XXXXXX")
 REQUESTS="$TMP_DIR/requests"
 RESPONSES="$TMP_DIR/responses.jsonl"
 ERRORS="$TMP_DIR/server.stderr"

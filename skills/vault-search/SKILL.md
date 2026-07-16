@@ -8,7 +8,7 @@ description: |
 
 You have three programmatic MCP tools available for reading the
 knowledge-iop vault. They are fast, deterministic, and query a SQLite
-index maintained by iop-skills. Use them instead of `grep` or `find`
+index maintained by skills-mcp. Use them instead of `grep` or `find`
 whenever you can.
 
 ## The tools

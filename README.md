@@ -1,6 +1,6 @@
-# iop-skills
+# skills-mcp
 
-`iop-skills` is a source-built [Model Context Protocol](https://modelcontextprotocol.io)
+`skills-mcp` is a [Model Context Protocol](https://modelcontextprotocol.io)
 server and a shared library of agent workflows. It helps teams reuse engineering
 practice that has already worked in real projects while preserving the judgment,
 validation, and human review needed to adapt that practice safely.
@@ -20,8 +20,8 @@ creates two short paths:
 - contribute a lesson from project experience as a new or improved skill or
   template.
 
-The current distribution is source-only. There is no prebuilt binary, bundle,
-Homebrew package, or coding-agent plugin yet.
+You can install `skills-mcp` with Homebrew, a one-line install script, or from
+source (see below). A coding-agent plugin is not distributed yet.
 
 ## How project lessons become shared skills
 
@@ -50,6 +50,33 @@ The DOT source is authoritative at
 [`docs/skill-feedback-loop.dot`](docs/skill-feedback-loop.dot); the SVG is rendered
 beside it and checked for freshness in CI.
 
+## Install with Homebrew
+
+The quickest way to get `skills-mcp` on Apple Silicon macOS or Linux is the IOP
+Systems Homebrew tap:
+
+```sh
+brew install iopsystems/iop/skills-mcp
+```
+
+This installs a bottled (prebuilt) `skills-mcp` binary. Pass
+`--build-from-source` to compile it locally instead.
+
+### Install script
+
+If you do not use Homebrew, the hosted install script downloads the prebuilt
+binary that matches your platform from the latest GitHub release, verifies its
+SHA-256 checksum, and installs it into `~/.local/bin`:
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/iopsystems/skills-mcp/main/install.sh | sh
+```
+
+Review the [script](install.sh) before piping it to a shell. When no prebuilt
+binary matches your platform it falls back to a `cargo install` build, so a Rust
+toolchain is still useful to have. Set `SKILLS_MCP_VERSION` to pin a release
+tag other than the latest.
+
 ## Install from source
 
 ### Prerequisites
@@ -66,26 +93,26 @@ cargo install --git https://github.com/iopsystems/skills-mcp --locked
 ```
 
 This command accesses the network, compiles Rust locally, and installs
-`iop-skills` into Cargo's binary directory (normally `$HOME/.cargo/bin`). Confirm
+`skills-mcp` into Cargo's binary directory (normally `$HOME/.cargo/bin`). Confirm
 that directory is on `PATH`:
 
 ```sh
-command -v iop-skills
+command -v skills-mcp
 ```
 
 If compilation fails, first update the Rust toolchain and retry. For contributor
 builds from a checkout, use `cargo build --locked`; the debug binary is
-`target/debug/iop-skills`.
+`target/debug/skills-mcp`.
 
 Configure an MCP client to spawn the installed binary. Replace the command with
-the absolute path printed by `command -v iop-skills` if the client does not inherit
+the absolute path printed by `command -v skills-mcp` if the client does not inherit
 your shell `PATH`:
 
 ```json
 {
   "mcpServers": {
-    "iop-skills": {
-      "command": "/absolute/path/to/iop-skills"
+    "skills-mcp": {
+      "command": "/absolute/path/to/skills-mcp"
     }
   }
 }
@@ -227,7 +254,7 @@ the debug binary, lists tools, and calls `skill_catalog` in one session:
   printf '%s\n' '{"jsonrpc":"2.0","method":"notifications/initialized","params":{}}'
   printf '%s\n' '{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}'
   printf '%s\n' '{"jsonrpc":"2.0","id":3,"method":"tools/call","params":{"name":"skill_catalog","arguments":{}}}'
-) | ./target/debug/iop-skills
+) | ./target/debug/skills-mcp
 ```
 
 Responses are JSON lines on standard output. Pipe them through `jq` to inspect
@@ -235,15 +262,14 @@ specific IDs; server diagnostics go to standard error.
 
 ## Present limitations and roadmap
 
-Today the project is source-only: there is no prebuilt bundle or binary and no
-automatic cross-project survey. Harness discovery can vary by coding agent, and
-template upgrades stop rather than guess when provenance or historical bases are
-unavailable. Agent evaluations provide comprehension evidence but never prove
-human usability.
+Prebuilt, checksummed binaries and a Homebrew bottle are now published for Apple
+Silicon macOS and Linux, but there is still no automatic cross-project survey.
+Harness discovery can vary by coding agent, and template upgrades stop rather
+than guess when provenance or historical bases are unavailable. Agent
+evaluations provide comprehension evidence but never prove human usability.
 
 See [assumptions and limitations](docs/assumptions-and-limitations.md) for the
-current boundaries. The [roadmap](docs/roadmap.md) covers checksummed Apple Silicon
-macOS and selected Linux artifacts, later Homebrew packaging, authorized adoption
+current boundaries. The [roadmap](docs/roadmap.md) covers authorized adoption
 surveys, evidence-based template evolution, and eventual evaluation of plugin
 distribution.
 
