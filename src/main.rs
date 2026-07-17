@@ -1,3 +1,17 @@
+//! `skills-mcp` — a single self-contained Model Context Protocol server that
+//! exposes embedded agent skills as MCP tools and serves read-only skill and
+//! template metadata over stdio.
+//!
+//! The binary embeds the `skills/` and `templates/` trees at compile time (the
+//! `SKILLS` and `TEMPLATES` statics below), so no sidecar directory is required
+//! at runtime. It speaks JSON-RPC over stdin/stdout via `rmcp`; there is no
+//! flag-oriented CLI, so the rendered interface is the `initialize`,
+//! `tools/list`, and `tools/call` exchange exercised by `scripts/mcp-smoke.sh`.
+//!
+//! Distribution: each release publishes checksummed prebuilt binaries and a
+//! Homebrew bottle. `install.sh` and the `iopsystems/homebrew-iop` formula both
+//! install this binary; see the README for the available install paths.
+
 use std::{borrow::Cow, path::PathBuf, sync::Arc};
 
 use anyhow::{bail, Context, Result};

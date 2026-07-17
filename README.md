@@ -52,15 +52,17 @@ beside it and checked for freshness in CI.
 
 ## Install with Homebrew
 
-The quickest way to get `skills-mcp` on Apple Silicon macOS or Linux is the IOP
-Systems Homebrew tap:
+The quickest way to get `skills-mcp` on Apple Silicon macOS or x86_64 Linux is
+the IOP Systems Homebrew tap:
 
 ```sh
 brew install iopsystems/iop/skills-mcp
 ```
 
-This installs a bottled (prebuilt) `skills-mcp` binary. Pass
-`--build-from-source` to compile it locally instead.
+This installs a bottled (prebuilt) `skills-mcp` binary. Bottles are published for
+Apple Silicon macOS (Sonoma and Sequoia) and x86_64 Linux; on other platforms
+Homebrew builds the same formula from source. Pass `--build-from-source` to
+compile locally on any platform.
 
 ### Install script
 
@@ -122,6 +124,28 @@ Restart or reconnect the client, list its MCP tools, and confirm that
 `skill_catalog` is present. If it is missing, run the command path directly from a
 terminal to check that it starts, then inspect the client's MCP logs for its
 effective `PATH` and configuration.
+
+## Using the server
+
+`skills-mcp` is an MCP server, not a command-line tool—you never run it
+directly. Launched on its own it just waits for JSON-RPC on standard input. Your
+MCP client spawns it from the `mcpServers` configuration above, and you use it by
+talking to your connected agent.
+
+Once connected, the server exposes three families of tools:
+
+- **Active skills** as invocable workflow tools—`recommend-skills`,
+  `plan-feature`, `engineering-journal`, `seed-skill-template`, `vault-search`,
+  and more. Ask your agent to run one by name; the tool returns workflow
+  instructions for the agent to follow, and nothing is copied into your project.
+- **`skill_catalog`** and **`skill_template_get`** for read-only browsing of every
+  active skill and template, and for retrieving a template's declared files.
+- **`vault_search`**, **`vault_edges`**, **`vault_reflect`**, and related
+  **`vault_*`** tools for querying the knowledge vault.
+
+A good first step is to ask your agent to call `skill_catalog`, or to ask the
+recommendation question below. The only time you feed the binary directly is the
+raw JSON-RPC check in the "Raw MCP smoke and debugging" section.
 
 ## Ask for recommendations and use an active skill
 

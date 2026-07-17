@@ -195,7 +195,7 @@ fn installed_state_records_the_exact_clean_base_and_declared_customizations() {
     assert!(manifest.compatibility.iter().any(|value| value == "codex"));
     assert_eq!(
         state.base.aggregate_sha256,
-        "cb18b1580d31580c63fa14d34c8a2438ebe55e4a67726e73c80be2a5369e423e"
+        "d27f6594f7cbc7ed7a379bdec16d53031ca039a5e01e3b89f1feb9166f9389a7"
     );
     assert_eq!(
         state.base.aggregate_sha256,
@@ -278,8 +278,8 @@ fn audience_charter_encodes_the_approved_project_profile() {
             "which skills here should I install and use for my project XYZ? Give me some recommendations",
             "cargo install --git https://github.com/iopsystems/skills-mcp --locked",
             "development experience",
-            "source-only",
-            "no prebuilt bundle or binary",
+            "Homebrew",
+            "install.sh",
             "DOT",
             "SVG",
             "human review",

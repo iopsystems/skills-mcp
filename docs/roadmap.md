@@ -21,12 +21,16 @@ The implementation is ready for pull-request review, but this stage remains open
 until live Codex and Claude Code discovery is verified from the same canonical
 installed instance or the repository owner explicitly revises that criterion.
 
-## Stage 2: Low-friction distribution
+## Stage 2: Low-friction distribution (delivered in v0.1.0)
 
-Publish versioned, checksummed artifacts for Apple Silicon macOS and the selected
-Linux targets. Add an organizational Homebrew tap after the release artifacts and
-platform smoke tests are trustworthy. Preserve source builds as the contributor
-path and fallback.
+The v0.1.0 release publishes versioned, checksummed binaries for Apple Silicon
+and Intel macOS and for x86_64 and aarch64 Linux, built by
+`.github/workflows/release.yml`. The hosted `install.sh` fetches and verifies the
+binary matching the caller's platform. The `iopsystems/homebrew-iop` tap carries
+a `skills-mcp` formula with bottles for Apple Silicon macOS (Sonoma and Sequoia)
+and x86_64 Linux, produced by the tap's `brew test-bot` pipeline. Source builds
+remain the contributor path and the fallback for platforms without a bottle or a
+prebuilt binary.
 
 ## Stage 3: Adoption and observation
 
