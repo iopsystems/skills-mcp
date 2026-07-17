@@ -100,6 +100,11 @@ action, expected outcome, measurable success criterion, relevant failure or
 recovery path, and evidence that would count as a pass. Include negative and
 boundary behavior, not only the happy path.
 
+For any installable or runnable component, also freeze a first-successful-use
+task that operates the feature after setup—invoking it and observing a correct
+result—kept distinct from installing and configuring it. Installation or setup
+succeeding is not evidence that a reader can actually use the feature.
+
 Use charter priorities and success criteria to drive content order, examples,
 visual and textual emphasis, and verification. Preserve shared authoritative
 facts across audiences. Satisfy a higher-priority need without making a
@@ -139,6 +144,20 @@ Ask the human owner when audience priorities conflict materially.
   source annotations or parser definitions alone are not sufficient.
 - Add or update deterministic tests when the project treats help output or CLI
   behavior as a contract.
+
+### Runtime and operational interface
+
+- When the component is not a flag-oriented CLI—a server, daemon, background
+  service, library, or protocol endpoint—document how it is actually operated at
+  runtime, not only how it is installed and configured.
+- State how it is invoked (for example, spawned by a host or client, imported as
+  a dependency, or connected to over a socket or protocol), the primary
+  interaction loop, and what a first successful use looks like end to end.
+- Call out invocation anti-patterns explicitly, such as running a server or
+  stdio binary directly when a client is meant to launch it.
+- Verify the operational interface against real observed behavior—the actual
+  request and response, API call, or session exchange—not configuration
+  snippets or source annotations alone.
 
 ## Visual Documentation
 

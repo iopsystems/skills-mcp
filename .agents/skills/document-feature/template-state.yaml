@@ -7,10 +7,10 @@ source:
   repository: https://github.com/iopsystems/skills-mcp
   commit: ade485632adf335661fdede554e9de548fed1648
 base:
-  aggregate_sha256: cb18b1580d31580c63fa14d34c8a2438ebe55e4a67726e73c80be2a5369e423e
+  aggregate_sha256: d27f6594f7cbc7ed7a379bdec16d53031ca039a5e01e3b89f1feb9166f9389a7
   files:
     - path: SKILL.md
-      sha256: 6ead604a122ab88718c6c4eadcb89c3b75043c693e4a2257e6b47627272fa746
+      sha256: c1b1b6a2af47e7e214893291945d2f8767896a1c5308ed72706f54f085cb7cd7
       merge_strategy: three-way
     - path: references/audience-charter.md
       sha256: 5113f77e70bffe7016e2e07c24a5bfc07fa9c9722f716b082e7167a0042b2579

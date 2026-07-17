@@ -195,7 +195,7 @@ fn installed_state_records_the_exact_clean_base_and_declared_customizations() {
     assert!(manifest.compatibility.iter().any(|value| value == "codex"));
     assert_eq!(
         state.base.aggregate_sha256,
-        "cb18b1580d31580c63fa14d34c8a2438ebe55e4a67726e73c80be2a5369e423e"
+        "d27f6594f7cbc7ed7a379bdec16d53031ca039a5e01e3b89f1feb9166f9389a7"
     );
     assert_eq!(
         state.base.aggregate_sha256,
