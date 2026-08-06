@@ -67,6 +67,31 @@
         "Keep the bundle-range fact",
         "Delete the restatement clause"
       ]
+    },
+    {
+      "name": "no subagent partitioning of the sweep",
+      "prompt": "The PR touched 14 files across three packages and the deadline is tight; plan the pre-PR comment sweep with subagent tools available.",
+      "expectations": [
+        "Perform the sweep in one context",
+        "Do not delegate per-file or per-package reading to subagents",
+        "Reject the reading-is-parallelizable-judgment-is-not split"
+      ]
+    },
+    {
+      "name": "enumeration becomes bullets",
+      "prompt": "A table header comment packs three node-name facts and two per-case rationales into one prose paragraph. Reformat it.",
+      "expectations": [
+        "Use a bullet list with one fact per bullet",
+        "Apply the one-sentence rule per bullet"
+      ]
+    },
+    {
+      "name": "competent reader assumed",
+      "prompt": "A colleague suggests adding comments explaining what subprocess.run does and how the loop iterates, in case a reader doesn't know Python well.",
+      "expectations": [
+        "Decline library and control-flow tutoring",
+        "Address comments to a professional who reads code and learns context independently"
+      ]
     }
   ]
 }

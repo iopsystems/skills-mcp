@@ -1188,6 +1188,10 @@ mod tests {
             "the current design, not the design",
             "byte-identical",
             "Never invent a rationale",
+            "Do not partition it across",
+            "competent at reading code and willing to learn the context",
+            "format it as a bullet",
+            "Examples that do not survive",
         ] {
             assert!(
                 body.contains(required),
@@ -1205,7 +1209,7 @@ mod tests {
             .as_array()
             .expect("sweep-comments evals should contain an evals array");
 
-        assert_eq!(evals.len(), 8);
+        assert_eq!(evals.len(), 11);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());
