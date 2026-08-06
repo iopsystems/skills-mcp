@@ -153,6 +153,30 @@ Genericized from real sweeps; recognize the pattern, not the wording:
   ignores these edges during coordinate assignment" — the constraint
   survives in one sentence; the journey does not.
 
+## Tests are labeled, not explained
+
+A test is a leaf-level artifact pinning an interior-node claim, and
+its comments serve failure diagnosis, not comprehension. Hold them to
+a different bar:
+
+- A test's doc comment states the property the test pins, in one
+  sentence — and it may restate the model clause it enforces. Across
+  the code/test boundary a restatement is a **claim binding**, not an
+  echo: when the test fails, it names the promise that broke, which
+  is the first thing a red CI run needs. The echo rule applies within
+  load-bearing code, not from code to its tests.
+- Scenario-contrivance comments are keepers: the why behind a
+  deliberately odd fixture — a capacity below the append count, a
+  scripted failure on the second send — is tier 3 at point of use.
+  Without it the contrivance reads as arbitrary and gets "simplified"
+  away along with the coverage it existed to create.
+- What still dies in tests: narration of the mechanics ("stage one
+  sample and open the round"), restating the test's own name, and
+  derivation walkthroughs.
+- Demo and tutorial files are designated teaching sites: pedagogy is
+  their function, so hold them to "teaches each idea once, clearly"
+  rather than to the production bar.
+
 ## The pre-PR sweep
 
 Design pivots during a working session are the main source of lying
@@ -194,6 +218,7 @@ what the sweep *is*.
 | "It's a concurrency/memory-ordering comment — those are keepers" | The test is derivability, not topic. An ordering justified by a visible lock is tier 1; only the protocol fact with no other guard survives, and it lives at the model home. |
 | "The reader might not have read the module doc" | They will — that is what the home is for. At most a pointer, never a copy. |
 | "Each copy states a real constraint, so each copy is a keeper" | A fact stated in five places is one statement and four echoes. Distributed echoes are invisible comment-by-comment; only the model inventory catches them. |
+| "The test doc restates the module doc, so it's an echo" | Across the code/test boundary a restatement is a claim binding: it names which promise the test enforces. Delete it and a red CI run stops saying what broke. |
 | "This echo is convenient right where it's used" | Two copies of one model drift independently; the stale one becomes a lie with authority. Pointer or nothing. |
 | "It's public API, so the length is fine" | Public API earns parameter, error, and panic contracts — not essays. |
 | "Rewording it shorter is compression" | Compression preserves meaning exactly; a guarantee must not become an obligation. Cut sentences, don't mutate them. |

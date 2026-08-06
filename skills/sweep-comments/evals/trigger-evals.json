@@ -128,6 +128,15 @@
       ]
     },
     {
+      "name": "test claim binding survives the echo rule",
+      "prompt": "A test's doc comment restates the model clause it enforces, and its fixture uses a deliberately undersized capacity; the module doc already states the model.",
+      "expectations": [
+        "Keep the property statement as a claim binding, not an echo",
+        "Keep the scenario-contrivance rationale",
+        "Delete mechanics narration inside the test body"
+      ]
+    },
+    {
       "name": "distributed echo caught by the inventory",
       "prompt": "A diff states one principle at a prominent module-doc home and a second principle three times across item docs with no home; sweep it.",
       "expectations": [
