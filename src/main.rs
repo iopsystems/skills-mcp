@@ -1189,6 +1189,7 @@ mod tests {
             "Derivable at a distance",
             "Underivable in principle",
             "still an echo: split the sentence",
+            "Build the model inventory",
             "derivability, not topic",
             "why behind magic numbers",
             "Source-of-truth pointers",
@@ -1219,7 +1220,7 @@ mod tests {
             .as_array()
             .expect("sweep-comments evals should contain an evals array");
 
-        assert_eq!(evals.len(), 16);
+        assert_eq!(evals.len(), 17);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());

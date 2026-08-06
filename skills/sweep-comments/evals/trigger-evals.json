@@ -128,6 +128,16 @@
       ]
     },
     {
+      "name": "distributed echo caught by the inventory",
+      "prompt": "A diff states one principle at a prominent module-doc home and a second principle three times across item docs with no home; sweep it.",
+      "expectations": [
+        "Inventory every principle before classifying comments",
+        "Designate a home for the second principle",
+        "Reduce its other copies to pointers or nothing",
+        "Do not anchor the sweep on the already-known model only"
+      ]
+    },
+    {
       "name": "mixed sentence split preserves the underivable clause",
       "prompt": "One sentence combines an echo of the model home with a forward design commitment about a future executor.",
       "expectations": [

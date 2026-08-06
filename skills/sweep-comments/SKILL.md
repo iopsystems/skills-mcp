@@ -167,11 +167,15 @@ keeping the "judgment" is the same violation through a keyhole. If the
 diff is large, sweep it in one pass anyway; reading the whole diff is
 what the sweep *is*.
 
-1. Identify each touched subsystem's model home. If the model is
-   stated nowhere, that is the first fix — write it once, where the
-   reader forms it.
+1. Build the model inventory before reading any comment: list every
+   design principle the touched code relies on — not just the one you
+   already have in mind — and assign each its home. A diff usually
+   carries several, and the echo test is only as good as this
+   inventory: a principle with no assigned home leaves every copy of
+   it looking like a local keeper. If a model is stated nowhere, that
+   is the first fix — write it once, where the reader forms it.
 2. List every comment and docstring in the touched files and classify
-   each into a tier. Tier 1 is deleted; tier 2 lives only at the home,
+   each into a tier against the inventory. Tier 1 is deleted; tier 2 lives only at the home,
    echoes become pointers or nothing; tier 3 is kept and compressed to
    one sentence per fact.
 3. Check each survivor against the current design, not the design it
@@ -189,6 +193,7 @@ what the sweep *is*.
 |---|---|
 | "It's a concurrency/memory-ordering comment — those are keepers" | The test is derivability, not topic. An ordering justified by a visible lock is tier 1; only the protocol fact with no other guard survives, and it lives at the model home. |
 | "The reader might not have read the module doc" | They will — that is what the home is for. At most a pointer, never a copy. |
+| "Each copy states a real constraint, so each copy is a keeper" | A fact stated in five places is one statement and four echoes. Distributed echoes are invisible comment-by-comment; only the model inventory catches them. |
 | "This echo is convenient right where it's used" | Two copies of one model drift independently; the stale one becomes a lie with authority. Pointer or nothing. |
 | "It's public API, so the length is fine" | Public API earns parameter, error, and panic contracts — not essays. |
 | "Rewording it shorter is compression" | Compression preserves meaning exactly; a guarantee must not become an obligation. Cut sentences, don't mutate them. |
@@ -202,6 +207,8 @@ what the sweep *is*.
 ## Red flags — stop and re-check
 
 - The same model stated in more than one place.
+- A multi-subsystem diff swept against a single model home: the sweep
+  anchored on the model you already knew.
 - A comment whose fact a competent reader could derive from the code
   in front of them plus the language's own rules.
 - A comment beginning with what the next line literally does.
