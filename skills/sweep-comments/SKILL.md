@@ -25,7 +25,34 @@ not a reader the codebase serves — their confusion is not grounds for
 a comment. Assuming an incompetent reader is what produces restatement
 comments; assuming this reader is what keeps them out.
 
-## The model home
+## Explanation follows the architecture
+
+Software design is hierarchical — system, subsystem, type, function —
+and each level makes decisions the levels below inherit. Explanation
+mirrors that contour: **every fact lives at the narrowest scope within
+which it is invariant**, the level where its decision was made. The
+crate doc teaches the system model; a module doc its subsystem's
+protocol; a type doc the type's invariants; a method doc the call
+contract; inline comments the point facts. Misplacement fails in both
+directions: a fact repeated below its level is an echo, and a fact
+hoisted above its level — a module doc narrating one method's edge
+case — taxes every reader of the level and goes stale when that one
+method changes. If no level exists where a fact is invariant, that is
+a design smell, not a commenting problem.
+
+Code materializes the leaves of that tree completely, which is why
+comments have value at every altitude above the code and none at zero:
+a comment at the code's own level restates what is already
+materialized, while prose is the only medium that can state the
+interior nodes — intent, models, protocols, why. Comments own the
+interior of the design tree; code owns its leaves. The two media trade
+in opposite directions: code must be functionally sound and so cannot
+be vague — it is forced to total precision at the leaf level — while
+prose is licensed to abstract and omit, which is exactly what lets it
+serve one idea at different levels of detail. A comment competing with
+the code on precision is a restatement; choose its altitude instead.
+
+### The model home
 
 Each subsystem designates one home — usually its module or crate doc —
 that teaches the mental model: the execution order, the ownership

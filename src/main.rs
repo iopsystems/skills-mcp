@@ -1180,6 +1180,9 @@ mod tests {
 
         for required in [
             "One short sentence per constraint",
+            "Explanation follows the architecture",
+            "narrowest scope within",
+            "Code materializes the leaves",
             "The model home",
             "three tiers by derivation cost",
             "Locally derivable",
@@ -1216,7 +1219,7 @@ mod tests {
             .as_array()
             .expect("sweep-comments evals should contain an evals array");
 
-        assert_eq!(evals.len(), 15);
+        assert_eq!(evals.len(), 16);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());

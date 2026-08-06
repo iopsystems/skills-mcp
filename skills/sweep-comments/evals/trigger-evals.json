@@ -119,6 +119,15 @@
       ]
     },
     {
+      "name": "facts migrate to their invariant level",
+      "prompt": "A module doc narrates one method's edge case among nine methods, while a type-wide guarantee relied on by several callers is stated on a single method.",
+      "expectations": [
+        "Move the method-specific contract down to the method",
+        "Move the type invariant up to the type doc",
+        "Place each fact at the narrowest scope where it is invariant"
+      ]
+    },
+    {
       "name": "mixed sentence split preserves the underivable clause",
       "prompt": "One sentence combines an echo of the model home with a forward design commitment about a future executor.",
       "expectations": [
