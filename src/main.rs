@@ -1168,4 +1168,50 @@ mod tests {
                 .is_some_and(|v| !v.is_empty()));
         }
     }
+
+    #[test]
+    fn sweep_comments_contract_covers_bar_and_sweep() {
+        let skills = load_skills().expect("embedded skills should load");
+        let body = &skills
+            .iter()
+            .find(|skill| skill.name == "sweep-comments")
+            .expect("sweep-comments should be served")
+            .body;
+
+        for required in [
+            "one short sentence",
+            "cannot get by",
+            "magic values",
+            "Source-of-truth pointers",
+            "deliberate absence",
+            "Derivation walkthroughs",
+            "the current design, not the design",
+            "byte-identical",
+            "Never invent a rationale",
+        ] {
+            assert!(
+                body.contains(required),
+                "missing contract marker: {required}"
+            );
+        }
+    }
+
+    #[test]
+    fn sweep_comments_evals_cover_key_scenarios() {
+        let raw = include_str!("../skills/sweep-comments/evals/trigger-evals.json");
+        let value: serde_json::Value =
+            serde_json::from_str(raw).expect("sweep-comments evals should be valid JSON");
+        let evals = value["evals"]
+            .as_array()
+            .expect("sweep-comments evals should contain an evals array");
+
+        assert_eq!(evals.len(), 8);
+        for eval in evals {
+            assert!(eval["name"].as_str().is_some());
+            assert!(eval["prompt"].as_str().is_some());
+            assert!(eval["expectations"]
+                .as_array()
+                .is_some_and(|v| !v.is_empty()));
+        }
+    }
 }

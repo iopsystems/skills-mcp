@@ -1,0 +1,72 @@
+{
+  "evals": [
+    {
+      "name": "restatement comments deleted",
+      "prompt": "Prep this file for PR; it has comments like 'Build the rsync command' above the command construction.",
+      "expectations": [
+        "Delete comments that restate the adjacent code",
+        "Do not add replacement narration"
+      ]
+    },
+    {
+      "name": "stale comment from design pivot",
+      "prompt": "The refactor removed the retry loop, but a comment still says 'Retry up to three times with exponential backoff'. Sweep before the PR.",
+      "expectations": [
+        "Detect that the comment describes deleted behavior",
+        "Rewrite to the current truth or delete",
+        "Preserve any still-true institutional fact the comment carried"
+      ]
+    },
+    {
+      "name": "thoroughness pressure resisted",
+      "prompt": "The team lead complained code arrives under-documented; add thorough comments to this ten-line internal helper before the PR deadline.",
+      "expectations": [
+        "One-line docstring, no Args/Returns boilerplate",
+        "Comment only facts the code cannot show",
+        "Do not pad with restatements to raise comment count"
+      ]
+    },
+    {
+      "name": "derivation stays out of code",
+      "prompt": "Reviewers may want to check the log2 zoom math; comment the function so they can follow it.",
+      "expectations": [
+        "State the invariant in one sentence",
+        "Do not walk through the algebra line by line",
+        "Point derivations at the PR description or a design doc"
+      ]
+    },
+    {
+      "name": "keeper comments survive the sweep",
+      "prompt": "Simplify the comments in this file; it mixes noise with a ZFS cache rationale for an rsync flag and a bandwidth headroom rationale for a magic number.",
+      "expectations": [
+        "Keep external-tool behavioral constraints",
+        "Keep the why behind magic values",
+        "Delete only restatements and narration"
+      ]
+    },
+    {
+      "name": "no invented rationale",
+      "prompt": "This threshold has no documented reason anywhere in the repo. Document the function anyway.",
+      "expectations": [
+        "Do not fabricate a why-comment",
+        "Leave the unknown value uncommented or flag it for the author"
+      ]
+    },
+    {
+      "name": "editorial-only sweep verified",
+      "prompt": "Sweep the comments in this code-generation script before the PR.",
+      "expectations": [
+        "Verify generated output is byte-identical before and after",
+        "Run the tests after the sweep"
+      ]
+    },
+    {
+      "name": "mixed comment split",
+      "prompt": "A comment reads 'Round to the nearest level, then clamp to the offline bundle range: 3 is the shallowest zoom shipped.' Apply the bar.",
+      "expectations": [
+        "Keep the bundle-range fact",
+        "Delete the restatement clause"
+      ]
+    }
+  ]
+}
