@@ -1,102 +1,130 @@
 ---
 name: sweep-comments
 description: |
-  Hold code comments and docstrings to a strict quality bar. Use whenever writing or editing comments — adding a comment to new code, being asked to "document this", "add comments", or "make this reviewer-ready" — and as a dedicated staleness sweep before opening or updating a pull request. Symptoms that this skill applies: comments that restate the adjacent code, docstring boilerplate on small internal helpers, derivation walkthroughs, war-story narration, or comments describing behavior a design pivot has since deleted.
+  Hold code comments and docstrings to a strict quality bar. Use whenever writing or editing comments — adding a comment to new code, being asked to "document this", "add comments", or "make this reviewer-ready" — and as a dedicated staleness sweep before opening or updating a pull request. Symptoms that this skill applies: comments that restate the adjacent code, the same design explanation sprinkled across several sites, docstring boilerplate on small internal helpers, derivation walkthroughs, war-story narration, or comments describing behavior a design pivot has since deleted.
 ---
 
 # Sweep comments
 
-Every comment must state a constraint the code itself cannot show, in
-one short sentence. If deleting the comment loses nothing a maintainer
-needs, delete it. Thoroughness is accuracy, not volume: an accurate,
-lean file is stronger in review than one padded with restatements.
+Comment placement is a design question before it is a hygiene question.
+Ask "where does the reader need this to be understood?" before "should
+this comment exist?" — a sprinkled explanation is usually a symptom
+that the design was never taught in one place, so every dependent site
+grew a defensive footnote. Thoroughness is accuracy, not volume: an
+accurate, lean file is stronger in review than one padded with
+restatements.
 
 ## The reader
 
 Write for the reader you actually have: a professional who is
 competent at reading code and willing to learn the context on their
-own. They can read a call signature, follow a loop, and look up a
-library. Comments exist to hand them the facts they cannot get that
-way — not to tutor them through the language, the stdlib, or the
-control flow. Assuming an incompetent reader is what produces
-restatement comments; assuming this reader is what keeps them out.
+own. They can read a call signature, follow a loop, look up a library,
+and derive what the language's own rules guarantee. They read the
+module doc before the internals. A reader who did not read the code is
+not a reader the codebase serves — their confusion is not grounds for
+a comment. Assuming an incompetent reader is what produces restatement
+comments; assuming this reader is what keeps them out.
 
-## The bar
+## The model home
 
-A comment earns its place only if it says something you cannot get by
-reading the statement below it. Hold every comment — new or existing —
-to this test.
+Each subsystem designates one home — usually its module or crate doc —
+that teaches the mental model: the execution order, the ownership
+protocol, the invariants everything downstream leans on. State the
+model there once and fully. Downstream sites then hold only three
+kinds of comment:
 
-Keep (these say what the code cannot):
+- **Externals** — tier-3 facts (below) that no model statement can
+  absorb, kept at their point of use.
+- **Deviations** — places where the code does something the model
+  would not predict. A reader carrying the model is *more* surprised
+  there, so the local note earns its place.
+- **Pointers** — one clause directing the reader to the model's home,
+  at sites distant enough that the association is not obvious.
 
-- Behavioral constraints of external tools and systems, e.g. a flag
-  chosen because of a filesystem cache pathology, a layout-engine
-  quirk, a protocol quirk.
-- The why behind magic values: weights, thresholds, limits, ports.
-- Schema documentation on data tables and wire formats.
-- Source-of-truth pointers ("the registry in X is authoritative").
-- A deliberate absence ("no retry here on purpose; rsync --partial
-  handles resumption").
+An **echo** — a restatement of the model at a downstream site — is a
+delete, however true it is and however keeper-shaped its topic sounds.
+One authoritative statement plus pointers; never two copies drifting
+independently. An echo clause inside an otherwise-kept sentence is
+still an echo: split the sentence, keep only the underivable clause,
+and recompose it to stand alone ("cut whole sentences" protects
+meaning, not echoes).
 
-Delete (these repeat what the code already shows):
+## The bar: three tiers by derivation cost
 
-- Restatements of the next line ("Build the command", "Loop over the
-  files in sorted order", "Get the service id from the environment").
-- Literal readings of a call — describing what `os.environ.get`
-  or a four-line function does in prose.
-- Process narration and war stories: how the fix was found, what the
-  code used to do, why this change is correct. That is PR-description
-  material, not a comment.
-- Derivation walkthroughs. State the constraint or invariant in one
-  sentence; do not teach the algebra line by line.
+Classify every comment by what it would cost the reader to reconstruct
+its fact from the code plus the language's own semantics:
 
-## Examples that do not survive
-
-Each of these was found in a real pre-PR sweep (identifiers
-genericized). The pattern, not the wording, is what to recognize:
-
-- `# Defaults to "primary" but honors SERVICE_ID from the environment`
-  above an `os.environ.get("SERVICE_ID", "primary")` — a literal
-  reading of the call. What survived instead: the one fact the code
-  could not show (which config layer wins when both are set).
-- A four-line comment above a four-line classification function,
-  paraphrasing its branches almost word for word. Deleted outright.
-- `# Entries stack above their group's anchor row` on a list literal
-  whose ordering already shows exactly that. The list is the
-  statement; the comment is an echo.
-- A comment justifying a layout mechanism "because auxiliary edges do
-  not constrain placement" — auxiliary edges had been deleted a dozen
-  iterations earlier. Stale rationale from a design pivot; rewritten
-  to the mechanism's actual current purpose.
-- A four-line header on an enum-to-role table re-describing enum
-  names that are self-descriptive. Shrunk to the single surviving
-  fact: the one non-obvious classification decision.
-- "After several failed attempts we discovered that the renderer
-  ignores these edges during coordinate assignment" — the constraint
-  (renderer ignores them) survives in one sentence; the journey does
-  not.
+1. **Locally derivable** — the fact is visible at the point of
+   reading. Never comment it. This covers restatements of the next
+   line, literal readings of a call, derivation walkthroughs of
+   visible algebra — and topic is no defense: a `Relaxed` ordering
+   justified by an exclusive lock held in the same function, or
+   an atomic chosen because shared `Send` handles force a `Sync`
+   cell, is generic language knowledge the reader owns.
+2. **Derivable at a distance** — true, but reconstructing it means
+   enumerating call sites or reading across files (a crate-private
+   protocol, a cross-module invariant). Do not cache it at each site;
+   state it once at the model home and reduce every echo to a pointer
+   or nothing.
+3. **Underivable in principle** — the fact comes from outside the
+   code entirely. This is the never-delete floor, kept at point of
+   use, one sentence each:
+   - External-system behavior and vendor quirks (a filesystem cache
+     pathology, a layout-engine rule, a protocol convention).
+   - Measured values and the why behind magic numbers: weights,
+     thresholds, limits, ports.
+   - Schema documentation on data tables and wire formats.
+   - Source-of-truth pointers ("the registry in X is authoritative").
+   - A deliberate absence ("no retry here on purpose; the transport's
+     watermark handles resumption").
+   - Forward design commitments ("a parallel executor must preserve
+     this invariant") — promises about code that does not exist yet.
 
 ## Writing new comments
 
-- One short sentence per constraint. If a comment needs a second
-  sentence, check whether it is carrying a second (or zero-th) fact.
+- One short sentence per constraint. A kept comment longer than one
+  sentence must justify every sentence as a distinct tier-2-at-home or
+  tier-3 fact; connective tissue, illustrative examples, and rhetorical
+  elaboration ("cheap is not free", storm-and-stall vignettes) do not
+  survive.
+- Compress, don't paraphrase: compression must not change meaning. A
+  guarantee ("never steps backwards") must not become an obligation
+  ("must not regress"); when in doubt, keep the original wording and
+  cut whole sentences instead.
 - Never mix a restatement with a real fact to justify the comment.
-  Split off the fact and delete the restatement half.
-- Match docstring weight to audience: a public API earns parameter
-  docs; a ten-line internal helper earns one line stating purpose,
-  not an Args/Returns block.
+  Keep the real clause, delete the restatement half.
+- A docstring longer than the function it documents is an action
+  trigger, not a style note: cut it down, or justify it. The public-API
+  allowance covers parameter, error, and panic contracts — not essays.
+- When a comment enumerates parallel facts, format it as a bullet
+  list, one fact per bullet; the one-sentence rule applies per bullet.
 - Name specifics, not categories ("the vessel_command edge", not
   "the relevant edge").
-- When a comment enumerates parallel facts — several name mappings,
-  per-case rationales, a set of invariants — format it as a bullet
-  list, one fact per bullet, rather than packing the enumeration into
-  prose. Readers scan lists; they re-read packed sentences. The
-  one-short-sentence rule then applies per bullet.
 - Do not pad a file with comments to appease an "under-documented"
-  complaint — reviewers are protected by every comment being true and
-  non-obvious, not by comment count.
-- Never invent a rationale for a value whose reason you do not know.
-  A wrong why-comment is worse than none.
+  complaint, and never invent a rationale for a value whose reason you
+  do not know — a wrong why-comment is worse than none.
+
+## Examples that do not survive
+
+Genericized from real sweeps; recognize the pattern, not the wording:
+
+- `# Defaults to "primary" but honors SERVICE_ID from the environment`
+  above the `os.environ.get` call — locally derivable (tier 1). What
+  survived: which config layer wins when both are set (tier 3).
+- A `Relaxed` justification reading "the lock's release/acquire edges
+  already order these accesses" in a function that visibly holds the
+  exclusive lock — tier 1, deleted; the reader owns the memory model.
+- A type doc repeating the module doc's ownership protocol ("only the
+  executor stores to it, between rounds") — an echo of the model home,
+  deleted even though the fact itself is load-bearing.
+- A four-line comment above a four-line classification function,
+  paraphrasing its branches — deleted outright.
+- A comment justifying a layout mechanism "because auxiliary edges do
+  not constrain placement" after auxiliary edges were deleted — stale
+  rationale from a design pivot, rewritten to the current truth.
+- "After several failed attempts we discovered that the renderer
+  ignores these edges during coordinate assignment" — the constraint
+  survives in one sentence; the journey does not.
 
 ## The pre-PR sweep
 
@@ -106,21 +134,22 @@ of iteration 12. Before opening or updating a PR:
 
 **Do the sweep yourself, in one context. Do not partition it across
 subagents.** A comment's value is holistic: whether it earns its place
-depends on what the neighboring code, the other comments, the module
-docstring, and the session's design pivots already say — context that
-no per-file or per-package delegate has. Splitting the reading and
-keeping the "judgment" is the same violation through a keyhole: the
-judgment is only as good as the reading it is built on. If the diff is
-large, sweep it in one pass anyway; reading the whole diff is what the
-sweep *is*.
+depends on the model home, the neighboring comments, and the session's
+pivots — context no per-file delegate has. Splitting the reading and
+keeping the "judgment" is the same violation through a keyhole. If the
+diff is large, sweep it in one pass anyway; reading the whole diff is
+what the sweep *is*.
 
-1. List every comment and docstring in the touched files.
-2. Check each against the current design, not the design it was
-   written for. A comment referring to anything deleted or renamed —
-   a removed retry loop, a dropped edge category, a dead config band —
+1. Identify each touched subsystem's model home. If the model is
+   stated nowhere, that is the first fix — write it once, where the
+   reader forms it.
+2. List every comment and docstring in the touched files and classify
+   each into a tier. Tier 1 is deleted; tier 2 lives only at the home,
+   echoes become pointers or nothing; tier 3 is kept and compressed to
+   one sentence per fact.
+3. Check each survivor against the current design, not the design it
+   was written for. A comment referring to anything deleted or renamed
    is rewritten to the truth or deleted.
-3. Apply the bar above to what remains; compress prose to its
-   irreducible content.
 4. Check the commit message and module docstring the same way — they
    go stale on the same pivots.
 5. Verify the sweep was purely editorial: tests still pass, and any
@@ -131,20 +160,27 @@ sweep *is*.
 
 | Excuse | Reality |
 |---|---|
-| "The team lead wants thorough documentation" | Thorough means every comment is true and non-obvious, not that every line has one. |
-| "The derivation helps reviewers check the math" | Put derivations in the PR description or a design doc. In code, one sentence stating the invariant suffices. |
-| "It's half restatement, but the other half is real" | Keep the real clause, delete the restatement half. |
-| "Args/Returns blocks look professional" | Boilerplate on internal helpers buries the one comment that matters. |
-| "I'll leave the old comment as historical context" | Git history is the historical context. A stale comment is a lie with authority. |
+| "It's a concurrency/memory-ordering comment — those are keepers" | The test is derivability, not topic. An ordering justified by a visible lock is tier 1; only the protocol fact with no other guard survives, and it lives at the model home. |
+| "The reader might not have read the module doc" | They will — that is what the home is for. At most a pointer, never a copy. |
+| "This echo is convenient right where it's used" | Two copies of one model drift independently; the stale one becomes a lie with authority. Pointer or nothing. |
+| "It's public API, so the length is fine" | Public API earns parameter, error, and panic contracts — not essays. |
+| "Rewording it shorter is compression" | Compression preserves meaning exactly; a guarantee must not become an obligation. Cut sentences, don't mutate them. |
+| "The derivation helps reviewers check the math" | Put derivations in the PR description. In code, one sentence states the invariant. |
+| "The team lead wants thorough documentation" | Thorough means every comment is true, non-obvious, and taught in the right place — not that every line has one. |
+| "I'll leave the old comment as historical context" | Git history is the historical context. |
 | "No time to sweep before the PR" | A sweep of touched files takes minutes; a reviewer misled by a stale comment costs a review round. |
 | "The diff is huge — I'll fan the reading out to subagents and keep the judgment" | Judgment built on delegated reading is delegated judgment. The sweep's value is one reader seeing the whole change. |
 | "The reader might not know this API" | The reader is a competent professional who will look it up. Document your constraint, not their library. |
 
 ## Red flags — stop and re-check
 
+- The same model stated in more than one place.
+- A comment whose fact a competent reader could derive from the code
+  in front of them plus the language's own rules.
 - A comment beginning with what the next line literally does.
 - A docstring longer than the function it documents.
 - "Previously", "used to", "we changed this to" in a comment.
-- A comment you are keeping because deleting it feels like losing work.
+- A comment you are keeping because deleting it feels like losing
+  work — or because its *topic* sounds important.
 - A sweep plan that contains the word "delegate", "fan out", or
   "per-file subagent".

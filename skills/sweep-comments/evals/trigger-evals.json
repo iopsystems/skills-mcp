@@ -92,6 +92,40 @@
         "Decline library and control-flow tutoring",
         "Address comments to a professional who reads code and learns context independently"
       ]
+    },
+    {
+      "name": "topic is no defense for tier one",
+      "prompt": "A comment justifies Relaxed ordering by the release/acquire edges of an exclusive lock that is visibly held in the same function.",
+      "expectations": [
+        "Classify as locally derivable and delete",
+        "Reject the concurrency-comments-are-keepers rationalization"
+      ]
+    },
+    {
+      "name": "echo of the model home deleted",
+      "prompt": "A type doc restates the module doc's ownership protocol word for word; the module doc is the subsystem's model home.",
+      "expectations": [
+        "Delete the echo however true it is",
+        "Keep one authoritative statement at the home",
+        "Use a pointer only where the association is not obvious"
+      ]
+    },
+    {
+      "name": "model home established first",
+      "prompt": "The touched subsystem's design is explained only in scattered on-site comments; no module doc states the model.",
+      "expectations": [
+        "Write the model once at a designated home",
+        "Reduce the scattered explanations to externals, deviations, and pointers"
+      ]
+    },
+    {
+      "name": "mixed sentence split preserves the underivable clause",
+      "prompt": "One sentence combines an echo of the model home with a forward design commitment about a future executor.",
+      "expectations": [
+        "Split the sentence and delete the echo clause",
+        "Recompose the forward commitment to stand alone",
+        "Do not mutate the prediction into an obligation"
+      ]
     }
   ]
 }

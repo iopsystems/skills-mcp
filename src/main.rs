@@ -1179,15 +1179,22 @@ mod tests {
             .body;
 
         for required in [
-            "one short sentence",
-            "cannot get by",
-            "magic values",
+            "One short sentence per constraint",
+            "The model home",
+            "three tiers by derivation cost",
+            "Locally derivable",
+            "Derivable at a distance",
+            "Underivable in principle",
+            "still an echo: split the sentence",
+            "derivability, not topic",
+            "why behind magic numbers",
             "Source-of-truth pointers",
             "deliberate absence",
-            "Derivation walkthroughs",
+            "Forward design commitments",
+            "Compress, don't paraphrase",
             "the current design, not the design",
             "byte-identical",
-            "Never invent a rationale",
+            "never invent a rationale",
             "Do not partition it across",
             "competent at reading code and willing to learn the context",
             "format it as a bullet",
@@ -1209,7 +1216,7 @@ mod tests {
             .as_array()
             .expect("sweep-comments evals should contain an evals array");
 
-        assert_eq!(evals.len(), 11);
+        assert_eq!(evals.len(), 15);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());
