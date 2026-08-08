@@ -128,6 +128,64 @@ system or borrow checker already rejects, and restatements of the
 model's *rationale* rather than its requirement. A wrong edit there
 does not compile, or does not matter.
 
+### The form the model takes
+
+Placement decides where a fact goes; form decides what shape it arrives
+in. The model home is the one place worth deciding form deliberately,
+because it is the only place whose job is comprehension.
+
+Prose is linear, which makes it good at causation, obligation, and
+sequence — and bad at **topology** (what connects to what), **layering**
+(what sits above what), and **simultaneity** (what happens at once).
+Where the model is a shape, a paragraph makes every reader rebuild that
+shape in their head, one at a time, forever. The trigger is not how
+complex the design is; it is: **must the reader construct a picture to
+follow this?** If so, supply the picture.
+
+Pick the lightest form that carries the shape, because form is
+maintenance:
+
+- **An ordered list or table** — enumerable structure: what a module
+  contains, what to read first, which error means what.
+- **ASCII** — a small pipeline or sequence, roughly three to six nodes.
+  It lives inline in the doc comment, needs no build step, and diffs as
+  text.
+- **A diagram** (D2 here) — real topology: many nodes, crossing edges,
+  layers. It costs a separate file and a build step, so it must earn
+  them.
+
+Prefer forms whose **source is the artifact**. A rendered image is
+readable by the human half of the readership and opaque to the other
+half, while ASCII and D2 source are legible to both and reviewable in a
+diff. A checked-in image blob with no source beside it is a diagram
+only some of your readers have.
+
+#### When the shape cannot live in the code
+
+A doc comment can hold a list or ASCII; it cannot render D2. A model
+whose best form is a diagram therefore lives on a docs page, with the
+module doc holding a pointer.
+
+That split is safe for comprehension and unsafe for constraint. A
+reader who never opens the page loses the picture but breaks nothing —
+whereas an edit constraint stranded on the far side of that pointer is
+exactly the failure the retrieval test exists to catch. Shapes may live
+one hop away; requirements may not.
+
+#### Diagrams that do not survive
+
+- One that shows what a single sentence already says — tier 1 in
+  picture form, and dearer to keep true.
+- One mirroring structure the code already materializes: a type
+  hierarchy, a module tree, a call graph. The compiler and the file
+  tree state those, and the drawing will drift from them.
+- One kept because it was expensive to draw.
+
+A diagram earns its place by showing what no single file materializes:
+flow across modules, a protocol over time, a layering. Sweep diagrams
+for staleness exactly as you sweep prose — a stale picture reads as
+more authoritative than a stale paragraph, so it misleads harder.
+
 ## The bar: three tiers by derivation cost
 
 Classify every comment by what it would cost the reader to reconstruct
@@ -265,11 +323,12 @@ wants it gone, and the frame wins.
    was owed.
 2. Build the model inventory: list every design principle the touched
    code relies on — not just the one you already have in mind — and
-   assign each its home. A diff usually carries several, and the echo
-   test is only as good as this inventory: a principle with no
-   assigned home leaves every copy of it looking like a local keeper.
-   If a model is stated nowhere, that is the first fix — write it
-   once, where the reader forms it.
+   assign each **a home and a form**. A diff usually carries several,
+   and the echo test is only as good as this inventory: a principle
+   with no assigned home leaves every copy of it looking like a local
+   keeper. If a model is stated nowhere, that is the first fix — write
+   it once, where the reader forms it. Recording the form is what
+   stops every model defaulting to prose; see below for choosing one.
 
 **Pass 1 — subtract.** Classify every comment and docstring into a
 tier against the inventory. Tier 1 is deleted; tier 2 lives only at
@@ -296,8 +355,9 @@ run. Report the list with the sweep.
 
 **Then:**
 
-3. Check the commit message and module docstring the same way — they
-   go stale on the same pivots.
+3. Check the commit message, the module docstring, and any diagram the
+   touched code is drawn in — all three go stale on the same pivots,
+   and the diagram is the one nobody thinks to open.
 4. Verify the sweep was purely editorial: tests still pass, and any
    generated output (code generation, DOT/SVG, fixtures) is
    byte-identical before and after.
@@ -338,6 +398,9 @@ has a home, and it is not the code:
 | "Agents don't follow pointers, so every pointer should go back to being a copy" | Only where a wrong edit would compile and pass. Everywhere else the agent that skips the pointer also skips a fact it had no use for. The carve-out is edit constraints, not comfort. |
 | "A pointer can't drift, so it beats a copy everywhere" | It also can't be read by someone who never follows it. At a site that can silently break the fact, an unread pointer is a missing fact, and drift is the cheaper failure. |
 | "Serving coding agents means keeping more comments" | It means one sentence at edit sites and the same deletions everywhere else. Tier 1 costs an agent more than a human — it burns the context window the code needed. |
+| "Agents don't read pictures, so a diagram is wasted effort" | The model home's job is comprehension and half the readership is human. Keep the source text-based (ASCII, D2) and the cost to the other half is zero. |
+| "A picture is always clearer than a paragraph" | Not when the paragraph already carries it. A diagram that restates one sentence is a restatement that also has to be kept true. |
+| "The diagram is a bit out of date but still roughly right" | A diagram reads as more authoritative than prose, so a stale one misleads harder. Redraw it or delete it. |
 | "Each copy states a real constraint, so each copy is a keeper" | A fact stated in five places is one statement and four echoes. Distributed echoes are invisible comment-by-comment; only the model inventory catches them. |
 | "The test doc restates the module doc, so it's an echo" | Across the code/test boundary a restatement is a claim binding: it names which promise the test enforces. Delete it and a red CI run stops saying what broke. |
 | "This echo is convenient right where it's used" | Two copies of one model drift independently; the stale one becomes a lie with authority. Pointer or nothing. |
@@ -379,5 +442,10 @@ has a home, and it is not the code:
 - Pass 2 folded into pass 1 "to save a read", or run as a re-read of
   pass 1's deletions rather than a walk of the edit sites.
 - A test or demo file swept before the bars were partitioned.
+- A model inventory whose every entry has the form "prose": the form
+  column was filled in after the fact, not chosen.
+- A paragraph at a model home that names three or more components and
+  the connections between them — that is a shape being spelled out.
+- An edit constraint reachable only by following a link to a diagram.
 - An "edit constraint" you are keeping whose violation the compiler
   would catch — that is the carve-out being used as an excuse.
