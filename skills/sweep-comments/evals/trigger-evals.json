@@ -92,6 +92,68 @@
         "Decline library and control-flow tutoring",
         "Address comments to a professional who reads code and learns context independently"
       ]
+    },
+    {
+      "name": "topic is no defense for tier one",
+      "prompt": "A comment justifies Relaxed ordering by the release/acquire edges of an exclusive lock that is visibly held in the same function.",
+      "expectations": [
+        "Classify as locally derivable and delete",
+        "Reject the concurrency-comments-are-keepers rationalization"
+      ]
+    },
+    {
+      "name": "echo of the model home deleted",
+      "prompt": "A type doc restates the module doc's ownership protocol word for word; the module doc is the subsystem's model home.",
+      "expectations": [
+        "Delete the echo however true it is",
+        "Keep one authoritative statement at the home",
+        "Use a pointer only where the association is not obvious"
+      ]
+    },
+    {
+      "name": "model home established first",
+      "prompt": "The touched subsystem's design is explained only in scattered on-site comments; no module doc states the model.",
+      "expectations": [
+        "Write the model once at a designated home",
+        "Reduce the scattered explanations to externals, deviations, and pointers"
+      ]
+    },
+    {
+      "name": "facts migrate to their invariant level",
+      "prompt": "A module doc narrates one method's edge case among nine methods, while a type-wide guarantee relied on by several callers is stated on a single method.",
+      "expectations": [
+        "Move the method-specific contract down to the method",
+        "Move the type invariant up to the type doc",
+        "Place each fact at the narrowest scope where it is invariant"
+      ]
+    },
+    {
+      "name": "test claim binding survives the echo rule",
+      "prompt": "A test's doc comment restates the model clause it enforces, and its fixture uses a deliberately undersized capacity; the module doc already states the model.",
+      "expectations": [
+        "Keep the property statement as a claim binding, not an echo",
+        "Keep the scenario-contrivance rationale",
+        "Delete mechanics narration inside the test body"
+      ]
+    },
+    {
+      "name": "distributed echo caught by the inventory",
+      "prompt": "A diff states one principle at a prominent module-doc home and a second principle three times across item docs with no home; sweep it.",
+      "expectations": [
+        "Inventory every principle before classifying comments",
+        "Designate a home for the second principle",
+        "Reduce its other copies to pointers or nothing",
+        "Do not anchor the sweep on the already-known model only"
+      ]
+    },
+    {
+      "name": "mixed sentence split preserves the underivable clause",
+      "prompt": "One sentence combines an echo of the model home with a forward design commitment about a future executor.",
+      "expectations": [
+        "Split the sentence and delete the echo clause",
+        "Recompose the forward commitment to stand alone",
+        "Do not mutate the prediction into an obligation"
+      ]
     }
   ]
 }
