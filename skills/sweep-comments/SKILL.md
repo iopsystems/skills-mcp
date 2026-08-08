@@ -322,13 +322,24 @@ wants it gone, and the frame wins.
    claim bindings before it ever occurs to you that a different bar
    was owed.
 2. Build the model inventory: list every design principle the touched
-   code relies on — not just the one you already have in mind — and
-   assign each **a home and a form**. A diff usually carries several,
-   and the echo test is only as good as this inventory: a principle
-   with no assigned home leaves every copy of it looking like a local
-   keeper. If a model is stated nowhere, that is the first fix — write
-   it once, where the reader forms it. Recording the form is what
-   stops every model defaulting to prose; see below for choosing one.
+   code *relies on* — not just the ones it states, and not just the one
+   you already have in mind — and assign each **a home and a form**.
+   The echo test is only as good as this inventory: a principle with no
+   assigned home leaves every copy of it looking like a local keeper.
+   If a model is stated nowhere, that is the first fix — write it once,
+   where the reader forms it. Recording the form is what stops every
+   model defaulting to prose; see below for choosing one.
+
+   **Inventory the subsystem, not the changed lines.** A diff does not
+   contain its own model homes, and any change that adds a *consumer*
+   of existing code will have most of its models homed elsewhere: a
+   parent branch in a stacked PR, a dependency crate, a module doc the
+   change never touched. For each model, write down where it is stated
+   and whether that file is in this diff; anything homed outside it
+   makes every statement of it inside the diff an echo until the
+   retrieval test says otherwise. Skipping this reads as a diff full of
+   local keepers, because from inside the diff that is exactly what
+   they look like.
 
 **Pass 1 — subtract.** Classify every comment and docstring into a
 tier against the inventory. Tier 1 is deleted; tier 2 lives only at
@@ -398,6 +409,7 @@ has a home, and it is not the code:
 | "Agents don't follow pointers, so every pointer should go back to being a copy" | Only where a wrong edit would compile and pass. Everywhere else the agent that skips the pointer also skips a fact it had no use for. The carve-out is edit constraints, not comfort. |
 | "A pointer can't drift, so it beats a copy everywhere" | It also can't be read by someone who never follows it. At a site that can silently break the fact, an unread pointer is a missing fact, and drift is the cheaper failure. |
 | "Serving coding agents means keeping more comments" | It means one sentence at edit sites and the same deletions everywhere else. Tier 1 costs an agent more than a human — it burns the context window the code needed. |
+| "This diff states the model, so the diff is its home" | Being the only copy you can see is not being the home. Look in the dependency and the parent branch first — a stacked PR's models are usually homed one branch down, and a new consumer's are homed in what it consumes. |
 | "Agents don't read pictures, so a diagram is wasted effort" | The model home's job is comprehension and half the readership is human. Keep the source text-based (ASCII, D2) and the cost to the other half is zero. |
 | "A picture is always clearer than a paragraph" | Not when the paragraph already carries it. A diagram that restates one sentence is a restatement that also has to be kept true. |
 | "The diagram is a bit out of date but still roughly right" | A diagram reads as more authoritative than prose, so a stale one misleads harder. Redraw it or delete it. |
@@ -422,6 +434,9 @@ has a home, and it is not the code:
 - The same model stated in more than one place.
 - A multi-subsystem diff swept against a single model home: the sweep
   anchored on the model you already knew.
+- A model inventory whose homes are all inside the diff, on a change
+  that adds a consumer of existing code — that is a sweep that never
+  looked up from the diff.
 - A comment whose fact a competent reader could derive from the code
   in front of them plus the language's own rules.
 - A comment beginning with what the next line literally does.
