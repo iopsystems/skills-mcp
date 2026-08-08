@@ -1202,7 +1202,7 @@ mod tests {
             "byte-identical",
             "never invent a rationale",
             "Do not partition it across",
-            "competent at reading code and willing to learn the context",
+            "competent at reading code",
             "format it as a bullet",
             "Examples that do not survive",
         ] {
