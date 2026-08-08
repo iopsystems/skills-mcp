@@ -1,7 +1,7 @@
 ---
 name: sweep-comments
 description: |
-  Hold code comments and docstrings to a strict quality bar. Use whenever writing or editing comments — adding a comment to new code, being asked to "document this", "add comments", or "make this reviewer-ready" — and as a dedicated staleness sweep before opening or updating a pull request. Symptoms that this skill applies: comments that restate the adjacent code, the same design explanation sprinkled across several sites, docstring boilerplate on small internal helpers, derivation walkthroughs, war-story narration, or comments describing behavior a design pivot has since deleted.
+  Hold code comments and docstrings to a strict quality bar. Use whenever writing or editing comments — adding a comment to new code, being asked to "document this", "add comments", or "make this reviewer-ready" — and as a dedicated staleness sweep before opening or updating a pull request. Symptoms that this skill applies: comments that restate the adjacent code, the same design explanation sprinkled across several sites, docstring boilerplate on small internal helpers, derivation walkthroughs, war-story narration, comments describing behavior a design pivot has since deleted, commented-out code kept "just in case", ticketless TODOs, banner comments, or docstrings written only to silence a linter.
 ---
 
 # Sweep comments
@@ -213,6 +213,33 @@ what the sweep *is*.
 
 ## Rationalizations
 
+### Comments that should not be written at all
+
+Some comments fail at write time, regardless of wording — the content
+has a home, and it is not the code:
+
+- **Change-narration** ("fixed the off-by-one", "added guard") — the
+  commit message and PR description exist for this; in code it becomes
+  a "previously" red flag the moment it lands.
+- **Commented-out code** kept "in case we need it back" — git history
+  is the fallback: reverting a commit beats resurrecting a block that
+  has rotted against the surrounding code.
+- **Idle TODOs** — a TODO with no ticket, owner, or design commitment
+  is a musing that ships as a stale comment with authority. File the
+  ticket or drop the thought. (A forward design commitment — tier 3 —
+  is different: it binds future code to an invariant.)
+- **Banner comments** (`// ---- helpers ----`) — writing-session
+  scaffolding that carries zero facts. A file that needs banners wants
+  to be split into modules instead.
+- **Linter-appeasement docstrings** on trivial internals — suppress
+  the check at the site and fix the config; a machine's
+  "under-documented" complaint licenses tier-1 prose no more than a
+  human's does.
+- **Insurance comments** written to pre-empt or placate a reviewer —
+  answer in the review thread and strengthen the model home; a comment
+  written to end a conversation serves the wrong reader.
+- **Guessed rationales** — never write a why you do not actually know.
+
 | Excuse | Reality |
 |---|---|
 | "It's a concurrency/memory-ordering comment — those are keepers" | The test is derivability, not topic. An ordering justified by a visible lock is tier 1; only the protocol fact with no other guard survives, and it lives at the model home. |
@@ -228,6 +255,10 @@ what the sweep *is*.
 | "No time to sweep before the PR" | A sweep of touched files takes minutes; a reviewer misled by a stale comment costs a review round. |
 | "The diff is huge — I'll fan the reading out to subagents and keep the judgment" | Judgment built on delegated reading is delegated judgment. The sweep's value is one reader seeing the whole change. |
 | "The reader might not know this API" | The reader is a competent professional who will look it up. Document your constraint, not their library. |
+| "One more true comment can't hurt — it buys reviewer goodwill" | Every comment is a liability that must stay true through every future edit. Goodwill belongs in the review thread, not pinned to the code. |
+| "A TODO is free — I'll leave it in case we want this later" | A TODO with no ticket or commitment is a stale-comment seed with no owner. It costs nothing today and lies within a quarter. |
+| "Suppressing the linter is cheating; writing the docstring is compliance" | The manufactured docstring is the cheat — it fakes documentation to green a check. A visible suppression records the deliberate absence honestly. |
+| "I'll keep the old code commented out until the new path is proven in prod" | If prod breaks you revert the commit; you don't uncomment a block that stopped compiling against its neighbors weeks ago. |
 
 ## Red flags — stop and re-check
 
@@ -243,3 +274,7 @@ what the sweep *is*.
   work — or because its *topic* sounds important.
 - A sweep plan that contains the word "delegate", "fan out", or
   "per-file subagent".
+- Commented-out code, a ticketless TODO, or a section banner in a
+  diff you are about to ship.
+- A comment you are writing mainly so a reviewer or linter stops
+  asking — not because the reader at that site needs the fact.
