@@ -1,7 +1,7 @@
 ---
 name: sweep-comments
 description: |
-  Hold code comments and docstrings to a strict quality bar. Use whenever writing or editing comments — adding a comment to new code, being asked to "document this", "add comments", or "make this reviewer-ready" — and as a dedicated staleness sweep before opening or updating a pull request. Symptoms that this skill applies: comments that restate the adjacent code, the same design explanation sprinkled across several sites, docstring boilerplate on small internal helpers, derivation walkthroughs, war-story narration, comments describing behavior a design pivot has since deleted, commented-out code kept "just in case", ticketless TODOs, banner comments, or docstrings written only to silence a linter.
+  Hold code comments and docstrings to a strict quality bar. Use whenever writing or editing comments — adding a comment to new code, being asked to "document this", "add comments", or "make this reviewer-ready" — and as a dedicated staleness sweep before opening or updating a pull request. Symptoms that this skill applies: comments that restate the adjacent code, the same design explanation sprinkled across several sites, docstring boilerplate on small internal helpers, derivation walkthroughs, war-story narration, comments describing behavior a design pivot has since deleted, commented-out code kept "just in case", ticketless TODOs, banner comments, docstrings written only to silence a linter, or an invariant reduced to a pointer at the very site where a wrong edit would silently break it.
 ---
 
 # Sweep comments
@@ -14,16 +14,36 @@ grew a defensive footnote. Thoroughness is accuracy, not volume: an
 accurate, lean file is stronger in review than one padded with
 restatements.
 
-## The reader
+## The two readers
 
-Write for the reader you actually have: a professional who is
-competent at reading code and willing to learn the context on their
-own. They can read a call signature, follow a loop, look up a library,
-and derive what the language's own rules guarantee. They read the
-module doc before the internals. A reader who did not read the code is
+A comment is read by a human and by a coding agent, and it must serve
+both. They differ in exactly one way that matters here, and the whole
+of this skill's placement rule follows from it.
+
+The **human** is a professional who is competent at reading code and
+willing to learn the context on their own. They can read a call
+signature, follow a loop, look up a library, and derive what the
+language's own rules guarantee. They arrive through the file: module
+doc first, then the internals. A reader who did not read the code is
 not a reader the codebase serves — their confusion is not grounds for
 a comment. Assuming an incompetent reader is what produces restatement
-comments; assuming this reader is what keeps them out.
+comments; assuming this one is what keeps them out.
+
+The **coding agent** has that same competence and none of that reading
+order. It arrives at a function by grep or symbol lookup, holding that
+function and little else, and it edits confidently on that much. It
+has usually not read the module doc, and a pointer costs it a
+retrieval it may not spend.
+
+The competence bar is shared, so **tier 1 dies for both**: a
+restatement wastes a human's attention and burns the context an agent
+needed for the code itself. Verbosity is not agent-friendly; it is the
+tax both readers pay.
+
+The reading order is not shared, and that is the entire difference. It
+changes nothing about *what* is worth saying and one thing about
+*where*: **a fact that constrains edits must be legible at the site
+where a wrong edit would be made**, not only at the model home.
 
 ## Explanation follows the architecture
 
@@ -57,7 +77,7 @@ the code on precision is a restatement; choose its altitude instead.
 Each subsystem designates one home — usually its module or crate doc —
 that teaches the mental model: the execution order, the ownership
 protocol, the invariants everything downstream leans on. State the
-model there once and fully. Downstream sites then hold only three
+model there once and fully. Downstream sites then hold only four
 kinds of comment:
 
 - **Externals** — tier-3 facts (below) that no model statement can
@@ -65,6 +85,9 @@ kinds of comment:
 - **Deviations** — places where the code does something the model
   would not predict. A reader carrying the model is *more* surprised
   there, so the local note earns its place.
+- **Edit constraints** — the one clause of the model this site can
+  silently break. Stated here *as well as* at the home, because the
+  reader who breaks it is the one who never saw the home.
 - **Pointers** — one clause directing the reader to the model's home,
   at sites distant enough that the association is not obvious.
 
@@ -75,6 +98,35 @@ independently. An echo clause inside an otherwise-kept sentence is
 still an echo: split the sentence, keep only the underivable clause,
 and recompose it to stand alone ("cut whole sentences" protects
 meaning, not echoes).
+
+### The retrieval test
+
+An edit constraint is the one case where two copies are correct, so it
+needs a test sharp enough that it cannot swallow the echo rule. Before
+reducing any downstream comment to a pointer, ask:
+
+**If a reader saw this site and nothing else, could they make a wrong
+edit here that the model would have prevented — and would it compile
+and pass?**
+
+If yes, it is an edit constraint: keep one sentence here, stating what
+must stay true, and leave the reasoning at the home. If no, it is an
+echo and it goes.
+
+Qualifying facts are narrow and recognizable:
+
+- What sharing a handle actually shares — a clone that aliases rather
+  than copies.
+- An invariant another file's logic leans on: a sequence that is dense
+  from 1, a buffer already sorted, a field never empty.
+- An ordering the code cannot express: this store must follow that
+  push; this lock must outlive that read.
+- A teardown or lifetime obligation with no destructor to enforce it.
+
+Not edit constraints: performance characteristics, anything the type
+system or borrow checker already rejects, and restatements of the
+model's *rationale* rather than its requirement. A wrong edit there
+does not compile, or does not matter.
 
 ## The bar: three tiers by derivation cost
 
@@ -92,7 +144,9 @@ its fact from the code plus the language's own semantics:
    enumerating call sites or reading across files (a crate-private
    protocol, a cross-module invariant). Do not cache it at each site;
    state it once at the model home and reduce every echo to a pointer
-   or nothing.
+   or nothing — unless the site passes the retrieval test above, which
+   is the one carve-out: an edit constraint is stated at the home
+   *and* in one sentence at the site that can break it.
 3. **Underivable in principle** — the fact comes from outside the
    code entirely. This is the never-delete floor, kept at point of
    use, one sentence each:
@@ -142,8 +196,12 @@ Genericized from real sweeps; recognize the pattern, not the wording:
   already order these accesses" in a function that visibly holds the
   exclusive lock — tier 1, deleted; the reader owns the memory model.
 - A type doc repeating the module doc's ownership protocol ("only the
-  executor stores to it, between rounds") — an echo of the model home,
-  deleted even though the fact itself is load-bearing.
+  executor stores to it, between rounds, so the bound is immutable for
+  the whole of one call") — the rationale is an echo of the model home
+  and goes. The requirement passes the retrieval test and stays as one
+  sentence: a store added anywhere else compiles and quietly moves a
+  bound out from under a reader. Split the sentence; keep the half
+  that constrains an edit.
 - A four-line comment above a four-line classification function,
   paraphrasing its branches — deleted outright.
 - A comment justifying a layout mechanism "because auxiliary edges do
@@ -164,7 +222,8 @@ a different bar:
   the code/test boundary a restatement is a **claim binding**, not an
   echo: when the test fails, it names the promise that broke, which
   is the first thing a red CI run needs. The echo rule applies within
-  load-bearing code, not from code to its tests.
+  load-bearing code, not from code to its tests. Both readers depend
+  on this, and an agent triaging a failure has little else.
 - Scenario-contrivance comments are keepers: the why behind a
   deliberately odd fixture — a capacity below the append count, a
   scripted failure on the second send — is tier 3 at point of use.
@@ -201,7 +260,9 @@ what the sweep *is*.
 2. List every comment and docstring in the touched files and classify
    each into a tier against the inventory. Tier 1 is deleted; tier 2 lives only at the home,
    echoes become pointers or nothing; tier 3 is kept and compressed to
-   one sentence per fact.
+   one sentence per fact. Run the retrieval test before reducing any
+   tier-2 fact to a pointer — a sweep that only ever deletes has not
+   been applying it.
 3. Check each survivor against the current design, not the design it
    was written for. A comment referring to anything deleted or renamed
    is rewritten to the truth or deleted.
@@ -243,7 +304,10 @@ has a home, and it is not the code:
 | Excuse | Reality |
 |---|---|
 | "It's a concurrency/memory-ordering comment — those are keepers" | The test is derivability, not topic. An ordering justified by a visible lock is tier 1; only the protocol fact with no other guard survives, and it lives at the model home. |
-| "The reader might not have read the module doc" | They will — that is what the home is for. At most a pointer, never a copy. |
+| "The reader might not have read the module doc" | The human will — that is what the home is for. The agent will not, which buys exactly one sentence at a site that passes the retrieval test, and nothing anywhere else. |
+| "Agents don't follow pointers, so every pointer should go back to being a copy" | Only where a wrong edit would compile and pass. Everywhere else the agent that skips the pointer also skips a fact it had no use for. The carve-out is edit constraints, not comfort. |
+| "A pointer can't drift, so it beats a copy everywhere" | It also can't be read by someone who never follows it. At a site that can silently break the fact, an unread pointer is a missing fact, and drift is the cheaper failure. |
+| "Serving coding agents means keeping more comments" | It means one sentence at edit sites and the same deletions everywhere else. Tier 1 costs an agent more than a human — it burns the context window the code needed. |
 | "Each copy states a real constraint, so each copy is a keeper" | A fact stated in five places is one statement and four echoes. Distributed echoes are invisible comment-by-comment; only the model inventory catches them. |
 | "The test doc restates the module doc, so it's an echo" | Across the code/test boundary a restatement is a claim binding: it names which promise the test enforces. Delete it and a red CI run stops saying what broke. |
 | "This echo is convenient right where it's used" | Two copies of one model drift independently; the stale one becomes a lie with authority. Pointer or nothing. |
@@ -278,3 +342,9 @@ has a home, and it is not the code:
   diff you are about to ship.
 - A comment you are writing mainly so a reviewer or linter stops
   asking — not because the reader at that site needs the fact.
+- A tier-2 fact reduced to a pointer without asking whether an edit at
+  that site could break it and still compile.
+- A sweep whose diff is deletions only: the retrieval test keeps
+  things, and a sweep that kept nothing probably never ran it.
+- An "edit constraint" you are keeping whose violation the compiler
+  would catch — that is the carve-out being used as an excuse.
