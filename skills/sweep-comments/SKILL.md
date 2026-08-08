@@ -250,25 +250,55 @@ keeping the "judgment" is the same violation through a keyhole. If the
 diff is large, sweep it in one pass anyway; reading the whole diff is
 what the sweep *is*.
 
-1. Build the model inventory before reading any comment: list every
-   design principle the touched code relies on — not just the one you
-   already have in mind — and assign each its home. A diff usually
-   carries several, and the echo test is only as good as this
-   inventory: a principle with no assigned home leaves every copy of
-   it looking like a local keeper. If a model is stated nowhere, that
-   is the first fix — write it once, where the reader forms it.
-2. List every comment and docstring in the touched files and classify
-   each into a tier against the inventory. Tier 1 is deleted; tier 2 lives only at the home,
-   echoes become pointers or nothing; tier 3 is kept and compressed to
-   one sentence per fact. Run the retrieval test before reducing any
-   tier-2 fact to a pointer — a sweep that only ever deletes has not
-   been applying it.
-3. Check each survivor against the current design, not the design it
-   was written for. A comment referring to anything deleted or renamed
-   is rewritten to the truth or deleted.
-4. Check the commit message and module docstring the same way — they
+The sweep runs as two passes with opposite polarity, and they are not
+interleaved. One pass removes and the other restores; trying to do
+both at once means judging every borderline comment under a frame that
+wants it gone, and the frame wins.
+
+**Setup, before reading a single comment:**
+
+1. Partition the touched files by which bar applies: production, test,
+   demo. Do this first and write it down. A file read under the wrong
+   bar gets the wrong rule applied to every comment in it, and no
+   later carve-out recovers it — the production bar deletes a test's
+   claim bindings before it ever occurs to you that a different bar
+   was owed.
+2. Build the model inventory: list every design principle the touched
+   code relies on — not just the one you already have in mind — and
+   assign each its home. A diff usually carries several, and the echo
+   test is only as good as this inventory: a principle with no
+   assigned home leaves every copy of it looking like a local keeper.
+   If a model is stated nowhere, that is the first fix — write it
+   once, where the reader forms it.
+
+**Pass 1 — subtract.** Classify every comment and docstring into a
+tier against the inventory. Tier 1 is deleted; tier 2 lives only at
+the home, echoes become pointers or nothing; tier 3 is kept and
+compressed to one sentence per fact. Then check each survivor against
+the current design, not the design it was written for: a comment
+referring to anything deleted or renamed is rewritten to the truth or
+deleted.
+
+**Pass 2 — restore.** Walk the edit sites — every place a future
+change could land, not every place a comment currently sits — and at
+each one ask the retrieval test: could a reader who saw this site and
+nothing else make a wrong edit here that still compiles and passes?
+
+This pass may only keep or add. It is not a review of pass 1 and it
+does not re-litigate a deletion on taste; it asks one question and
+acts on the answer.
+
+Its output is a written list of the sites that passed the test and the
+one sentence each now carries. **An empty list is a failed pass, not a
+clean bill** — a diff that touches load-bearing code has edit
+constraints in it, and finding none means the test was not actually
+run. Report the list with the sweep.
+
+**Then:**
+
+3. Check the commit message and module docstring the same way — they
    go stale on the same pivots.
-5. Verify the sweep was purely editorial: tests still pass, and any
+4. Verify the sweep was purely editorial: tests still pass, and any
    generated output (code generation, DOT/SVG, fixtures) is
    byte-identical before and after.
 
@@ -346,5 +376,8 @@ has a home, and it is not the code:
   that site could break it and still compile.
 - A sweep whose diff is deletions only: the retrieval test keeps
   things, and a sweep that kept nothing probably never ran it.
+- Pass 2 folded into pass 1 "to save a read", or run as a re-read of
+  pass 1's deletions rather than a walk of the edit sites.
+- A test or demo file swept before the bars were partitioned.
 - An "edit constraint" you are keeping whose violation the compiler
   would catch — that is the carve-out being used as an excuse.
