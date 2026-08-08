@@ -10,7 +10,7 @@ name = "skills-mcp"
 path = "src/main.rs"
 
 [dependencies]
-rmcp = { version = "0.16", features = ["server", "transport-io"] }
+rmcp = { version = "3.1", features = ["server", "transport-io"] }
 tokio = { version = "1", features = ["macros", "rt-multi-thread", "io-std", "signal"] }
 include_dir = "0.7"
 serde = { version = "1", features = ["derive"] }
@@ -21,7 +21,7 @@ semver = "1"
 sha2 = "0.10"
 tracing = "0.1"
 tracing-subscriber = { version = "0.3", features = ["env-filter"] }
-rusqlite = { version = "0.31", features = ["bundled"] }
+rusqlite = { version = "0.40", features = ["bundled"] }
 walkdir = "2"
 
 [dev-dependencies]

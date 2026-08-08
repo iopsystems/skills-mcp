@@ -12,15 +12,15 @@
 //! Homebrew bottle. `install.sh` and the `iopsystems/homebrew-iop` formula both
 //! install this binary; see the README for the available install paths.
 
-use std::{borrow::Cow, path::PathBuf, sync::Arc};
+use std::{path::PathBuf, sync::Arc};
 
 use anyhow::{bail, Context, Result};
 use include_dir::{include_dir, Dir, File};
 use rmcp::{
     model::{
-        CallToolRequestParams, CallToolResult, Content, Implementation, InitializeResult,
-        ListToolsResult, PaginatedRequestParams, ProtocolVersion, ServerCapabilities, Tool,
-        ToolAnnotations,
+        CallToolRequestParams, CallToolResponse, CallToolResult, ContentBlock, Implementation,
+        InitializeResult, ListToolsResult, PaginatedRequestParams, ProtocolVersion,
+        ServerCapabilities, Tool, ToolAnnotations,
     },
     service::RequestContext,
     transport::stdio,
@@ -149,26 +149,16 @@ fn obj_schema(v: Value) -> Arc<serde_json::Map<String, Value>> {
 /// returning structured JSON. Complements the instructional skills.
 fn programmatic_tools() -> Vec<Tool> {
     vec![
-        Tool {
-            name: Cow::Borrowed("skill_catalog"),
-            title: None,
-            description: Some(Cow::Borrowed(
-                "List active skills and installable skill templates from the embedded catalog. Read-only; returns metadata only and never template contents.",
-            )),
-            input_schema: empty_schema(),
-            output_schema: None,
-            annotations: Some(ToolAnnotations::new().read_only(true)),
-            execution: None,
-            icons: None,
-            meta: None,
-        },
-        Tool {
-            name: Cow::Borrowed("skill_template_get"),
-            title: None,
-            description: Some(Cow::Borrowed(
-                "Retrieve an embedded skill template by template_id, optionally limited to one declared path. Read-only; never reads arbitrary filesystem paths.",
-            )),
-            input_schema: obj_schema(json!({
+        Tool::new(
+            "skill_catalog",
+            "List active skills and installable skill templates from the embedded catalog. Read-only; returns metadata only and never template contents.",
+            empty_schema(),
+        )
+        .with_annotations(ToolAnnotations::new().read_only(true)),
+        Tool::new(
+            "skill_template_get",
+            "Retrieve an embedded skill template by template_id, optionally limited to one declared path. Read-only; never reads arbitrary filesystem paths.",
+            obj_schema(json!({
                 "type": "object",
                 "properties": {
                     "template_id": {"type": "string"},
@@ -177,22 +167,15 @@ fn programmatic_tools() -> Vec<Tool> {
                 "required": ["template_id"],
                 "additionalProperties": false
             })),
-            output_schema: None,
-            annotations: Some(ToolAnnotations::new().read_only(true)),
-            execution: None,
-            icons: None,
-            meta: None,
-        },
-        Tool {
-            name: Cow::Borrowed("vault_search"),
-            title: None,
-            description: Some(Cow::Borrowed(
-                "Search the knowledge-iop vault for artifacts matching filters. \
-                 At least one of type/status/author/topic must be provided. \
-                 Returns up to `limit` rows (default 50, max 500). `topic` is \
-                 a full-text-search term matched against title and body.",
-            )),
-            input_schema: obj_schema(json!({
+        )
+        .with_annotations(ToolAnnotations::new().read_only(true)),
+        Tool::new(
+            "vault_search",
+            "Search the knowledge-iop vault for artifacts matching filters. \
+             At least one of type/status/author/topic must be provided. \
+             Returns up to `limit` rows (default 50, max 500). `topic` is \
+             a full-text-search term matched against title and body.",
+            obj_schema(json!({
                 "type": "object",
                 "properties": {
                     "type": {
@@ -206,23 +189,15 @@ fn programmatic_tools() -> Vec<Tool> {
                 },
                 "additionalProperties": false
             })),
-            output_schema: None,
-            annotations: None,
-            execution: None,
-            icons: None,
-            meta: None,
-        },
-        Tool {
-            name: Cow::Borrowed("vault_edges"),
-            title: None,
-            description: Some(Cow::Borrowed(
-                "Return edges touching the given artifact id. Optionally \
-                 filter by edge kind (frames, supersedes, superseded_by, \
-                 relates_to, conflicts_with, depends_on, derived_from, arc, \
-                 scopes, inquiry) and direction (outgoing, incoming, both — \
-                 default both). Each row includes the neighbor artifact.",
-            )),
-            input_schema: obj_schema(json!({
+        ),
+        Tool::new(
+            "vault_edges",
+            "Return edges touching the given artifact id. Optionally \
+             filter by edge kind (frames, supersedes, superseded_by, \
+             relates_to, conflicts_with, depends_on, derived_from, arc, \
+             scopes, inquiry) and direction (outgoing, incoming, both — \
+             default both). Each row includes the neighbor artifact.",
+            obj_schema(json!({
                 "type": "object",
                 "properties": {
                     "id": {"type": "string", "description": "The artifact id to pivot on"},
@@ -235,39 +210,23 @@ fn programmatic_tools() -> Vec<Tool> {
                 "required": ["id"],
                 "additionalProperties": false
             })),
-            output_schema: None,
-            annotations: None,
-            execution: None,
-            icons: None,
-            meta: None,
-        },
-        Tool {
-            name: Cow::Borrowed("vault_reindex"),
-            title: None,
-            description: Some(Cow::Borrowed(
-                "Force a full rebuild of the vault's sqlite index. Normally \
-                 unnecessary — queries auto-rebuild on staleness — but useful \
-                 after a schema bump or to debug drift.",
-            )),
-            input_schema: empty_schema(),
-            output_schema: None,
-            annotations: None,
-            execution: None,
-            icons: None,
-            meta: None,
-        },
-        Tool {
-            name: Cow::Borrowed("vault_check_transition"),
-            title: None,
-            description: Some(Cow::Borrowed(
-                "Evaluate a proposed status transition against the vault's \
-                 resolution-propagation invariants. Returns allowed/blockers/\
-                 warnings with machine-stable rule ids and artifact evidence. \
-                 Use this before committing a status change to catch cascading \
-                 violations (e.g. accepting a decision whose design-brief is \
-                 still draft, closing an arc with open inquiries).",
-            )),
-            input_schema: obj_schema(json!({
+        ),
+        Tool::new(
+            "vault_reindex",
+            "Force a full rebuild of the vault's sqlite index. Normally \
+             unnecessary — queries auto-rebuild on staleness — but useful \
+             after a schema bump or to debug drift.",
+            empty_schema(),
+        ),
+        Tool::new(
+            "vault_check_transition",
+            "Evaluate a proposed status transition against the vault's \
+             resolution-propagation invariants. Returns allowed/blockers/\
+             warnings with machine-stable rule ids and artifact evidence. \
+             Use this before committing a status change to catch cascading \
+             violations (e.g. accepting a decision whose design-brief is \
+             still draft, closing an arc with open inquiries).",
+            obj_schema(json!({
                 "type": "object",
                 "properties": {
                     "id": {"type": "string", "description": "The artifact id to transition"},
@@ -276,24 +235,16 @@ fn programmatic_tools() -> Vec<Tool> {
                 "required": ["id", "new_status"],
                 "additionalProperties": false
             })),
-            output_schema: None,
-            annotations: None,
-            execution: None,
-            icons: None,
-            meta: None,
-        },
-        Tool {
-            name: Cow::Borrowed("vault_reflect"),
-            title: None,
-            description: Some(Cow::Borrowed(
-                "Produce the Part A (graph hygiene) report the reconciler \
-                 consumes: scope activity, arc momentum, orphan problem-briefs, \
-                 stale design-briefs, pending syntheses, and stale open arcs. \
-                 Returns structured JSON; the reconcile-vault skill layers \
-                 strategic judgment (Part B) on top. All three window \
-                 parameters are optional; defaults are 30 / 14 / 60 days.",
-            )),
-            input_schema: obj_schema(json!({
+        ),
+        Tool::new(
+            "vault_reflect",
+            "Produce the Part A (graph hygiene) report the reconciler \
+             consumes: scope activity, arc momentum, orphan problem-briefs, \
+             stale design-briefs, pending syntheses, and stale open arcs. \
+             Returns structured JSON; the reconcile-vault skill layers \
+             strategic judgment (Part B) on top. All three window \
+             parameters are optional; defaults are 30 / 14 / 60 days.",
+            obj_schema(json!({
                 "type": "object",
                 "properties": {
                     "window_days": {
@@ -311,12 +262,7 @@ fn programmatic_tools() -> Vec<Tool> {
                 },
                 "additionalProperties": false
             })),
-            output_schema: None,
-            annotations: None,
-            execution: None,
-            icons: None,
-            meta: None,
-        },
+        ),
     ]
 }
 
@@ -356,17 +302,7 @@ impl SkillsServer {
         let mut tools: Vec<Tool> = self
             .skills
             .iter()
-            .map(|s| Tool {
-                name: Cow::Owned(s.name.clone()),
-                title: None,
-                description: Some(Cow::Owned(s.description.clone())),
-                input_schema: empty.clone(),
-                output_schema: None,
-                annotations: None,
-                execution: None,
-                icons: None,
-                meta: None,
-            })
+            .map(|s| Tool::new(s.name.clone(), s.description.clone(), empty.clone()))
             .collect();
         tools.extend(programmatic_tools());
         tools.sort_by(|a, b| a.name.cmp(&b.name));
@@ -406,18 +342,13 @@ impl SkillsServer {
 
 impl ServerHandler for SkillsServer {
     fn get_info(&self) -> InitializeResult {
-        InitializeResult {
-            protocol_version: ProtocolVersion::LATEST,
-            capabilities: ServerCapabilities::builder().enable_tools().build(),
-            server_info: Implementation {
-                name: env!("CARGO_PKG_NAME").to_string(),
-                version: env!("CARGO_PKG_VERSION").to_string(),
-                title: None,
-                description: Some(env!("CARGO_PKG_DESCRIPTION").to_string()),
-                icons: None,
-                website_url: None,
-            },
-            instructions: Some(
+        InitializeResult::new(ServerCapabilities::builder().enable_tools().build())
+            .with_protocol_version(ProtocolVersion::LATEST)
+            .with_server_info(
+                Implementation::new(env!("CARGO_PKG_NAME"), env!("CARGO_PKG_VERSION"))
+                    .with_description(env!("CARGO_PKG_DESCRIPTION")),
+            )
+            .with_instructions(
                 "This server exposes three tool families. The instructional skill tools \
                  (catchup, plan-feature, ...) return instruction text to follow. The \
                  catalog and retrieval tools are read-only: skill_catalog lists active \
@@ -427,10 +358,8 @@ impl ServerHandler for SkillsServer {
                  knowledge-iop vault and return structured JSON: vault_search searches \
                  artifacts, vault_edges traverses relationships, vault_reindex rebuilds the \
                  index, vault_check_transition validates proposed status changes, and \
-                 vault_reflect produces graph-hygiene reports."
-                    .to_string(),
-            ),
-        }
+                 vault_reflect produces graph-hygiene reports.",
+            )
     }
 
     async fn list_tools(
@@ -438,20 +367,17 @@ impl ServerHandler for SkillsServer {
         _request: Option<PaginatedRequestParams>,
         _context: RequestContext<RoleServer>,
     ) -> Result<ListToolsResult, McpError> {
-        Ok(ListToolsResult {
-            tools: self.listed_tools(),
-            next_cursor: None,
-            meta: None,
-        })
+        Ok(ListToolsResult::with_all_items(self.listed_tools()))
     }
 
     async fn call_tool(
         &self,
         request: CallToolRequestParams,
         _context: RequestContext<RoleServer>,
-    ) -> Result<CallToolResult, McpError> {
+    ) -> Result<CallToolResponse, McpError> {
         self.route_tool(request.name.as_ref(), request.arguments)
             .await
+            .map(Into::into)
     }
 }
 
@@ -476,10 +402,10 @@ impl SkillsServer {
             "vault_check_transition" => self.handle_vault_check_transition(arguments).await,
             "vault_reflect" => self.handle_vault_reflect(arguments).await,
             name => match self.find_skill(name) {
-                Some(skill) => Ok(CallToolResult::success(vec![Content::text(
+                Some(skill) => Ok(CallToolResult::success(vec![ContentBlock::text(
                     skill.body.clone(),
                 )])),
-                None => Ok(CallToolResult::error(vec![Content::text(format!(
+                None => Ok(CallToolResult::error(vec![ContentBlock::text(format!(
                     "unknown tool: {name}"
                 ))])),
             },
@@ -721,15 +647,15 @@ impl SkillsServer {
 
 fn json_result(v: Value) -> CallToolResult {
     let text = serde_json::to_string_pretty(&v).unwrap_or_else(|_| v.to_string());
-    CallToolResult::success(vec![Content::text(text)])
+    CallToolResult::success(vec![ContentBlock::text(text)])
 }
 
 fn vault_err(msg: String) -> CallToolResult {
-    CallToolResult::error(vec![Content::text(msg)])
+    CallToolResult::error(vec![ContentBlock::text(msg)])
 }
 
 fn tool_err(msg: impl Into<String>) -> CallToolResult {
-    CallToolResult::error(vec![Content::text(msg.into())])
+    CallToolResult::error(vec![ContentBlock::text(msg.into())])
 }
 
 #[tokio::main(flavor = "multi_thread", worker_threads = 2)]
