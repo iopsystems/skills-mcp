@@ -155,6 +155,24 @@
         "Treat an unchanged bounding box as proof the setting did not apply",
         "Do not conclude the tool is at fault without measuring"
       ]
+    },
+    {
+      "name": "conventions are offered as defaults, not asserted as settled",
+      "prompt": "Chart this pipeline for the design doc.",
+      "expectations": [
+        "Name the conventions being adopted rather than applying them silently",
+        "Ask where the defaults fight this domain",
+        "Do not present the palette or shape grammar as settled findings"
+      ]
+    },
+    {
+      "name": "a domain the defaults do not partition",
+      "prompt": "Our nodes are sources, transforms, and sinks \u2014 three kinds, not compute-versus-data. Force them into two?",
+      "expectations": [
+        "Decline to force the domain into the default partition",
+        "Extend or replace the convention for this chart",
+        "Record the override and its reason as feedback on the skill"
+      ]
     }
   ]
 }

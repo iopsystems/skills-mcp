@@ -11,6 +11,37 @@ makes must be one the code can be held to, and every claim the code makes
 must appear. Both halves fail quietly, which is why this is a generator
 problem before it is a drawing problem.
 
+## What this is, and what it is not yet
+
+Two kinds of claim live below, and they are not equally well founded.
+
+The **principles** — derive rather than draw, fail loudly on the
+unclassified, treat every channel as a claim, check placement rather than
+eyeball it — come from failures that were observed, diagnosed, and fixed.
+They should survive contact with a different domain.
+
+The **conventions** — the specific palette, rounded-versus-square, the edge
+styles, the frame grammar — are defaults distilled from one project's
+diagrams. They are internally consistent and worth adopting wholesale
+rather than assembling from scratch, but they have not been tried against a
+dataflow that is shaped differently: one with three kinds of node rather
+than two, one read mainly in print or on a projector, one where the
+interesting distinction is timing rather than kind.
+
+So when you apply this, **say which conventions you are adopting and ask
+where they fight the domain.** Concretely, ask:
+
+- Does compute-versus-data actually partition this system's nodes, or is
+  there a third kind that fits neither?
+- Does the palette survive the medium it will be read in?
+- Is there a distinction the reader needs that no channel here carries?
+
+And when the answer is that a default does not fit, **that override is the
+finding this skill is missing.** Capture it with its reason and bring it
+back here. A convention someone rejected for a stated reason is worth more
+than one nobody has tested, and this skill has more of the second kind than
+it should.
+
 ## Derive, never draw
 
 The nodes and edges come from the program's own structures — its topic
@@ -267,6 +298,9 @@ request and to every tool.
 - A diagram checked in as an image with no source beside it.
 - Two visual channels carrying the same distinction, or one channel
   carrying two.
+- Presenting the conventions here as settled when applying them, rather
+  than as defaults the domain may override.
+- Finishing a diagram without asking which defaults fought the domain.
 - Compute and data sharing a silhouette, so kind can only be read from the
   label.
 - A segmented glyph on something with no history to segment.
