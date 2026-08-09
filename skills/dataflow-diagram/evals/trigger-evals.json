@@ -1,0 +1,178 @@
+{
+  "evals": [
+    {
+      "name": "existing program triggers the skill",
+      "prompt": "Draw me a diagram of the six-stage processing pipeline in this crate so I can put it in the PR description.",
+      "expectations": [
+        "Read the program's own wiring to get nodes and edges",
+        "Do not hand-author a node list beside the code"
+      ]
+    },
+    {
+      "name": "speculative design does not trigger it",
+      "prompt": "We're kicking around ideas for a new ingestion service. Sketch roughly how data might move through it.",
+      "expectations": [
+        "Recognise there is no program to derive from",
+        "Sketch freely without building a generator",
+        "Do not apply the derive-never-draw rule to a design that does not exist yet"
+      ]
+    },
+    {
+      "name": "hand-maintained node list is the defect",
+      "prompt": "The diagram script has a list of stage names at the top that we update whenever we add a stage. Add the new stage to it.",
+      "expectations": [
+        "Name the hand-maintained list as a second source of truth",
+        "Derive the stages from the program's declarations instead",
+        "Do not simply append the new stage to the list"
+      ]
+    },
+    {
+      "name": "unclassified element must stop the run",
+      "prompt": "The generator's role table doesn't cover the new stage, so it renders without it. Just skip unknown stages so it stops breaking.",
+      "expectations": [
+        "Refuse to skip silently",
+        "Fail the generator on any unclassified element",
+        "Explain that an omitted node is invisible in the output"
+      ]
+    },
+    {
+      "name": "stale table entry fails too",
+      "prompt": "The classification table still lists a stage we deleted last month. It renders fine, so leave it.",
+      "expectations": [
+        "Treat a table entry with no matching element as a failure",
+        "Do not accept that rendering successfully means it is correct"
+      ]
+    },
+    {
+      "name": "compute and data share a silhouette",
+      "prompt": "Everything is a filled rectangle right now; the labels say which is a stage and which is a buffer. Good enough?",
+      "expectations": [
+        "Give compute rounded corners and data square ones",
+        "Explain that kind should read from outline before label",
+        "Do not resolve it by changing only the labels or the fills"
+      ]
+    },
+    {
+      "name": "a property does not earn a new shape",
+      "prompt": "Buffers that get archived should look different. I was going to make those hexagons.",
+      "expectations": [
+        "Keep the buffer shape and annotate it, with a frame",
+        "Explain that a new shape asserts a new kind",
+        "Point out that a framed buffer is still recognisably a buffer"
+      ]
+    },
+    {
+      "name": "segmentation asserts a history that is not there",
+      "prompt": "The config values loaded at startup are drawn with the same multi-cell queue glyph as the streams. Fine to leave?",
+      "expectations": [
+        "Reject the queue glyph for a write-once value",
+        "Explain that segmentation claims a readable history",
+        "Give it a different shape, since it is a different kind"
+      ]
+    },
+    {
+      "name": "absence must stay legible",
+      "prompt": "Two of the five inputs aren't archived. Should I just leave those two undecorated and mention it in the caption?",
+      "expectations": [
+        "Keep the unmarked state readable as a gap in a series",
+        "Ensure the marked cases are visibly marked so the absence reads",
+        "Prefer the chart showing it over the caption saying it"
+      ]
+    },
+    {
+      "name": "unknown value must not be encoded",
+      "prompt": "We don't know the throughput of one edge. Draw it at the same weight as the others so the chart looks even.",
+      "expectations": [
+        "Refuse to encode a value that was guessed",
+        "Leave the property unencoded rather than plausibly wrong"
+      ]
+    },
+    {
+      "name": "palette members must come from one family",
+      "prompt": "I grabbed three fills from one palette and a fourth from another because it looked better. OK?",
+      "expectations": [
+        "Keep the palette to one family",
+        "Explain that a palette works because members were chosen against each other"
+      ]
+    },
+    {
+      "name": "edge colour is the channel with no fallback",
+      "prompt": "Simplify the chart by making every edge the same grey and telling the difference by where they connect.",
+      "expectations": [
+        "Preserve distinct edge colours for meaningfully different paths",
+        "Keep colourblind-safe choices for edge colour specifically",
+        "Note that edges have no shape channel to fall back on"
+      ]
+    },
+    {
+      "name": "cyclic program stays legible as a DAG",
+      "prompt": "Each stage reads its own previous output, so the layout engine tangles the graph. Should I drop those edges?",
+      "expectations": [
+        "Keep the edges as real data flow",
+        "Draw them dashed and unconstrained so they do not drive layout",
+        "Do not delete a real dependency to make the picture tidy"
+      ]
+    },
+    {
+      "name": "key must not fake a shape",
+      "prompt": "The legend is an HTML table of coloured cells. One entry needs to show the folded-corner shape; approximate it with a notched cell.",
+      "expectations": [
+        "Refuse the approximation",
+        "Draw the key as a graph using the chart's own node shapes",
+        "Explain that a faked shape teaches a glyph the chart never draws"
+      ]
+    },
+    {
+      "name": "colour named in words instead of shown",
+      "prompt": "The legend row says 'lilac = external input, grey = derived'. That's clear enough, right?",
+      "expectations": [
+        "Show the actual glyph instead of naming its colour",
+        "Note that naming a colour fails a colourblind reader entirely"
+      ]
+    },
+    {
+      "name": "trivial chart does not earn a key",
+      "prompt": "Three boxes, one arrow style. Add a legend so it looks finished.",
+      "expectations": [
+        "Decline the legend at this complexity",
+        "Explain that it would imply distinctions the chart does not draw"
+      ]
+    },
+    {
+      "name": "inset placement is computed, not adjusted by eye",
+      "prompt": "I nudged the legend offset a few times until it stopped covering anything. Ship it.",
+      "expectations": [
+        "Replace the eyeballed offset with a collision check",
+        "Check node boxes and edge splines both",
+        "Make the check fail the build rather than warn"
+      ]
+    },
+    {
+      "name": "a layout attribute that silently did nothing",
+      "prompt": "I set the rank separation to tighten the rows but it looks the same. The source is right, so it must be a rendering quirk.",
+      "expectations": [
+        "Confirm the rendered geometry actually changed before believing the source",
+        "Treat an unchanged bounding box as proof the setting did not apply",
+        "Do not conclude the tool is at fault without measuring"
+      ]
+    },
+    {
+      "name": "conventions are offered as defaults, not asserted as settled",
+      "prompt": "Chart this pipeline for the design doc.",
+      "expectations": [
+        "Name the conventions being adopted rather than applying them silently",
+        "Ask where the defaults fight this domain",
+        "Do not present the palette or shape grammar as settled findings"
+      ]
+    },
+    {
+      "name": "a domain the defaults do not partition",
+      "prompt": "Our nodes are sources, transforms, and sinks \u2014 three kinds, not compute-versus-data. Force them into two?",
+      "expectations": [
+        "Decline to force the domain into the default partition",
+        "Extend or replace the convention for this chart",
+        "Record the override and its reason as feedback on the skill"
+      ]
+    }
+  ]
+}

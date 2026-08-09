@@ -1157,4 +1157,23 @@ mod tests {
                 .is_some_and(|v| !v.is_empty()));
         }
     }
+
+    #[test]
+    fn dataflow_diagram_evals_cover_key_scenarios() {
+        let raw = include_str!("../skills/dataflow-diagram/evals/trigger-evals.json");
+        let value: serde_json::Value =
+            serde_json::from_str(raw).expect("dataflow-diagram evals should be valid JSON");
+        let evals = value["evals"]
+            .as_array()
+            .expect("dataflow-diagram evals should contain an evals array");
+
+        assert_eq!(evals.len(), 20);
+        for eval in evals {
+            assert!(eval["name"].as_str().is_some());
+            assert!(eval["prompt"].as_str().is_some());
+            assert!(eval["expectations"]
+                .as_array()
+                .is_some_and(|v| !v.is_empty()));
+        }
+    }
 }
