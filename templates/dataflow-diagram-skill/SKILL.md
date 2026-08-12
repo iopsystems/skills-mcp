@@ -50,24 +50,27 @@ emitted directly instead of through a layout engine, each with its
 reason). For that duo, install that template; this skill remains the home
 domain for dataflow and pipeline charts of a single running program.
 
-This skill also ships in two forms: the active skill serves these
-conventions as ready defaults — enough for a single-use chart in a
-repository you cannot modify, or a figure for a talk, where the generator
-script travels with the artifact and the chart is stamped with the commit
-it describes, a dated snapshot rather than a living document — while the
-`dataflow-diagram-skill` template installs them into a project, binding
-them through a charter that gives recorded overrides a durable home.
+This skill also ships in two forms with one structure: the skill itself
+is a complete set of working defaults, usable with no configuration —
+enough for a single-use chart in a repository you cannot modify, or a
+figure for a talk, where the generator script travels with the artifact
+and the chart is stamped with the commit it describes, a dated snapshot
+rather than a living document. The `dataflow-diagram-skill` template adds
+a charter, which is a *delta* on those defaults: the bindings no default
+can supply, plus any deviation, each with its reason. A convention absent
+from the charter means the default applies.
 
 ## Project Contract
 
-Read and fill the [dataflow charter](references/dataflow-charter.md) before
-drawing or regenerating any chart. It binds these conventions to the project:
-the chart inventory, the generator and its invocation, the program structures
-nodes and edges derive from, the palette adopted or replaced, the key and
-placement checks, the freshness check, and the review gate. Recheck it at the
-start of every material diagram effort — and record every override of a
-default there, with its reason, so the next effort inherits the tested
-convention rather than re-deriving it.
+Read the [dataflow charter](references/dataflow-charter.md) before drawing
+or regenerating any chart, and recheck it at the start of every material
+diagram effort. The charter is a delta, not a duplicate: it records the
+bindings no default can supply — the chart inventory, the generator and its
+invocation, the program structures nodes and edges derive from, the
+freshness check, the review gate — and any deviation from this skill's
+defaults (palette, shape grammar, edge vocabulary), each with its reason.
+A convention absent from the charter means the default applies, so the next
+effort inherits tested conventions rather than re-deriving them.
 
 ## Trust and Execution Boundary
 

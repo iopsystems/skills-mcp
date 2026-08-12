@@ -35,10 +35,12 @@ scratch, but when one fights your system, the override with its stated
 reason is the most valuable thing the effort can produce: record it in the
 project's charter and bring it back to this skill.
 
-This skill ships in two forms: the active skill serves the conventions as
-ready defaults — including single-use charts (see below) — while the
-`architecture-diagram-skill` template installs them into a project, binding
-them through a charter.
+This skill ships in two forms with one structure: the skill itself is a
+complete set of working defaults, usable with no configuration at all
+(including single-use charts, below); the `architecture-diagram-skill`
+template adds a charter, which is a *delta* on those defaults — the
+bindings no default can supply, plus any deviation, each with its reason.
+A convention absent from the charter means the default applies.
 
 ## Relationship to the dataflow-diagram skill
 
@@ -56,11 +58,13 @@ is, and what the process does at runtime.
 
 ## Project Contract
 
-Read and fill the [diagram charter](references/diagram-charter.md) before
-touching any diagram. It binds this skill's conventions to the project: the
-chart inventory, the generator and its invocation, the ground-truth sources
-and curated tables, the palette and type scale, the freshness check, and the
-review gate. Recheck it at the start of every material diagram effort.
+Read the [diagram charter](references/diagram-charter.md) before touching
+any diagram, and recheck it at the start of every material diagram effort.
+The charter is a delta, not a duplicate: it records the bindings no default
+can supply — the chart inventory, the generator and its invocation, the
+ground-truth sources and curated tables, the freshness check, the review
+gate — and any deviation from this skill's defaults, each with its reason.
+A convention absent from the charter means the default applies.
 
 ## Trust and Execution Boundary
 
@@ -235,25 +239,51 @@ Request flow:
   belong on one request-flow chart; pick one and let the thread-model chart
   carry the other.
 
+## A default visual language
+
+Adopt this wholesale or replace it wholesale in the charter — never mix. It
+was derived against one system (see the beta note above), but it is
+internally consistent and colorblind-considerate, and starting from it beats
+assembling one from scratch.
+
+- **Palette** (pastel — these are large filled areas read at length):
+  interface/protocol layer `#FBB4AE`, storage/state layer `#B3CDE3`,
+  runtime/core layer `#CCEBC5`, foundation `#F2F2F2`, externals white.
+- **Type scale**: four sizes only — 14 for chips, legends, and edge labels;
+  16 for sub-labels; 17 for element labels; 20 for panel titles.
+- **Style channels**: monospace marks literal runtime strings (thread names
+  as the OS reports them); italic plus dashed marks external elements;
+  underlined text carries a hyperlink to an external unit's registry page
+  (draw the underline as a line — text-decoration is unreliable in
+  rasterizers).
+- **Edge weight**: heavy (2.4) for process-boundary/wire edges, thin (1.4)
+  for internal/object edges; labels sit above arrows; orthogonal arrows
+  only.
+- **Panels**: one per variant, stacked vertically for narrow screens, with
+  right-margin vertically-centered annotations naming what each panel
+  covers.
+
 ## Single-use charts
 
-A chart for a talk, or for a repository you cannot add files to, still
-follows the core of this skill: derive nodes and edges from the program's
-real structures at generation time, classify through fail-loud tables, and
-keep the generator script with the artifact wherever the work lives. What
-single use loses is freshness — no CI will catch drift — so stamp the chart
-with the commit it was derived from and present it as a dated snapshot, not
-a living document. Skip the charter and the review gate; keep derivation
-and fail-loudly, which cost nothing and are what make even a one-off chart
-trustworthy. If the chart proves worth keeping, the script is the seed of
-the installed generator.
+This skill is complete without a charter — every convention is a working
+default — and single use is exactly that degenerate case. A chart for a
+talk, or for a repository you cannot add files to, follows the same core:
+derive nodes and edges from the program's real structures at generation
+time, classify through fail-loud tables, use the default visual language,
+and keep the generator script with the artifact wherever the work lives.
+What single use loses is freshness — no CI will catch drift — so stamp the
+chart with the commit it was derived from and present it as a dated
+snapshot, not a living document. Skip the charter and the review gate; keep
+derivation and fail-loudly, which cost nothing and are what make even a
+one-off chart trustworthy. If the chart proves worth keeping, the script is
+the seed of the installed generator.
 
 ## Workflow
 
-1. Establish the bindings: recheck the project's diagram charter when this
-   skill is installed as a template instance; otherwise discover the
-   generator, conventions, and reviewer from the repository — or use
-   single-use mode above.
+1. Establish the bindings: recheck the project's diagram charter when one
+   is installed (defaults apply wherever it is silent); otherwise discover
+   the generator and reviewer from the repository, or use single-use mode
+   above on pure defaults.
 2. Decide which half (or both) the request touches, and which chart in the
    inventory it maps to — or whether it is genuinely a new chart.
 3. Write the ground-truth extraction and claims *before* any geometry:

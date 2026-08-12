@@ -1,10 +1,14 @@
 # Dataflow Diagram Charter
 
-Fill this file from project evidence before using the installed skill. Replace
-all placeholders, cite repository sources, and recheck the charter before
-every material diagram effort.
+This charter is a **delta on the skill's defaults**, not a duplicate of the
+skill. Fill the required bindings from project evidence; record a convention
+here only when the project deviates from a default, with the reason. A
+convention absent from this file means the skill's default applies — which
+is also what keeps the skill usable with no charter at all.
 
-## Chart Inventory
+## Required Bindings (no default exists)
+
+### Chart Inventory
 
 | Chart | Program | Output | Generator module | Derived from |
 | --- | --- | --- | --- | --- |
@@ -13,7 +17,7 @@ every material diagram effort.
 Record where charts are embedded and where each chart's textual equivalent
 lives: `<paths>`.
 
-## Generator
+### Generator
 
 - Regeneration command: `<one command that regenerates every chart>`
 - Toolchain: `<the project's native toolchain — a diagram generator must not
@@ -22,7 +26,7 @@ lives: `<paths>`.
   SVG) and the render command>`
 - Layout engine: `<engine and version, or "geometry emitted directly">`
 
-## Ground Truth Bindings
+### Ground Truth
 
 - Node and edge sources: `<the registries, step declarations, or wiring
   functions read at generation time — never a hand-kept list>`
@@ -31,35 +35,24 @@ lives: `<paths>`.
 - Properties that must not be guessed: `<values rendered only when known,
   left unencoded otherwise>`
 
-## Visual Language Bindings
-
-- Palette: `<adopted default palette or wholesale replacement — never mixed;
-  role of each color>`
-- Shape grammar: `<what rounded vs. square (or the project's kinds) assert;
-  any third kind the compute/data partition did not cover>`
-- Edge vocabulary: `<solid/dashed/dotted/penwidth meanings>`
-- Key: `<how the key is generated from the same shapes, and when a chart is
-  simple enough to omit it>`
-- Placement check: `<the computed collision check (nodes and edge splines
-  both) and how it fails the build>`
-
-## Freshness
+### Freshness
 
 - CI: `<the job that regenerates all charts and fails on any diff against
   the committed output>`
 - Locally: `<the same commands, and when contributors should run them>`
 
-## Review Gate
+### Review Gate
 
 - `<who reviews every new chart and every visual change; note that approval
   of an earlier revision does not cover a later one>`
 
-## Recorded Overrides
+## Overrides (defaults apply unless listed here)
 
-Every default from the skill that this project rejected or extended, with the
-reason — the skill's conventions improve only through this record:
+Deviations from the skill's defaults — palette, shape grammar, edge
+vocabulary, key conventions, or any convention in the skill body — each with
+its reason. This record is how the skill's defaults improve:
 
-- `<override and reason, or "none yet">`
+- `<override and reason, or "none — defaults adopted wholesale">`
 
 ## Charter Evidence
 

@@ -1,10 +1,14 @@
 # Architecture Diagram Charter
 
-Fill this file from project evidence before using the installed skill. Replace
-all placeholders, cite repository sources, and recheck the charter before
-every material diagram effort.
+This charter is a **delta on the skill's defaults**, not a duplicate of the
+skill. Fill the required bindings from project evidence; record a convention
+here only when the project deviates from a default, with the reason. A
+convention absent from this file means the skill's default applies — which
+is also what keeps the skill usable with no charter at all.
 
-## Chart Inventory
+## Required Bindings (no default exists)
+
+### Chart Inventory
 
 | Chart | Half | Output | Generator module | Claims |
 | --- | --- | --- | --- | --- |
@@ -13,7 +17,7 @@ every material diagram effort.
 Record where charts are embedded and where each chart's textual equivalent
 lives: `<paths>`.
 
-## Generator
+### Generator
 
 - Regeneration command: `<one command that regenerates every chart>`
 - Toolchain: `<the project's native toolchain — a diagram generator must not
@@ -23,7 +27,7 @@ lives: `<paths>`.
 - Source-claim helper: `<where positive and negative assertions live and how
   they fail>`
 
-## Ground Truth Bindings
+### Ground Truth
 
 - Build half: `<build-manifest query interface (e.g. cargo metadata, go list,
   npm ls)>`; composition greps for wiring choices manifests cannot see:
@@ -34,35 +38,24 @@ lives: `<paths>`.
 - Curated tables that need maintenance when the code changes (each validated
   at generation time so drift aborts the run): `<table names and locations>`
 
-## Visual Language Bindings
-
-- Palette: `<one palette, adopted or replaced wholesale — never mixed; role
-  of each color>`
-- Type scale: `<the few sizes in use and what each marks>`
-- Style channels: `<what monospace, italic, dashed, underline each mean —
-  one meaning per channel>`
-- Edge weight: `<what heavy vs. thin asserts (e.g. process-boundary vs.
-  internal)>`
-- Layout: `<arrow discipline, label placement, panel arrangement, margin
-  annotations>`
-
-## Freshness
+### Freshness
 
 - CI: `<the job that regenerates all charts and fails on any diff against
   the committed output>`
 - Locally: `<the same commands, and when contributors should run them>`
 
-## Review Gate
+### Review Gate
 
 - `<who reviews every new chart and every visual change; note that approval
   of an earlier revision does not cover a later one>`
 
-## Recorded Overrides
+## Overrides (defaults apply unless listed here)
 
-Every default from the skill that this project rejected or extended, with the
-reason — the skill's conventions improve only through this record:
+Deviations from the skill's defaults — palette, type scale, style channels,
+edge weights, panel layout, or any convention in the skill body — each with
+its reason. This record is how the skill's defaults improve:
 
-- `<override and reason, or "none yet">`
+- `<override and reason, or "none — defaults adopted wholesale">`
 
 ## Charter Evidence
 
