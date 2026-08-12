@@ -1,0 +1,164 @@
+{
+  "evals": [
+    {
+      "name": "explicit de-slop request",
+      "prompt": "This README section reads like AI wrote it. De-slop it.",
+      "expectations": [
+        "Delete words that carry no fact rather than substituting synonyms for them",
+        "Preserve every technical claim the passage made",
+        "Leave sentence shape decisions to the document's own conventions"
+      ]
+    },
+    {
+      "name": "requirement softened to should",
+      "prompt": "Tighten this line: 'Callers should acquire the lock before reading the buffer.'",
+      "expectations": [
+        "Identify that this is a requirement, not a recommendation",
+        "Rewrite with must",
+        "Do not present should as merely a style preference"
+      ]
+    },
+    {
+      "name": "prohibition with may not is preserved",
+      "prompt": "Apply the modal rules to: 'Callers may not hold the lock across an await point.'",
+      "expectations": [
+        "Recognize may as permission-sense, not possibility",
+        "Leave may not intact",
+        "Do not rewrite to cannot or to can"
+      ]
+    },
+    {
+      "name": "possibility may becomes can",
+      "prompt": "Clean up: 'The connection may fail if the upstream is saturated.'",
+      "expectations": [
+        "Recognize may as possibility-sense here",
+        "Rewrite to can",
+        "Distinguish this case from a permission-sense may"
+      ]
+    },
+    {
+      "name": "gracefully handles states nothing",
+      "prompt": "Make this plainer: 'The client gracefully handles upstream failures.'",
+      "expectations": [
+        "Flag that the sentence names a quality of the handling rather than the handling",
+        "Ask for or state the actual behavior",
+        "Do not accept a synonym such as elegantly or cleanly"
+      ]
+    },
+    {
+      "name": "unmeasurable intensifier",
+      "prompt": "Tighten: 'A robust, blazingly fast, battle-tested ingestion pipeline.'",
+      "expectations": [
+        "Delete adjectives asserting properties the reader cannot check",
+        "Replace with a measurement where one exists, or drop the claim",
+        "Do not preserve the adjectives by rewording them"
+      ]
+    },
+    {
+      "name": "synonym rotation across one document",
+      "prompt": "This doc calls the same component the executor, the runner, and the scheduler in different sections. Fix the wording.",
+      "expectations": [
+        "Collapse to one name used throughout",
+        "Treat the rotation as a comprehension defect, not a style preference",
+        "Check sites that refer back to the explanation for the same name"
+      ]
+    },
+    {
+      "name": "identifier is not a verb",
+      "prompt": "De-slop this troubleshooting section; it uses run and execute inconsistently, including in `sqlpipe run --config sqlpipe.yaml`.",
+      "expectations": [
+        "Pick one verb for prose and use it consistently",
+        "Leave the command `sqlpipe run --config sqlpipe.yaml` byte-identical",
+        "Do not rewrite flags, paths, or identifiers"
+      ]
+    },
+    {
+      "name": "quoted error text untouched",
+      "prompt": "Tighten the wording around this error: the docs quote 'dial tcp: i/o timeout' and then explain it verbosely.",
+      "expectations": [
+        "Compress the surrounding explanation",
+        "Leave the quoted error string exactly as written",
+        "Do not normalize punctuation or casing inside the quoted text"
+      ]
+    },
+    {
+      "name": "nominalized action",
+      "prompt": "Clean up: 'The service performs compression of the payload prior to transmission.'",
+      "expectations": [
+        "Restore the action to a verb",
+        "Remove the empty carrier verb perform",
+        "Replace prior to with before"
+      ]
+    },
+    {
+      "name": "passive with a known actor",
+      "prompt": "Make this clearer: 'The value is cached and is later invalidated.'",
+      "expectations": [
+        "Name the actor that caches and invalidates",
+        "Convert to active voice",
+        "Do not keep passive on the grounds that it sounds more objective"
+      ]
+    },
+    {
+      "name": "condition trailing its command",
+      "prompt": "Tighten: 'Increase the timeout if the network path is slow.'",
+      "expectations": [
+        "Move the condition before the command",
+        "Keep the instruction itself unchanged"
+      ]
+    },
+    {
+      "name": "latin abbreviations",
+      "prompt": "De-slop: 'Supported backends (e.g. Postgres, MySQL, etc.) can be configured, i.e. via the config file.'",
+      "expectations": [
+        "Replace e.g. with for example and i.e. with that is",
+        "Remove etc. by naming the remaining items or writing and more",
+        "Do not leave any Latin abbreviation in place"
+      ]
+    },
+    {
+      "name": "throat-clearing opener",
+      "prompt": "Tighten: 'It is worth noting that it is important to configure the retry budget before deploying.'",
+      "expectations": [
+        "Delete the opening clauses rather than rewording them",
+        "Keep only the instruction that survived"
+      ]
+    },
+    {
+      "name": "syntax boundary respected on fragments",
+      "prompt": "Apply the prose rules to these doc comments; several are sentence fragments without articles.",
+      "expectations": [
+        "Correct word choice only",
+        "Do not convert fragments into complete sentences",
+        "State that sentence shape belongs to the calling skill or the site's own convention"
+      ]
+    },
+    {
+      "name": "no sentence-length ruling",
+      "prompt": "Run the prose bar over this architecture section and tell me which sentences are too long.",
+      "expectations": [
+        "Report vocabulary and modality findings",
+        "Decline to impose a word-count limit",
+        "Point out that sentence length is the calling skill's decision"
+      ]
+    },
+    {
+      "name": "invoked for word choice inside a comment sweep",
+      "prompt": "While sweeping comments before a PR, one surviving comment reads: 'Should probably not be mutated here, as it may break downstream consumers.'",
+      "expectations": [
+        "Remove the hedge probably",
+        "Convert the requirement to must not or may not as a prohibition",
+        "Preserve the downstream constraint the comment carries"
+      ]
+    },
+    {
+      "name": "pressure to sound impressive resisted",
+      "prompt": "Marketing wants the docs intro to sound more impressive before launch. Punch up the wording.",
+      "expectations": [
+        "Decline to add unfalsifiable adjectives to technical documentation",
+        "Offer measurable properties as the stronger alternative",
+        "Note that persuasion belongs in marketing copy, not the reference docs"
+      ]
+    }
+  ]
+}

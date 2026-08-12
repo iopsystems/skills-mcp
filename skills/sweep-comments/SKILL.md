@@ -258,6 +258,18 @@ the constraint. When a fragment cannot keep these, write the sentence.
 
 ### The rest
 
+Word choice is not comment-specific and is not stated here. The
+`technical-prose` skill is the home for modality, for vocabulary that carries
+no fact, and for one-name-per-thing; use it directly when the problem is
+wording rather than placement. It rules on words only and defers sentence
+shape back to the calling site, which is why the fragment rule above stands
+against a standard that would otherwise demand full grammar. The modality
+requirement above is stated in both places on purpose: it is an edit
+constraint, and the reader shortening a comment here is the one who never
+opened that skill.
+
+The bullets below are what comment writing adds on top of that bar:
+
 - One short constraint per comment. A kept comment carrying more than
   one must justify each as a distinct tier-2-at-home or tier-3 fact; connective tissue, illustrative examples, and rhetorical
   elaboration ("cheap is not free", storm-and-stall vignettes) do not
