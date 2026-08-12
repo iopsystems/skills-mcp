@@ -9,7 +9,7 @@ compatibility:
   - claude-code
 files:
   - path: SKILL.md
-    sha256: 1ce27410fd14538227aa8069488a92ea0f0ee0467ead004c18a38e56ee3f342c
+    sha256: 8af1a6e010568057625744f98156abf150d74dc762af8a7b2b831ec5bf3e571b
     merge_strategy: three-way
   - path: references/diagram-charter.md
     sha256: 26da75c2265b013a4aaea125486bc229b853096b9b5c03bde298da9f3540ad27

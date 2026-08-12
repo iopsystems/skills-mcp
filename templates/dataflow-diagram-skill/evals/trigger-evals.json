@@ -1,0 +1,106 @@
+{
+  "evals": [
+    {
+      "name": "activate for existing pipeline chart",
+      "prompt": "Draw a diagram of the six-stage processing pipeline in this crate for the PR description.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Recheck the dataflow charter before drawing",
+        "Read the program's own wiring to derive nodes and edges",
+        "Name the conventions being adopted and ask where they fight the domain"
+      ],
+      "prohibited_outcomes": [
+        "Hand-author a node or edge list beside the code",
+        "Present the palette or shape grammar as settled findings"
+      ]
+    },
+    {
+      "name": "do not activate for speculative design",
+      "prompt": "We're kicking around ideas for a new ingestion service. Sketch roughly how data might move through it.",
+      "should_trigger": false,
+      "required_outcomes": [
+        "Recognise there is no program to derive from and sketch freely"
+      ],
+      "prohibited_outcomes": [
+        "Build a generator or apply derive-never-draw to a design that does not exist yet"
+      ]
+    },
+    {
+      "name": "activate for hand-maintained list defect",
+      "prompt": "The diagram script has a list of stage names at the top that we update whenever we add a stage. Add the new stage to it.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Name the hand-maintained list as a second source of truth",
+        "Derive the stages from the program's declarations instead"
+      ],
+      "prohibited_outcomes": [
+        "Simply append the new stage to the list"
+      ]
+    },
+    {
+      "name": "activate for unclassified element",
+      "prompt": "The generator's role table doesn't cover the new stage, so it renders without it. Just make it skip unknown stages so it stops breaking.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Fail the generator on any unclassified element",
+        "Explain that an omitted node is invisible in the output",
+        "Treat a stale table entry naming a deleted element as a failure too"
+      ],
+      "prohibited_outcomes": [
+        "Skip unclassified elements silently",
+        "Accept that rendering successfully means the chart is correct"
+      ]
+    },
+    {
+      "name": "activate for key fidelity",
+      "prompt": "The legend is an HTML table of coloured cells; one row says 'lilac = external input'. Good enough?",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Draw the key as a graph using the chart's own node shapes, from the same generator",
+        "Show the actual glyph instead of naming its colour"
+      ],
+      "prohibited_outcomes": [
+        "Approximate a shape with table cells",
+        "Name a colour in words in the key"
+      ]
+    },
+    {
+      "name": "activate for eyeballed inset placement",
+      "prompt": "I nudged the legend offset a few times until it stopped covering anything. Ship it.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Replace the eyeballed offset with a computed collision check",
+        "Check node boxes and edge splines both",
+        "Make the check fail the build rather than warn"
+      ],
+      "prohibited_outcomes": [
+        "Ship an inset positioned by adjusting a number until it looked right"
+      ]
+    },
+    {
+      "name": "activate for a domain the defaults do not partition",
+      "prompt": "Our nodes are sources, transforms, and sinks — three kinds, not compute-versus-data. Force them into two?",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Extend or replace the convention for this chart",
+        "Record the override and its reason in the charter"
+      ],
+      "prohibited_outcomes": [
+        "Force the domain into the default partition",
+        "Apply an override without recording the reason"
+      ]
+    },
+    {
+      "name": "activate but verify the rendering",
+      "prompt": "I set the rank separation to tighten the rows but it looks the same. The source is right, so it must be a rendering quirk.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Confirm the rendered geometry actually changed before believing the source",
+        "Treat an unchanged bounding box as proof the setting did not apply"
+      ],
+      "prohibited_outcomes": [
+        "Conclude the tool is at fault without measuring"
+      ]
+    }
+  ]
+}

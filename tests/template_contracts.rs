@@ -8,8 +8,9 @@ use serde::Deserialize;
 use sha2::{Digest, Sha256};
 use walkdir::WalkDir;
 
-const TEMPLATE_IDS: [&str; 3] = [
+const TEMPLATE_IDS: [&str; 4] = [
     "architecture-diagram-skill",
+    "dataflow-diagram-skill",
     "document-feature-skill",
     "engineering-journal-skill",
 ];
