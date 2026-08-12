@@ -221,9 +221,45 @@ its fact from the code plus the language's own semantics:
 
 ## Writing new comments
 
-- One short sentence per constraint. A kept comment longer than one
-  sentence must justify every sentence as a distinct tier-2-at-home or
-  tier-3 fact; connective tissue, illustrative examples, and rhetorical
+### Prefer the fragment
+
+A comment is a label on code, not prose to be read aloud, and the
+declaration beneath it already supplies the subject. Write the shortest
+form that carries the fact:
+
+- `/// Wrong `source_id`. Separate from `type_mismatch` so a
+  misaddressed reader stays self-diagnosing.`
+- not `/// Records whose `source_id` was not the expected one. Kept
+  separate from `type_mismatch` so that the misaddressed-reader case
+  stays self-diagnosing rather than being folded into a generic bucket.`
+
+Grammatical completeness is not the bar; unmistakable meaning in context
+is. The gain is uneven by altitude and that is the point: field and
+variant docs are labels and shorten the most, method contracts shorten
+some, and a model home is prose doing real explanatory work — it
+tightens but stays sentences.
+
+**Two things a fragment may never drop.** Both are ways a shorter comment
+says something *different* rather than something briefer:
+
+- **Modality.** "Nothing may be moved out of it here" is a prohibition
+  binding future edits; "nothing moved out here" merely describes the
+  present and licenses the edit the comment existed to prevent. Every
+  edit constraint keeps its `must`, `may not`, or `never`.
+- **The subject of a claim.** "The operational *response* to any of them
+  converges on one question" is not "all three converge on one question"
+  — the first is about what an operator does, the second about the
+  causes. Dropping a noun to save a line silently reassigns what the
+  sentence is about.
+
+Also survivable only as full sentences: negations, scope qualifiers
+(`only`, `at most`, `never`), and conditionals whose antecedent carries
+the constraint. When a fragment cannot keep these, write the sentence.
+
+### The rest
+
+- One short constraint per comment. A kept comment carrying more than
+  one must justify each as a distinct tier-2-at-home or tier-3 fact; connective tissue, illustrative examples, and rhetorical
   elaboration ("cheap is not free", storm-and-stall vignettes) do not
   survive.
 - Compress, don't paraphrase: compression must not change meaning. A
@@ -418,6 +454,9 @@ has a home, and it is not the code:
 | "This echo is convenient right where it's used" | Two copies of one model drift independently; the stale one becomes a lie with authority. Pointer or nothing. |
 | "It's public API, so the length is fine" | Public API earns parameter, error, and panic contracts — not essays. |
 | "Rewording it shorter is compression" | Compression preserves meaning exactly; a guarantee must not become an obligation. Cut sentences, don't mutate them. |
+| "Shorter is always better, so drop the verb" | Only while the fact survives. Modality and the subject of a claim are content, not grammar — a fragment that loses either says something else. |
+| "The fragment is obvious from context" | Obvious that the fact is *true*, perhaps. Check that it is still obvious the fact *binds*: a description reads as reversible where a prohibition does not. |
+| "It's an edit constraint, so it has to be a full sentence" | Only the modal clause does. `Ring must outlive the reader.` is a fragment and a prohibition at once. |
 | "The derivation helps reviewers check the math" | Put derivations in the PR description. In code, one sentence states the invariant. |
 | "The team lead wants thorough documentation" | Thorough means every comment is true, non-obvious, and taught in the right place — not that every line has one. |
 | "I'll leave the old comment as historical context" | Git history is the historical context. |
@@ -464,3 +503,9 @@ has a home, and it is not the code:
 - An edit constraint reachable only by following a link to a diagram.
 - An "edit constraint" you are keeping whose violation the compiler
   would catch — that is the carve-out being used as an excuse.
+- An edit constraint with no `must`, `may not`, or `never` in it.
+- A shortened comment whose grammatical subject differs from the one it
+  replaced.
+- A shortened comment that dropped `only`, `at most`, or a negation.
+- A model home rewritten into fragments: explanation is the one place
+  prose is doing the work.
