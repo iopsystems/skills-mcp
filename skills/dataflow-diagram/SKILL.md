@@ -49,11 +49,15 @@ build-time dependency/composition chart and runtime thread/request charts
 the structure chart entirely, provenance demoted from a channel, geometry
 emitted directly instead of through a layout engine, each with its
 reason). For that duo, install that template; this skill remains the home
-domain for dataflow and pipeline charts of a single running program. And
-when a project adopts a standing generator for its dataflow charts, this
-skill is also available as the `dataflow-diagram-skill` template, which
-binds these conventions to the project through a charter and gives
-recorded overrides a durable home.
+domain for dataflow and pipeline charts of a single running program.
+
+This skill also ships in two forms: the active skill serves these
+conventions as ready defaults — enough for a single-use chart in a
+repository you cannot modify, or a figure for a talk, where the generator
+script travels with the artifact and the chart is stamped with the commit
+it describes, a dated snapshot rather than a living document — while the
+`dataflow-diagram-skill` template installs them into a project, binding
+them through a charter that gives recorded overrides a durable home.
 
 ## Derive, never draw
 

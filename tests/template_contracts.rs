@@ -246,6 +246,59 @@ fn mcp_smoke_exercises_the_public_skill_and_template_boundary() {
     );
 }
 
+
+#[test]
+fn diagram_skills_active_and_template_bodies_stay_in_sync() {
+    // The diagram skills ship in two forms: an active skill serving the
+    // conventions as defaults, and an installable template that adds only the
+    // Project Contract and Trust and Execution Boundary sections. This is the
+    // guarantee that keeps dual presence from drifting.
+    fn body_after_frontmatter(text: &str) -> &str {
+        let after_open = &text[3..];
+        let close = after_open
+            .find("\n---")
+            .expect("frontmatter must be closed");
+        &after_open[close + 4..]
+    }
+
+    for (active, template) in [
+        ("architecture-diagram", "architecture-diagram-skill"),
+        ("dataflow-diagram", "dataflow-diagram-skill"),
+    ] {
+        let active_text = read(
+            repository_root()
+                .join("skills")
+                .join(active)
+                .join("SKILL.md"),
+        );
+        let template_text = read(templates_root().join(template).join("SKILL.md"));
+        let active_body = body_after_frontmatter(&active_text);
+        let template_body = body_after_frontmatter(&template_text);
+
+        let contract = template_body
+            .find("## Project Contract")
+            .expect("template must declare a Project Contract");
+        let trust = template_body
+            .find("## Trust and Execution Boundary")
+            .expect("template must declare a Trust and Execution Boundary");
+        assert!(trust > contract, "{template}: contract precedes trust");
+        let block_end = template_body[trust..]
+            .find("\n## ")
+            .map(|offset| trust + offset + 1)
+            .expect("a shared section must follow the trust boundary");
+
+        let reconstructed = format!(
+            "{}{}",
+            &template_body[..contract],
+            &template_body[block_end..]
+        );
+        assert_eq!(
+            active_body, reconstructed,
+            "{active} active body must equal {template} body minus the template-only sections"
+        );
+    }
+}
+
 #[test]
 fn catalog_contains_exactly_the_approved_inert_templates() {
     let catalog = catalog();

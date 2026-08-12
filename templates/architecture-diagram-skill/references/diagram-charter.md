@@ -57,6 +57,13 @@ lives: `<paths>`.
 - `<who reviews every new chart and every visual change; note that approval
   of an earlier revision does not cover a later one>`
 
+## Recorded Overrides
+
+Every default from the skill that this project rejected or extended, with the
+reason — the skill's conventions improve only through this record:
+
+- `<override and reason, or "none yet">`
+
 ## Charter Evidence
 
 - Filled by and date: `<who, when>`
