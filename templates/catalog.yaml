@@ -1,5 +1,9 @@
 schema_version: 1
 templates:
+  - id: architecture-diagram-skill
+    manifest: architecture-diagram-skill/template.yaml
+  - id: dataflow-diagram-skill
+    manifest: dataflow-diagram-skill/template.yaml
   - id: document-feature-skill
     manifest: document-feature-skill/template.yaml
   - id: engineering-journal-skill

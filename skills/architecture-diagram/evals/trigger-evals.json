@@ -1,0 +1,56 @@
+{
+  "evals": [
+    {
+      "name": "existing workspace triggers the build chart",
+      "prompt": "Draw an architecture diagram of this workspace showing the layers and what each binary is composed of.",
+      "expectations": [
+        "Derive units and composition from the build manifest, not a hand-kept list",
+        "Abort on any unclassified unit or stale classification",
+        "Obtain human review of the rendered chart"
+      ]
+    },
+    {
+      "name": "thread model goes on a runtime chart",
+      "prompt": "Add arrows to the dependency diagram showing which threads talk to which.",
+      "expectations": [
+        "Route the runtime claim to a runtime chart instead of overlaying the build chart",
+        "Explain that structure and runtime claims need different ground truths"
+      ]
+    },
+    {
+      "name": "runtime chart needs source assertions",
+      "prompt": "Create a threading diagram showing which threads each binary spawns and how they are connected.",
+      "expectations": [
+        "Write positive and negative source assertions before any geometry",
+        "Use literal runtime thread names, grep-asserted against spawn sites",
+        "Bridge to the build chart with module chips"
+      ]
+    },
+    {
+      "name": "single-use chart in an alien repo",
+      "prompt": "I need an architecture diagram of this open-source project for a conference talk next week. I can't add files to their repo.",
+      "expectations": [
+        "Still derive from the program's real structures and fail loudly",
+        "Keep the generator script with the talk materials",
+        "Stamp the chart with the commit it was derived from and present it as a dated snapshot",
+        "Skip the charter and CI freshness apparatus without skipping derivation"
+      ]
+    },
+    {
+      "name": "speculative system does not trigger derivation",
+      "prompt": "We're sketching a possible microservice split for next quarter. Diagram how it might look.",
+      "expectations": [
+        "Recognise there is no code to derive from",
+        "Sketch freely without building a generator"
+      ]
+    },
+    {
+      "name": "beta conventions invite overrides",
+      "prompt": "Our system has four meaningful layers but the band design only reads well with three. Force it?",
+      "expectations": [
+        "Extend the convention rather than force the domain",
+        "Record the override and its reason"
+      ]
+    }
+  ]
+}
