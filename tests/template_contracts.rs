@@ -246,7 +246,6 @@ fn mcp_smoke_exercises_the_public_skill_and_template_boundary() {
     );
 }
 
-
 #[test]
 fn diagram_skills_active_and_template_bodies_stay_in_sync() {
     // The diagram skills ship in two forms: an active skill serving the
