@@ -42,6 +42,15 @@ back here. A convention someone rejected for a stated reason is worth more
 than one nobody has tested, and this skill has more of the second kind than
 it should.
 
+One such contact has now happened: the `architecture-diagram-skill`
+template applies these principles to system-architecture charts — a
+build-time dependency/composition chart and runtime thread/request charts
+— and records where the defaults fought that domain (arrows dropped from
+the structure chart entirely, provenance demoted from a channel, geometry
+emitted directly instead of through a layout engine, each with its
+reason). For that duo, install that template; this skill remains the home
+domain for dataflow and pipeline charts of a single running program.
+
 ## Derive, never draw
 
 The nodes and edges come from the program's own structures — its topic

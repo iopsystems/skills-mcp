@@ -8,7 +8,11 @@ use serde::Deserialize;
 use sha2::{Digest, Sha256};
 use walkdir::WalkDir;
 
-const TEMPLATE_IDS: [&str; 2] = ["document-feature-skill", "engineering-journal-skill"];
+const TEMPLATE_IDS: [&str; 3] = [
+    "architecture-diagram-skill",
+    "document-feature-skill",
+    "engineering-journal-skill",
+];
 const SPRIG_FIXTURE_PATH: &str = "docs/evals/fixtures/sprig-cli-v1.md";
 
 #[derive(Debug, Deserialize)]
