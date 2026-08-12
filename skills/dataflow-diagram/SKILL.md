@@ -42,24 +42,22 @@ back here. A convention someone rejected for a stated reason is worth more
 than one nobody has tested, and this skill has more of the second kind than
 it should.
 
-One such contact has now happened: the `architecture-diagram-skill`
-template applies these principles to system-architecture charts — a
-build-time dependency/composition chart and runtime thread/request charts
-— and records where the defaults fought that domain (arrows dropped from
-the structure chart entirely, provenance demoted from a channel, geometry
-emitted directly instead of through a layout engine, each with its
-reason). For that duo, install that template; this skill remains the home
-domain for dataflow and pipeline charts of a single running program.
+One such contact has now happened: the `architecture-diagram` skill
+carries these principles into system-architecture charts — a build-time
+structure chart plus runtime thread/request charts — and records where the
+defaults fought (arrows dropped from the structure chart, provenance
+demoted from a channel, geometry emitted directly). Use it for that duo;
+this skill remains the home for dataflow and pipeline charts of a single
+running program.
 
-This skill also ships in two forms with one structure: the skill itself
-is a complete set of working defaults, usable with no configuration —
-enough for a single-use chart in a repository you cannot modify, or a
-figure for a talk, where the generator script travels with the artifact
-and the chart is stamped with the commit it describes, a dated snapshot
-rather than a living document. The `dataflow-diagram-skill` template adds
-a charter, which is a *delta* on those defaults: the bindings no default
-can supply, plus any deviation, each with its reason. A convention absent
-from the charter means the default applies.
+This skill ships in two forms with one structure: the skill itself is
+complete working defaults — enough for a single-use chart in a repository
+you cannot modify, or a figure for a talk, where the generator script
+travels with the artifact and the chart is stamped with the commit it
+describes, a dated snapshot. The `dataflow-diagram-skill` template adds a
+charter: a *delta* recording the bindings no default can supply, plus any
+deviation with its reason. A convention absent from the charter means the
+default applies.
 
 ## Derive, never draw
 

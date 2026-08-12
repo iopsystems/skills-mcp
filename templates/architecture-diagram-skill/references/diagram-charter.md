@@ -1,10 +1,9 @@
 # Architecture Diagram Charter
 
-This charter is a **delta on the skill's defaults**, not a duplicate of the
-skill. Fill the required bindings from project evidence; record a convention
-here only when the project deviates from a default, with the reason. A
-convention absent from this file means the skill's default applies — which
-is also what keeps the skill usable with no charter at all.
+This charter is a **delta on the skill's defaults**. Fill the required
+bindings from project evidence; record a convention only where the project
+deviates, with the reason. Absence means the default applies — which is
+what keeps the skill usable with no charter at all.
 
 ## Required Bindings (no default exists)
 
