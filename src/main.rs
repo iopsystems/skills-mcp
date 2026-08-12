@@ -1105,7 +1105,7 @@ mod tests {
             .body;
 
         for required in [
-            "One short sentence per constraint",
+            "One short constraint per comment",
             "Explanation follows the architecture",
             "narrowest scope within",
             "Code materializes the leaves",
@@ -1124,6 +1124,10 @@ mod tests {
             "deliberate absence",
             "Forward design commitments",
             "Compress, don't paraphrase",
+            "Prefer the fragment",
+            "may never drop",
+            "Modality",
+            "The subject of a claim",
             "the current design, not the design",
             "byte-identical",
             "never invent a rationale",
@@ -1148,7 +1152,7 @@ mod tests {
             .as_array()
             .expect("sweep-comments evals should contain an evals array");
 
-        assert_eq!(evals.len(), 18);
+        assert_eq!(evals.len(), 28);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());

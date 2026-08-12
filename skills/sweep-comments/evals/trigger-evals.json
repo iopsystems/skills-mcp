@@ -154,6 +154,96 @@
         "Recompose the forward commitment to stand alone",
         "Do not mutate the prediction into an obligation"
       ]
+    },
+    {
+      "name": "field doc shortens to a label",
+      "prompt": "A struct field doc reads 'Records whose source_id was not the expected one.' above a field named source_mismatch.",
+      "expectations": [
+        "Shorten to a fragment such as 'Wrong `source_id`.'",
+        "Do not restate the subject the declaration already supplies",
+        "Keep any clause explaining why the counter is separate"
+      ]
+    },
+    {
+      "name": "model home stays prose under fragment pressure",
+      "prompt": "Apply the fragment preference to a module doc that teaches the crate's ownership protocol across three paragraphs.",
+      "expectations": [
+        "Tighten wording but keep sentences",
+        "Do not chop the explanation into fragments",
+        "State that a model home is where prose does the work"
+      ]
+    },
+    {
+      "name": "edit constraint keeps its modality",
+      "prompt": "Shorten 'The record is still whole: a forwarder re-encodes it unchanged, so nothing may be moved out of it here.'",
+      "expectations": [
+        "Keep 'may not' or an equivalent prohibition",
+        "Reject 'nothing moved out here' as a description rather than a prohibition",
+        "Note that a description licenses the edit the comment existed to prevent"
+      ]
+    },
+    {
+      "name": "compression must not reassign the subject",
+      "prompt": "Shorten 'the operational response to any of them converges on the same question' to save a line.",
+      "expectations": [
+        "Refuse a rewrite whose subject becomes the causes rather than the response",
+        "Keep the original subject or keep the full sentence",
+        "Name this as meaning change, not compression"
+      ]
+    },
+    {
+      "name": "negation survives shortening",
+      "prompt": "Shorten 'Records filtered out by the caller's timestamp filter are not counted here.'",
+      "expectations": [
+        "Keep the negation explicit",
+        "Reject any form that reads as though those records are counted",
+        "A fragment is acceptable only if it preserves the 'not'"
+      ]
+    },
+    {
+      "name": "scope qualifier survives shortening",
+      "prompt": "Shorten 'The result can never exceed one buffer's worth.' and 'Checked at open only.'",
+      "expectations": [
+        "Keep 'never' and 'only'",
+        "Reject wording that turns a bound into a typical case",
+        "Name scope qualifiers as content, not filler"
+      ]
+    },
+    {
+      "name": "conditional antecedent is not dropped",
+      "prompt": "Shorten 'If the probe fails, report the pessimistic value rather than claim a property that was not checked.'",
+      "expectations": [
+        "Keep the antecedent that carries the constraint",
+        "Reject the bare consequent, which loses when the rule applies",
+        "Full sentence is acceptable when the conditional cannot survive a fragment"
+      ]
+    },
+    {
+      "name": "guarantee is not shortened into an obligation",
+      "prompt": "Shorten a doc saying a sequence 'never steps backwards' while applying the fragment preference.",
+      "expectations": [
+        "Keep it a guarantee about behavior",
+        "Reject 'must not regress', which makes it an obligation on the reader",
+        "Cite compress-don't-paraphrase"
+      ]
+    },
+    {
+      "name": "fragment edit constraint is allowed when modality survives",
+      "prompt": "A reviewer says every edit constraint must be a full grammatical sentence.",
+      "expectations": [
+        "Disagree: only the modal clause must survive",
+        "Offer a fragment that is still a prohibition, e.g. 'Ring must outlive the reader.'",
+        "Do not pad the comment to satisfy grammar"
+      ]
+    },
+    {
+      "name": "test claim binding is not fragmented into ambiguity",
+      "prompt": "Apply the fragment preference to a test doc that names the model clause the test enforces.",
+      "expectations": [
+        "Keep the named promise legible in a failure message",
+        "Do not shorten to the point that a red CI run stops saying what broke",
+        "Test bar governs, not the production bar"
+      ]
     }
   ]
 }
