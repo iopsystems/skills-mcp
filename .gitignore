@@ -3,3 +3,4 @@
 Cargo.lock.tmp
 *.swp
 .DS_Store
+/docs/superpowers/
