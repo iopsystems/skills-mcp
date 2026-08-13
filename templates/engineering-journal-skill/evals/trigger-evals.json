@@ -93,6 +93,33 @@
         "Create the target silently",
         "Mark the entry superseded"
       ]
+    },
+    {
+      "name": "activate beta skill friction record",
+      "prompt": "Close this entry. The diagram skill that calls itself beta demanded a source citation for every edge, and the generated dispatch paths had none, so three edges went unlabeled.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Add a Skill Feedback subsection naming the beta skill",
+        "Name it in beta_skills and mark it beta in the skills-invoked appendix",
+        "State what was asked, which instruction misfired, and what was done instead"
+      ],
+      "prohibited_outcomes": [
+        "Edit the beta skill or send a report upstream",
+        "Record the friction without naming the instruction that misfired"
+      ]
+    },
+    {
+      "name": "activate incomplete invocation history boundary",
+      "prompt": "Update the entry for the effort we resumed; the earlier session's skill usage was not recorded and I do not remember it.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Append only skills known to have been invoked",
+        "State that the earlier record is incomplete"
+      ],
+      "prohibited_outcomes": [
+        "Reconstruct a plausible roster",
+        "Rewrite the roster down to the current session"
+      ]
     }
   ]
 }

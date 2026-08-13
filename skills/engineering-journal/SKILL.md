@@ -59,8 +59,9 @@ Allowed states:
 - `status: superseded` — replaced by an existing entry; require
   `superseded_by: <entry-slug>`.
 
-Optional fields such as `issues: [123]` and `prs: [456]` appear only when known.
-Never invent lifecycle dates, links, measurements, or evidence.
+Optional fields such as `issues: [123]`, `prs: [456]`, and
+`beta_skills: [architecture-diagram]` appear only when they apply. Never invent
+lifecycle dates, links, measurements, or evidence.
 
 Valid transitions are `open` to any terminal state, and `shipped` or `no-go` to
 `superseded` when a replacement entry exists. Do not reopen terminal entries in
@@ -86,10 +87,13 @@ updated: YYYY-MM-DD
 ## Outcome
 ## Derived Documents
 ## Deferred or Reopen Items
+## Skill Feedback
+## Appendix: Skills Invoked
 ```
 
 Omit `Decision Criteria` only when there is no meaningful GO/NO-GO gate. While
 open, state the current result or say explicitly that the outcome remains open.
+The last two headings follow the rules in Record Skill Use below.
 
 Ground claims in durable source paths, commit SHAs, pull requests, measurements,
 or canonical datasets. Mark unverifiable gaps; never fabricate them. A NO-GO is
@@ -100,6 +104,47 @@ When the repository has adopted the journal as its durable design record, absorb
 the durable goal, decisions, rationale, dead ends, and verification from temporary
 specification or plan documents into the entry, then remove those temporary files
 in the same PR. Do not rewrite unrelated historical design records.
+
+## Record Skill Use
+
+Every entry ends with a roster of the skills invoked during the effort:
+
+```markdown
+## Appendix: Skills Invoked
+
+- `architecture-diagram` (beta) — build-time structure chart and one runtime chart.
+- `technical-prose` — word-level pass over the caption text.
+```
+
+The roster covers the whole effort rather than the current session. On update,
+append to it; do not rewrite it down to what this session remembers. List only
+skills actually invoked. When the record is incomplete — compacted context, a
+handoff, a resumed effort — say so in one line instead of inferring a plausible
+list. An invented roster is worse than a short one, because a later survey
+cannot tell the two apart. Omit the appendix when no skill was invoked.
+
+A skill is beta when its own instruction text or its template manifest says so,
+or when the user says so. Never infer immaturity from one bad result. Mark each
+beta skill `(beta)` in the roster, name it in `beta_skills`, and give it a
+subsection here:
+
+```markdown
+## Skill Feedback
+
+### architecture-diagram (beta)
+
+- **Friction** — what was asked, which instruction misfired, what was done instead.
+- **Confirmation** — a default that held under real use.
+```
+
+Record friction and confirmation both. A beta skill needs evidence that its
+defaults survive contact, not only a complaint log. Every friction must name
+what was asked, which instruction misfired, and what was done instead; drop an
+item that cannot be stated that concretely. Omit the section, and `beta_skills`
+with it, when no beta skill was invoked.
+
+This record is advisory. Do not edit the beta skill, open an issue, or propose
+an upstream change unless the user separately asks.
 
 ## Operations
 
@@ -112,8 +157,9 @@ For intent-first work, land this record before implementation.
 ### Update
 
 Re-read code, Git history, and durable evidence. Update `updated`, current
-implementation, evidence, outcome, and unresolved items. Paused or blocked work
-remains open and names its blocker and restart condition.
+implementation, evidence, outcome, and unresolved items. Append newly invoked
+skills to the roster and add any new beta-skill friction or confirmation. Paused
+or blocked work remains open and names its blocker and restart condition.
 
 ### Close
 
@@ -139,6 +185,13 @@ of truth and check:
 - A no-go entry carries its mechanism and reopen condition.
 - Index date, title, status, and membership match the entries.
 - Deferred and reopen items match an existing backlog.
+- `beta_skills` matches the subsections under `## Skill Feedback`, and every
+  skill named there also appears in the roster.
+- An entry carrying `## Skill Feedback` carries a non-empty `beta_skills`.
+
+Entries written before the repository adopted the skill-use convention keep
+their shape. Never backfill a roster or a feedback section by inference; a
+survey cannot distinguish reconstructed history from observed history.
 
 Repair mechanical index drift. For changes requiring judgment, report the exact
 proposed edit before applying it. Preserve repository-specific headings and extra

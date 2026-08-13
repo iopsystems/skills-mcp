@@ -86,6 +86,54 @@
       "expectations": [
         "Do not create a journal entry"
       ]
+    },
+    {
+      "name": "beta skill friction recorded",
+      "prompt": "Close the ingest-rewrite entry. The architecture-diagram skill, which calls itself beta, produced the runtime chart, but its claim-check step demanded a source citation per edge and the generated dispatch paths had none, so I left three edges unlabeled.",
+      "expectations": [
+        "Add a Skill Feedback section with an architecture-diagram subsection",
+        "Add beta_skills to the frontmatter naming architecture-diagram",
+        "State what was asked, which instruction misfired, and what was done instead",
+        "List architecture-diagram in the skills-invoked appendix marked beta"
+      ]
+    },
+    {
+      "name": "beta skill confirmation recorded",
+      "prompt": "Journal the reviewer feedback: the beta architecture-diagram skill's build-time and runtime split worked, nobody asked which diagram to read first.",
+      "expectations": [
+        "Record the confirmation alongside friction rather than treating feedback as complaints only",
+        "Keep the record advisory",
+        "Do not edit the skill, open an issue, or send a report upstream"
+      ]
+    },
+    {
+      "name": "no beta skill invoked",
+      "prompt": "Close the config-loader entry. I used sweep-comments and technical-prose, neither of which declares itself beta.",
+      "expectations": [
+        "List both skills in the appendix",
+        "Omit the Skill Feedback section",
+        "Omit beta_skills from the frontmatter",
+        "Do not mark either skill beta on the basis of a single rough result"
+      ]
+    },
+    {
+      "name": "incomplete invocation history",
+      "prompt": "Update the entry for the effort we resumed after the context was compacted; I no longer know everything the earlier session invoked.",
+      "expectations": [
+        "Append only skills known to have been invoked",
+        "State in one line that the earlier record is incomplete",
+        "Do not reconstruct a plausible roster",
+        "Do not rewrite the roster down to this session"
+      ]
+    },
+    {
+      "name": "no backfill during reconciliation",
+      "prompt": "Reconcile the journal; the three older entries have no skills-invoked appendix.",
+      "expectations": [
+        "Leave entries predating the convention unchanged",
+        "Do not infer a roster or a feedback section for them",
+        "Report the gap rather than repairing it"
+      ]
     }
   ]
 }

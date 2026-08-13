@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-08-12 | [Skill use in journal entries](2026-08-12-skill-use-in-journal-entries.md) | shipped |
 | 2026-08-12 | [Technical prose skill](2026-08-12-technical-prose-skill.md) | shipped |
 | 2026-07-13 | [Skill templates and project documentation](2026-07-13-skill-templates-and-project-documentation.md) | open |
 | 2026-07-12 | [Engineering journal skill](2026-07-13-engineering-journal-skill.md) | shipped |

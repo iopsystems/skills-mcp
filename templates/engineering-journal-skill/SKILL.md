@@ -94,6 +94,9 @@ Valid transitions are `open` to a terminal state, and `shipped` or `no-go` to
 place. Open a new linked effort. Never invent dates, links, measurements, issue
 numbers, pull requests, or evidence.
 
+When the project participates in skill feedback, `beta_skills: [<skill>]` joins
+this frontmatter under the rules in Record Skill Use.
+
 ## Entry Content
 
 Match project-specific headings from the profile. A new convention may start
@@ -110,6 +113,8 @@ with:
 ## Outcome
 ## Derived Documents
 ## Deferred or Reopen Items
+## Skill Feedback
+## Appendix: Skills Invoked
 ```
 
 Ground claims in durable source paths, commit SHAs, pull requests, measurements,
@@ -117,6 +122,49 @@ canonical datasets, or exact validation commands and results. Mark unverifiable
 gaps. While open, state the current result or explicitly say the outcome remains
 open. A no-go is first-class evidence: record what was tried, why it failed, and
 what changed condition would justify a new effort.
+
+## Record Skill Use
+
+The profile's skill-feedback policy governs this section. When the project
+participates, every entry ends with a roster of the skills invoked during the
+effort:
+
+```markdown
+## Appendix: Skills Invoked
+
+- `architecture-diagram` (beta) — build-time structure chart and one runtime chart.
+- `technical-prose` — word-level pass over the caption text.
+```
+
+The roster covers the whole effort rather than the current session. On update,
+append to it; do not rewrite it down to what this session remembers. List only
+skills actually invoked. When the record is incomplete — compacted context, a
+handoff, a resumed effort — say so in one line instead of inferring a plausible
+list. An invented roster is worse than a short one, because a later survey
+cannot tell the two apart. Omit the appendix when no skill was invoked.
+
+A skill is beta when its own instruction text or its template manifest says so,
+or when the user or the profile says so. Never infer immaturity from one bad
+result. Mark each beta skill `(beta)` in the roster, name it in `beta_skills`,
+and give it a subsection here:
+
+```markdown
+## Skill Feedback
+
+### architecture-diagram (beta)
+
+- **Friction** — what was asked, which instruction misfired, what was done instead.
+- **Confirmation** — a default that held under real use.
+```
+
+Record friction and confirmation both. A beta skill needs evidence that its
+defaults survive contact, not only a complaint log. Every friction must name
+what was asked, which instruction misfired, and what was done instead; drop an
+item that cannot be stated that concretely. Omit the section, and `beta_skills`
+with it, when no beta skill was invoked.
+
+This record is advisory and stays inside the repository. Do not edit the beta
+skill, open an issue, or send a report upstream unless the user separately asks.
 
 ## Operations
 
@@ -130,6 +178,8 @@ land the record before implementation.
 When updating, re-read authoritative code, history, and evidence. Update the
 profile-defined date field, implementation, evidence, outcome, blocker, restart
 condition, and unresolved items without erasing useful reasoning or dead ends.
+Append newly invoked skills to the roster and add any new beta-skill friction or
+confirmation.
 
 ### Close
 
@@ -145,6 +195,12 @@ truth. Check required fields, allowed states and transitions, date ordering,
 supersession targets, closure evidence, index membership and metadata, and links
 to deferred work. Repair mechanical index drift. For a change requiring judgment,
 report the exact proposed edit before applying it.
+
+Where the profile adopts skill feedback, also check that `beta_skills` matches
+the subsections under `## Skill Feedback` and that every skill named there
+appears in the roster. Entries written before the project adopted the convention
+keep their shape. Never backfill a roster or a feedback section by inference; a
+survey cannot distinguish reconstructed history from observed history.
 
 Reconcile only within the boundaries recorded in the project profile. Preserve
 project-specific metadata. Selectively update durable derived documents such as
