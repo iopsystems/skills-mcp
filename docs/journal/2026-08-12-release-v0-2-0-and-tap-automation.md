@@ -1,5 +1,5 @@
 ---
-status: open
+status: shipped
 opened: 2026-08-12
 updated: 2026-08-12
 ---
@@ -78,8 +78,40 @@ would have shipped the release while leaving the defect that caused the gap.
 
 ## Outcome
 
-Open. The version bump is prepared; the tag, the release build, the tap
-workflow, and the formula bump have not yet run.
+Shipped. `brew install iopsystems/iop/skills-mcp` now serves twenty-one skills,
+and the formula bump that delivered them was machine-generated, so both decision
+criteria are met.
+
+The version bump merged as `d455d47` (pull request #24). Tag `v0.2.0` triggered
+release run `31670572508`, which published at 2026-08-13T05:33:53Z with all eight
+assets across the four targets; `repos/iopsystems/skills-mcp/releases/latest` now
+returns `v0.2.0`, which is the endpoint the tap workflow queries.
+
+The tap updater landed as `b307828` in `iopsystems/homebrew-iop`. A
+`workflow_dispatch` of it, run `31670784740`, produced pull request 117 without
+manual editing, changing exactly one line:
+
+```diff
+-    tag: "v0.1.0"
++    tag: "v0.2.0"
+```
+
+The downstream chain then ran unattended. `test-bot` run `31670798345` built
+bottles on `macos-14`, `macos-15`, and `ubuntu-24.04` and succeeded at 05:41 UTC;
+`autotag` applied the `pr-pull` label; `publish.yml` pushed the bottled formula to
+the tap's `main` by 05:42 UTC, roughly eight minutes from dispatch. The published
+formula carries `tag: "v0.2.0"`, `root_url` ending `skills-mcp-0.2.0`, and fresh
+checksums for `arm64_sequoia`, `arm64_sonoma`, and `x86_64_linux`.
+
+One observation worth keeping: pull request 117 shows as closed rather than
+merged. `brew pr-pull` pushes the commits to `main` directly and closes the pull
+request behind them, so closed-not-merged is the expected result of a successful
+publication in this tap, not a failure.
+
+No measurement was taken of how many users the release reaches. The v0.1.0 asset
+download counts that motivated the effort were read before the release and are
+recorded under Evidence; the equivalent numbers for v0.2.0 will not be meaningful
+for some time.
 
 ## Derived Documents
 
@@ -88,9 +120,11 @@ rewritten by this effort. Revisit only if release cadence becomes a stated goal.
 
 ## Deferred or Reopen Items
 
-- Whether tap publication should require human review. Today the chain from an
-  automated formula pull request to a published bottle runs unattended, which
-  this effort inherits rather than decides.
+- Whether tap publication should require human review. The chain from an
+  automated formula pull request to a published bottle ran unattended and was
+  observed doing so during this effort: nobody approved pull request 117 between
+  its creation and its publication. This effort inherits that policy rather than
+  deciding it, and the observation raises rather than settles the question.
 - Release cadence. Nothing yet prevents a second month-long gap; the automation
   removes the formula step, not the decision to tag.
 - The skills-invoked appendix is omitted here because no skill was invoked,
