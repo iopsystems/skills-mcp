@@ -1180,4 +1180,23 @@ mod tests {
                 .is_some_and(|v| !v.is_empty()));
         }
     }
+
+    #[test]
+    fn technical_prose_evals_cover_key_scenarios() {
+        let raw = include_str!("../skills/technical-prose/evals/trigger-evals.json");
+        let value: serde_json::Value =
+            serde_json::from_str(raw).expect("technical-prose evals should be valid JSON");
+        let evals = value["evals"]
+            .as_array()
+            .expect("technical-prose evals should contain an evals array");
+
+        assert_eq!(evals.len(), 18);
+        for eval in evals {
+            assert!(eval["name"].as_str().is_some());
+            assert!(eval["prompt"].as_str().is_some());
+            assert!(eval["expectations"]
+                .as_array()
+                .is_some_and(|v| !v.is_empty()));
+        }
+    }
 }
