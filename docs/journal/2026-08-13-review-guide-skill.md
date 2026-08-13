@@ -118,11 +118,11 @@ what turns each use into evidence instead of an anecdote.
 Artifacts:
 
 - `skills/review-guide/SKILL.md`
-- `skills/review-guide/evals/trigger-evals.json`, twenty-one cases covering the
-  publish test in both directions, proportional output, refused padding, ranking
-  against path order, test-reporting honesty, both uncertainty failure modes,
-  refused confidence ratings, diagram earning, and the journal and file-output
-  boundaries
+- `skills/review-guide/evals/trigger-evals.json`, twenty-two cases covering the
+  publish test in both directions, a qualifying section surviving a small
+  change, proportional output, refused padding, ranking against path order,
+  test-reporting honesty, both uncertainty failure modes, refused confidence
+  ratings, diagram earning, and the journal and file-output boundaries
 - `review_guide_evals_cover_key_scenarios` in `src/main.rs`
 
 ## Outcome
@@ -161,6 +161,13 @@ the convention this repository has followed since the `technical-prose` entry.
 - Whether the skill should read the diff itself or rely on the caller's summary.
   It currently assumes whoever invokes it has the change in context, which is
   true for an authoring agent and false for a reviewer invoking it cold.
+- Counts written out in journal prose drift from the artifacts they describe.
+  Both findings external review has raised against this entry were that class:
+  three design questions against four, then twenty-one eval cases against
+  twenty-two, each introduced by a late change to the artifact without a matching
+  edit to the record. Nothing checks the two against each other. The options are
+  to stop stating counts in prose, or to check them the way the diagram SVGs are
+  checked for freshness in CI.
 
 ## Skill Feedback
 
