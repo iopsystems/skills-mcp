@@ -269,15 +269,21 @@ stop. Do not chain.
 
 ### Default to merge; gate on observable risk
 
-Per SCHEMA.md: "You can get unstuck; you can't pretend something is
-resolved when it isn't." Apply and merge clean, evidence-backed work by
-default. Human review is required when any candidate has a blocker or
-warning, the evidence is incomplete or ambiguous, more than one outcome is
-plausible, validation or required checks fail, or a normal merge is refused.
+Apply and merge clean, evidence-backed work by default. Human review is
+required when any candidate has a blocker or warning, the evidence is
+incomplete or ambiguous, more than one outcome is plausible, validation or
+required checks fail, or a normal merge is refused.
 
 Never bypass a blocker, warning, branch protection rule, or failed check.
 Never use `force_accept`, force-push, or force-merge. A merge refusal is a
 review result, not permission to work around the host.
+
+That prohibition is what SCHEMA.md states. Its escape hatches —
+`withdraw_exploration` and `abandon_inquiry` — are explicit and logged, and
+there is deliberately no `force_accept` or `override_blocking`: "You can get
+unstuck; you can't pretend something is resolved when it isn't." The sentence
+governs bypassing an invariant, not who applies a transition that satisfies
+every invariant. Do not cite it for either side of the auto-merge question.
 
 ### Token budget
 
