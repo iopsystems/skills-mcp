@@ -72,9 +72,17 @@ Present when earned:
    reviewer cannot hold in their head.
 7. **Not in scope**, when a reader would otherwise ask why something is missing.
 
-A small change collapses to the first four, and a very small one to a single
-sentence under the publish test above. Drop a section when the change genuinely
-has nothing there. The certainty section is the exception: it never disappears
+Drop a section only when the change genuinely has nothing in it, never to reach
+a size. Any section holding an item that cleared the publish test stays,
+whatever the size of the change: dropping it would publish a guide that cannot
+say why it exists. A small change often reduces to the first four sections
+because the later ones are empty, not because it is small — and a change that
+clears the bar on production risk alone keeps that section and drops the others.
+
+A very small change reduces to a single sentence, but only when the publish test
+found nothing at all.
+
+The certainty section is the exception to emptiness: it never disappears
 silently — it says "none, and here is why".
 
 ## Where to look first

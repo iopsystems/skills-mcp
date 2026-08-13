@@ -156,5 +156,8 @@ the convention this repository has followed since the `technical-prose` entry.
 
 ## Appendix: Skills Invoked
 
-- `superpowers:brainstorming` — context exploration, the three design questions,
-  and the design-approval gate before any file was written.
+- `superpowers:brainstorming` — context exploration, the three design questions
+  asked before implementation, and the design-approval gate before any file was
+  written. The fourth decision recorded under Evidence, always-run with
+  proportional publication, came from review feedback afterward and did not pass
+  through this skill.

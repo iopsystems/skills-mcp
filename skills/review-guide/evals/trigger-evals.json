@@ -29,6 +29,15 @@
       ]
     },
     {
+      "name": "qualifying section survives a small change",
+      "prompt": "Small change: a one-line config default. Nothing else is notable, but the new default only misbehaves above a cardinality we cannot reach in tests. Draft the body.",
+      "expectations": [
+        "Keep the production-only risk section, because it is the item that cleared the publish test",
+        "Drop the other sections as empty rather than keeping them at reduced size",
+        "Do not reduce the guide to sections that omit the reason it was published"
+      ]
+    },
+    {
       "name": "output proportional to complexity",
       "prompt": "Draft bodies for two PRs: one renames a private helper, one adds a caching layer across three subsystems with a latency claim.",
       "expectations": [
