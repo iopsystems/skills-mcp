@@ -8,7 +8,9 @@ description: |
   reviewable", "write a review guide", or whenever opening or updating a pull
   request. It runs on every change; what it publishes is proportional to the
   change, and a change with nothing to direct attention to earns one sentence
-  rather than a guide. Symptoms that this skill applies: a description that
+  rather than a guide. Beta — its ranking and publish rules are asserted rather
+  than measured, so record friction and confirmation through
+  `engineering-journal`. Symptoms that this skill applies: a description that
   retells the diff, a reviewer who reads files in whatever order the diff
   listed them, "all tests pass" with no statement of what the tests do not
   cover, a change whose risky decisions are invisible because they look like
@@ -25,6 +27,25 @@ author could not settle.
 The output is the pull-request body. Do not create a file for it. If the user
 asks for a checked-in document, write that instead, but that is a different
 request.
+
+## What this is, and what it is not yet
+
+Treat this skill as **beta**. Its two central rules are asserted rather than
+derived. The attention ranking below has never been measured against where
+defects were actually found, and the four items of the publish test are a
+judgment about what a reviewer cannot get from a diff, not a finding. No guide
+this skill produced has yet been read by a reviewer who then said whether it
+helped.
+
+Use the rules wholesale anyway. A stated default that fails teaches more than a
+hedge that cannot. When one fights the change in front of you, the override and
+its reason are the most valuable thing the effort produces: record them through
+`engineering-journal`, which names this skill in `beta_skills` and takes the
+account under `## Skill Feedback` — what was asked, which instruction misfired,
+and what you did instead.
+
+Record the defaults that held, too. A channel collecting only complaints will
+retire rules that were working.
 
 ## Always run; publish only when it earns it
 

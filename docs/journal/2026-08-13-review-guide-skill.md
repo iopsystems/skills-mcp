@@ -2,6 +2,7 @@
 status: shipped
 opened: 2026-08-13
 updated: 2026-08-13
+beta_skills: [review-guide]
 ---
 
 # Review guide skill
@@ -107,6 +108,13 @@ change-scoped. Content overlap is permitted, and the guide may restate a
 decision rather than making the reviewer click through. The single firm rule is
 that the guide never becomes the durable record.
 
+The skill ships marked **beta** in its own instruction text, which is what the
+`Record Skill Use` contract reads to decide that friction against it belongs in
+a journal entry. The designation is not modesty: the ranking rule and the four
+items of the publish test are both asserted rather than measured, and the
+feedback channel is the only route by which that changes. Marking it beta is
+what turns each use into evidence instead of an anecdote.
+
 Artifacts:
 
 - `skills/review-guide/SKILL.md`
@@ -154,6 +162,31 @@ the convention this repository has followed since the `technical-prose` entry.
   It currently assumes whoever invokes it has the change in context, which is
   true for an authoring agent and false for a reviewer invoking it cold.
 
+## Skill Feedback
+
+### review-guide (beta)
+
+- **Friction** — asked for a pull-request body for this change. The rule
+  requiring a specific line rather than a module produced three citations that
+  were each off by a section, because the line numbers were estimated rather
+  than read, and the next commit shifted every one of them again. Anchors were
+  re-verified against the file after each edit, and the failure was left in the
+  body as an uncertainty item. The rule is right and the cost is real: a
+  line-precise citation rots the moment the file is edited, and nothing in the
+  skill says how to keep one honest across revisions.
+- **Friction** — asked the skill to check its own output for the defects it
+  names. Its red flags caught none of the contradiction between the publish test
+  and the proportional-output rule, which an external reviewer found instead. A
+  guide written by following the skill would have shipped a body whose stated
+  rules disagreed with each other.
+- **Confirmation** — the evidence-bound uncertainty section named the publish
+  test as the least-settled mechanism in the change before any reviewer saw it,
+  and external review then found a defect in that same mechanism. The section
+  pointed at the right area even though it did not name the specific fault.
+- **Confirmation** — the ranked reading order and the explicit safe-to-skim list
+  cost two paragraphs to write and made the mechanical two thirds of the diff
+  legibly skippable.
+
 ## Appendix: Skills Invoked
 
 - `superpowers:brainstorming` — context exploration, the three design questions
@@ -161,3 +194,6 @@ the convention this repository has followed since the `technical-prose` entry.
   written. The fourth decision recorded under Evidence, always-run with
   proportional publication, came from review feedback afterward and did not pass
   through this skill.
+- `review-guide` (beta) — used to draft this change's own pull-request body,
+  followed from its source file rather than invoked as a tool, because this
+  effort was writing that file.
