@@ -5,8 +5,10 @@ description: |
   look first, what was tested and what was not, which calls were judgment
   rather than deduction, and what will only show up in production. Use when
   asked to "draft the PR body", "write the PR description", "make this
-  reviewable", "write a review guide", or when opening a pull request on a
-  substantial change. Symptoms that this skill applies: a description that
+  reviewable", "write a review guide", or whenever opening or updating a pull
+  request. It runs on every change; what it publishes is proportional to the
+  change, and a change with nothing to direct attention to earns one sentence
+  rather than a guide. Symptoms that this skill applies: a description that
   retells the diff, a reviewer who reads files in whatever order the diff
   listed them, "all tests pass" with no statement of what the tests do not
   cover, a change whose risky decisions are invisible because they look like
@@ -24,13 +26,34 @@ The output is the pull-request body. Do not create a file for it. If the user
 asks for a checked-in document, write that instead, but that is a different
 request.
 
-## When this fires
+## Always run; publish only when it earns it
 
-Substantial changes: new behavior, a changed interface, a migration, a
-performance claim, anything touching more than one subsystem. Skip it for a
-typo, a version bump, a dependency pin, or a mechanical rename — the same
-threshold `engineering-journal` uses for a trivial change. A guide on a trivial
-change trains reviewers to skip guides.
+Run on every change. The assessment costs little and its result is information
+either way: a change with nothing to say is a fact about the change, not a
+reason to have skipped looking.
+
+What you publish is proportional to the change and to its complexity. A
+one-file mechanical edit earns a sentence. A change that crosses subsystems,
+alters an interface, or makes a performance claim earns every section. Length
+is a consequence of what the change actually carries, never a target.
+
+### The publish test
+
+Publish a guide when it carries at least one item the reviewer could not get
+from the diff itself:
+
+- a reading order that differs from the order the diff presents
+- a test gap
+- a judgment call
+- a production-only risk
+
+If all four are empty, do not publish a guide. Write one sentence describing
+the change, and state that you checked those four and found nothing. The empty
+result is a claim, and stating it is what makes the claim checkable — silence
+is indistinguishable from not having looked.
+
+Never pad to reach the bar. A guide inflated to look thorough costs the
+reviewer more than no guide, because it teaches them to skim the next one.
 
 ## The body
 
@@ -49,9 +72,10 @@ Present when earned:
    reviewer cannot hold in their head.
 7. **Not in scope**, when a reader would otherwise ask why something is missing.
 
-A small change collapses to the first four. Drop a section when the change
-genuinely has nothing there. The certainty section is the exception: it never
-disappears silently — it says "none, and here is why".
+A small change collapses to the first four, and a very small one to a single
+sentence under the publish test above. Drop a section when the change genuinely
+has nothing there. The certainty section is the exception: it never disappears
+silently — it says "none, and here is why".
 
 ## Where to look first
 
@@ -188,6 +212,8 @@ guide's prose.
 | "The requirement was clear to me." | If it admitted two readings, you chose. Say which. |
 | "Production risk is the ops team's problem." | Review is the last moment it is cheap to change. |
 | "I will add the diagram if someone asks." | Nobody asks. They just review the wrong thing. |
+| "Every PR deserves a full guide." | A guide with nothing in it teaches reviewers to skim the next one. |
+| "The change was trivial, so I skipped the check." | Run it anyway and say the four were empty. Silence looks like not looking. |
 
 ## Red flags
 
@@ -203,3 +229,6 @@ guide's prose.
 - Production risks are listed with nothing that would reveal them.
 - A diagram is pasted where a link belongs, or a stale one goes unmentioned.
 - The guide is written to a file when the request was a pull-request body.
+- A guide is published carrying none of the four items in the publish test.
+- A section is padded so the guide looks substantial.
+- A change was skipped entirely rather than checked and reported as empty.

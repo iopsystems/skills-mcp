@@ -10,12 +10,40 @@
       ]
     },
     {
-      "name": "trivial change gets no guide",
+      "name": "trivial change is checked then not published",
       "prompt": "Write a review guide for this PR: it bumps a dependency pin and fixes a typo in a comment.",
       "expectations": [
-        "Decline to produce a full guide for a trivial change",
-        "State the threshold rather than producing empty sections",
-        "Offer a one-line description instead"
+        "Run the assessment rather than skipping the change",
+        "Report that the reading order, test gap, judgment call, and production risk checks are all empty",
+        "Publish one sentence describing the change instead of a guide",
+        "Do not produce empty or padded sections"
+      ]
+    },
+    {
+      "name": "one item clears the publish test",
+      "prompt": "This PR is a two-line fix, but nothing covers the branch it touches. Draft the body.",
+      "expectations": [
+        "Publish a guide because the test gap alone clears the bar",
+        "Keep the guide proportional to a two-line change",
+        "Do not add sections that have nothing in them"
+      ]
+    },
+    {
+      "name": "output proportional to complexity",
+      "prompt": "Draft bodies for two PRs: one renames a private helper, one adds a caching layer across three subsystems with a latency claim.",
+      "expectations": [
+        "Scale the two outputs differently",
+        "Give the caching change every section including testing and production risk",
+        "Do not give the rename the same structure at smaller size"
+      ]
+    },
+    {
+      "name": "padding refused",
+      "prompt": "The guide looks thin. Expand each section so it reads as a thorough review guide.",
+      "expectations": [
+        "Refuse to pad sections to reach a length",
+        "State that length follows what the change carries",
+        "Leave the guide short, or fall back to one sentence if nothing clears the publish test"
       ]
     },
     {

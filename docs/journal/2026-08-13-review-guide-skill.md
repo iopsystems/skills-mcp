@@ -40,12 +40,14 @@ durable effort narrative, so a review guide that also claims durability would
 create a second record nobody maintains. `sweep-comments` already holds comment
 quality inside the diff, so guide prose has no business ruling on it.
 
-The user settled three questions during design: the guide is the pull-request
+The user settled four questions during design: the guide is the pull-request
 body rather than a checked-in file unless explicitly asked otherwise; a diagram
 is checked in when it already exists or is worth keeping, and inline mermaid
-when it is scaffolding for one review; and uncertainty is expressed through
-cited evidence rather than confidence ratings. The user also stated that overlap
-with the journal is acceptable rather than something to engineer around.
+when it is scaffolding for one review; uncertainty is expressed through cited
+evidence rather than confidence ratings; and the skill runs on every change
+while publishing proportionally, rather than gating on a size threshold at
+invocation. The user also stated that overlap with the journal is acceptable
+rather than something to engineer around.
 
 ## Design and Implementation
 
@@ -53,7 +55,21 @@ The skill's premise is that the reviewer already has the diff, so summarizing it
 adds nothing. What a reviewer cannot reconstruct alone is the author's attention
 budget and the author's doubts, and those are what the body carries.
 
-Two rules do the work.
+Three rules do the work.
+
+The first governs whether a guide exists at all. An earlier draft gated
+invocation on a substantial-change threshold borrowed from
+`engineering-journal`. That was replaced: the skill now runs on every change and
+decides afterward whether the result is worth publishing. The assessment is
+cheap, and its outcome is information either way — a change with nothing to say
+is a fact about the change rather than a reason to have skipped looking. A guide
+publishes when it carries at least one item the reviewer could not get from the
+diff: a reading order differing from the diff's own order, a test gap, a
+judgment call, or a production-only risk. When all four are empty the skill
+publishes one sentence and states that it checked those four and found nothing,
+because silence is indistinguishable from not having looked. Padding to clear
+the bar is named as a defect: an inflated guide costs the reviewer more than no
+guide, since it teaches them to skim the next one.
 
 The attention ranking orders by the cost of a missed defect multiplied by the
 chance the reviewer misses it: code carrying a judgment call first, then code
@@ -94,10 +110,11 @@ that the guide never becomes the durable record.
 Artifacts:
 
 - `skills/review-guide/SKILL.md`
-- `skills/review-guide/evals/trigger-evals.json`, eighteen cases covering the
-  trivial-change threshold, ranking against path order, test-reporting honesty,
-  both uncertainty failure modes, refused confidence ratings, diagram earning,
-  and the journal and file-output boundaries
+- `skills/review-guide/evals/trigger-evals.json`, twenty-one cases covering the
+  publish test in both directions, proportional output, refused padding, ranking
+  against path order, test-reporting honesty, both uncertainty failure modes,
+  refused confidence ratings, diagram earning, and the journal and file-output
+  boundaries
 - `review_guide_evals_cover_key_scenarios` in `src/main.rs`
 
 ## Outcome
@@ -105,8 +122,17 @@ Artifacts:
 Shipped as an embedded MCP skill. `cargo fmt --check` passed, 137 tests passed
 across the seven test binaries, `cargo build --release` succeeded, and a raw
 JSON-RPC smoke test confirmed that `tools/list` exposes twenty-nine tools
-including `review-guide` and that `tools/call` returns the 8,294-character body
-with its ranking, certainty, production-risk, and red-flag sections intact.
+including `review-guide` and that `tools/call` returns the served body with its
+ranking, certainty, production-risk, and red-flag sections intact.
+
+The pull request body for this change was written with the skill itself, which
+is the only test available before a human reads one. It caught a real defect:
+the first draft cited three line ranges that were each off by a section, because
+the model estimated them rather than checking. The rule at
+`skills/review-guide/SKILL.md` requiring a specific place rather than a module
+was violated on first use by the model that wrote it. The mistake was corrected,
+kept in the body as an uncertainty item, and produced a risk that had not been
+listed: line-precise citations rot as soon as a file is edited.
 
 The trigger corpus asserts intended behavior rather than measured behavior. No
 guide has yet been produced by the skill and judged by a human reviewer, which
