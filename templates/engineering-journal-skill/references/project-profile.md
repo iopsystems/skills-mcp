@@ -27,6 +27,8 @@ policy merely because a similarly named file exists.
 - Intent-first landing requirement: `<policy>`
 - Trivial-change threshold: `<policy>`
 - Evidence requirements: `<paths, commits, measurements, commands, or other>`
+- Skill-feedback policy: `<records skills invoked and beta-skill friction, or none>`
+- Skills this project treats as beta: `<names or none; skill self-declaration already counts>`
 
 ## Durable Derived Documents
 
