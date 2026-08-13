@@ -5,7 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
-| 2026-08-12 | [Release v0.2.0 and Homebrew tap automation](2026-08-12-release-v0-2-0-and-tap-automation.md) | open |
+| 2026-08-12 | [Release v0.2.0 and Homebrew tap automation](2026-08-12-release-v0-2-0-and-tap-automation.md) | shipped |
 | 2026-08-12 | [Skill use in journal entries](2026-08-12-skill-use-in-journal-entries.md) | shipped |
 | 2026-08-12 | [Technical prose skill](2026-08-12-technical-prose-skill.md) | shipped |
 | 2026-07-13 | [Skill templates and project documentation](2026-07-13-skill-templates-and-project-documentation.md) | open |
