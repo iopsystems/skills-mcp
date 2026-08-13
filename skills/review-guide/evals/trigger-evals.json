@@ -1,0 +1,203 @@
+{
+  "evals": [
+    {
+      "name": "explicit PR body request",
+      "prompt": "Draft the PR body for this branch; it adds a retry budget to the ingest client and changes two call sites.",
+      "expectations": [
+        "Produce a pull-request body rather than a file",
+        "Open with what changed and the claim the change makes",
+        "Include a ranked reading order, testing, judgment calls, and production-only risks"
+      ]
+    },
+    {
+      "name": "trivial change is checked then not published",
+      "prompt": "Write a review guide for this PR: it bumps a dependency pin and fixes a typo in a comment.",
+      "expectations": [
+        "Run the assessment rather than skipping the change",
+        "Report that the reading order, test gap, judgment call, and production risk checks are all empty",
+        "Publish one sentence describing the change instead of a guide",
+        "Do not produce empty or padded sections"
+      ]
+    },
+    {
+      "name": "one item clears the publish test",
+      "prompt": "This PR is a two-line fix, but nothing covers the branch it touches. Draft the body.",
+      "expectations": [
+        "Publish a guide because the test gap alone clears the bar",
+        "Keep the guide proportional to a two-line change",
+        "Do not add sections that have nothing in them"
+      ]
+    },
+    {
+      "name": "qualifying section survives a small change",
+      "prompt": "Small change: a one-line config default. Nothing else is notable, but the new default only misbehaves above a cardinality we cannot reach in tests. Draft the body.",
+      "expectations": [
+        "Keep the production-only risk section, because it is the item that cleared the publish test",
+        "Drop the other sections as empty rather than keeping them at reduced size",
+        "Do not reduce the guide to sections that omit the reason it was published"
+      ]
+    },
+    {
+      "name": "output proportional to complexity",
+      "prompt": "Draft bodies for two PRs: one renames a private helper, one adds a caching layer across three subsystems with a latency claim.",
+      "expectations": [
+        "Scale the two outputs differently",
+        "Give the caching change every section including testing and production risk",
+        "Do not give the rename the same structure at smaller size"
+      ]
+    },
+    {
+      "name": "padding refused",
+      "prompt": "The guide looks thin. Expand each section so it reads as a thorough review guide.",
+      "expectations": [
+        "Refuse to pad sections to reach a length",
+        "State that length follows what the change carries",
+        "Leave the guide short, or fall back to one sentence if nothing clears the publish test"
+      ]
+    },
+    {
+      "name": "reading order is not path order",
+      "prompt": "Here are the eleven files this PR touches, alphabetically. Write the review guide.",
+      "expectations": [
+        "Rank by cost of a missed defect and the chance the reviewer misses it",
+        "Do not preserve alphabetical or diff order",
+        "Put judgment-carrying code above mechanical code"
+      ]
+    },
+    {
+      "name": "skimmable half named",
+      "prompt": "This PR renames one symbol across forty files and changes the locking rule in one of them. Draft the body.",
+      "expectations": [
+        "Name the rename as safe to skim and say why",
+        "Point the reviewer at the locking change first",
+        "Cite a specific file and line rather than a module name"
+      ]
+    },
+    {
+      "name": "correctness depends on code outside the diff",
+      "prompt": "Draft the body. The new function is only correct because callers hold the lock, and no caller appears in this diff.",
+      "expectations": [
+        "Rank this above code whose correctness is visible locally",
+        "State that the invariant is held outside the diff",
+        "Name where the reviewer must look to confirm it"
+      ]
+    },
+    {
+      "name": "all tests pass is not a report",
+      "prompt": "Testing section: I ran the suite and everything passed. Write it up.",
+      "expectations": [
+        "Ask for or state the actual command and its real output",
+        "State what the tests do not cover",
+        "Reject 'all tests pass' as a sufficient statement"
+      ]
+    },
+    {
+      "name": "no coverage percentage",
+      "prompt": "Put our 87% line coverage in the testing section of the PR body.",
+      "expectations": [
+        "Decline to report a coverage percentage",
+        "Describe what the tests are organized around instead",
+        "Name the specific paths that no test covers"
+      ]
+    },
+    {
+      "name": "test surfaces discovered not assumed",
+      "prompt": "Write the testing section for a change to this repo's MCP server behavior.",
+      "expectations": [
+        "Inspect what test surfaces the repository actually has before writing",
+        "Consider unit, integration, smoke, benchmark, and evaluation corpora as applicable",
+        "Do not assert a taxonomy the repository does not use"
+      ]
+    },
+    {
+      "name": "skipped check is named",
+      "prompt": "I did not run the benchmark because the machine was busy. Write the testing section.",
+      "expectations": [
+        "State which check was skipped and why",
+        "Do not imply the benchmark passed",
+        "Keep the performance claim unverified rather than asserting it"
+      ]
+    },
+    {
+      "name": "vague requirement resolved silently",
+      "prompt": "The ticket said 'retry on failure'. I chose to retry only on 5xx, not on timeouts. Draft the body.",
+      "expectations": [
+        "Surface the ambiguity as a judgment call rather than presenting one reading as the only reading",
+        "Quote or cite the requirement sentence that admits two readings",
+        "State the alternative rejected and what evidence would change the choice"
+      ]
+    },
+    {
+      "name": "manufactured uncertainty rejected",
+      "prompt": "Add some caveats to the uncertainty section so it looks appropriately humble; the change was mechanical and I am confident.",
+      "expectations": [
+        "Decline to add uncertainty items with no cited evidence",
+        "State that nothing was unsettled and why the change was deducible",
+        "Do not delete the section silently"
+      ]
+    },
+    {
+      "name": "no confidence ratings",
+      "prompt": "Rate your confidence high, medium, or low for each area you touched.",
+      "expectations": [
+        "Decline to attach self-reported confidence ratings",
+        "Give the cited evidence instead",
+        "Explain that a rating carries no information the reviewer can check"
+      ]
+    },
+    {
+      "name": "uncertainty item without the three parts",
+      "prompt": "Include this in the uncertainty section: 'I am a little worried about the cache path.'",
+      "expectations": [
+        "Require the call made, the alternative rejected, and what evidence would settle it",
+        "Drop the item if it cannot be stated that concretely",
+        "Do not keep it as a vague worry"
+      ]
+    },
+    {
+      "name": "production risk needs a signal",
+      "prompt": "Production risks: this only breaks under high cardinality. Write that section.",
+      "expectations": [
+        "Name what would surface the risk in production, such as a metric, log line, or alert",
+        "Invite the reviewer to weigh in or accept the risk explicitly",
+        "Do not leave the risk listed with no way to observe it"
+      ]
+    },
+    {
+      "name": "diagram not earned",
+      "prompt": "Add an architecture diagram to the PR body. The change adds one field to a struct and its accessor.",
+      "expectations": [
+        "Decline to add a diagram for a change that crosses no boundary",
+        "State that most changes do not need one",
+        "Keep the guide to the sections the change earns"
+      ]
+    },
+    {
+      "name": "one-off diagram inline, durable diagram linked",
+      "prompt": "This PR reorders three stages of the pipeline. A committed pipeline diagram already exists and is now wrong. Draft the body.",
+      "expectations": [
+        "Say that the existing diagram is now stale",
+        "Link the checked-in diagram rather than pasting it",
+        "Use inline mermaid only for a picture that is scaffolding for this review"
+      ]
+    },
+    {
+      "name": "journal boundary",
+      "prompt": "There is a journal entry for this effort. Should the PR body repeat its reasoning?",
+      "expectations": [
+        "Allow the guide to restate a decision rather than making the reviewer click through",
+        "Link the journal entry",
+        "Keep the journal as the durable record and the guide as change-scoped"
+      ]
+    },
+    {
+      "name": "file requested instead of PR body",
+      "prompt": "Write the review guide into docs/reviews/ so we can keep it.",
+      "expectations": [
+        "Honor the explicit request for a checked-in document",
+        "Note that the default output is the pull-request body",
+        "Do not create a file when no one asked for one"
+      ]
+    }
+  ]
+}
