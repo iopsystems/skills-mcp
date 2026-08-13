@@ -1,7 +1,7 @@
 ---
 name: reconcile-vault
 description: |
-  Reconcile the knowledge-iop vault. Two modes, same skill. **Interactive** — invoked after a phase skill commits an artifact; scoped to the touched artifact and its immediate graph neighborhood; surfaces proposed transitions for the user to confirm. **Dream** — invoked by a Claude Max scheduled task; runs across the whole vault; writes a session-note with Part A (graph hygiene — deterministic) and Part B (strategic reflection — judgment). Use whenever the user says things like "reconcile the vault", "what needs attention", "dream over the vault", "check for blocked transitions", "what's the state of the project", "run reconciliation". Propose changes; never auto-apply. The vault has no force_accept and neither does this skill.
+  Reconcile the knowledge-iop vault. Two modes, same skill. **Interactive** — invoked after a phase skill commits an artifact; scoped to the touched artifact and its immediate graph neighborhood; applies and merges clean transitions by default. **Dream** — invoked by a Claude Max scheduled task; runs across the whole vault; writes a session-note with Part A (graph hygiene — deterministic) and Part B (strategic reflection — judgment), then merges a clean PR by default. Use whenever the user says things like "reconcile the vault", "what needs attention", "dream over the vault", "check for blocked transitions", "what's the state of the project", "run reconciliation". Route blockers, warnings, ambiguity, failed validation, and refused merges to human review. The vault has no force_accept and neither does this skill.
 ---
 
 # Reconcile vault
@@ -66,7 +66,36 @@ For every transition you want to propose:
 2. Attach the result (`allowed` + any `blockers` / `warnings`) to the
    proposal.
 
-### Step 5 — Present to the user
+### Step 5 — Choose the disposition
+
+Auto-merge is the default. A run is clean only when every proposed
+transition:
+
+- is `allowed` with no blockers or warnings;
+- cites direct, sufficient evidence;
+- has exactly one justified next state; and
+- passes repository validation and required PR checks.
+
+Require human review if any transition is blocked or warned, evidence is
+incomplete or ambiguous, multiple outcomes are plausible, validation or a
+required check fails, or the hosting service refuses a normal merge.
+
+### Step 6 — Apply or request review
+
+For a clean run:
+
+1. Apply every transition with a direct frontmatter edit.
+2. Run the repository's validation and inspect the diff.
+3. Commit and push the current branch.
+4. Create a PR, or update the existing PR for the branch.
+5. Merge the PR normally once required checks pass.
+
+Do not ask for confirmation on this path. Do not bypass branch protection,
+force-push, force-merge, or report a refused merge as success.
+
+When human review is required, do not apply the uncertain or invalid
+transition and do not merge the PR. Leave any existing PR open and produce
+a concise review package:
 
 Produce a concise proposal list:
 
@@ -84,22 +113,22 @@ NO ACTION NEEDED
 - <neighbor-id>: <why touched, why unchanged>
 ```
 
-Ask the user which to apply. Do not auto-apply. For each accepted
-proposal, guide the user to the appropriate phase skill or a direct
-frontmatter edit + commit.
+State the exact review reason for each item: blocker, warning, ambiguous
+evidence, multiple plausible outcomes, failed validation/check, or refused
+merge. Ask the user to decide only those items.
 
-### Step 6 — Stop
+### Step 7 — Stop
 
-When the user has acted (or declined), interactive reconciliation is
-done. Do NOT cascade further — the next phase skill invocation will
+After the PR merges, or after the review package is presented, interactive
+reconciliation is done. Do NOT cascade further — the next phase skill invocation will
 trigger its own interactive reconciliation if needed.
 
 ---
 
 ## Mode B: Dream
 
-Scope: the full vault. Write output as a session-note; never mutate
-artifacts directly.
+Scope: the full vault. Write one session-note; do not mutate other artifacts
+from this mode.
 
 ### Step 1 — Run the reflection report
 
@@ -216,25 +245,39 @@ transitions you haven't pre-flighted.
   <blocker>" — and the follow-up is on the user.
 ```
 
-### Step 4 — Commit
+### Step 4 — Commit, open the PR, and choose the disposition
+
+Commit the note, push the current branch, and create or update its PR:
 
 `git add discussions/<id>.md && git commit -m "Reconciler dream:
 <YYYY-MM-DD>"`.
 
+Apply the shared review gate below. If the report contains no
+review-required finding and repository validation plus required PR checks
+pass, merge the PR normally. If the report contains a blocker, warning,
+ambiguous evidence, multiple plausible outcomes, or a failed/refused check
+or merge, leave the PR open and surface the exact reason for human review.
+
 ### Step 5 — Stop
 
-The user triages the session-note asynchronously. Do not chain.
+After the PR merges, or after the review-required findings are surfaced,
+stop. Do not chain.
 
 ---
 
 ## Shared rules
 
-### Never auto-apply
+### Default to merge; gate on observable risk
 
 Per SCHEMA.md: "You can get unstuck; you can't pretend something is
-resolved when it isn't." This skill proposes. The user decides.
-Refuse any instruction to "just apply all the transitions" — ask them
-to review and confirm each.
+resolved when it isn't." Apply and merge clean, evidence-backed work by
+default. Human review is required when any candidate has a blocker or
+warning, the evidence is incomplete or ambiguous, more than one outcome is
+plausible, validation or required checks fail, or a normal merge is refused.
+
+Never bypass a blocker, warning, branch protection rule, or failed check.
+Never use `force_accept`, force-push, or force-merge. A merge refusal is a
+review result, not permission to work around the host.
 
 ### Token budget
 
@@ -250,7 +293,7 @@ If the report balloons, your rubric is wrong. Cut.
 
 ### When in doubt, ask
 
-If a proposal is ambiguous — two plausible next states, or the
-offender evidence is thin — name it as such and let the user decide.
-Reconciliation that hallucinates certainty is worse than
-reconciliation that names uncertainty.
+If a proposal is ambiguous — two plausible next states, or the offender
+evidence is thin — classify the run as human-review-required, name the
+ambiguity, and leave the PR open. Reconciliation that hallucinates certainty
+is worse than reconciliation that names uncertainty.
