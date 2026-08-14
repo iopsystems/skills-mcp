@@ -184,4 +184,49 @@ out=$(git review-feedback --as codex --branch no-thread-here)
 pass 'unknown branch reports no rounds'
 cd "$ROOT_DIR"
 
+# --- concurrency --------------------------------------------------------
+
+cd "$REPO"
+git review-note --as a --role reviewer -m 'one' >/dev/null &
+git review-note --as b --role reviewer -m 'two' >/dev/null &
+git review-note --as c --role reviewer -m 'three' >/dev/null &
+wait
+
+dir="$REPO/.git/review-feedback/threads/yao-feature-one"
+round_names() { for f in "$dir"/[0-9][0-9][0-9]-*.md; do [[ -e "$f" ]] && basename "$f"; done; }
+count=$(round_names | wc -l | tr -d ' ')
+[[ "$count" == "6" ]] || fail "expected 6 rounds after concurrent writes, got $count"
+uniq_nums=$(round_names | cut -d- -f1 | sort -u | wc -l | tr -d ' ')
+[[ "$uniq_nums" == "6" ]] || fail "round numbers collided: $uniq_nums distinct of 6"
+[[ -z "$(ls -A "$dir"/.claim-* 2>/dev/null || true)" ]] || fail 'a claim directory was left behind'
+pass 'concurrent writers get distinct round numbers'
+cd "$ROOT_DIR"
+
+# --- upgrade of a legacy repository -------------------------------------
+
+LEGACY=$(make_repo legacy)
+mkdir -p "$LEGACY/.git/review-feedback/reviews/yao-old-branch"
+printf '# old review\n' > "$LEGACY/.git/review-feedback/reviews/yao-old-branch/2026-08-13T0134-0700.md"
+printf '# latest\n'     > "$LEGACY/.git/review-feedback/latest.md"
+printf '# readme\n'     > "$LEGACY/.git/review-feedback/README.md"
+git -C "$LEGACY" config --local alias.review-feedback '!echo old-alias'
+
+out=$(install_into "$LEGACY")
+[[ "$out" == *"legacy one-way reviews left untouched"* ]] \
+  || fail "upgrade should report the archive: $out"
+[[ "$out" == *"1 file"* ]] || fail "upgrade should count the legacy files: $out"
+[[ -f "$LEGACY/.git/review-feedback/latest.md" ]] || fail 'upgrade deleted latest.md'
+[[ -f "$LEGACY/.git/review-feedback/reviews/yao-old-branch/2026-08-13T0134-0700.md" ]] \
+  || fail 'upgrade deleted a legacy review'
+[[ "$(cat "$LEGACY/.git/review-feedback/README.md")" == "# readme" ]] \
+  || fail 'upgrade overwrote the legacy README'
+pass 'upgrade preserves legacy artifacts'
+
+out=$(cd "$LEGACY" && git review-feedback --as codex --list)
+[[ "$out" == *"no threads yet"* ]] || fail "upgraded alias not replaced: $out"
+pass 'upgrade replaces the old alias'
+
+[[ "$(cat "$LEGACY/.git/review-feedback/VERSION")" == "2" ]] || fail 'upgrade did not write VERSION'
+pass 'upgrade writes VERSION'
+
 printf 'all review-bridge tests passed\n'

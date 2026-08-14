@@ -82,10 +82,15 @@ USAGE
 }
 
 next_round() {
+  # Counts written rounds and in-flight claims alike. A claim that is not yet a
+  # file must still reserve its number, or two writers racing under different
+  # agent names would each believe the number is free — their filenames differ,
+  # so no file-level exclusion would catch it.
   local dir=$1 max=0 f base num
-  for f in "$dir"/[0-9][0-9][0-9]-*.md; do
+  for f in "$dir"/[0-9][0-9][0-9]-*.md "$dir"/.claim-[0-9][0-9][0-9]; do
     [ -e "$f" ] || continue
     base=${f##*/}
+    base=${base#.claim-}
     num=${base%%-*}
     num=$((10#$num))
     if [ "$num" -gt "$max" ]; then max=$num; fi
@@ -175,16 +180,19 @@ cmd_note() {
   fi
   [ -n "${body//[[:space:]]/}" ] || die 'empty body'
 
-  local dir path n attempt=0
+  local dir path claim n attempt=0
   dir="$(store_dir)/threads/$(slug "$branch")"
   mkdir -p "$dir"
   while : ; do
     n=$(next_round "$dir")
-    path=$(printf '%s/%03d-%s-%s.md' "$dir" "$n" "$agent" "$short")
-    if (set -C; : > "$path") 2>/dev/null; then break; fi
+    claim=$(printf '%s/.claim-%03d' "$dir" "$n")
+    # mkdir is atomic and fails if the name exists, so exactly one racing
+    # writer wins a given round number.
+    if mkdir "$claim" 2>/dev/null; then break; fi
     attempt=$((attempt + 1))
     [ "$attempt" -lt 10 ] || die 'could not claim a round number after 10 attempts'
   done
+  path=$(printf '%s/%03d-%s-%s.md' "$dir" "$n" "$agent" "$short")
 
   {
     printf -- '---\n'
@@ -202,6 +210,7 @@ cmd_note() {
     printf -- '---\n\n'
     printf '%s\n' "$body"
   } > "$path"
+  rmdir "$claim" 2>/dev/null || true
 
   set_cursor "$branch" "$agent" "$n"
   printf '%s\n' "$path"
@@ -317,7 +326,12 @@ git config --local alias.review-feedback \
 
 printf 'review bridge installed at %s (format %s)\n' "$store" "$(cat "$store/VERSION")"
 if [ -d "$store/reviews" ] || [ -f "$store/latest.md" ]; then
-  printf 'legacy one-way reviews left untouched under %s\n' "$store"
+  legacy_count=0
+  if [ -d "$store/reviews" ]; then
+    legacy_count=$(find "$store/reviews" -name '*.md' -type f | wc -l | tr -d ' ')
+  fi
+  printf 'legacy one-way reviews left untouched under %s (%s file(s))\n' \
+    "$store/reviews" "$legacy_count"
 fi
 ```
 <!-- INSTALLER-END -->
