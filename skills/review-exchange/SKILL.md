@@ -335,3 +335,74 @@ if [ -d "$store/reviews" ] || [ -f "$store/latest.md" ]; then
 fi
 ```
 <!-- INSTALLER-END -->
+
+## Read before you write
+
+Run `git review-feedback --as <your-name>` before writing anything. A round
+written without reading the unread ones repeats findings that were already
+answered, which is the failure the thread exists to prevent.
+
+`--peek` shows the unread rounds without marking them read. Use it when you are
+only checking whether there is work, not doing it.
+
+## Reviewing
+
+Scope the review at the merge base against the base branch, not at the branch
+tip. You are reviewing what would merge.
+
+Write one round with `--role reviewer`:
+
+- **Findings**, in severity order. Each cites `file:line` and states the failure
+  concretely — the input or state, and the wrong result. A finding a reader
+  cannot act on is not a finding.
+- **Open questions**, where the change is defensible either way and you need the
+  author's intent.
+- **Verification**: the commands you ran and what they returned. Name the ones
+  that failed as plainly as the ones that passed.
+- **Residual risk**: what you could not check.
+
+An empty Findings section means you found nothing actionable. It does not mean
+the change is defect-free, and it is not evidence of correctness. Say so.
+
+## Answering
+
+Write one round with `--role author` and `--replies-to <n>`.
+
+Every finding in the round you are answering gets exactly one disposition:
+
+- **fixed** — cite the commit that fixed it.
+- **disputed** — cite the evidence that the finding is wrong or does not apply.
+  A dispute without evidence is a refusal.
+- **deferred** — state why, and what would reopen it.
+
+Silence is not a disposition. A finding you skip will come back next round, and
+the reviewer will not know whether you disagreed or missed it.
+
+Then answer the open questions, and list anything else you changed that no
+finding asked for.
+
+## Convergence
+
+A thread converges when a reviewer round carries no findings and no open
+questions. Either agent may observe that; neither may declare it on the other's
+behalf. If you are the author and you believe the thread is done, say so and
+leave it open — the reviewer's round is what closes it.
+
+## What this is not
+
+The store lives in `.git/`. It is untracked, shared across linked worktrees, and
+destroyed by a fresh clone. It is a working channel, not a record.
+
+Anything that must outlive the branch goes somewhere durable: the pull-request
+body through `review-guide`, or an entry through `engineering-journal`. Do not
+commit the thread into the repository.
+
+## Red flags
+
+- Writing a round without reading the unread ones.
+- Producing findings because the last round was empty and an empty round felt
+  like a failure. It is not.
+- Marking a finding fixed with no commit that fixes it.
+- Disputing a finding by restating the original code.
+- Reporting "no findings" as evidence the change is correct.
+- Guessing an agent name because none was supplied.
