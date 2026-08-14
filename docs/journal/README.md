@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-08-14 | [Citation guard](2026-08-14-citation-guard.md) | shipped |
 | 2026-08-13 | [Review exchange bridge](2026-08-13-review-exchange-bridge.md) | shipped |
 | 2026-08-13 | [Reconcile-vault auto-merge](2026-08-13-reconcile-vault-auto-merge.md) | shipped |
 | 2026-08-13 | [Review guide skill](2026-08-13-review-guide-skill.md) | shipped |

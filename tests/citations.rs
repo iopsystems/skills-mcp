@@ -115,6 +115,13 @@ fn quoted_spans(text: &str) -> Vec<String> {
         .collect()
 }
 
+/// Collapses every run of whitespace to one space. Prose in this repository
+/// wraps at eighty columns, so an anchor phrase routinely spans two lines and
+/// carries a newline plus indentation that the cited line does not have.
+fn normalize(text: &str) -> String {
+    text.split_whitespace().collect::<Vec<_>>().join(" ")
+}
+
 /// True for a line that opens a new list item, so sibling bullets do not pool
 /// their anchors. Without this, a citation in one bullet can be "anchored" by a
 /// phrase belonging to an unrelated bullet three lines away.
@@ -254,8 +261,11 @@ fn check_citation(cite: &Citation, at: usize, path: &str, anchors: &[(String, us
         };
     }
 
-    let cited_text = lines[cite.start - 1..cite.end].join("\n");
-    if usable.iter().any(|a| cited_text.contains(a.as_str())) {
+    let cited_text = normalize(&lines[cite.start - 1..cite.end].join(" "));
+    if usable
+        .iter()
+        .any(|anchor| cited_text.contains(&normalize(anchor)))
+    {
         return Outcome::Ok;
     }
 
@@ -265,13 +275,16 @@ fn check_citation(cite: &Citation, at: usize, path: &str, anchors: &[(String, us
         .iter()
         .filter(|a| a.len() >= MIN_RELOCATE_LEN)
         .find_map(|anchor| {
+            let needle = normalize(anchor);
             let hits: Vec<usize> = lines
                 .iter()
                 .enumerate()
-                .filter(|(_, line)| line.contains(anchor.as_str()))
+                .filter(|(_, line)| normalize(line).contains(&needle))
                 .map(|(index, _)| index + 1)
                 .collect();
-            (hits.len() == 1).then_some(hits[0])
+            // `then`, not `then_some`: the latter evaluates its argument even
+            // when the condition is false, indexing an empty vector.
+            (hits.len() == 1).then(|| hits[0])
         });
     match relocation {
         Some(to) => Outcome::Moved { to },
@@ -280,10 +293,11 @@ fn check_citation(cite: &Citation, at: usize, path: &str, anchors: &[(String, us
             // hunting; "now at 29 and 39" lets them just pick one.
             let mut sightings: Vec<String> = Vec::new();
             for anchor in &usable {
+                let needle = normalize(anchor);
                 let hits: Vec<String> = lines
                     .iter()
                     .enumerate()
-                    .filter(|(_, line)| line.contains(anchor.as_str()))
+                    .filter(|(_, line)| normalize(line).contains(&needle))
                     .map(|(index, _)| (index + 1).to_string())
                     .collect();
                 sightings.push(match hits.len() {
@@ -495,6 +509,14 @@ mod parsing {
         let found = paragraphs(detached);
         assert_eq!(found.len(), 2);
         assert_eq!(found[0].1.trim(), "<!-- cite-ignore -->");
+    }
+
+    #[test]
+    fn normalize_lets_a_wrapped_anchor_match_one_line() {
+        let anchor = "treat this skill as\n  **beta**";
+        let target = "cache framework — so treat this skill as **beta**. Adopt";
+        assert!(!target.contains(anchor));
+        assert!(normalize(target).contains(&normalize(anchor)));
     }
 
     #[test]
