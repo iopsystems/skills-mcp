@@ -79,4 +79,67 @@ pass 'working tree clean'
 install_into "$REPO" >/dev/null
 pass 'installer is idempotent'
 
+# --- write path ---------------------------------------------------------
+
+cd "$REPO"
+git checkout --quiet -b yao/feature-one
+printf 'change\n' > file.txt
+git add file.txt
+git commit --quiet -m 'a change'
+HEAD_SHA=$(git rev-parse HEAD)
+SHORT=$(git rev-parse --short HEAD)
+MERGE_BASE=$(git merge-base HEAD main)
+
+path=$(git review-note --as codex --role reviewer -m 'P1 unchecked index in parse()')
+[[ "$path" == *"/threads/yao-feature-one/001-codex-$SHORT.md" ]] \
+  || fail "first round path wrong: $path"
+pass 'first round numbered 001 with agent and short sha'
+
+grep -q "^round:       1$"               "$path" || fail 'round field wrong'
+grep -q "^agent:       codex$"           "$path" || fail 'agent field wrong'
+grep -q "^role:        reviewer$"        "$path" || fail 'role field wrong'
+grep -q "^branch:      yao/feature-one$" "$path" || fail 'branch field wrong'
+grep -q "^base:        main$"            "$path" || fail 'base field wrong'
+grep -q "^commit:      $HEAD_SHA$"       "$path" || fail 'commit field wrong'
+grep -q "^merge_base:  $MERGE_BASE$"     "$path" || fail 'merge_base field wrong'
+grep -q "^written:     20"               "$path" || fail 'written field wrong'
+grep -q 'P1 unchecked index'             "$path" || fail 'body missing'
+pass 'header derived from git, body preserved'
+
+grep -q "^replies_to:" "$path" && fail 'first round must not carry replies_to' || true
+pass 'replies_to omitted on first round'
+
+path2=$(git review-note --as claude --role author --replies-to 1 -m 'fixed in abc1234')
+[[ "$path2" == *"/002-claude-$SHORT.md" ]] || fail "second round path wrong: $path2"
+grep -q "^replies_to:  1$" "$path2" || fail 'replies_to not recorded'
+pass 'second round increments and records replies_to'
+
+out=$(git review-note --as codex 2>&1) && fail 'missing --role should exit non-zero' || true
+[[ "$out" == *"--role"* ]] || fail "missing --role error should name the flag: $out"
+pass 'missing --role errors clearly'
+
+out=$(git review-note --as codex --role bogus -m x 2>&1) && fail 'bad role should exit non-zero' || true
+[[ "$out" == *"bogus"* ]] || fail "bad role error should name the value: $out"
+pass 'invalid --role errors clearly'
+
+out=$(git review-note --as codex --role reviewer --base no-such-branch -m x 2>&1) \
+  && fail 'unresolvable base should exit non-zero' || true
+[[ "$out" == *"no-such-branch"* ]] || fail "base error should name the ref: $out"
+pass 'unresolvable base errors clearly'
+
+out=$(printf '   \n' | git review-note --as codex --role reviewer 2>&1) \
+  && fail 'empty body should exit non-zero' || true
+[[ "$out" == *"empty body"* ]] || fail "empty body error wrong: $out"
+pass 'empty body rejected'
+
+printf 'from a file\n' > "$TMP_DIR/body.md"
+path3=$(git review-note --as codex --role reviewer -F "$TMP_DIR/body.md")
+grep -q 'from a file' "$path3" || fail '-F body not used'
+pass '-F reads the body from a file'
+
+status=$(git status --short)
+[[ -z "$status" ]] || fail "writing a round dirtied the tree: $status"
+pass 'working tree still clean'
+cd "$ROOT_DIR"
+
 printf 'all review-bridge tests passed\n'

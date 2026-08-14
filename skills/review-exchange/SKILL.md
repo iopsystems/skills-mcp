@@ -81,6 +81,106 @@ USAGE
   exit 2
 }
 
+next_round() {
+  local dir=$1 max=0 f base num
+  for f in "$dir"/[0-9][0-9][0-9]-*.md; do
+    [ -e "$f" ] || continue
+    base=${f##*/}
+    num=${base%%-*}
+    num=$((10#$num))
+    if [ "$num" -gt "$max" ]; then max=$num; fi
+  done
+  printf '%s\n' "$((max + 1))"
+}
+
+set_cursor() {
+  # $1 branch, $2 agent, $3 round number
+  local path
+  path=$(cursor_path "$1" "$2")
+  mkdir -p "$(dirname "$path")"
+  printf '%s\n' "$3" > "$path"
+}
+
+cmd_note() {
+  local agent='' role='' branch='' base='' replies_to='' body_file='' message='' have_message=0
+  while [ $# -gt 0 ]; do
+    case "$1" in
+      --as)         agent=${2:-}; shift 2 ;;
+      --role)       role=${2:-}; shift 2 ;;
+      --branch)     branch=${2:-}; shift 2 ;;
+      --base)       base=${2:-}; shift 2 ;;
+      --replies-to) replies_to=${2:-}; shift 2 ;;
+      -F)           body_file=${2:-}; shift 2 ;;
+      -m)           message=${2:-}; have_message=1; shift 2 ;;
+      -h|--help)    usage ;;
+      *) die "unknown option: $1" ;;
+    esac
+  done
+
+  [ -n "$agent" ] || agent=${REVIEW_AGENT:-}
+  [ -n "$agent" ] || die 'missing --as <name> (or set REVIEW_AGENT)'
+  case "$role" in
+    reviewer|author) ;;
+    '') die 'missing --role reviewer|author' ;;
+    *)  die "invalid --role: $role (expected reviewer or author)" ;;
+  esac
+
+  [ -n "$branch" ] || branch=$(current_branch)
+  if [ -z "$base" ]; then
+    base=$(git config review.base 2>/dev/null || true)
+    [ -n "$base" ] || base=main
+  fi
+
+  local commit merge_base short
+  commit=$(git rev-parse --verify --quiet "$branch^{commit}") \
+    || die "cannot resolve branch: $branch"
+  merge_base=$(git merge-base "$commit" "$base" 2>/dev/null) \
+    || die "cannot find the merge base of $branch and $base"
+  short=$(git rev-parse --short "$commit")
+
+  local body
+  if [ -n "$body_file" ]; then
+    [ -f "$body_file" ] || die "no such file: $body_file"
+    body=$(cat "$body_file")
+  elif [ "$have_message" -eq 1 ]; then
+    body=$message
+  else
+    body=$(cat)
+  fi
+  [ -n "${body//[[:space:]]/}" ] || die 'empty body'
+
+  local dir path n attempt=0
+  dir="$(store_dir)/threads/$(slug "$branch")"
+  mkdir -p "$dir"
+  while : ; do
+    n=$(next_round "$dir")
+    path=$(printf '%s/%03d-%s-%s.md' "$dir" "$n" "$agent" "$short")
+    if (set -C; : > "$path") 2>/dev/null; then break; fi
+    attempt=$((attempt + 1))
+    [ "$attempt" -lt 10 ] || die 'could not claim a round number after 10 attempts'
+  done
+
+  {
+    printf -- '---\n'
+    printf 'round:       %d\n' "$n"
+    printf 'agent:       %s\n' "$agent"
+    printf 'role:        %s\n' "$role"
+    printf 'branch:      %s\n' "$branch"
+    printf 'base:        %s\n' "$base"
+    printf 'commit:      %s\n' "$commit"
+    printf 'merge_base:  %s\n' "$merge_base"
+    if [ -n "$replies_to" ]; then
+      printf 'replies_to:  %s\n' "$replies_to"
+    fi
+    printf 'written:     %s\n' "$(date +%Y-%m-%dT%H:%M:%S%z)"
+    printf -- '---\n\n'
+    printf '%s\n' "$body"
+  } > "$path"
+
+  set_cursor "$branch" "$agent" "$n"
+  printf '%s\n' "$path"
+}
+
 list_threads() {
   local dir any=0
   for dir in "$(store_dir)"/threads/*/; do
@@ -123,7 +223,7 @@ cmd_feedback() {
 }
 
 case "${1:-}" in
-  note)     shift; die 'not implemented yet' ;;
+  note)     shift; cmd_note "$@" ;;
   feedback) shift; cmd_feedback "$@" ;;
   version)  printf '%s\n' "$FORMAT_VERSION"; exit 0 ;;
   *)        usage ;;
