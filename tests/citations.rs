@@ -166,6 +166,17 @@ fn paragraphs(markdown: &str) -> Vec<(usize, String)> {
             }
             continue;
         }
+        // The marker always stands alone, whatever surrounds it. Absorbed into
+        // a neighbouring block -- the tail of the preceding list item, say --
+        // it would silently suppress nothing.
+        if line.trim() == IGNORE_MARKER {
+            if !current.is_empty() {
+                out.push((start, current.join("\n")));
+                current.clear();
+            }
+            out.push((index + 1, IGNORE_MARKER.to_owned()));
+            continue;
+        }
         if starts_list_item(line) && !current.is_empty() {
             out.push((start, current.join("\n")));
             current.clear();
@@ -496,19 +507,22 @@ mod parsing {
     }
 
     #[test]
-    fn ignore_marker_works_attached_or_detached() {
-        let attached = "<!-- cite-ignore -->\nthe `a/b.rs:1` example";
-        let found = paragraphs(attached);
-        assert_eq!(found.len(), 1);
-        assert_eq!(
-            found[0].1.lines().next().unwrap().trim(),
-            "<!-- cite-ignore -->"
-        );
-
-        let detached = "<!-- cite-ignore -->\n\nthe `a/b.rs:1` example";
-        let found = paragraphs(detached);
-        assert_eq!(found.len(), 2);
-        assert_eq!(found[0].1.trim(), "<!-- cite-ignore -->");
+    fn ignore_marker_always_stands_alone() {
+        for markdown in [
+            "<!-- cite-ignore -->\nthe `a/b.rs:1` example",
+            "<!-- cite-ignore -->\n\nthe `a/b.rs:1` example",
+            "- earlier bullet\n<!-- cite-ignore -->\n- the `a/b.rs:1` example",
+        ] {
+            let found = paragraphs(markdown);
+            let marker = found
+                .iter()
+                .position(|(_, text)| text.trim() == IGNORE_MARKER)
+                .expect("marker is its own paragraph");
+            assert!(
+                found[marker + 1].1.contains("a/b.rs:1"),
+                "marker must immediately precede the paragraph it suppresses"
+            );
+        }
     }
 
     #[test]

@@ -207,6 +207,7 @@ altering either.
   next time the cited file is edited. Pinned the body to a commit SHA and stated
   so at the top, then opened a separate effort to make citation form follow the
   artifact's lifespan.
+<!-- cite-ignore -->
 - **Friction** — The body shipped one wrong citation: `:194` for a line reading
   `done`, where the attempt cap is `:193`. The skill's instruction to cite a
   specific line was followed; what failed was that four anchors were read and
