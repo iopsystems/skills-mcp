@@ -86,11 +86,14 @@ holds six content-validation suites, `walkdir` is already a dependency, and
 self-healing mode survives as an environment gate, the pattern `insta` and
 `expect-test` use.
 
-### Four defects the checker found in itself
+### Five defects the checker found in itself
 
-Two surfaced when it was first run against the existing corpus, and two more
-when this entry was added to that corpus. None would have been caught by the
-unit tests written alongside, because each depended on the shape of real prose.
+Two surfaced when it was first run against the existing corpus, two more when
+this entry was added to that corpus, and one when the branch was rebased onto
+the review-exchange entry. None would have been caught by the unit tests written
+alongside, because each depended on the shape of real prose — which is the
+general lesson: every defect here was found by pointing the checker at text
+somebody actually wrote, and none by reasoning about it.
 
 <!-- cite-ignore -->
 The first version relocated on any anchor occurring exactly once, and
@@ -117,6 +120,13 @@ quoted anchor phrase routinely spans two lines and carries a newline plus
 indentation that the cited line does not have. Substring matching failed on
 every wrapped anchor. Both the anchor and the candidate line are now normalized
 to single-spaced text before comparison.
+
+The fifth appeared on rebasing onto the merged review-exchange entry, whose
+Skill Feedback section cites two line numbers to illustrate a wrong citation
+rather than to claim anything about a file. Marking that bullet did not suppress
+it: a marker line is neither blank nor a list-item start, so it was absorbed
+into the tail of the preceding bullet and set no flag. The marker now always
+stands alone, whatever surrounds it.
 
 ### Verification beyond the unit tests
 
@@ -146,7 +156,7 @@ carries a `<!-- cite-ignore -->` marker.
 
 ## Outcome
 
-Shipped in pull request 32. `tests/citations.rs` adds eleven tests, bringing
+Shipped in pull request 32. `tests/citations.rs` adds twelve tests, bringing
 `cargo test --locked` to eight green test binaries. `cargo fmt --all
 --check`, `clippy --all-targets --locked -D warnings`,
 `./scripts/review-bridge-test.sh`, and `./scripts/mcp-smoke.sh` all pass. No CI
