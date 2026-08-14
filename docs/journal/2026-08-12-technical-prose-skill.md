@@ -41,14 +41,14 @@ author's own and was not independently reproduced here.
 
 Three structural facts about this repository constrain the design:
 
-- `src/main.rs:38` embeds `skills/` and serves each `SKILL.md` body as
-  instruction text. `skill_template_get` is templates-only, and no active skill
-  has a `references/` directory. An active skill is therefore exactly one file,
-  and a shared rule set cannot be a servable sub-file — it must be its own skill
-  with its own trigger.
-- `skills/architecture-diagram/SKILL.md:27` and `:37` establish the precedent
-  for one skill deferring to another in prose, by name, with no import
-  mechanism.
+- `src/main.rs:38` embeds `skills/` through `include_dir!` and serves each
+  `SKILL.md` body as instruction text. `skill_template_get` is templates-only,
+  and no active skill has a `references/` directory. An active skill is
+  therefore exactly one file, and a shared rule set cannot be a servable
+  sub-file — it must be its own skill with its own trigger.
+- `skills/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
+  and `:37` ("use `dataflow-diagram` directly") establish the precedent for one
+  skill deferring to another in prose, by name, with no import mechanism.
 - `templates/document-feature-skill/` is an inert template, seeded and
   customized per project. A reference from it to an MCP-served skill dangles in
   any repository without `skills-mcp` installed.

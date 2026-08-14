@@ -33,8 +33,9 @@ each of which has a skill already. No template counterpart is created.
 The repository carries twenty-one skills before this change, each a single
 `SKILL.md` served as instruction text, and skills defer to each other by name in
 prose rather than through any import mechanism —
-`skills/architecture-diagram/SKILL.md:27` and `:37` are the precedent this
-follows for pictures.
+`skills/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
+and `:37` ("use `dataflow-diagram` directly") are the precedent this follows for
+pictures.
 
 Two adjacent skills bound the design. `engineering-journal` already records
 durable effort narrative, so a review guide that also claims durability would

@@ -126,9 +126,31 @@ formatting, a change repeated identically across many files. Naming the skimmabl
 half is half the value. A reviewer who spends attention on a rename has none
 left for the invariant.
 
-Point at a specific place, not a file. `src/vault/transitions.rs:119` beats
-"the transitions module". Cite the line where a wrong review would cost the
-most.
+Point at a specific place, not a file. Cite the line where a wrong review would
+cost the most.
+
+<!-- cite-ignore -->
+A line number beats a module name — `src/vault/transitions.rs:119` beats "the
+transitions module" — but a line number is a fact with a short shelf life, so
+its form follows how long the document lives.
+
+**In the pull-request body**, which is read this week against one commit, cite
+`path:line` and state near the top which commit the lines are pinned to. Commits
+landing on the branch after you draft will shift them; naming the commit is what
+keeps the citation true.
+
+**In a durable document** — a journal entry, a skill — a bare line number rots
+silently the next time someone edits the cited file. Quote a phrase from the
+cited line in the same paragraph, so the number stays re-derivable from the
+text. `tests/citations.rs` enforces this and can repair a number that moved; it
+cannot repair a citation that never carried a phrase.
+
+Read every line you cite, at the moment you cite it. Not most of them. A line
+number you did not open in this session is not a citation you may write — it is
+a guess that looks exactly like a fact, and the reviewer cannot tell which one
+they are holding. Partial verification is the failure mode here: checking four
+anchors and estimating the fifth produces a body that is wrong in a way its own
+care makes harder to doubt.
 
 ## Testing
 
@@ -251,6 +273,8 @@ guide's prose.
 - No section names anything as safe to skim.
 - Testing reports a percentage instead of a gap.
 - A command is described as run without its actual output.
+- A line number arrived at by inference rather than by opening the line.
+- A durable document cites a line with no phrase quoted from it.
 - Uncertainty items have no cited evidence.
 - Every uncertainty item is hedged, or none exists on a change that clearly had
   a fork in it.
