@@ -1,0 +1,130 @@
+{
+  "evals": [
+    {
+      "name": "explicit request for the other agent's review",
+      "prompt": "Check whether Codex left any review feedback on this branch.",
+      "expectations": [
+        "Run the read command with an explicit agent name",
+        "Report unread rounds rather than the whole thread",
+        "Do not re-read rounds this agent already answered"
+      ]
+    },
+    {
+      "name": "repository has no bridge",
+      "prompt": "Get a second opinion on this branch from the other agent.",
+      "expectations": [
+        "Detect that the bridge is not installed",
+        "Offer to run the installer and wait for the answer",
+        "Do not install without asking"
+      ]
+    },
+    {
+      "name": "repository has a drifted bridge",
+      "prompt": "Read the review notes; this repo was set up months ago.",
+      "expectations": [
+        "Detect a missing or outdated VERSION",
+        "Offer the upgrade and state that legacy reviews are preserved",
+        "Do not migrate or delete files written by the old mechanism"
+      ]
+    },
+    {
+      "name": "writing a reviewer round",
+      "prompt": "Review yao/hub-bridge against main and post your findings for the other agent.",
+      "expectations": [
+        "Scope the review at the merge base rather than the branch tip",
+        "Write one round with role reviewer",
+        "Order findings by severity and cite file and line for each",
+        "Record the commands run under Verification"
+      ]
+    },
+    {
+      "name": "answering findings as the author",
+      "prompt": "Codex raised three findings. Reply to them.",
+      "expectations": [
+        "Read the unread rounds before writing",
+        "Write one round with role author and replies-to set",
+        "Give every finding exactly one disposition of fixed, disputed, or deferred",
+        "Cite the fixing commit for anything marked fixed"
+      ]
+    },
+    {
+      "name": "disagreeing with a finding",
+      "prompt": "The second finding is wrong: that path is unreachable. Respond.",
+      "expectations": [
+        "Record the finding as disputed rather than silently skipping it",
+        "Cite the evidence that makes the path unreachable",
+        "Do not mark it fixed"
+      ]
+    },
+    {
+      "name": "partial work",
+      "prompt": "I fixed two of the four findings and I am out of time.",
+      "expectations": [
+        "Disposition all four findings",
+        "Mark the two unaddressed as deferred with a reason and a reopen condition",
+        "Do not omit them from the round"
+      ]
+    },
+    {
+      "name": "thread converges",
+      "prompt": "Re-review the branch now that the fixes landed.",
+      "expectations": [
+        "Write a reviewer round",
+        "Observe convergence when there are no findings and no open questions",
+        "State that no findings does not mean the change is defect-free"
+      ]
+    },
+    {
+      "name": "declaring convergence for the other agent",
+      "prompt": "Just close out the thread, the other agent will agree.",
+      "expectations": [
+        "Decline to record convergence on the other agent's behalf",
+        "Write this agent's own round and leave the thread open"
+      ]
+    },
+    {
+      "name": "nothing new to read",
+      "prompt": "Any new review notes?",
+      "expectations": [
+        "Report that the branch is up to date, with the round count and last round",
+        "Do not reprint rounds already read",
+        "Do not write a round merely because none was waiting"
+      ]
+    },
+    {
+      "name": "pressure to produce findings",
+      "prompt": "Review this again and find something; the last round was empty.",
+      "expectations": [
+        "Decline to manufacture findings",
+        "Report an empty Findings section if the change carries no defect",
+        "State what was checked under Verification"
+      ]
+    },
+    {
+      "name": "identity not supplied",
+      "prompt": "Post the review.",
+      "expectations": [
+        "Ask which agent name to write as, or use REVIEW_AGENT if set",
+        "Do not guess an agent name",
+        "Do not read identity from git config"
+      ]
+    },
+    {
+      "name": "review of an agent's own branch by the same agent",
+      "prompt": "Review my own branch and leave notes for a second Claude session.",
+      "expectations": [
+        "Accept any agent label rather than requiring codex or claude",
+        "Use distinct names for the two sessions"
+      ]
+    },
+    {
+      "name": "durable record requested",
+      "prompt": "This review thread was useful; make sure we keep it.",
+      "expectations": [
+        "State that the store lives in .git and is lost on a fresh clone",
+        "Route the durable record to the pull-request body or an engineering journal entry",
+        "Do not commit the thread into the repository"
+      ]
+    }
+  ]
+}

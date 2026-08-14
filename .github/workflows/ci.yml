@@ -48,5 +48,8 @@ jobs:
       - name: MCP smoke test
         run: ./scripts/mcp-smoke.sh
 
+      - name: Review bridge test
+        run: ./scripts/review-bridge-test.sh
+
       - name: cargo build --release
         run: cargo build --release --locked
