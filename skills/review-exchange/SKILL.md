@@ -101,6 +101,32 @@ set_cursor() {
   printf '%s\n' "$3" > "$path"
 }
 
+get_cursor() {
+  # $1 branch, $2 agent — prints 0 when no cursor exists
+  local path v
+  path=$(cursor_path "$1" "$2")
+  if [ -r "$path" ]; then
+    v=$(cat "$path" 2>/dev/null || printf '0')
+    case "$v" in
+      ''|*[!0-9]*) printf '0\n' ;;
+      *)           printf '%s\n' "$v" ;;
+    esac
+  else
+    printf '0\n'
+  fi
+}
+
+round_number_of() {
+  local base=${1##*/}
+  printf '%s\n' "$((10#${base%%-*}))"
+}
+
+agent_of() {
+  local base=${1##*/} rest
+  rest=${base#*-}
+  printf '%s\n' "${rest%-*}"
+}
+
 cmd_note() {
   local agent='' role='' branch='' base='' replies_to='' body_file='' message='' have_message=0
   while [ $# -gt 0 ]; do
@@ -182,11 +208,22 @@ cmd_note() {
 }
 
 list_threads() {
-  local dir any=0
+  local agent=$1 dir name total unread from f n any=0
   for dir in "$(store_dir)"/threads/*/; do
     [ -d "$dir" ] || continue
+    name=$(basename "$dir")
+    total=0
+    unread=0
+    from=$(get_cursor "$name" "$agent")
+    for f in "$dir"[0-9][0-9][0-9]-*.md; do
+      [ -e "$f" ] || continue
+      total=$((total + 1))
+      n=$(round_number_of "$f")
+      if [ "$n" -gt "$from" ]; then unread=$((unread + 1)); fi
+    done
+    [ "$total" -gt 0 ] || continue
     any=1
-    basename "$dir"
+    printf '%s — %d rounds, %d unread\n' "$name" "$total" "$unread"
   done
   [ "$any" -eq 1 ] || printf 'no threads yet\n'
 }
@@ -219,7 +256,48 @@ cmd_feedback() {
     printf 'no rounds yet on %s\n' "$branch"
     return 0
   fi
-  printf 'no rounds yet on %s\n' "$branch"
+
+  local rounds=() f
+  for f in "$dir"/[0-9][0-9][0-9]-*.md; do
+    [ -e "$f" ] || continue
+    rounds+=("$f")
+  done
+  if [ "${#rounds[@]}" -eq 0 ]; then
+    printf 'no rounds yet on %s\n' "$branch"
+    return 0
+  fi
+
+  local total=${#rounds[@]}
+  local last=${rounds[$((total - 1))]}
+  local from=0
+  if [ "$all" -eq 0 ]; then
+    from=$(get_cursor "$branch" "$agent")
+  fi
+
+  local show=() n
+  for f in "${rounds[@]}"; do
+    n=$(round_number_of "$f")
+    if [ "$n" -gt "$from" ]; then show+=("$f"); fi
+  done
+
+  if [ "${#show[@]}" -eq 0 ]; then
+    printf 'up to date on %s (%d rounds, last: %s round %s)\n' \
+      "$branch" "$total" "$(agent_of "$last")" "$(round_number_of "$last")"
+    return 0
+  fi
+
+  local noun=rounds
+  if [ "${#show[@]}" -eq 1 ]; then noun=round; fi
+  printf '%d new %s on %s since you last read:\n\n' "${#show[@]}" "$noun" "$branch"
+  for f in "${show[@]}"; do
+    printf -- '--- %s ---\n' "$(basename "$f" .md)"
+    cat "$f"
+    printf '\n'
+  done
+
+  if [ "$peek" -eq 0 ]; then
+    set_cursor "$branch" "$agent" "$(round_number_of "$last")"
+  fi
 }
 
 case "${1:-}" in

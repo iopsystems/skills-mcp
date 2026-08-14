@@ -142,4 +142,46 @@ status=$(git status --short)
 pass 'working tree still clean'
 cd "$ROOT_DIR"
 
+# --- read path ----------------------------------------------------------
+
+cd "$REPO"
+
+# claude wrote round 2, so its cursor is at 2; round 3 is unread for it.
+out=$(git review-feedback --as claude --peek)
+[[ "$out" == *"1 new round"* ]]        || fail "peek should report 1 new round: $out"
+[[ "$out" == *"003-codex-"* ]]         || fail "peek should show round 3: $out"
+[[ "$out" != *"001-codex-"* ]]         || fail "peek must not show read rounds: $out"
+pass 'unread rounds reported'
+
+out=$(git review-feedback --as claude --peek)
+[[ "$out" == *"1 new round"* ]] || fail "--peek must not advance the cursor: $out"
+pass '--peek does not advance'
+
+out=$(git review-feedback --as claude)
+[[ "$out" == *"1 new round"* ]] || fail "read should report the unread round: $out"
+out=$(git review-feedback --as claude)
+[[ "$out" == *"up to date on yao/feature-one"* ]] || fail "up-to-date message wrong: $out"
+[[ "$out" == *"3 rounds"* ]]                      || fail "up-to-date should state the total: $out"
+[[ "$out" == *"round 3"* ]]                       || fail "up-to-date should name the last round: $out"
+pass 'reading advances the cursor and reports up to date'
+
+out=$(git review-feedback --as newcomer --peek)
+[[ "$out" == *"3 new rounds"* ]] || fail "an agent with no cursor should see everything: $out"
+pass 'missing cursor means everything is unread'
+
+out=$(git review-feedback --as claude --all)
+[[ "$out" == *"001-codex-"* ]] || fail "--all should print read rounds too: $out"
+[[ "$out" == *"003-codex-"* ]] || fail "--all should print the last round: $out"
+pass '--all ignores the cursor'
+
+out=$(git review-feedback --as codex --list)
+[[ "$out" == *"yao-feature-one"* ]] || fail "--list should name the thread: $out"
+[[ "$out" == *"3 rounds"* ]]        || fail "--list should count rounds: $out"
+pass '--list summarises threads'
+
+out=$(git review-feedback --as codex --branch no-thread-here)
+[[ "$out" == *"no rounds yet on no-thread-here"* ]] || fail "unknown branch message wrong: $out"
+pass 'unknown branch reports no rounds'
+cd "$ROOT_DIR"
+
 printf 'all review-bridge tests passed\n'
