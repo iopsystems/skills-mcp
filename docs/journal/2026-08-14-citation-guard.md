@@ -156,7 +156,7 @@ carries a `<!-- cite-ignore -->` marker.
 
 ## Outcome
 
-Shipped in pull request 32. `tests/citations.rs` adds twelve tests, bringing
+Shipped in pull request 32. `tests/citations.rs` adds eleven tests — ten unit plus the corpus check — bringing
 `cargo test --locked` to eight green test binaries. `cargo fmt --all
 --check`, `clippy --all-targets --locked -D warnings`,
 `./scripts/review-bridge-test.sh`, and `./scripts/mcp-smoke.sh` all pass. No CI
