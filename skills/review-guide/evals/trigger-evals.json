@@ -29,6 +29,44 @@
       ]
     },
     {
+      "name": "body opens with a TL;DR",
+      "prompt": "Draft the PR body for a change that adds a retry budget and needs the reviewer to settle whether timeouts count as retryable failures.",
+      "expectations": [
+        "Open with one or two sentences above every heading",
+        "Say what changed and what the change asks of the reviewer",
+        "Do not exceed two sentences",
+        "Expand rather than repeat the TL;DR in the section below it"
+      ]
+    },
+    {
+      "name": "TL;DR is not the title again",
+      "prompt": "The PR is titled 'cache: evict on write pressure'. Write the TL;DR.",
+      "expectations": [
+        "State what the change asks of the reviewer rather than restating the title",
+        "Do not open a list the reviewer must read to use the summary",
+        "Keep it to one or two sentences"
+      ]
+    },
+    {
+      "name": "how-to-review routes rather than summarizes",
+      "prompt": "Draft the body for a change with a ranked reading order, a testing section, three judgment calls, and two production risks.",
+      "expectations": [
+        "Add a How to review this block after the TL;DR",
+        "Give one line per section naming the action it asks for rather than its content",
+        "Name at least one specific item the reviewer should settle",
+        "Do not restate what the sections say"
+      ]
+    },
+    {
+      "name": "how-to-review omitted when there is nothing to route",
+      "prompt": "Draft the body for a two-line fix whose only notable item is an untested branch.",
+      "expectations": [
+        "Omit the How to review this block because the guide has fewer than three sections",
+        "Do not list sections the guide does not contain",
+        "Keep the TL;DR and the section that cleared the publish test"
+      ]
+    },
+    {
       "name": "qualifying section survives a small change",
       "prompt": "Small change: a one-line config default. Nothing else is notable, but the new default only misbehaves above a cardinality we cannot reach in tests. Draft the body.",
       "expectations": [
