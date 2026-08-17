@@ -51,7 +51,7 @@
       "name": "how-to-review routes rather than summarizes",
       "prompt": "Draft the body for a change with a ranked reading order, a testing section, three judgment calls, and two production risks.",
       "expectations": [
-        "Add a How to review this block after the TL;DR",
+        "Add a How to review this block after the mental model, not before it",
         "Give one line per section naming the action it asks for rather than its content",
         "Name at least one specific item the reviewer should settle",
         "Do not restate what the sections say"
@@ -91,7 +91,7 @@
       "prompt": "Draft the body. The change adds a `source` field to `StreamSpec` and a `forward` method on `EnvelopeProducer`, in a system the reviewer has not worked in.",
       "expectations": [
         "Establish what the system does and the concepts involved before naming any type or field",
-        "Place the mental model before the ranked reading order",
+        "Place the mental model directly after the TL;DR and before the routing block",
         "Name each concept once and reuse that name",
         "Do not open the body on struct or field names"
       ]
