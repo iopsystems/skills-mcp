@@ -81,6 +81,13 @@ None.
 
 ## Deferred or Reopen Items
 
+- Demote the routing block once the format is familiar. The user accepted it as
+  useful now while naming its expiry: readers who know the sections do not need
+  to be told what each one asks, and at that point the block should move to an
+  appendix or become optional. Reopen when reviewers stop reading it — visible
+  as guides whose block goes unmentioned while its items are acted on anyway —
+  rather than on a schedule. The argument for keeping it is that it teaches the
+  format; that argument ends when the format is known.
 - The prior entry for this skill is terminal, so this effort is recorded
   separately rather than reopening it. Both describe the same skill and a reader
   needs both.
