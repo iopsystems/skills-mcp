@@ -67,6 +67,26 @@
       ]
     },
     {
+      "name": "judgment call keeps its modality",
+      "prompt": "Write this judgment call for the body: 'Reviewers should probably not merge this before the migration runs, and it might break the importer.'",
+      "expectations": [
+        "Rewrite the prohibition with must not or may not rather than should",
+        "Rewrite the possibility might as can",
+        "Remove the hedge probably",
+        "Do not present a requirement as a recommendation"
+      ]
+    },
+    {
+      "name": "quoted evidence is untouchable",
+      "prompt": "De-slop the testing section; it pastes 'error: failed to utilize the robust cache backend' from the real log and a command line with a --just-in-time flag.",
+      "expectations": [
+        "Leave the quoted error string byte-identical despite the slop inside it",
+        "Leave the --just-in-time flag unchanged",
+        "Apply word-level fixes only to the surrounding prose",
+        "State that quoted evidence is untouchable"
+      ]
+    },
+    {
       "name": "qualifying section survives a small change",
       "prompt": "Small change: a one-line config default. Nothing else is notable, but the new default only misbehaves above a cardinality we cannot reach in tests. Draft the body.",
       "expectations": [

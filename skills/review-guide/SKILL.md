@@ -24,7 +24,10 @@ The reviewer already has the diff. This skill does not summarize it. It decides
 where a human's limited attention buys the most, and states plainly what the
 author could not settle.
 
-The output is the pull-request body. Do not create a file for it. If the user
+The output is the pull-request body. "The guide" and "the body" name that one
+artifact throughout; nothing else here is called either.
+
+Do not create a file for it. If the user
 asks for a checked-in document, write that instead, but that is a different
 request.
 
@@ -118,7 +121,7 @@ furniture the reviewer learns to skip:
   the reviewer already has one.
 
 Close with the shortest useful path when the guide has enough in it that a
-reviewer might reasonably read only part. Omit the whole block when the guide
+reviewer can reasonably read only part. Omit the whole block when the guide
 has fewer than three sections: routing two sections costs more than it saves.
 
 Always present:
@@ -224,8 +227,8 @@ to have passed is a defect in the guide.
 
 ## Judgment calls and low certainty
 
-This is the section the reviewer cannot reconstruct alone, and the one most
-easily faked in both directions.
+This is the section the reviewer cannot reconstruct alone, and the one faked
+most often in both directions.
 
 Every item cites concrete evidence:
 
@@ -287,13 +290,33 @@ unmentioned costs more than no diagram.
 
 `engineering-journal` owns the durable record: effort-scoped, written for
 someone reading in a year. This guide is change-scoped and written for one
-reviewer this week. They may overlap, and the guide may restate a decision
+reviewer this week. They can overlap, and the guide may restate a decision
 rather than making the reviewer click through. The guide never becomes the
 durable record — when an entry exists, link it.
 
-`technical-prose` owns word choice in the guide. `sweep-comments` owns the
-comments inside the diff; a comment defect belongs in the review, not in the
-guide's prose.
+`technical-prose` owns word choice, and every guide is held to it. Three of its
+rules carry most of the weight here:
+
+- **Modality.** A judgment call written with `should` is not a softer claim, it
+  is a different one, and the reviewer who treats it as optional has read you
+  correctly. A risk that `might` happen is one that `can` happen. Permission-
+  sense `may not` survives intact.
+- **Words that carry no fact.** "Gracefully handles" in a testing row names a
+  quality of the handling instead of the handling, which is the failure the
+  Testing section exists to prevent. "Robust" asserts what the reviewer cannot
+  check; if the property is real it has a measurement, and the measurement is
+  the row.
+- **One name per thing.** A guide that calls one component three names across
+  its sections destroys the association each section was building.
+
+One interaction belongs to this skill alone. A guide quotes evidence: real
+command output in Testing, a requirement sentence in the certainty section, a
+flag or a path in the reading order. Those are untouchable under that skill's
+own rule, and a word-level pass that edits a pasted result, a quoted error, or
+an identifier has broken the evidence it was cleaning.
+
+`sweep-comments` owns the comments inside the diff; a comment defect belongs in
+the review, not in the guide's prose.
 
 ## Rationalizations
 
@@ -306,7 +329,7 @@ guide's prose.
 | "Adding caveats shows rigor." | A caveat with no evidence is noise that buries the real one. |
 | "The requirement was clear to me." | If it admitted two readings, you chose. Say which. |
 | "Production risk is the ops team's problem." | Review is the last moment it is cheap to change. |
-| "I will add the diagram if someone asks." | Nobody asks. They just review the wrong thing. |
+| "I will add the diagram if someone asks." | Nobody asks. They review the wrong thing instead. |
 | "Every PR deserves a full guide." | A guide with nothing in it teaches reviewers to skim the next one. |
 | "The title already says it." | Then the TL;DR says what it asks of the reviewer, which a title cannot. |
 | "The change was trivial, so I skipped the check." | Run it anyway and say the four were empty. Silence looks like not looking. |
