@@ -87,6 +87,44 @@
       ]
     },
     {
+      "name": "context precedes the first identifier",
+      "prompt": "Draft the body. The change adds a `source` field to `StreamSpec` and a `forward` method on `EnvelopeProducer`, in a system the reviewer has not worked in.",
+      "expectations": [
+        "Establish what the system does and the concepts involved before naming any type or field",
+        "Place the mental model before the ranked reading order",
+        "Name each concept once and reuse that name",
+        "Do not open the body on struct or field names"
+      ]
+    },
+    {
+      "name": "shape gets a diagram, not a paragraph",
+      "prompt": "Draft the body for a change that moves records between three hosts over a new forwarding link.",
+      "expectations": [
+        "Draw the topology rather than describing it in prose",
+        "Choose dataflow-diagram for movement or architecture-diagram for structure",
+        "Use inline mermaid when the picture serves only this review",
+        "Keep the diagram small enough to read without panning"
+      ]
+    },
+    {
+      "name": "mental model is not a subsystem tour",
+      "prompt": "The mental model section I drafted explains the whole ring protocol and its history. The change adds one counter.",
+      "expectations": [
+        "Cut what would be equally true of a different pull request against the same files",
+        "Keep only what this change needs",
+        "State the assumed starting point so a reviewer who has it can skip"
+      ]
+    },
+    {
+      "name": "stacked series reuses one picture",
+      "prompt": "Draft bodies for a six-PR stack that all touch the same host-to-host forwarding path.",
+      "expectations": [
+        "Use one shared diagram across the stack",
+        "Mark this change's piece in each guide rather than drawing a different diagram per pull request",
+        "Let the reviewer reuse one model across the series"
+      ]
+    },
+    {
       "name": "qualifying section survives a small change",
       "prompt": "Small change: a one-line config default. Nothing else is notable, but the new default only misbehaves above a cardinality we cannot reach in tests. Draft the body.",
       "expectations": [

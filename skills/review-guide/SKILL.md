@@ -27,9 +27,8 @@ author could not settle.
 The output is the pull-request body. "The guide" and "the body" name that one
 artifact throughout; nothing else here is called either.
 
-Do not create a file for it. If the user
-asks for a checked-in document, write that instead, but that is a different
-request.
+Do not create a file for it. If the user asks for a checked-in document, write
+that instead, but that is a different request.
 
 ## What this is, and what it is not yet
 
@@ -129,15 +128,15 @@ Always present:
 1. **What changed, and the claim it makes.** One paragraph expanding the TL;DR
    rather than repeating it. The claim is what would be false if the change
    were wrong.
-2. **Where to look first.** Ranked reading order, plus what is safe to skim.
-3. **Testing.** Methodology, what ran, its actual output, and the gaps.
-4. **Judgment calls and low certainty.**
-5. **Production-only risks**, with a direct invitation to weigh in.
+2. **The mental model.** The concepts the reviewer needs before any detail
+   means anything, and where this change sits among them. See below.
+3. **Where to look first.** Ranked reading order, plus what is safe to skim.
+4. **Testing.** Methodology, what ran, its actual output, and the gaps.
+5. **Judgment calls and low certainty.**
+6. **Production-only risks**, with a direct invitation to weigh in.
 
 Present when earned:
 
-6. **Mental model**, with a diagram, when the change crosses a boundary the
-   reviewer cannot hold in their head.
 7. **Not in scope**, when a reader would otherwise ask why something is missing.
 
 Drop a section only when the change genuinely has nothing in it, never to reach
@@ -152,6 +151,47 @@ found nothing at all. That sentence is the TL;DR, and nothing follows it.
 
 The certainty section is the exception to emptiness: it never disappears
 silently — it says "none, and here is why".
+
+## The mental model
+
+A reviewer who meets a field name before they know what the thing holding it is
+for has nowhere to put it. Type names, field names, and function names are the
+last thing a guide reaches for, not the first.
+
+Establish, in this order:
+
+1. **What the system does at the level this change touches.** One or two
+   sentences in the domain's terms, not the code's.
+2. **The two or three concepts the change depends on.** Name each once and use
+   that name everywhere after. A concept the guide leans on without naming is a
+   concept the reviewer rebuilds from the diff, which is the work the guide
+   exists to do for them.
+3. **Where this change sits** among those concepts, and what it moves.
+
+Only then can the reading order name a type, because the name now has somewhere
+to land.
+
+State the starting point you assume. "This assumes you know the ring protocol;
+skip to the reading order if you do" costs one line and releases the reviewer
+who already holds the model.
+
+Reach for a diagram when the concepts have a shape — a topology, a pipeline, a
+set of hosts, a before and after. Prose carries a sequence; a picture carries a
+shape, and re-deriving a shape from prose is the work being pushed back onto the
+reviewer. See Diagrams below for which kind.
+
+Two failure modes:
+
+- **A subsystem tour.** This section gives the reviewer what this change needs,
+  not what the subsystem is. If a paragraph would be equally true of a different
+  pull request against the same files, cut it.
+- **Restating the diff in prose.** The mental model is what holds before the
+  change, plus where the change lands. It is not the change.
+
+Omit it only when the change touches one concept the reviewer certainly holds: a
+typo, a version bump, a rename inside one file. The burden is on omitting.
+A guide that opens on field names with no picture behind them is the failure
+this section exists to prevent, and it is the one readers report.
 
 ## Where to look first
 
@@ -273,15 +313,31 @@ which. A risk nobody accepted is a risk nobody owns.
 
 ## Diagrams
 
-A diagram earns its place only when the change crosses a boundary the reviewer
-cannot hold in their head. Most changes do not need one.
+A diagram belongs in the mental model, where it does the work prose is bad at:
+carrying a shape. Reach for one when the concepts have a topology, a pipeline, a
+set of hosts, or a before and after.
 
-- Use a checked-in diagram when one already exists, or when the picture is
-  worth keeping past this review. Defer to `architecture-diagram` for
-  build-time structure and runtime charts, and to `dataflow-diagram` for
-  pipelines and topologies. Link it; do not paste it.
-- Use inline mermaid when the picture is scaffolding for this review only. It
-  renders in the pull-request body without a committed asset.
+Which kind:
+
+- **Structure — what exists and what contains what.** Units, layers, processes,
+  hosts. Defer to `architecture-diagram`, which owns the build-time structure
+  chart and the runtime thread and request charts.
+- **Movement — what flows where.** Pipelines, stream topologies, service graphs,
+  a record's path across processes. Defer to `dataflow-diagram`.
+
+Where it lives follows how long it is worth:
+
+- **Checked in** when one already exists, or when the picture outlives this
+  review. Link it; do not paste it. Both skills above produce a source file and
+  a rendered image, which is what makes it maintainable.
+- **Inline mermaid** when the picture is scaffolding for this review only. It
+  renders in the pull-request body with no committed asset. Keep it small
+  enough to read without scrolling — a diagram a reviewer must pan is prose
+  with extra steps.
+
+A stacked series shares one shape. Draw it once, and in each guide show the same
+picture with this change's piece marked, rather than a different diagram per
+pull request: the reviewer learns one model and reuses it across the stack.
 
 When a change makes an existing diagram wrong, say so. A stale diagram left
 unmentioned costs more than no diagram.
@@ -330,6 +386,8 @@ the review, not in the guide's prose.
 | "The requirement was clear to me." | If it admitted two readings, you chose. Say which. |
 | "Production risk is the ops team's problem." | Review is the last moment it is cheap to change. |
 | "I will add the diagram if someone asks." | Nobody asks. They review the wrong thing instead. |
+| "Anyone reviewing this already knows the subsystem." | Then one line saying so releases them. Assuming it strands everyone else. |
+| "The details are the review; context is padding." | A detail with nothing to attach to is not reviewed, only read. |
 | "Every PR deserves a full guide." | A guide with nothing in it teaches reviewers to skim the next one. |
 | "The title already says it." | Then the TL;DR says what it asks of the reviewer, which a title cannot. |
 | "The change was trivial, so I skipped the check." | Run it anyway and say the four were empty. Silence looks like not looking. |
@@ -342,6 +400,11 @@ the review, not in the guide's prose.
 - The "How to review this" block summarizes sections instead of routing to
   them, lists a section the guide does not contain, names no specific item, or
   appears on a guide with two sections.
+- The first concrete detail — a type, a field, a function — arrives before
+  the reader has been given anything to attach it to.
+- The mental model is a subsystem tour that would fit any pull request
+  against the same files.
+- Concepts with a shape are described in prose where a diagram was owed.
 - The body restates the diff, file by file.
 - Reading order matches path order.
 - No section names anything as safe to skim.
