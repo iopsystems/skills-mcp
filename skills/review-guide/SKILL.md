@@ -78,10 +78,54 @@ reviewer more than no guide, because it teaches them to skim the next one.
 
 ## The body
 
+Open with a TL;DR of one or two sentences, above every heading. It is what the
+reviewer carries away if they read nothing else, so it says what changed and
+what it asks of them — approve on sight, look hard at one named thing, or settle
+one decision. Write it last, once you know which of those three it is.
+
+A TL;DR that restates the title is wasted. So is one that opens a list the
+reviewer must then read to use. Two sentences is the ceiling, not a target.
+
+### How to review this
+
+After the TL;DR, tell the reviewer how to use the sections that follow. One line
+per section actually present, naming the action it asks for rather than the
+content it holds:
+
+```markdown
+## How to review this
+
+- **Where to look first** — read in order; item 1 is where a missed defect
+  costs most. Everything under "safe to skim" needs no attention.
+- **Testing** — check the "does not cover" column against what you know breaks.
+- **Judgment calls** — three decisions I made that were not deducible. I want
+  your read on the retry-on-timeout one; the other two are FYI.
+- **Production risks** — accept them or push back. This is the last cheap
+  moment to change any of them.
+
+Short on time: the retry-on-timeout call and the cardinality risk are the two
+things only you can settle.
+```
+
+The block routes; it never restates. Three rules keep it from becoming
+furniture the reviewer learns to skip:
+
+- Name only sections this guide actually has. A line about a section that is not
+  here is worse than no block.
+- Every line states an action — verify, decide, accept, skip — not a summary.
+- Name at least one specific item, the way the example names the
+  retry-on-timeout call. A block of section titles is a table of contents, and
+  the reviewer already has one.
+
+Close with the shortest useful path when the guide has enough in it that a
+reviewer might reasonably read only part. Omit the whole block when the guide
+has fewer than three sections: routing two sections costs more than it saves.
+
 Always present:
 
-1. **What changed, and the claim it makes.** One paragraph. The claim is what
-   would be false if the change were wrong.
+1. **What changed, and the claim it makes.** One paragraph expanding the TL;DR
+   rather than repeating it. The claim is what would be false if the change
+   were wrong.
 2. **Where to look first.** Ranked reading order, plus what is safe to skim.
 3. **Testing.** Methodology, what ran, its actual output, and the gaps.
 4. **Judgment calls and low certainty.**
@@ -101,7 +145,7 @@ because the later ones are empty, not because it is small — and a change that
 clears the bar on production risk alone keeps that section and drops the others.
 
 A very small change reduces to a single sentence, but only when the publish test
-found nothing at all.
+found nothing at all. That sentence is the TL;DR, and nothing follows it.
 
 The certainty section is the exception to emptiness: it never disappears
 silently — it says "none, and here is why".
@@ -264,10 +308,17 @@ guide's prose.
 | "Production risk is the ops team's problem." | Review is the last moment it is cheap to change. |
 | "I will add the diagram if someone asks." | Nobody asks. They just review the wrong thing. |
 | "Every PR deserves a full guide." | A guide with nothing in it teaches reviewers to skim the next one. |
+| "The title already says it." | Then the TL;DR says what it asks of the reviewer, which a title cannot. |
 | "The change was trivial, so I skipped the check." | Run it anyway and say the four were empty. Silence looks like not looking. |
 
 ## Red flags
 
+- The body opens with a heading instead of a TL;DR.
+- The TL;DR runs past two sentences, restates the title, or says what changed
+  without saying what it asks of the reviewer.
+- The "How to review this" block summarizes sections instead of routing to
+  them, lists a section the guide does not contain, names no specific item, or
+  appears on a guide with two sections.
 - The body restates the diff, file by file.
 - Reading order matches path order.
 - No section names anything as safe to skim.
