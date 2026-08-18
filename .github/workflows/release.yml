@@ -46,7 +46,13 @@ jobs:
             os: ubuntu-latest
           - target: aarch64-unknown-linux-gnu
             os: ubuntu-latest
-            apt: gcc-aarch64-linux-gnu
+            # libc6-dev-arm64-cross carries the cross libc headers. It is a
+            # Recommends of the compiler package, so it arrived for free until
+            # --no-install-recommends stopped pulling recommends, and the C in
+            # libsqlite3-sys then failed on a missing bits/libc-header-start.h.
+            # Named explicitly: a build dependency that only a default supplies
+            # is a dependency nobody declared.
+            apt: gcc-aarch64-linux-gnu libc6-dev-arm64-cross
     steps:
       - uses: actions/checkout@v4
         with:
