@@ -259,46 +259,44 @@ typo, a version bump, a rename inside one file. The burden is on omitting.
 A guide that opens on field names with no picture behind them is the failure
 this section exists to prevent, and it is the one readers report.
 
-### Gloss what you did not introduce
+### Before, problem, change
 
-Below the TL;DR, identifiers are allowed. Undefined ones are not.
+Every explanation in the guide takes the same shape, from one paragraph to a
+whole section:
 
-An identifier the change **adds** introduces itself: the sentence that adds it
-says what it is. An identifier that **already existed** has no such sentence,
-which is exactly why it is the one that goes undefined. The reviewer may have
-forgotten it, or never met it, and the guide reads as though they should have.
-
-At first use, give it one clause in the domain's terms, then let the change
-follow from a gap:
-
-1. **What the existing thing is.** One clause. Not its type — its job.
-2. **What it could not do.** The gap that made this change necessary.
-3. **What this change adds.** Now it arrives as a consequence rather than as a
-   fact the reviewer has to accept.
-
-<!-- cite-ignore -->
-> **Undefined.** `StreamSpec.topic` was answering two questions at once.
-
-> **Glossed, then motivated.** Every stream has a registry entry saying where it
-> comes from and how it is carried, and one field on that entry named the
-> message-bus topic it arrives on. That field was quietly doing a second job —
-> standing in for whether a record arrived raw or already wrapped — and it could
-> not tell those apart. This change gives the second question its own field.
-
-Same three sentences of work. The second version can be read by someone who has
-never opened the file, and the change lands as the answer to a problem the
-paragraph just posed.
-
-**One beat per step.** The reasoning is a chain — what held before, what changed
-in the world, what that broke, what this adds — and each link appears once. A
-paragraph that makes the previous paragraph's point from a new angle reads as
-emphasis and costs the reader exactly what new information would have cost them.
-The chain is usually four sentences, not four paragraphs:
+1. **Where things stood before.** The arrangement that worked until now.
+2. **The new problem or condition that motivates the change.** What arrived, or
+   what stopped being true.
+3. **The change.** Now it lands as the response to something, rather than as a
+   fact the reviewer has to accept on its own.
 
 > When only one machine recorded, nothing needed to distinguish the topic a
 > record arrived on from the sensor that produced it. As streams migrate to
 > arriving over the link instead, the topic alone can no longer tell the two
-> paths apart. So a second label is needed. This change adds it.
+> paths apart. So a second label is needed, and this change adds it.
+
+Three beats, three sentences. Each appears once: a sentence that makes the
+previous sentence's point from a new angle reads as emphasis and costs the
+reader exactly what new information would have cost them. The most common way
+to inflate this is to state the "before" twice, once plainly and once as the
+problem.
+
+**Gloss what you did not introduce.** Below the TL;DR, identifiers are allowed;
+undefined ones are not. An identifier the change **adds** introduces itself —
+the sentence that adds it says what it is. An identifier that **already
+existed** has no such sentence, which is exactly why it is the one left
+undefined, and the guide then reads as though the reviewer should have known it.
+The "before" beat is where it gets its one clause, in the domain's terms: not
+its type, its job.
+
+<!-- cite-ignore -->
+> **Undefined.** `StreamSpec.topic` was answering two questions at once.
+
+> **Glossed, in the before beat.** Every stream has a registry entry saying
+> where it comes from and how it is carried, and one field on that entry named
+> the message-bus topic it arrives on.
+
+Same work. The second can be read by someone who has never opened the file.
 
 ## Where to look first
 
@@ -512,9 +510,10 @@ the review, not in the guide's prose.
   so the reviewer has to guess which one was meant.
 - An identifier the change did not introduce is used with no gloss, as though
   the reviewer should already hold it.
-- An addition is stated as a fact rather than as the answer to a gap the
+- A change is stated as a fact rather than as the response to a problem the
   paragraph just named.
-- A paragraph restates the previous paragraph's point from another angle.
+- A sentence restates the previous sentence's point from another angle, most
+  often by stating the "before" twice — once plainly, once as the problem.
 - The TL;DR restates the title, or says what changed without saying what it
   asks of the reviewer.
 - The TL;DR answers none of why, what the idea is, and what is true
