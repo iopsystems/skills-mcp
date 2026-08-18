@@ -19,7 +19,7 @@
       "prompt": "We're kicking around ideas for a new ingestion service. Sketch roughly how data might move through it.",
       "should_trigger": false,
       "required_outcomes": [
-        "Recognise there is no program to derive from and sketch freely"
+        "Recognize there is no program to derive from and sketch freely"
       ],
       "prohibited_outcomes": [
         "Build a generator or apply derive-never-draw to a design that does not exist yet"
@@ -53,15 +53,15 @@
     },
     {
       "name": "activate for key fidelity",
-      "prompt": "The legend is an HTML table of coloured cells; one row says 'lilac = external input'. Good enough?",
+      "prompt": "The legend is an HTML table of colored cells; one row says 'lilac = external input'. Good enough?",
       "should_trigger": true,
       "required_outcomes": [
         "Draw the key as a graph using the chart's own node shapes, from the same generator",
-        "Show the actual glyph instead of naming its colour"
+        "Show the actual glyph instead of naming its color"
       ],
       "prohibited_outcomes": [
         "Approximate a shape with table cells",
-        "Name a colour in words in the key"
+        "Name a color in words in the key"
       ]
     },
     {

@@ -159,6 +159,24 @@
         "Offer measurable properties as the stronger alternative",
         "Note that persuasion belongs in marketing copy, not the reference docs"
       ]
+    },
+    {
+      "name": "spelling is American by default",
+      "prompt": "Tighten this section; it uses 'colour' in three places and 'color' in two, and says 'the parser recognises the header'.",
+      "expectations": [
+        "Settle on American spelling throughout",
+        "Treat mixed spelling as a defect rather than a preference",
+        "Do not change a spelling inside an identifier, a flag, or a quoted string"
+      ]
+    },
+    {
+      "name": "user overrides the spelling default",
+      "prompt": "Our house style is British English. Apply the prose bar to this README.",
+      "expectations": [
+        "Honor the stated convention rather than imposing American spelling",
+        "Keep the chosen spelling consistent throughout",
+        "Apply every other rule unchanged"
+      ]
     }
   ]
 }

@@ -273,6 +273,13 @@ Recorded so they are not re-attempted:
   the top chart plus a textual table. Prove a companion chart adds claims
   the main chart cannot carry before building it.
 
+## Prose in the chart
+
+Prose in and around a chart — node labels, the key, the caption, the charter —
+follows `technical-prose`, including its default of American spelling. A
+convention the user or the project states overrides that default; a mixture of
+both overrides nothing and reads as several authors.
+
 ## Red flags
 
 - A node or edge list maintained by hand beside the code it describes.

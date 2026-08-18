@@ -225,6 +225,16 @@ Name the source entry and why it qualifies. Do not create or update briefs, and
 do not invoke a problem-framing or design-proposal workflow, unless the user
 separately asks for that work. Advisory reporting is never silent brief creation.
 
+## Prose in an Entry
+
+An entry outlives the effort it records, so its wording reaches someone with no
+memory of the work. Follow `technical-prose` for word choice, including its
+default of American spelling. A convention recorded in the project profile
+overrides that default, and applies to every entry rather than to one.
+
+Quoted evidence is exempt: a command, a log line, an error string, or a path is
+copied exactly, whatever its spelling.
+
 ## Report and Stop Conditions
 
 Report the selected mode, entry and index paths, lifecycle change, evidence,

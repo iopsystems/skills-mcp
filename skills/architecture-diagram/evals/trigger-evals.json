@@ -40,7 +40,7 @@
       "name": "speculative system does not trigger derivation",
       "prompt": "We're sketching a possible microservice split for next quarter. Diagram how it might look.",
       "expectations": [
-        "Recognise there is no code to derive from",
+        "Recognize there is no code to derive from",
         "Sketch freely without building a generator"
       ]
     },

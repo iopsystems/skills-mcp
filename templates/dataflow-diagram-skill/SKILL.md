@@ -1,6 +1,6 @@
 ---
 name: dataflow-diagram
-description: Use when drawing or materially revising a dataflow or pipeline diagram for a program that already exists in code — a DAG, a processing chain, a stream topology, a service graph. Triggers include "diagram the pipeline", "show the dataflow", "chart the DAG", "visualise how the data moves", or a design doc or PR needing a picture of a running system. Symptoms include a hand-maintained diagram that no longer matches the code, a legend that disagrees with the chart, a glyph reused for two kinds of thing, a diagram that silently omits a node nobody classified, or a picture that is a screenshot rather than a source file.
+description: Use when drawing or materially revising a dataflow or pipeline diagram for a program that already exists in code — a DAG, a processing chain, a stream topology, a service graph. Triggers include "diagram the pipeline", "show the dataflow", "chart the DAG", "visualize how the data moves", or a design doc or PR needing a picture of a running system. Symptoms include a hand-maintained diagram that no longer matches the code, a legend that disagrees with the chart, a glyph reused for two kinds of thing, a diagram that silently omits a node nobody classified, or a picture that is a screenshot rather than a source file.
 ---
 
 # Dataflow diagram
@@ -197,7 +197,7 @@ dashed, so only sometimes.* Four unrelated shapes have to be memorised
 whole.
 
 The test for whether something has earned a new shape: **would a reader who
-knows the base shape still recognise it?** A framed queue is a queue. A
+knows the base shape still recognize it?** A framed queue is a queue. A
 tinted queue is a queue. A page with a folded corner is not a queue, and
 should only appear because a parameter genuinely is not a history — a
 different kind, not a queue with a property.
@@ -231,10 +231,10 @@ than compute:
 | state carried across ticks | `#FBE3CB` |
 | parameter | `#DDE4CF` |
 
-**Edge colours** — `#4D4D4D` for ordinary dataflow, then `#CC79A7` and
+**Edge colors** — `#4D4D4D` for ordinary dataflow, then `#CC79A7` and
 `#D55E00` for the two paths worth separating. Those two are Okabe–Ito
-colours, chosen for colourblind-safe separation; keep them if you change
-everything else, because edge colour is the channel with no shape to fall
+colors, chosen for colorblind-safe separation; keep them if you change
+everything else, because edge color is the channel with no shape to fall
 back on.
 
 **Panel** — `#F2F2F2` fill with a `#9E9E9E` border, for the key.
@@ -288,8 +288,8 @@ render time so the artifact stays one file. Order its entries by channel —
 shapes, then line styles, then symbols — so a reader looking up a mark
 searches one band rather than the whole panel.
 
-Show the glyph, never its colour's name. "Lilac means input" asks the
-reader to translate, fails a colourblind reader entirely, and is
+Show the glyph, never its color's name. "Lilac means input" asks the
+reader to translate, fails a colorblind reader entirely, and is
 inconsistent with every other entry that shows the thing itself.
 
 A key earns its place once the chart carries more than about two
@@ -317,7 +317,7 @@ currently looking at is a warning nobody reads.
 ## Verify the rendering, not the source
 
 Layout engines accept attributes they ignore. A setting on the wrong graph,
-an attribute the shape does not honour, a size that excludes the border it
+an attribute the shape does not honor, a size that excludes the border it
 draws — each fails by doing nothing, and a generator that emitted the
 attribute looks correct.
 
@@ -331,12 +331,19 @@ Keep the output a text format whose source is the artifact — a `.dot` or
 and survives review; an image is opaque to half the readers of a pull
 request and to every tool.
 
+## Prose in the chart
+
+Prose in and around a chart — node labels, the key, the caption, the charter —
+follows `technical-prose`, including its default of American spelling. A
+convention the user or the project states overrides that default; a mixture of
+both overrides nothing and reads as several authors.
+
 ## Red flags
 
 - A node list or edge list maintained by hand beside the code it describes.
 - A generator that `continue`s past an element it cannot classify.
 - The legend built by a different mechanism than the chart.
-- A colour named in words in the key.
+- A color named in words in the key.
 - A glyph whose structure asserts more than the thing it marks possesses.
 - An inset element positioned by adjusting a number until it looked right.
 - A collision check that inspects nodes but not edges, or that silently

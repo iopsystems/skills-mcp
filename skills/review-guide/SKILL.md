@@ -175,7 +175,7 @@ Rules that keep the list honest:
 - **Only what the reviewer can settle.** If you can settle it, settle it in the
   guide and leave it out. An item you already know the answer to is a quiz.
 - **Say what each will need by the end** — a decision, a confirmation of fact,
-  or an acknowledgement of a risk. Those cost different amounts.
+  or an acknowledgment of a risk. Those cost different amounts.
 - **Say which block the merge**, if any, in the opening sentence.
 - **Never empty.** When nothing needs the reviewer, write one line saying so:
   "Nothing here needs a decision — the checks that would produce one came back
