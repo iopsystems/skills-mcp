@@ -34,8 +34,9 @@
       "expectations": [
         "Open with one or two sentences above every heading",
         "Say what changed and what the change asks of the reviewer",
-        "Do not exceed two sentences",
-        "Expand rather than repeat the TL;DR in the section below it"
+        "Do not run longer than the three answers need",
+        "Expand rather than repeat the TL;DR in the section below it",
+        "Close with the ask as its own paragraph rather than fused to the summary"
       ]
     },
     {
@@ -44,26 +45,64 @@
       "expectations": [
         "State what the change asks of the reviewer rather than restating the title",
         "Do not open a list the reviewer must read to use the summary",
-        "Keep it to one or two sentences"
+        "Keep it as short as the three answers allow"
       ]
     },
     {
-      "name": "how-to-review routes rather than summarizes",
-      "prompt": "Draft the body for a change with a ranked reading order, a testing section, three judgment calls, and two production risks.",
+      "name": "judgment call keeps its modality",
+      "prompt": "Write this judgment call for the body: 'Reviewers should probably not merge this before the migration runs, and it might break the importer.'",
       "expectations": [
-        "Add a How to review this block after the TL;DR",
-        "Give one line per section naming the action it asks for rather than its content",
-        "Name at least one specific item the reviewer should settle",
-        "Do not restate what the sections say"
+        "Rewrite the prohibition with must not or may not rather than should",
+        "Rewrite the possibility might as can",
+        "Remove the hedge probably",
+        "Do not present a requirement as a recommendation"
       ]
     },
     {
-      "name": "how-to-review omitted when there is nothing to route",
-      "prompt": "Draft the body for a two-line fix whose only notable item is an untested branch.",
+      "name": "quoted evidence is untouchable",
+      "prompt": "De-slop the testing section; it pastes 'error: failed to utilize the robust cache backend' from the real log and a command line with a --just-in-time flag.",
       "expectations": [
-        "Omit the How to review this block because the guide has fewer than three sections",
-        "Do not list sections the guide does not contain",
-        "Keep the TL;DR and the section that cleared the publish test"
+        "Leave the quoted error string byte-identical despite the slop inside it",
+        "Leave the --just-in-time flag unchanged",
+        "Apply word-level fixes only to the surrounding prose",
+        "State that quoted evidence is untouchable"
+      ]
+    },
+    {
+      "name": "context precedes the first identifier",
+      "prompt": "Draft the body. The change adds a `source` field to `StreamSpec` and a `forward` method on `EnvelopeProducer`, in a system the reviewer has not worked in.",
+      "expectations": [
+        "Establish what the system does and the concepts involved before naming any type or field",
+        "Name each concept once and reuse that name",
+        "Do not open the body on struct or field names"
+      ]
+    },
+    {
+      "name": "shape gets a diagram, not a paragraph",
+      "prompt": "Draft the body for a change that moves records between three hosts over a new forwarding link.",
+      "expectations": [
+        "Draw the topology rather than describing it in prose",
+        "Choose dataflow-diagram for movement or architecture-diagram for structure",
+        "Use inline mermaid when the picture serves only this review",
+        "Keep the diagram small enough to read without panning"
+      ]
+    },
+    {
+      "name": "mental model is not a subsystem tour",
+      "prompt": "The mental model section I drafted explains the whole ring protocol and its history. The change adds one counter.",
+      "expectations": [
+        "Cut what would be equally true of a different pull request against the same files",
+        "Keep only what this change needs",
+        "State the assumed starting point so a reviewer who has it can skip"
+      ]
+    },
+    {
+      "name": "stacked series reuses one picture",
+      "prompt": "Draft bodies for a six-PR stack that all touch the same host-to-host forwarding path.",
+      "expectations": [
+        "Use one shared diagram across the stack",
+        "Mark this change's piece in each guide rather than drawing a different diagram per pull request",
+        "Let the reviewer reuse one model across the series"
       ]
     },
     {
@@ -235,6 +274,135 @@
         "Honor the explicit request for a checked-in document",
         "Note that the default output is the pull-request body",
         "Do not create a file when no one asked for one"
+      ]
+    },
+    {
+      "name": "TL;DR carries no identifiers",
+      "prompt": "Write the TL;DR: the change adds a `source` field to `StreamSpec` so each stream declares which host originates it.",
+      "expectations": [
+        "State the reason in the domain's terms without naming the type or the field",
+        "Say what is moving from what to what, what stands in the way, and the idea that resolves it",
+        "Do not open with a struct, field, function, flag, or file path",
+        "Leave the identifiers for the reading order"
+      ]
+    },
+    {
+      "name": "TL;DR readable by someone who has not seen the code",
+      "prompt": "Is this TL;DR good? 'Splits StreamSpec.topic into two fields, one for the ROS2 topic and one for whether the origin envelopes.'",
+      "expectations": [
+        "Judge it too specific because a reader outside the codebase cannot say what problem it solves",
+        "Rewrite it as the motion, the obstacle, and the idea",
+        "Keep it as short as the three answers allow"
+      ]
+    },
+    {
+      "name": "opening answers why, idea, and effect",
+      "prompt": "Draft the opening for a change that moves recording off one central machine onto each sensor's own machine.",
+      "expectations": [
+        "Answer why the change is needed before saying what it does",
+        "State the key idea the change turns on",
+        "State what is true once it lands, including what still does not work",
+        "Say what the change asks of the reviewer"
+      ]
+    },
+    {
+      "name": "small change collapses the three answers",
+      "prompt": "Draft the opening for a one-line default change whose only notable item is an untested branch.",
+      "expectations": [
+        "Collapse why, the idea, and the effect into one sentence",
+        "Do not pad it into three separate answers",
+        "Keep the section that cleared the publish test"
+      ]
+    },
+    {
+      "name": "the look-out list stands alone and is numbered",
+      "prompt": "Draft the opening for a change with two calls for the reviewer and one risk to accept.",
+      "expectations": [
+        "Put the list in its own section after the TL;DR rather than folding it into the summary",
+        "Number the items so the body can refer back to them",
+        "Phrase them as things to carry while reading rather than questions to answer immediately",
+        "Say how many there are and whether any blocks the merge"
+      ]
+    },
+    {
+      "name": "look-out list is never empty",
+      "prompt": "Draft the opening for a mechanical change where nothing needs the reviewer's judgment.",
+      "expectations": [
+        "State in one line that nothing needs a decision",
+        "Do not omit the section entirely",
+        "Do not invent an item to fill it"
+      ]
+    },
+    {
+      "name": "author-settleable item is not listed",
+      "prompt": "Put 'should we use a HashMap or a BTreeMap here?' in the look-out list; I already know BTreeMap is right because ordering matters.",
+      "expectations": [
+        "Refuse to list an item the author can settle",
+        "Settle it in the guide instead",
+        "Keep the list to what only the reviewer can decide"
+      ]
+    },
+    {
+      "name": "look-out items are marked again where evidence appears",
+      "prompt": "Draft the body; item 2 of the look-out list is settled by a specific line in the reading order.",
+      "expectations": [
+        "Mark the item by its number at the place its evidence appears",
+        "Let the reviewer meet each item twice, as a flag and as the detail",
+        "Do not leave a numbered item unreferenced in the rest of the body"
+      ]
+    },
+    {
+      "name": "cross-reference names the heading",
+      "prompt": "The mental model ends with 'skip to the reading order if you do', and the section is headed 'Where to look first'.",
+      "expectations": [
+        "Name the section exactly as its heading reads",
+        "Treat a description used as an address as a defect",
+        "Do not leave the reviewer guessing which section was meant"
+      ]
+    },
+    {
+      "name": "pre-existing identifier is glossed at first use",
+      "prompt": "Write the what-changed section: `StreamSpec.topic` was answering two questions at once, and this splits it into two fields.",
+      "expectations": [
+        "Gloss the existing thing in one clause in the before beat, saying its job rather than its type",
+        "State the new problem that the existing arrangement could not handle",
+        "Introduce the change as the response rather than as a bare fact"
+      ]
+    },
+    {
+      "name": "before, problem, change",
+      "prompt": "My what-changed section explains in three paragraphs that one field was doing two jobs, that the two questions used to have the same answer, and that they stop agreeing once a sensor migrates.",
+      "expectations": [
+        "Collapse it to three beats: where things stood before, the new problem, the change",
+        "Cut a sentence that makes the previous sentence's point from another angle",
+        "Do not state the before twice, once plainly and once as the problem"
+      ]
+    },
+    {
+      "name": "rewriting re-reads the source",
+      "prompt": "The reviewer says the what-changed section does not make sense. Rewrite it.",
+      "expectations": [
+        "Re-read the code behind the section before rewriting it",
+        "Treat the confusion as evidence the claim may be wrong, not only the wording",
+        "Do not edit the existing prose into new prose without checking the source"
+      ]
+    },
+    {
+      "name": "invented before-state is caught",
+      "prompt": "My before beat says the recorder decided which channels to open and wrote them as two separable steps. The code has no such split.",
+      "expectations": [
+        "Reject the beat as fabricated even though its shape is correct",
+        "Replace it with the arrangement the code actually has",
+        "State the mechanism rather than asserting the consequence"
+      ]
+    },
+    {
+      "name": "absolutes name their scope",
+      "prompt": "The claim says a machine running this 'writes nothing'. It writes into shared-memory buffers and publishes onto the message bus; only the disk file is absent.",
+      "expectations": [
+        "Scope the absolute to what it actually excludes",
+        "Say what the machine does still do, so the claim is not read as idleness",
+        "Treat an unqualified absolute as a false claim rather than as shorthand"
       ]
     }
   ]

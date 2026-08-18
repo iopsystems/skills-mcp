@@ -28,10 +28,16 @@ jobs:
       - name: Cache cargo registry and build outputs
         uses: Swatinem/rust-cache@v2
 
-      - name: Install documentation tools
+      # `jq` ships with the runner image; installing it cost a slot in a
+      # dependency resolution that already dominates this job. Graphviz is the
+      # only real dependency, and `--no-install-recommends` keeps it to what
+      # `dot -Tsvg` needs rather than the full documentation-tooling set.
+      # `scripts/mcp-smoke.sh` still checks for jq at run time, so a runner
+      # image that drops it fails loudly rather than mysteriously.
+      - name: Install Graphviz
         run: |
           sudo apt-get update
-          sudo apt-get install --yes graphviz jq
+          sudo apt-get install --yes --no-install-recommends graphviz
 
       - name: cargo fmt
         run: cargo fmt --all -- --check
@@ -51,5 +57,13 @@ jobs:
       - name: Review bridge test
         run: ./scripts/review-bridge-test.sh
 
+      # The release profile compiles from scratch rather than reusing the debug
+      # artifacts above, which made this the longest step in the job once the
+      # apt install was cut. `release.yml` builds all four target triples on a
+      # version tag, so this exists to catch a release-only break earlier than
+      # that -- worth a run on `main`, not worth it on every push to a branch.
+      # The gap it accepts: such a break surfaces after merge rather than on the
+      # pull request that caused it.
       - name: cargo build --release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: cargo build --release --locked
