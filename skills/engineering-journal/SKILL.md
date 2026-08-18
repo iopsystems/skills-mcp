@@ -226,6 +226,16 @@ is authoritative for lifecycle status.
 | YYYY-MM-DD | [Effort title](YYYY-MM-DD-short-slug.md) | open |
 ```
 
+## Prose in an Entry
+
+An entry outlives the effort it records, so its wording reaches someone with no
+memory of the work. Follow `technical-prose` for word choice, including its
+default of American spelling. A convention the repository states overrides that
+default; a mixture of both states nothing.
+
+Quoted evidence is exempt: a command, a log line, an error string, or a path is
+copied exactly, whatever its spelling.
+
 ## Stop Conditions
 
 - Stop a lifecycle update when required evidence or a supersession target is
