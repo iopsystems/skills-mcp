@@ -28,10 +28,16 @@ jobs:
       - name: Cache cargo registry and build outputs
         uses: Swatinem/rust-cache@v2
 
-      - name: Install documentation tools
+      # `jq` ships with the runner image; installing it cost a slot in a
+      # dependency resolution that already dominates this job. Graphviz is the
+      # only real dependency, and `--no-install-recommends` keeps it to what
+      # `dot -Tsvg` needs rather than the full documentation-tooling set.
+      # `scripts/mcp-smoke.sh` still checks for jq at run time, so a runner
+      # image that drops it fails loudly rather than mysteriously.
+      - name: Install Graphviz
         run: |
           sudo apt-get update
-          sudo apt-get install --yes graphviz jq
+          sudo apt-get install --yes --no-install-recommends graphviz
 
       - name: cargo fmt
         run: cargo fmt --all -- --check
