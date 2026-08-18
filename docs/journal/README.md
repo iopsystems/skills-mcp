@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-08-17 | [Review guide opening, rebuilt by its reader](2026-08-17-review-guide-reader-arc.md) | shipped |
 | 2026-08-17 | [Review guide mental model](2026-08-17-review-guide-mental-model.md) | shipped |
 | 2026-08-17 | [Review guide under the technical-prose bar](2026-08-17-review-guide-prose-bar.md) | shipped |
 | 2026-08-17 | [Review guide opening: TL;DR and reader routing](2026-08-17-review-guide-tldr.md) | shipped |
