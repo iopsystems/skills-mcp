@@ -60,6 +60,12 @@ one-file mechanical edit earns a sentence. A change that crosses subsystems,
 alters an interface, or makes a performance claim earns every section. Length
 is a consequence of what the change actually carries, never a target.
 
+**When accessibility and brevity conflict, accessibility wins.** Establishing a
+starting point the reviewer does not hold costs words and buys the whole
+section; cutting it saves a paragraph and loses the reader. The rule against
+padding forbids material with nothing in it — not material that is longer than
+you would like.
+
 ### The publish test
 
 Publish a guide when it carries at least one item the reviewer could not get
@@ -499,6 +505,7 @@ the review, not in the guide's prose.
 | "Anyone reviewing this already knows the subsystem." | Then one line saying so releases them. Assuming it strands everyone else. |
 | "The details are the review; context is padding." | A detail with nothing to attach to is not reviewed, only read. |
 | "Every PR deserves a full guide." | A guide with nothing in it teaches reviewers to skim the next one. |
+| "Establishing the before-state makes it long." | Length is not the cost. A reader who cannot follow it is. |
 | "The title already says it." | Then the TL;DR says what it asks of the reviewer, which a title cannot. |
 | "The identifier is the change." | The reviewer cannot resolve a name in sentence one. Name the motion, not the symbol. |
 | "Saying why it exists is context, not summary." | A summary of an edit nobody can place is not a summary. |
