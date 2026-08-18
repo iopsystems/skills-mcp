@@ -34,7 +34,7 @@
       "expectations": [
         "Open with one or two sentences above every heading",
         "Say what changed and what the change asks of the reviewer",
-        "Do not exceed two sentences",
+        "Do not run longer than the three answers need",
         "Expand rather than repeat the TL;DR in the section below it"
       ]
     },
@@ -44,7 +44,7 @@
       "expectations": [
         "State what the change asks of the reviewer rather than restating the title",
         "Do not open a list the reviewer must read to use the summary",
-        "Keep it to one or two sentences"
+        "Keep it as short as the three answers allow"
       ]
     },
     {
@@ -311,7 +311,26 @@
       "expectations": [
         "Judge it too specific because a reader outside the codebase cannot say what problem it solves",
         "Rewrite it as the motion, the obstacle, and the idea",
-        "Keep it to one or two sentences"
+        "Keep it as short as the three answers allow"
+      ]
+    },
+    {
+      "name": "opening answers why, idea, and effect",
+      "prompt": "Draft the opening for a change that moves recording off one central machine onto each sensor's own machine.",
+      "expectations": [
+        "Answer why the change is needed before saying what it does",
+        "State the key idea the change turns on",
+        "State what is true once it lands, including what still does not work",
+        "Say what the change asks of the reviewer"
+      ]
+    },
+    {
+      "name": "small change collapses the three answers",
+      "prompt": "Draft the opening for a one-line default change whose only notable item is an untested branch.",
+      "expectations": [
+        "Collapse why, the idea, and the effect into one sentence",
+        "Do not pad it into three separate answers",
+        "Keep the section that cleared the publish test"
       ]
     }
   ]

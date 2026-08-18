@@ -80,13 +80,28 @@ reviewer more than no guide, because it teaches them to skim the next one.
 
 ## The body
 
-Open with a TL;DR of one or two sentences, above every heading. It is what the
-reviewer carries away if they read nothing else, so it says what changed and
-what it asks of them — approve on sight, look hard at one named thing, or settle
-one decision. Write it last, once you know which of those three it is.
+Open with a TL;DR, above every heading. It is what the reviewer carries away if
+they read nothing else. Write it last, once the rest exists.
+
+It is a short essay, not a label, and it answers three questions in order:
+
+1. **Why are we doing this?** The problem or the motion that makes the change
+   necessary. Not what the change is — what made it needed.
+2. **What is the key idea?** The one insight the change turns on. If the change
+   has no idea in it, say what it does instead and move on.
+3. **What is true once it lands?** The state the reviewer should expect
+   afterwards, including what still does not work.
+
+Then say what it asks of them: approve on sight, look hard at one named thing,
+or settle one decision.
+
+Length follows those answers and nothing else. A change that crosses subsystems
+earns a paragraph. A small change collapses all three into one sentence, because
+its why, its idea, and its effect are the same fact seen three ways. A change
+that clears nothing on the publish test is one sentence and stops there.
 
 A TL;DR that restates the title is wasted. So is one that opens a list the
-reviewer must then read to use. Two sentences is the ceiling, not a target.
+reviewer must then read to use.
 
 **No identifiers.** A type, field, function, flag, or file path in the TL;DR is
 the strongest available signal that you described the change instead of the
@@ -95,14 +110,8 @@ is, and a name they cannot resolve costs them the sentence it appears in. Names
 belong in the reading order, after the mental model has given them somewhere to
 land.
 
-Say this instead, in the domain's terms:
-
-1. the motion this serves — what is moving from what to what
-2. what stands in the way
-3. the idea that resolves it, and what it buys
-
-A worked example. The change splits one registry field that was answering two
-questions:
+A worked example, answering the three questions above. The change splits one
+registry field that was answering two questions at once:
 
 > **Too specific.** Splits `StreamSpec.topic`, which was answering both "which
 > ROS2 topic carries this" and "has the origin started enveloping", into two
@@ -169,7 +178,8 @@ has fewer than three sections: routing two sections costs more than it saves.
 
 Always present, in this order:
 
-1. **TL;DR.** One or two sentences, above every heading.
+1. **TL;DR.** Why, the key idea, and what is true afterwards — as long as those
+   three answers need, and no longer.
 2. **The mental model.** The concepts the reviewer needs before any detail means
    anything, and where this change sits among them. A diagram when they have a
    shape.
@@ -448,8 +458,10 @@ the review, not in the guide's prose.
 ## Red flags
 
 - The body opens with a heading instead of a TL;DR.
-- The TL;DR runs past two sentences, restates the title, or says what changed
-  without saying what it asks of the reviewer.
+- The TL;DR restates the title, or says what changed without saying what it
+  asks of the reviewer.
+- The TL;DR answers none of why, what the idea is, and what is true
+  afterwards — or runs longer than those three answers need.
 - The TL;DR names a type, field, function, flag, or file path.
 - A reader who has not seen the codebase cannot say, from the TL;DR, what
   problem the change solves.
