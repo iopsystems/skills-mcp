@@ -127,49 +127,54 @@ name pre-loaded.
 The test: if a reader who has not seen the codebase cannot say what problem the
 change solves, the TL;DR is describing the edit rather than the reason.
 
-### What I need from you
+### What to look out for
 
-The ask gets its own paragraph, immediately after the TL;DR. Folding it into the
-summary buries the one part the reviewer has to act on.
+The reviewer has read one paragraph. They cannot answer a question yet, and a
+list of questions at the top of a page is a quiz before the lesson. So the ask
+is not a request for answers — it is the set of things to carry while reading.
 
-Open with a sentence saying how many decisions there are and whether any of them
-blocks the merge. Then one checkbox per question:
+Number them. Then mark each one again, by number, at the place further down
+where its evidence appears. The reviewer meets the item twice: once as a flag to
+hold, once as the detail that lets them settle it.
 
 ```markdown
-## What I need from you
+## What to look out for
 
-Two decisions and one risk to accept, none of them blocking. The first is a fact
-about the vessel that I cannot check from the code.
+Two calls and one risk, none blocking. Carry these while you read; each is
+marked again where its evidence appears.
 
-- [ ] Does the cabin machine really publish the operator's commands? This is a
-      claim about the vessel, not about the code, and the origin labels say
-      otherwise.
-- [ ] Is refusing to start on an unnameable host the right call, given it turns
-      a naming mistake into an outage rather than a degraded process?
-- [ ] Accept the slot-headroom risk, or ask for the geometry to widen first.
+1. [ ] **Which machine publishes the operator's commands.** A claim about the
+       vessel rather than about the code, and the recorded labels disagree.
+       I cannot check this from here.
+2. [ ] **Refusing to start on an unnameable machine.** Deliberate, but it turns
+       a naming mistake into no recorder at all.
+3. [ ] **Message-size headroom**, to accept or to send back for widening.
 ```
+
+Then, in the section that carries the evidence:
+
+<!-- cite-ignore -->
+> **[1]** `src/registry/streams.rs:490` — the comment asserting that the four
+> command streams originate on the cabin machine …
 
 Rules that keep the list honest:
 
-- **One bullet per question**, written as a question or as an explicit accept.
-- **Only questions the reviewer can answer.** If you can answer it, answer it in
-  the guide and leave it out of this list. A question you already know the
-  answer to is a quiz.
-- **Say what kind of answer you need** — a decision, a confirmation of fact, or
-  an acknowledgement of a risk. Those cost the reviewer different amounts.
+- **One item per thing to watch**, numbered, and marked again below. An item
+  never marked again is a flag the reviewer carries to no purpose.
+- **Only what the reviewer can settle.** If you can settle it, settle it in the
+  guide and leave it out. An item you already know the answer to is a quiz.
+- **Say what each will need by the end** — a decision, a confirmation of fact,
+  or an acknowledgement of a risk. Those cost different amounts.
 - **Say which block the merge**, if any, in the opening sentence.
 - **Never empty.** When nothing needs the reviewer, write one line saying so:
   "Nothing here needs a decision — the checks that would produce one came back
-  empty." An absent list and a list with nothing in it read identically, and
-  only one of them means you looked.
-
-Every item here appears somewhere below with its evidence. This list is the
-index of asks, not a second place to argue them.
+  empty." An absent list and an empty one read identically, and only one of them
+  means you looked.
 
 ### Then the mental model
 
-The order of the opening is the point. The TL;DR says why this exists; the ask
-list says what the reviewer has to do about it. **The mental model comes next**,
+The order of the opening is the point. The TL;DR says why this exists; the
+look-out list says what to carry while reading. **The mental model comes next**,
 before any section that names a type, because it is what the rest of the guide
 is written in terms of. Content for it is below under The mental model.
 
@@ -177,7 +182,8 @@ Always present, in this order:
 
 1. **TL;DR.** Why, the key idea, and what is true afterwards — as long as those
    three answers need, and no longer.
-2. **What I need from you.** One checkbox per question, never empty.
+2. **What to look out for.** Numbered items to carry while reading, each
+   marked again where its evidence appears. Never empty.
 3. **The mental model.** The concepts the reviewer needs before any detail means
    anything, and where this change sits among them. A diagram when they have a
    shape.
@@ -209,7 +215,7 @@ silently — it says "none, and here is why".
 
 ## The mental model
 
-This section sits directly after the ask list. A
+This section sits directly after the look-out list. A
 reviewer who meets a field name before they know what the thing holding it is
 for has nowhere to put it. Type names, field names, and function names are
 the last thing a guide reaches for, not the first.
@@ -454,8 +460,9 @@ the review, not in the guide's prose.
 
 - The body opens with a heading instead of a TL;DR.
 - The ask is folded into the summary instead of standing as its own list.
-- The ask list is absent rather than saying nothing needs a decision, or
-  contains a question the author could have answered.
+- The look-out list is absent rather than saying nothing needs a decision,
+  or contains an item the author could have settled.
+- A numbered item is never marked again where its evidence appears.
 - The TL;DR restates the title, or says what changed without saying what it
   asks of the reviewer.
 - The TL;DR answers none of why, what the idea is, and what is true

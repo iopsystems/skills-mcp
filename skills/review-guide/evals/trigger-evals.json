@@ -314,31 +314,40 @@
       ]
     },
     {
-      "name": "the ask stands alone as a checklist",
-      "prompt": "Draft the opening for a change with two decisions for the reviewer and one risk to accept.",
+      "name": "the look-out list stands alone and is numbered",
+      "prompt": "Draft the opening for a change with two calls for the reviewer and one risk to accept.",
       "expectations": [
-        "Put the ask in its own section after the TL;DR rather than folding it into the summary",
-        "Give one checkbox per question",
-        "Say how many decisions there are and whether any blocks the merge",
-        "Say what kind of answer each item needs"
+        "Put the list in its own section after the TL;DR rather than folding it into the summary",
+        "Number the items so the body can refer back to them",
+        "Phrase them as things to carry while reading rather than questions to answer immediately",
+        "Say how many there are and whether any blocks the merge"
       ]
     },
     {
-      "name": "ask list is never empty",
+      "name": "look-out list is never empty",
       "prompt": "Draft the opening for a mechanical change where nothing needs the reviewer's judgment.",
       "expectations": [
         "State in one line that nothing needs a decision",
         "Do not omit the section entirely",
-        "Do not invent a question to fill it"
+        "Do not invent an item to fill it"
       ]
     },
     {
-      "name": "author-answerable question is not asked",
-      "prompt": "Put 'should we use a HashMap or a BTreeMap here?' in the reviewer checklist; I already know BTreeMap is right because ordering matters.",
+      "name": "author-settleable item is not listed",
+      "prompt": "Put 'should we use a HashMap or a BTreeMap here?' in the look-out list; I already know BTreeMap is right because ordering matters.",
       "expectations": [
-        "Refuse to list a question the author can answer",
-        "Answer it in the guide instead",
-        "Keep the checklist to what only the reviewer can settle"
+        "Refuse to list an item the author can settle",
+        "Settle it in the guide instead",
+        "Keep the list to what only the reviewer can decide"
+      ]
+    },
+    {
+      "name": "look-out items are marked again where evidence appears",
+      "prompt": "Draft the body; item 2 of the look-out list is settled by a specific line in the reading order.",
+      "expectations": [
+        "Mark the item by its number at the place its evidence appears",
+        "Let the reviewer meet each item twice, as a flag and as the detail",
+        "Do not leave a numbered item unreferenced in the rest of the body"
       ]
     }
   ]

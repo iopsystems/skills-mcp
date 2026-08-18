@@ -1209,7 +1209,7 @@ mod tests {
             .as_array()
             .expect("review-guide evals should contain an evals array");
 
-        assert_eq!(evals.len(), 37);
+        assert_eq!(evals.len(), 38);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());
