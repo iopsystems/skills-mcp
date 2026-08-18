@@ -377,6 +377,24 @@
         "Cut a sentence that makes the previous sentence's point from another angle",
         "Do not state the before twice, once plainly and once as the problem"
       ]
+    },
+    {
+      "name": "rewriting re-reads the source",
+      "prompt": "The reviewer says the what-changed section does not make sense. Rewrite it.",
+      "expectations": [
+        "Re-read the code behind the section before rewriting it",
+        "Treat the confusion as evidence the claim may be wrong, not only the wording",
+        "Do not edit the existing prose into new prose without checking the source"
+      ]
+    },
+    {
+      "name": "invented before-state is caught",
+      "prompt": "My before beat says the recorder decided which channels to open and wrote them as two separable steps. The code has no such split.",
+      "expectations": [
+        "Reject the beat as fabricated even though its shape is correct",
+        "Replace it with the arrangement the code actually has",
+        "State the mechanism rather than asserting the consequence"
+      ]
     }
   ]
 }

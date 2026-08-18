@@ -309,6 +309,30 @@ its type, its job.
 
 Same work. The second can be read by someone who has never opened the file.
 
+## Rewriting a guide
+
+Rewriting is not a text edit. Every sentence in a guide is a claim about code,
+and prose carries no trace of whether it was ever checked — a fabricated
+sentence and a verified one look identical, and the fabricated one often reads
+better, because nothing constrained it.
+
+**Re-read the source behind a section before rewriting that section.** Not the
+section. The source. Editing prose from prose is how a wrong claim survives
+every revision: the second draft inherits the first draft's errors and adds
+fluency, so each pass makes the mistake harder to doubt while changing nothing
+about whether it is true.
+
+The failure this prevents has a specific shape, and it is not the shape a
+missing rule produces. The structure can be right — a before beat, a problem, a
+change, in that order — with the before beat filled by an arrangement that never
+existed. A reader who does not know the code cannot tell, and a reviewer who
+does will stop trusting the rest.
+
+When a reader says a section does not make sense, that is evidence the claim is
+wrong, not only that the wording is. Go back to the code before reaching for
+better sentences. The temptation runs the other way, because rewording is fast
+and re-reading is not.
+
 ## Where to look first
 
 Rank by the cost of a missed defect multiplied by the chance the reviewer
@@ -506,6 +530,8 @@ the review, not in the guide's prose.
 | "The details are the review; context is padding." | A detail with nothing to attach to is not reviewed, only read. |
 | "Every PR deserves a full guide." | A guide with nothing in it teaches reviewers to skim the next one. |
 | "Establishing the before-state makes it long." | Length is not the cost. A reader who cannot follow it is. |
+| "I am only rewording this section." | The words are claims about code. Re-read the code, or you are polishing a guess. |
+| "The reader found it confusing, so it needs clearer prose." | It may need a truer claim. Check the source before the sentences. |
 | "The title already says it." | Then the TL;DR says what it asks of the reviewer, which a title cannot. |
 | "The identifier is the change." | The reviewer cannot resolve a name in sentence one. Name the motion, not the symbol. |
 | "Saying why it exists is context, not summary." | A summary of an edit nobody can place is not a summary. |
@@ -546,6 +572,8 @@ the review, not in the guide's prose.
 - Testing reports a percentage instead of a gap.
 - A command is described as run without its actual output.
 - A line number arrived at by inference rather than by opening the line.
+- A section was rewritten without re-reading the code it describes.
+- A before beat describes an arrangement that never existed, in the right shape.
 - A durable document cites a line with no phrase quoted from it.
 - Uncertainty items have no cited evidence.
 - Every uncertainty item is hedged, or none exists on a change that clearly had
