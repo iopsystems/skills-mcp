@@ -294,6 +294,25 @@
         "Note that the default output is the pull-request body",
         "Do not create a file when no one asked for one"
       ]
+    },
+    {
+      "name": "TL;DR carries no identifiers",
+      "prompt": "Write the TL;DR: the change adds a `source` field to `StreamSpec` so each stream declares which host originates it.",
+      "expectations": [
+        "State the reason in the domain's terms without naming the type or the field",
+        "Say what is moving from what to what, what stands in the way, and the idea that resolves it",
+        "Do not open with a struct, field, function, flag, or file path",
+        "Leave the identifiers for the reading order"
+      ]
+    },
+    {
+      "name": "TL;DR readable by someone who has not seen the code",
+      "prompt": "Is this TL;DR good? 'Splits StreamSpec.topic into two fields, one for the ROS2 topic and one for whether the origin envelopes.'",
+      "expectations": [
+        "Judge it too specific because a reader outside the codebase cannot say what problem it solves",
+        "Rewrite it as the motion, the obstacle, and the idea",
+        "Keep it to one or two sentences"
+      ]
     }
   ]
 }

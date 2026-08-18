@@ -88,6 +88,39 @@ one decision. Write it last, once you know which of those three it is.
 A TL;DR that restates the title is wasted. So is one that opens a list the
 reviewer must then read to use. Two sentences is the ceiling, not a target.
 
+**No identifiers.** A type, field, function, flag, or file path in the TL;DR is
+the strongest available signal that you described the change instead of the
+reason for it. The reviewer meets `StreamSpec` before they know what a stream
+is, and a name they cannot resolve costs them the sentence it appears in. Names
+belong in the reading order, after the mental model has given them somewhere to
+land.
+
+Say this instead, in the domain's terms:
+
+1. the motion this serves — what is moving from what to what
+2. what stands in the way
+3. the idea that resolves it, and what it buys
+
+A worked example. The change splits one registry field that was answering two
+questions:
+
+> **Too specific.** Splits `StreamSpec.topic`, which was answering both "which
+> ROS2 topic carries this" and "has the origin started enveloping", into two
+> fields.
+
+> **The reason.** Each sensor is moving from publishing a raw ROS2 topic to
+> publishing through the Hub, which wraps the payload in an envelope. The
+> payloads are byte-identical either way, so nothing downstream can tell which
+> path a record took; using the presence of the envelope as the discriminator is
+> what lets the sensors move one at a time.
+
+Same change. The second tells a reviewer who has never opened this code why the
+work exists and what the idea is. The first is a diff summary with the field
+name pre-loaded.
+
+The test: if a reader who has not seen the codebase cannot say what problem the
+change solves, the TL;DR is describing the edit rather than the reason.
+
 ### Then the mental model, then the steps
 
 The order of the opening is the point. The TL;DR says what this is and what it
@@ -408,6 +441,8 @@ the review, not in the guide's prose.
 | "The details are the review; context is padding." | A detail with nothing to attach to is not reviewed, only read. |
 | "Every PR deserves a full guide." | A guide with nothing in it teaches reviewers to skim the next one. |
 | "The title already says it." | Then the TL;DR says what it asks of the reviewer, which a title cannot. |
+| "The identifier is the change." | The reviewer cannot resolve a name in sentence one. Name the motion, not the symbol. |
+| "Saying why it exists is context, not summary." | A summary of an edit nobody can place is not a summary. |
 | "The change was trivial, so I skipped the check." | Run it anyway and say the four were empty. Silence looks like not looking. |
 
 ## Red flags
@@ -415,6 +450,9 @@ the review, not in the guide's prose.
 - The body opens with a heading instead of a TL;DR.
 - The TL;DR runs past two sentences, restates the title, or says what changed
   without saying what it asks of the reviewer.
+- The TL;DR names a type, field, function, flag, or file path.
+- A reader who has not seen the codebase cannot say, from the TL;DR, what
+  problem the change solves.
 - The "How to review this" block summarizes sections instead of routing to
   them, lists a section the guide does not contain, names no specific item, or
   appears on a guide with two sections.
