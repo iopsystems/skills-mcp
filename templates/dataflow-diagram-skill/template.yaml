@@ -9,11 +9,11 @@ compatibility:
   - claude-code
 files:
   - path: SKILL.md
-    sha256: 4ae05d57624c3d5ac244ef76fb1c306249c3a5fed5c5195609d5b4a78cf97d05
+    sha256: 9a1e3ea0bfca10fc6a1599fe548595dfc8dda9d9fd35a2fad54525e89cc67226
     merge_strategy: three-way
   - path: references/dataflow-charter.md
     sha256: 53e51904a355beca7221a43e8507393c1f9c48fe7b3fe426f6ea1f1ec3852feb
     merge_strategy: three-way
   - path: evals/trigger-evals.json
-    sha256: 9ac9985c80a3b229922f8d7f35541a8091f33957247aa4ccd6b731b7cdc339ed
+    sha256: 94142bf60671e218688ca07157f39bef600577f3a7d6dd047ef1ab972eaae026
     merge_strategy: preserve-local

@@ -106,6 +106,25 @@ existed to create.
 Rotation is worth catching in both directions. One name for two things is the
 worse failure of the two, and it hides better.
 
+## One spelling: American
+
+Write `color`, not `colour`; `behavior`, not `behaviour`; `-ize`, not `-ise`;
+`gray`, not `grey`; `judgment` and `acknowledgment` without the middle `e`.
+
+This is the same rule as one item, one name, applied to the word rather than
+the thing. Mixed spelling inside one document reads as several authors who did
+not talk to each other, and it costs the reader a half-second of wondering
+whether the difference is meaningful. It never is.
+
+Two carve-outs, both absolute:
+
+- **The user's choice wins.** If the user or the project asks for British
+  spelling, or for any other convention, use it and keep it consistent. This
+  rule sets the default, not the policy.
+- **Untouchables stay untouchable.** A `colour` inside an identifier, a flag, a
+  configuration key, a quoted error, or a cited third-party title is a name.
+  Renaming it breaks the artifact, exactly as the section below says.
+
 ## The rest
 
 - **Actions are verbs, not nouns.** "Compress the file", not "perform
@@ -159,6 +178,8 @@ When a rule and a name conflict, the name wins silently.
 - "Perform", "conduct", or "undertake" followed by a noun that is really a verb.
 - A rewrite whose diff touches an identifier, a flag, or a quoted error string.
 - A condition trailing its command in an instruction.
+- Two spellings of one word in a document, or a spelling changed inside an
+  identifier or a quoted string.
 
 ## Attribution
 

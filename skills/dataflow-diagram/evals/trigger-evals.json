@@ -12,7 +12,7 @@
       "name": "speculative design does not trigger it",
       "prompt": "We're kicking around ideas for a new ingestion service. Sketch roughly how data might move through it.",
       "expectations": [
-        "Recognise there is no program to derive from",
+        "Recognize there is no program to derive from",
         "Sketch freely without building a generator",
         "Do not apply the derive-never-draw rule to a design that does not exist yet"
       ]
@@ -58,7 +58,7 @@
       "expectations": [
         "Keep the buffer shape and annotate it, with a frame",
         "Explain that a new shape asserts a new kind",
-        "Point out that a framed buffer is still recognisably a buffer"
+        "Point out that a framed buffer is still recognizably a buffer"
       ]
     },
     {
@@ -96,11 +96,11 @@
       ]
     },
     {
-      "name": "edge colour is the channel with no fallback",
-      "prompt": "Simplify the chart by making every edge the same grey and telling the difference by where they connect.",
+      "name": "edge color is the channel with no fallback",
+      "prompt": "Simplify the chart by making every edge the same gray and telling the difference by where they connect.",
       "expectations": [
-        "Preserve distinct edge colours for meaningfully different paths",
-        "Keep colourblind-safe choices for edge colour specifically",
+        "Preserve distinct edge colors for meaningfully different paths",
+        "Keep colorblind-safe choices for edge color specifically",
         "Note that edges have no shape channel to fall back on"
       ]
     },
@@ -115,7 +115,7 @@
     },
     {
       "name": "key must not fake a shape",
-      "prompt": "The legend is an HTML table of coloured cells. One entry needs to show the folded-corner shape; approximate it with a notched cell.",
+      "prompt": "The legend is an HTML table of colored cells. One entry needs to show the folded-corner shape; approximate it with a notched cell.",
       "expectations": [
         "Refuse the approximation",
         "Draw the key as a graph using the chart's own node shapes",
@@ -123,11 +123,11 @@
       ]
     },
     {
-      "name": "colour named in words instead of shown",
-      "prompt": "The legend row says 'lilac = external input, grey = derived'. That's clear enough, right?",
+      "name": "color named in words instead of shown",
+      "prompt": "The legend row says 'lilac = external input, gray = derived'. That's clear enough, right?",
       "expectations": [
-        "Show the actual glyph instead of naming its colour",
-        "Note that naming a colour fails a colourblind reader entirely"
+        "Show the actual glyph instead of naming its color",
+        "Note that naming a color fails a colorblind reader entirely"
       ]
     },
     {
