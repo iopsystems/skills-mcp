@@ -368,6 +368,15 @@
         "Introduce the addition as the consequence rather than as a bare fact",
         "Do not assume the reviewer holds a concept this change did not introduce"
       ]
+    },
+    {
+      "name": "the reasoning is a chain, not a restatement",
+      "prompt": "My what-changed section explains in three paragraphs that one field was doing two jobs, that the two questions used to have the same answer, and that they stop agreeing once a sensor migrates.",
+      "expectations": [
+        "Collapse it to one beat per step: what held before, what changed, what broke, what this adds",
+        "Cut a paragraph that makes the previous paragraph's point from another angle",
+        "Keep the chain to about four sentences rather than four paragraphs"
+      ]
     }
   ]
 }

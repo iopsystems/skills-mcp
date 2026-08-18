@@ -289,6 +289,17 @@ Same three sentences of work. The second version can be read by someone who has
 never opened the file, and the change lands as the answer to a problem the
 paragraph just posed.
 
+**One beat per step.** The reasoning is a chain — what held before, what changed
+in the world, what that broke, what this adds — and each link appears once. A
+paragraph that makes the previous paragraph's point from a new angle reads as
+emphasis and costs the reader exactly what new information would have cost them.
+The chain is usually four sentences, not four paragraphs:
+
+> When only one machine recorded, nothing needed to distinguish the topic a
+> record arrived on from the sensor that produced it. As streams migrate to
+> arriving over the link instead, the topic alone can no longer tell the two
+> paths apart. So a second label is needed. This change adds it.
+
 ## Where to look first
 
 Rank by the cost of a missed defect multiplied by the chance the reviewer
@@ -503,6 +514,7 @@ the review, not in the guide's prose.
   the reviewer should already hold it.
 - An addition is stated as a fact rather than as the answer to a gap the
   paragraph just named.
+- A paragraph restates the previous paragraph's point from another angle.
 - The TL;DR restates the title, or says what changed without saying what it
   asks of the reviewer.
 - The TL;DR answers none of why, what the idea is, and what is true
