@@ -395,6 +395,15 @@
         "Replace it with the arrangement the code actually has",
         "State the mechanism rather than asserting the consequence"
       ]
+    },
+    {
+      "name": "absolutes name their scope",
+      "prompt": "The claim says a machine running this 'writes nothing'. It writes into shared-memory buffers and publishes onto the message bus; only the disk file is absent.",
+      "expectations": [
+        "Scope the absolute to what it actually excludes",
+        "Say what the machine does still do, so the claim is not read as idleness",
+        "Treat an unqualified absolute as a false claim rather than as shorthand"
+      ]
     }
   ]
 }

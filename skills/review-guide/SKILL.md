@@ -531,6 +531,7 @@ the review, not in the guide's prose.
 | "Every PR deserves a full guide." | A guide with nothing in it teaches reviewers to skim the next one. |
 | "Establishing the before-state makes it long." | Length is not the cost. A reader who cannot follow it is. |
 | "I am only rewording this section." | The words are claims about code. Re-read the code, or you are polishing a guess. |
+| "'Writes nothing' is obviously about the disk." | It writes to buffers and publishes to the bus. Name the scope or the claim is false. |
 | "The reader found it confusing, so it needs clearer prose." | It may need a truer claim. Check the source before the sentences. |
 | "The title already says it." | Then the TL;DR says what it asks of the reviewer, which a title cannot. |
 | "The identifier is the change." | The reviewer cannot resolve a name in sentence one. Name the motion, not the symbol. |
@@ -574,6 +575,8 @@ the review, not in the guide's prose.
 - A line number arrived at by inference rather than by opening the line.
 - A section was rewritten without re-reading the code it describes.
 - A before beat describes an arrangement that never existed, in the right shape.
+- An absolute — writes nothing, never blocks, always succeeds — with no scope
+  named, in a system where the verb has more than one meaning.
 - A durable document cites a line with no phrase quoted from it.
 - Uncertainty items have no cited evidence.
 - Every uncertainty item is hedged, or none exists on a change that clearly had
