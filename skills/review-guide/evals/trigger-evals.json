@@ -349,6 +349,15 @@
         "Let the reviewer meet each item twice, as a flag and as the detail",
         "Do not leave a numbered item unreferenced in the rest of the body"
       ]
+    },
+    {
+      "name": "cross-reference names the heading",
+      "prompt": "The mental model ends with 'skip to the reading order if you do', and the section is headed 'Where to look first'.",
+      "expectations": [
+        "Name the section exactly as its heading reads",
+        "Treat a description used as an address as a defect",
+        "Do not leave the reviewer guessing which section was meant"
+      ]
     }
   ]
 }

@@ -104,8 +104,8 @@ reviewer must then read to use.
 the strongest available signal that you described the change instead of the
 reason for it. The reviewer meets `StreamSpec` before they know what a stream
 is, and a name they cannot resolve costs them the sentence it appears in. Names
-belong in the reading order, after the mental model has given them somewhere to
-land.
+belong under Where to look first, after the mental model has given them
+somewhere to land.
 
 A worked example, answering the three questions above. The change splits one
 registry field that was answering two questions at once:
@@ -230,12 +230,16 @@ Establish, in this order:
    exists to do for them.
 3. **Where this change sits** among those concepts, and what it moves.
 
-Only then can the reading order name a type, because the name now has somewhere
-to land.
+Only then can Where to look first name a type, because the name now has
+somewhere to land.
 
-State the starting point you assume. "This assumes you know the ring protocol;
-skip to the reading order if you do" costs one line and releases the reviewer
-who already holds the model.
+State the starting point you assume, and name where to jump by its heading:
+"This assumes you know the ring protocol; skip to Where to look first if you
+do." That costs one line and releases the reviewer who already holds the model.
+
+A cross-reference names a section exactly as its heading reads. "The reading
+order" and "the certainty section" are descriptions, not addresses; a reviewer
+sent to one has to guess which heading was meant.
 
 Reach for a diagram when the concepts have a shape — a topology, a pipeline, a
 set of hosts, a before and after. Prose carries a sequence; a picture carries a
@@ -429,7 +433,7 @@ rules carry most of the weight here:
 
 One interaction belongs to this skill alone. A guide quotes evidence: real
 command output in Testing, a requirement sentence in the certainty section, a
-flag or a path in the reading order. Those are untouchable under that skill's
+flag or a path under Where to look first. Those are untouchable under that skill's
 own rule, and a word-level pass that edits a pasted result, a quoted error, or
 an identifier has broken the evidence it was cleaning.
 
@@ -463,6 +467,8 @@ the review, not in the guide's prose.
 - The look-out list is absent rather than saying nothing needs a decision,
   or contains an item the author could have settled.
 - A numbered item is never marked again where its evidence appears.
+- A cross-reference names a section by description rather than by its heading,
+  so the reviewer has to guess which one was meant.
 - The TL;DR restates the title, or says what changed without saying what it
   asks of the reviewer.
 - The TL;DR answers none of why, what the idea is, and what is true
