@@ -259,6 +259,36 @@ typo, a version bump, a rename inside one file. The burden is on omitting.
 A guide that opens on field names with no picture behind them is the failure
 this section exists to prevent, and it is the one readers report.
 
+### Gloss what you did not introduce
+
+Below the TL;DR, identifiers are allowed. Undefined ones are not.
+
+An identifier the change **adds** introduces itself: the sentence that adds it
+says what it is. An identifier that **already existed** has no such sentence,
+which is exactly why it is the one that goes undefined. The reviewer may have
+forgotten it, or never met it, and the guide reads as though they should have.
+
+At first use, give it one clause in the domain's terms, then let the change
+follow from a gap:
+
+1. **What the existing thing is.** One clause. Not its type — its job.
+2. **What it could not do.** The gap that made this change necessary.
+3. **What this change adds.** Now it arrives as a consequence rather than as a
+   fact the reviewer has to accept.
+
+<!-- cite-ignore -->
+> **Undefined.** `StreamSpec.topic` was answering two questions at once.
+
+> **Glossed, then motivated.** Every stream has a registry entry saying where it
+> comes from and how it is carried, and one field on that entry named the
+> message-bus topic it arrives on. That field was quietly doing a second job —
+> standing in for whether a record arrived raw or already wrapped — and it could
+> not tell those apart. This change gives the second question its own field.
+
+Same three sentences of work. The second version can be read by someone who has
+never opened the file, and the change lands as the answer to a problem the
+paragraph just posed.
+
 ## Where to look first
 
 Rank by the cost of a missed defect multiplied by the chance the reviewer
@@ -469,6 +499,10 @@ the review, not in the guide's prose.
 - A numbered item is never marked again where its evidence appears.
 - A cross-reference names a section by description rather than by its heading,
   so the reviewer has to guess which one was meant.
+- An identifier the change did not introduce is used with no gloss, as though
+  the reviewer should already hold it.
+- An addition is stated as a fact rather than as the answer to a gap the
+  paragraph just named.
 - The TL;DR restates the title, or says what changed without saying what it
   asks of the reviewer.
 - The TL;DR answers none of why, what the idea is, and what is true

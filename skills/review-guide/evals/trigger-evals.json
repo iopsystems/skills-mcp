@@ -358,6 +358,16 @@
         "Treat a description used as an address as a defect",
         "Do not leave the reviewer guessing which section was meant"
       ]
+    },
+    {
+      "name": "pre-existing identifier is glossed at first use",
+      "prompt": "Write the what-changed section: `StreamSpec.topic` was answering two questions at once, and this splits it into two fields.",
+      "expectations": [
+        "Say what the existing thing is in one clause before using its name",
+        "State what it could not do, so the change answers a gap",
+        "Introduce the addition as the consequence rather than as a bare fact",
+        "Do not assume the reviewer holds a concept this change did not introduce"
+      ]
     }
   ]
 }
