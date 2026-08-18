@@ -92,6 +92,11 @@ It is a short essay, not a label, and it answers three questions in order:
 3. **What is true once it lands?** The state the reviewer should expect
    afterwards, including what still does not work.
 
+Close with one line naming what the change asks of the reviewer, **as its own
+paragraph**. Fused to the end of the summary it disappears into the sentence
+before it; the line break is what makes it findable. What to look out for
+expands it into the numbered items.
+
 Length follows those answers and nothing else. A change that crosses subsystems
 earns a paragraph. A small change collapses all three into one sentence, because
 its why, its idea, and its effect are the same fact seen three ways. A change
@@ -502,6 +507,8 @@ the review, not in the guide's prose.
 ## Red flags
 
 - The body opens with a heading instead of a TL;DR.
+- The ask is fused onto the last clause of the summary instead of standing as
+  its own paragraph.
 - The ask is folded into the summary instead of standing as its own list.
 - The look-out list is absent rather than saying nothing needs a decision,
   or contains an item the author could have settled.

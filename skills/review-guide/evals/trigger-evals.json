@@ -35,7 +35,8 @@
         "Open with one or two sentences above every heading",
         "Say what changed and what the change asks of the reviewer",
         "Do not run longer than the three answers need",
-        "Expand rather than repeat the TL;DR in the section below it"
+        "Expand rather than repeat the TL;DR in the section below it",
+        "Close with the ask as its own paragraph rather than fused to the summary"
       ]
     },
     {
