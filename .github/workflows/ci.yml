@@ -57,5 +57,13 @@ jobs:
       - name: Review bridge test
         run: ./scripts/review-bridge-test.sh
 
+      # The release profile compiles from scratch rather than reusing the debug
+      # artifacts above, which made this the longest step in the job once the
+      # apt install was cut. `release.yml` builds all four target triples on a
+      # version tag, so this exists to catch a release-only break earlier than
+      # that -- worth a run on `main`, not worth it on every push to a branch.
+      # The gap it accepts: such a break surfaces after merge rather than on the
+      # pull request that caused it.
       - name: cargo build --release
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: cargo build --release --locked
