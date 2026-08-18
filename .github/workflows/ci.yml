@@ -17,6 +17,10 @@ jobs:
   check:
     name: fmt + clippy + test
     runs-on: ubuntu-latest
+    # The job runs in ~41s. Ten minutes is far above any honest run and far
+    # below the six-hour default, which is what let a hung apt install stall a
+    # release for fifteen minutes before anyone noticed.
+    timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
 

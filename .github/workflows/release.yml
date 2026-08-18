@@ -29,6 +29,11 @@ jobs:
   build:
     name: build ${{ matrix.target }}
     runs-on: ${{ matrix.os }}
+    # A hung apt install on the aarch64 runner sat on the default six-hour
+    # timeout during v0.4.2 while the same step took 14s on v0.3.0 and 26s on
+    # the retry. Ten minutes is roughly four times the slowest honest build,
+    # so a stall fails fast enough to retry inside a release.
+    timeout-minutes: 10
     strategy:
       fail-fast: false
       matrix:
@@ -61,7 +66,7 @@ jobs:
         if: matrix.apt != ''
         run: |
           sudo apt-get update
-          sudo apt-get install --yes ${{ matrix.apt }}
+          sudo apt-get install --yes --no-install-recommends ${{ matrix.apt }}
           {
             echo "CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc"
             echo "CC_aarch64_unknown_linux_gnu=aarch64-linux-gnu-gcc"
@@ -96,6 +101,7 @@ jobs:
     name: publish release
     needs: build
     runs-on: ubuntu-latest
+    timeout-minutes: 10
     permissions:
       contents: write
     steps:
