@@ -92,9 +92,6 @@ It is a short essay, not a label, and it answers three questions in order:
 3. **What is true once it lands?** The state the reviewer should expect
    afterwards, including what still does not work.
 
-Then say what it asks of them: approve on sight, look hard at one named thing,
-or settle one decision.
-
 Length follows those answers and nothing else. A change that crosses subsystems
 earns a paragraph. A small change collapses all three into one sentence, because
 its why, its idea, and its effect are the same fact seen three ways. A change
@@ -130,61 +127,60 @@ name pre-loaded.
 The test: if a reader who has not seen the codebase cannot say what problem the
 change solves, the TL;DR is describing the edit rather than the reason.
 
-### Then the mental model, then the steps
+### What I need from you
 
-The order of the opening is the point. The TL;DR says what this is and what it
-asks. **The mental model comes next**, before any routing, because it is what
-the rest of the guide is written in terms of — routing a reviewer through
-sections that name concepts they do not hold yet asks them to navigate a map
-whose legend arrives later. Content for that section is below under The mental
-model.
+The ask gets its own paragraph, immediately after the TL;DR. Folding it into the
+summary buries the one part the reviewer has to act on.
 
-Only then the steps for using it.
-
-### How to review this
-
-After the mental model, tell the reviewer how to use the sections that follow.
-One line per section actually present, naming the action it asks for rather than
-the content it holds. Write these in the terms the model just established:
+Open with a sentence saying how many decisions there are and whether any of them
+blocks the merge. Then one checkbox per question:
 
 ```markdown
-## How to review this
+## What I need from you
 
-- **Where to look first** — read in order; item 1 is where a missed defect
-  costs most. Everything under "safe to skim" needs no attention.
-- **Testing** — check the "does not cover" column against what you know breaks.
-- **Judgment calls** — three decisions I made that were not deducible. I want
-  your read on the retry-on-timeout one; the other two are FYI.
-- **Production risks** — accept them or push back. This is the last cheap
-  moment to change any of them.
+Two decisions and one risk to accept, none of them blocking. The first is a fact
+about the vessel that I cannot check from the code.
 
-Short on time: the retry-on-timeout call and the cardinality risk are the two
-things only you can settle.
+- [ ] Does the cabin machine really publish the operator's commands? This is a
+      claim about the vessel, not about the code, and the origin labels say
+      otherwise.
+- [ ] Is refusing to start on an unnameable host the right call, given it turns
+      a naming mistake into an outage rather than a degraded process?
+- [ ] Accept the slot-headroom risk, or ask for the geometry to widen first.
 ```
 
-The block routes; it never restates. Three rules keep it from becoming
-furniture the reviewer learns to skip:
+Rules that keep the list honest:
 
-- Name only sections this guide actually has. A line about a section that is not
-  here is worse than no block.
-- Every line states an action — verify, decide, accept, skip — not a summary.
-- Name at least one specific item, the way the example names the
-  retry-on-timeout call. A block of section titles is a table of contents, and
-  the reviewer already has one.
+- **One bullet per question**, written as a question or as an explicit accept.
+- **Only questions the reviewer can answer.** If you can answer it, answer it in
+  the guide and leave it out of this list. A question you already know the
+  answer to is a quiz.
+- **Say what kind of answer you need** — a decision, a confirmation of fact, or
+  an acknowledgement of a risk. Those cost the reviewer different amounts.
+- **Say which block the merge**, if any, in the opening sentence.
+- **Never empty.** When nothing needs the reviewer, write one line saying so:
+  "Nothing here needs a decision — the checks that would produce one came back
+  empty." An absent list and a list with nothing in it read identically, and
+  only one of them means you looked.
 
-Close with the shortest useful path when the guide has enough in it that a
-reviewer can reasonably read only part. Omit the whole block when the guide
-has fewer than three sections: routing two sections costs more than it saves.
+Every item here appears somewhere below with its evidence. This list is the
+index of asks, not a second place to argue them.
+
+### Then the mental model
+
+The order of the opening is the point. The TL;DR says why this exists; the ask
+list says what the reviewer has to do about it. **The mental model comes next**,
+before any section that names a type, because it is what the rest of the guide
+is written in terms of. Content for it is below under The mental model.
 
 Always present, in this order:
 
 1. **TL;DR.** Why, the key idea, and what is true afterwards — as long as those
    three answers need, and no longer.
-2. **The mental model.** The concepts the reviewer needs before any detail means
+2. **What I need from you.** One checkbox per question, never empty.
+3. **The mental model.** The concepts the reviewer needs before any detail means
    anything, and where this change sits among them. A diagram when they have a
    shape.
-3. **How to review this.** The steps for using what follows, written in the
-   model's terms.
 4. **What changed, and the claim it makes.** One paragraph expanding the TL;DR
    rather than repeating it. The claim is what would be false if the change
    were wrong.
@@ -213,10 +209,9 @@ silently — it says "none, and here is why".
 
 ## The mental model
 
-This section sits directly after the TL;DR and before the routing block. A
+This section sits directly after the ask list. A
 reviewer who meets a field name before they know what the thing holding it is
-for has nowhere to put it, and a routing block written in unfamiliar terms is
-the same failure one level up. Type names, field names, and function names are
+for has nowhere to put it. Type names, field names, and function names are
 the last thing a guide reaches for, not the first.
 
 Establish, in this order:
@@ -458,6 +453,9 @@ the review, not in the guide's prose.
 ## Red flags
 
 - The body opens with a heading instead of a TL;DR.
+- The ask is folded into the summary instead of standing as its own list.
+- The ask list is absent rather than saying nothing needs a decision, or
+  contains a question the author could have answered.
 - The TL;DR restates the title, or says what changed without saying what it
   asks of the reviewer.
 - The TL;DR answers none of why, what the idea is, and what is true
@@ -465,13 +463,8 @@ the review, not in the guide's prose.
 - The TL;DR names a type, field, function, flag, or file path.
 - A reader who has not seen the codebase cannot say, from the TL;DR, what
   problem the change solves.
-- The "How to review this" block summarizes sections instead of routing to
-  them, lists a section the guide does not contain, names no specific item, or
-  appears on a guide with two sections.
 - The first concrete detail — a type, a field, a function — arrives before
   the reader has been given anything to attach it to.
-- The routing block arrives before the mental model, so it routes a reviewer
-  through sections named in terms they do not hold yet.
 - The mental model is a subsystem tour that would fit any pull request
   against the same files.
 - Concepts with a shape are described in prose where a diagram was owed.
