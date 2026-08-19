@@ -280,8 +280,25 @@ follows `technical-prose`, including its default of American spelling. A
 convention the user or the project states overrides that default; a mixture of
 both overrides nothing and reads as several authors.
 
+## Draw the state, do not bury it
+
+A stateful component folded into the label of the thing that reads or writes it
+is invisible: a ring named inside a process box, a queue mentioned in an edge
+label, a store that exists only as a verb. Draw it as its own node.
+
+In a structure chart this decides what a unit *is*. A process that owns a
+buffer and a process that borrows one look identical until the buffer is drawn
+and the ownership edge has somewhere to land. In a runtime chart it decides
+where the interesting failures live: a thread cannot lose a record, but the
+queue between two threads can, and a chart with no queue has nowhere to put
+the loss.
+
+The test: **if a box names both a unit and something that outlives it, split
+it.**
+
 ## Red flags
 
+- A stateful component named inside another node's label rather than drawn.
 - A node or edge list maintained by hand beside the code it describes.
 - A generator that skips an element it cannot classify.
 - A curated order or whitelist with no validity check against derived facts.

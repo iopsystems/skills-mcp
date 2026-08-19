@@ -119,6 +119,39 @@ because the marked ones are visibly marked.
 **Never encode a value you had to guess.** An unknown that renders as a
 plausible mark is worse than an unknown that renders as a gap.
 
+## Draw the state, do not bury it
+
+Before a shape can distinguish compute from data, both have to be nodes. The
+failure that precedes a silhouette mistake is a stateful component folded into
+the label of the thing that reads or writes it: "recorded streams → rings",
+"writes to the queue", "the cache".
+
+A component that holds data across invocations — a ring, a queue, a cache, a
+store, a cursor — is not an implementation detail of its reader. Draw it. The
+properties that make it worth drawing belong to nothing else in that box: what
+it holds, how much, what happens when it fills, who else writes it, and whether
+a reader can fall behind and lose records.
+
+Two facts surface the moment it becomes a node, and neither is visible while it
+is a phrase:
+
+- **Where paths converge.** Two producers meeting at one buffer is an
+  architectural claim a label cannot make. In one case that fact moved the
+  boundary of a chart's central claim: two paths drawn as separate pipelines
+  turned out to meet at the ring, so what was "identical from the program down"
+  was really identical from the buffer down, one node earlier.
+- **Where records can be lost.** Loss happens at the thing with a capacity. A
+  chart that draws only processes has nowhere to put the loss, so it does not
+  show it, and a reader concludes the path is lossless.
+
+The test: **if a box names both a process and something that outlives it, split
+it.** A file being read and the buffer it is read into are two nodes, and only
+one of them can lap.
+
+This is also what makes the segmented glyph honest. A queue drawn as a queue
+asserts a history; a queue named inside a process box asserts nothing, and the
+reader has to take the depth on trust.
+
 ## Compute and data must not share a silhouette
 
 The first thing a reader resolves is *what kind of thing is this*, and they
@@ -328,6 +361,8 @@ both overrides nothing and reads as several authors.
 - Compute and data sharing a silhouette, so kind can only be read from the
   label.
 - A segmented glyph on something with no history to segment.
+- A stateful component named inside another node's label rather than drawn.
+- A box naming both a process and something that outlives it.
 - A new shape introduced for what is really a property of an existing one.
 - More shapes in the chart than kinds of thing in the program.
 - Palette members borrowed from two different palettes.
