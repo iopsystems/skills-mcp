@@ -353,7 +353,7 @@
     },
     {
       "name": "cross-reference names the heading",
-      "prompt": "The mental model ends with 'skip to the reading order if you do', and the section is headed 'Where to look first'.",
+      "prompt": "The mental model ends with 'skip to the reading order if you do', and the section is headed 'Where to look more closely'.",
       "expectations": [
         "Name the section exactly as its heading reads",
         "Treat a description used as an address as a defect",
@@ -448,6 +448,15 @@
         "Split them into one subsection per decision",
         "Say that a shared heading gets answered as one, usually only the first",
         "Keep each one's own context and reference"
+      ]
+    },
+    {
+      "name": "the reading order follows the decisions",
+      "prompt": "Where does the ranked reading order go relative to the decisions I want answered?",
+      "expectations": [
+        "Put Decisions first, so the reviewer knows what is being asked before choosing where to slow down",
+        "Let a reading-order item point at a decision by its heading rather than restating it",
+        "Name the section for the attention it ranks, not for a position in the reading order"
       ]
     }
   ]

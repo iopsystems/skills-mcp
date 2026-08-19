@@ -2,7 +2,7 @@
 name: review-guide
 description: |
   Draft the pull-request body as a guide for the human reviewing it: where to
-  look first, what was tested and what was not, which calls were judgment
+  look more closely, what was tested and what was not, which calls were
   rather than deduction, and what will only show up in production. Use when
   asked to "draft the PR body", "write the PR description", "make this
   reviewable", "write a review guide", or whenever opening or updating a pull
@@ -123,7 +123,7 @@ reviewer must then read to use.
 the strongest available signal that you described the change instead of the
 reason for it. The reviewer meets `StreamSpec` before they know what a stream
 is, and a name they cannot resolve costs them the sentence it appears in. Names
-belong under Where to look first, after the mental model has given them
+belong under Where to look more closely, after the mental model has given them
 somewhere to land.
 
 A worked example, answering the three questions above. The change splits one
@@ -219,11 +219,12 @@ Always present, in this order:
 3. **What changed, and the claim it makes.** One paragraph expanding the TL;DR
    rather than repeating it. The claim is what would be false if the change
    were wrong.
-4. **Where to look first.** Ranked reading order, plus what is safe to skim.
-5. **Testing.** Methodology, what ran, its actual output, and the gaps.
-6. **Decisions.** One subsection per decision that wants the reviewer, each
+4. **Decisions.** One subsection per decision that wants the reviewer, each
    laying out its context before it asks its question. Then the calls that need
    no answer, as a short list.
+5. **Where to look more closely.** Ranked reading order, plus what is safe to
+   skim.
+6. **Testing.** Methodology, what ran, its actual output, and the gaps.
 7. **Production-only risks**, with a direct invitation to weigh in.
 
 Present when earned:
@@ -261,12 +262,12 @@ Establish, in this order:
    exists to do for them.
 3. **Where this change sits** among those concepts, and what it moves.
 
-Only then can Where to look first name a type, because the name now has
+Only then can Where to look more closely name a type, because the name now has
 somewhere to land.
 
 State the starting point you assume, and name where to jump by its heading:
-"This assumes you know the ring protocol; skip to Where to look first if you
-do." That costs one line and releases the reviewer who already holds the model.
+"This assumes you know the ring protocol; skip to Where to look more closely
+if you do." That costs one line and releases the reviewer who already holds the model.
 
 A cross-reference names a section exactly as its heading reads. "The reading
 order" and "the certainty section" are descriptions, not addresses; a reviewer
@@ -362,7 +363,41 @@ wrong, not only that the wording is. Go back to the code before reaching for
 better sentences. The temptation runs the other way, because rewording is fast
 and re-reading is not.
 
-## Where to look first
+## Decisions
+
+This is the section the reviewer cannot reconstruct alone, and the one faked
+most often in both directions. Its shape — context, reference, question, one
+subsection each — is under One subsection per decision above.
+
+Every subsection cites concrete evidence:
+
+- a requirement sentence that admits two readings, quoted
+- a path with no test
+- an assumption made and never verified
+- a measurement not taken
+- an interface whose contract the caller and callee state differently
+
+Every one carries the call that was made, the alternative that was rejected, and
+what evidence would change it. Without those three it is a worry, not a finding;
+drop it.
+
+Two failure modes, both defects:
+
+- **Manufactured uncertainty.** Hedging to look careful. If nothing was
+  genuinely unsettled, say so and say why the change was deducible.
+- **Suppressed uncertainty.** Presenting one reading of a vague requirement as
+  the only reading. If a requirement was ambiguous and a choice was made, the
+  reviewer owns that choice as much as the author.
+
+Do not rate confidence. A number invites the reviewer to trust a self-report
+that carries no information. The evidence carries the signal.
+
+## Where to look more closely
+
+This follows Decisions, so the reviewer reaches it already knowing what is being
+asked of them and can read for those answers rather than reading evenly. It also
+means an item here can point at a decision by its heading instead of restating
+it.
 
 Rank by the cost of a missed defect multiplied by the chance the reviewer
 misses it. Never rank by file size, path order, or the order the diff happened
@@ -376,6 +411,10 @@ Highest attention first:
    held elsewhere, a caller not shown, an ordering another module guarantees.
 3. Code no test covers.
 4. Code the author is least sure of.
+
+The heading says *more closely*, not *first*, because by this point the reviewer
+has already read three sections. What it ranks is attention, not order — where
+to slow down, against a guide they are reading straight through.
 
 Then name what is safe to skim, and why: generated output, mechanical renames,
 formatting, a change repeated identically across many files. Naming the skimmable
@@ -433,35 +472,6 @@ percentage; it answers a question nobody asked and hides the gap that matters.
 Never state that a command ran when it did not. If a check was skipped, say
 which and why. A skipped benchmark named is useful; a skipped benchmark implied
 to have passed is a defect in the guide.
-
-## Decisions
-
-This is the section the reviewer cannot reconstruct alone, and the one faked
-most often in both directions. Its shape — context, reference, question, one
-subsection each — is under One subsection per decision above.
-
-Every subsection cites concrete evidence:
-
-- a requirement sentence that admits two readings, quoted
-- a path with no test
-- an assumption made and never verified
-- a measurement not taken
-- an interface whose contract the caller and callee state differently
-
-Every one carries the call that was made, the alternative that was rejected, and
-what evidence would change it. Without those three it is a worry, not a finding;
-drop it.
-
-Two failure modes, both defects:
-
-- **Manufactured uncertainty.** Hedging to look careful. If nothing was
-  genuinely unsettled, say so and say why the change was deducible.
-- **Suppressed uncertainty.** Presenting one reading of a vague requirement as
-  the only reading. If a requirement was ambiguous and a choice was made, the
-  reviewer owns that choice as much as the author.
-
-Do not rate confidence. A number invites the reviewer to trust a self-report
-that carries no information. The evidence carries the signal.
 
 ## Production-only risks
 
@@ -537,7 +547,8 @@ rules carry most of the weight here:
 
 One interaction belongs to this skill alone. A guide quotes evidence: real
 command output in Testing, a requirement sentence under Decisions, a
-flag or a path under Where to look first. Those are untouchable under that skill's
+flag or a path under Where to look more closely. Those are untouchable under that
+skill's
 own rule, and a word-level pass that edits a pasted result, a quoted error, or
 an identifier has broken the evidence it was cleaning.
 

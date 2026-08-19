@@ -61,6 +61,13 @@ The summary keeps one line, demoted to a pointer: how many decisions want the
 reviewer, whether any block, and where they are. Naming them there costs the
 context that makes them decisions, which is the same failure in a shorter form.
 
+The section then moved above the ranked reading order, on the same reader's
+call, and the reading order was renamed `Where to look more closely`. Both
+follow from the first change: a reviewer who has met the questions can read the
+ranking for those answers rather than evenly, an item in the ranking can point
+at a decision by its heading, and a section arriving fourth cannot honestly be
+called what to look at first — what it ranks is attention, not order.
+
 The empty case survives both revisions. "Nothing here needs a decision; the four
 checks came back empty" is what the pointer says when the checks are empty,
 because an absent ask and an empty one still read identically.
