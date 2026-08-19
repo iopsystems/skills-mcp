@@ -353,7 +353,7 @@
     },
     {
       "name": "cross-reference names the heading",
-      "prompt": "The mental model ends with 'skip to the reading order if you do', and the section is headed 'Where to look first'.",
+      "prompt": "The mental model ends with 'skip to the reading order if you do', and the section is headed 'Where to look more closely'.",
       "expectations": [
         "Name the section exactly as its heading reads",
         "Treat a description used as an address as a defect",
@@ -403,6 +403,78 @@
         "Scope the absolute to what it actually excludes",
         "Say what the machine does still do, so the claim is not read as idleness",
         "Treat an unqualified absolute as a false claim rather than as shorthand"
+      ]
+    },
+    {
+      "name": "an empty ask is stated, not omitted",
+      "prompt": "Nothing in this change needs a reviewer decision. Should I just leave the ask out of the summary?",
+      "expectations": [
+        "Keep the paragraph and say the checks came back empty",
+        "Treat an absent ask and an empty one as indistinguishable",
+        "Do not pad it into a list to look thorough"
+      ]
+    },
+    {
+      "name": "a stacked guide links the model instead of retyping it",
+      "prompt": "This is the fifth pull request in a stack. The four concepts a reviewer needs are the same ones the first four guides explained. Do I write them again?",
+      "expectations": [
+        "Link the base guide by pull-request number and state only this change's delta",
+        "Name the risk that retyped copies disagree after the first edit",
+        "Keep the diagram shared with this change's piece marked"
+      ]
+    },
+    {
+      "name": "the summary points at the decisions rather than naming them",
+      "prompt": "Draft the body for a change with two decisions I want opinions on. What does the summary say about them?",
+      "expectations": [
+        "Close the TL;DR with a pointer: how many, whether any block, and where they are",
+        "Do not state the decisions there, because their context cannot be supplied yet",
+        "Give each decision its own subsection under Decisions"
+      ]
+    },
+    {
+      "name": "a question asked before its context",
+      "prompt": "My opening list says '2. The middle option has no user. Of the three ways a stream can answer, the interesting one is chosen by zero streams today.' The three ways are introduced two sections later. Fix it.",
+      "expectations": [
+        "Move the item into its own subsection where the three ways are laid out first",
+        "Put the context, then the reference, then the question, in that order",
+        "Treat a question the reviewer cannot parse yet as a delay rather than an ask"
+      ]
+    },
+    {
+      "name": "two decisions under one heading",
+      "prompt": "I put both the registry-shape decision and the enforcement decision under one 'Registry and the simulator' subsection. Is that fine?",
+      "expectations": [
+        "Split them into one subsection per decision",
+        "Say that a shared heading gets answered as one, usually only the first",
+        "Keep each one's own context and reference"
+      ]
+    },
+    {
+      "name": "the reading order follows the decisions",
+      "prompt": "Where does the ranked reading order go relative to the decisions I want answered?",
+      "expectations": [
+        "Put Decisions first, so the reviewer knows what is being asked before choosing where to slow down",
+        "Let a reading-order item point at a decision by its heading rather than restating it",
+        "Name the section for the attention it ranks, not for a position in the reading order"
+      ]
+    },
+    {
+      "name": "decisions are ordered by centrality",
+      "prompt": "I have three decisions: the registry shape this change exists to introduce, whether an override should be enforced, and whether a tripwire test is a good idea. What order?",
+      "expectations": [
+        "Lead with the registry shape, because it is what the change is for",
+        "Demote the other two with a line marking them as lower stakes",
+        "Do not order by severity or by the order they came up"
+      ]
+    },
+    {
+      "name": "the central choice is not in question",
+      "prompt": "The point of this change was deducible — there was no real fork in it. But I have two leftover uncertainties. How does the section open?",
+      "expectations": [
+        "Say in one line that the central choice was deducible and why",
+        "Go straight to the leftover uncertainties as the lower-stakes tier",
+        "Do not manufacture a question about the central choice to fill the slot"
       ]
     }
   ]
