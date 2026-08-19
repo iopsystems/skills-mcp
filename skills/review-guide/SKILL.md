@@ -200,7 +200,8 @@ Rules that keep the section honest:
 
 Calls that need no answer do not get subsections. They stay a short list at the
 end of the section, one line each, under a sentence saying they are recorded
-rather than asked.
+rather than asked. That is the third tier: the point of the change, then what
+you are merely unsure of, then what you are only putting on the record.
 
 ### Then the mental model
 
@@ -368,6 +369,27 @@ and re-reading is not.
 This is the section the reviewer cannot reconstruct alone, and the one faked
 most often in both directions. Its shape — context, reference, question, one
 subsection each — is under One subsection per decision above.
+
+**Two things earn a reviewer's attention, and they are not equal.** The first is
+what the change is *for* — the choice the whole change rests on, the one that
+would make the work wrong if it were wrong. The second is everything the author
+happens to be unsure about. They often overlap, and when they do the item
+appears once, at the top.
+
+So the section is ordered by centrality, not by severity and not by the order the
+questions occurred to you. It opens with the decision that is the point of the
+change. Then a line demoting the rest — "the rest is lower stakes: things I am
+less sure of rather than what this change is for" — and the remaining
+subsections after it.
+
+That ordering is the guide's only defense against a reviewer spending their
+attention evenly. A leftover uncertainty presented beside the change's central
+question reads as equally weighted, and the reviewer answers whichever is
+easiest.
+
+When the point of the change is not itself in question, say so in one line and
+go straight to the rest. A manufactured question about the central choice is
+worse than admitting it was deducible.
 
 Every subsection cites concrete evidence:
 
@@ -573,6 +595,8 @@ the review, not in the guide's prose.
 | "Each guide in the stack should stand alone." | Then each one restates the model, and the copies disagree by the third edit. Link the base and state the delta. |
 | "The look-out list makes the asks impossible to miss." | It states them where the reviewer cannot follow them yet. A decision needs its context in front of it, which is why each gets a subsection. |
 | "Listing the asks up front is friendlier than making them scroll." | Not when the list is unreadable there. The summary points; the subsection asks. |
+| "All the open questions matter, so they go in one flat list." | Then the reviewer answers the easiest one. Lead with what the change is for; the rest is a by-the-way. |
+| "Leading with the central choice buries my real worry." | If the worry is what the change is for, it *is* the central choice. If it is not, it is a by-the-way, and saying so is what makes the first one findable. |
 | "Establishing the before-state makes it long." | Length is not the cost. A reader who cannot follow it is. |
 | "I am only rewording this section." | The words are claims about code. Re-read the code, or you are polishing a guess. |
 | "'Writes nothing' is obviously about the disk." | It writes to buffers and publishes to the bus. Name the scope or the claim is false. |
@@ -595,6 +619,10 @@ the review, not in the guide's prose.
   context they need and gives the reviewer the question twice.
 - Two decisions share one subsection, so they get answered as one — usually
   only the first.
+- The decisions are ordered by when they occurred to the author, or by severity,
+  rather than by which one the change is for.
+- A leftover uncertainty sits above the central question, or beside it with
+  nothing marking the two as different weights.
 - A decision has a question and no reference, so the reviewer has to take the
   description of the code on trust.
 - A stacked guide restates the shared mental model instead of linking the guide

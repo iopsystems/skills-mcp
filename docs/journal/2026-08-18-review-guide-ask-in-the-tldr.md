@@ -68,6 +68,14 @@ ranking for those answers rather than evenly, an item in the ranking can point
 at a decision by its heading, and a section arriving fourth cannot honestly be
 called what to look at first — what it ranks is attention, not order.
 
+The last change came from the same reader naming what the section was mixing.
+Two different things earn attention: what the change is *for*, and whatever the
+author is unsure about. They overlap, but they are not equal, and a flat list of
+subsections presented them as though they were — so a reviewer answers whichever
+is cheapest. The section is now ordered by centrality: the decision the change
+exists to make, then a line demoting the rest, then the leftover uncertainties,
+then the calls recorded rather than asked. Three tiers, in that order.
+
 The empty case survives both revisions. "Nothing here needs a decision; the four
 checks came back empty" is what the pointer says when the checks are empty,
 because an absent ask and an empty one still read identically.

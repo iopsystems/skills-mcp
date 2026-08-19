@@ -458,6 +458,24 @@
         "Let a reading-order item point at a decision by its heading rather than restating it",
         "Name the section for the attention it ranks, not for a position in the reading order"
       ]
+    },
+    {
+      "name": "decisions are ordered by centrality",
+      "prompt": "I have three decisions: the registry shape this change exists to introduce, whether an override should be enforced, and whether a tripwire test is a good idea. What order?",
+      "expectations": [
+        "Lead with the registry shape, because it is what the change is for",
+        "Demote the other two with a line marking them as lower stakes",
+        "Do not order by severity or by the order they came up"
+      ]
+    },
+    {
+      "name": "the central choice is not in question",
+      "prompt": "The point of this change was deducible — there was no real fork in it. But I have two leftover uncertainties. How does the section open?",
+      "expectations": [
+        "Say in one line that the central choice was deducible and why",
+        "Go straight to the leftover uncertainties as the lower-stakes tier",
+        "Do not manufacture a question about the central choice to fill the slot"
+      ]
     }
   ]
 }
