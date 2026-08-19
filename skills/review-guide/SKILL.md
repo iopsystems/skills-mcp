@@ -98,10 +98,18 @@ It is a short essay, not a label, and it answers three questions in order:
 3. **What is true once it lands?** The state the reviewer should expect
    afterwards, including what still does not work.
 
-Close with one line naming what the change asks of the reviewer, **as its own
-paragraph**. Fused to the end of the summary it disappears into the sentence
-before it; the line break is what makes it findable. What to look out for
-expands it into the numbered items.
+Close with the ask, **as its own paragraph**: what this change wants from the
+reviewer, one clause each, numbered if there is more than one. Fused to the end
+of the summary it disappears into the sentence before it; the line break is what
+makes it findable.
+
+The ask is the only place the reviewer is told what they are being asked for
+before they have read anything, which is why it carries no argument and no
+identifier — the case for each item is made below, where its evidence is, under
+the same number. Never leave it out: when nothing needs the reviewer, the
+paragraph says so — "Nothing here needs a decision; the four checks came back
+empty" — because an absent ask and an empty one read identically, and only one
+of them means you looked.
 
 Length follows those answers and nothing else. A change that crosses subsystems
 earns a paragraph. A small change collapses all three into one sentence, because
@@ -138,28 +146,19 @@ name pre-loaded.
 The test: if a reader who has not seen the codebase cannot say what problem the
 change solves, the TL;DR is describing the edit rather than the reason.
 
-### What to look out for
+### Numbering the ask
 
-The reviewer has read one paragraph. They cannot answer a question yet, and a
-list of questions at the top of a page is a quiz before the lesson. So the ask
-is not a request for answers — it is the set of things to carry while reading.
-
-Number them. Then mark each one again, by number, at the place further down
-where its evidence appears. The reviewer meets the item twice: once as a flag to
-hold, once as the detail that lets them settle it.
+Number the items in the ask, then mark each one again, by number, at the place
+further down where its evidence appears. The reviewer meets each item twice:
+once as a clause telling them what they are on the hook for, once as the detail
+that lets them settle it.
 
 ```markdown
-## What to look out for
-
-Two calls and one risk, none blocking. Carry these while you read; each is
-marked again where its evidence appears.
-
-1. [ ] **Which machine publishes the operator's commands.** A claim about the
-       vessel rather than about the code, and the recorded labels disagree.
-       I cannot check this from here.
-2. [ ] **Refusing to start on an unnameable machine.** Deliberate, but it turns
-       a naming mistake into no recorder at all.
-3. [ ] **Message-size headroom**, to accept or to send back for widening.
+Two calls and one risk want your opinion, none blocking: **(1)** which machine
+publishes the operator's commands, which is a claim about the vessel that I
+cannot check from here; **(2)** whether a machine that cannot name itself should
+refuse to start; and **(3)** message-size headroom, to accept or to send back
+for widening.
 ```
 
 Then, in the section that carries the evidence:
@@ -168,47 +167,50 @@ Then, in the section that carries the evidence:
 > **[1]** `src/registry/streams.rs:490` — the comment asserting that the four
 > command streams originate on the cabin machine …
 
-Rules that keep the list honest:
+Rules that keep the ask honest:
 
-- **One item per thing to watch**, numbered, and marked again below. An item
-  never marked again is a flag the reviewer carries to no purpose.
+- **One number per thing to settle**, marked again below. A number never marked
+  again is a flag the reviewer carries to no purpose.
 - **Only what the reviewer can settle.** If you can settle it, settle it in the
   guide and leave it out. An item you already know the answer to is a quiz.
-- **Say what each will need by the end** — a decision, a confirmation of fact,
-  or an acknowledgment of a risk. Those cost different amounts.
-- **Say which block the merge**, if any, in the opening sentence.
-- **Never empty.** When nothing needs the reviewer, write one line saying so:
-  "Nothing here needs a decision — the checks that would produce one came back
-  empty." An absent list and an empty one read identically, and only one of them
-  means you looked.
+- **Say what each will need** — a decision, a confirmation of fact, or an
+  acknowledgment of a risk. Those cost different amounts.
+- **Say which block the merge**, if any.
+- **No argument here.** The clause names the thing; the section below it makes
+  the case. An ask that argues its own items is the guide written twice, and
+  the copy the reviewer meets first is the one they cannot yet evaluate.
+
+There is no section for this. An earlier version of this skill put the asks in a
+list of their own between the TL;DR and the mental model, and every guide it
+produced stated each item twice — once in the list, in vocabulary the mental
+model had not yet supplied, and once at its evidence. The reviewer met the
+argument before they could follow it, and read it again when they could.
 
 ### Then the mental model
 
-The order of the opening is the point. The TL;DR says why this exists; the
-look-out list says what to carry while reading. **The mental model comes next**,
-before any section that names a type, because it is what the rest of the guide
-is written in terms of. Content for it is below under The mental model.
+The order of the opening is the point. The TL;DR says why this exists and
+closes with the ask. **The mental model comes next**, before any section that
+names a type, because it is what the rest of the guide is written in terms of.
+Content for it is below under The mental model.
 
 Always present, in this order:
 
 1. **TL;DR.** Why, the key idea, and what is true afterwards — as long as those
    three answers need, and no longer.
-2. **What to look out for.** Numbered items to carry while reading, each
-   marked again where its evidence appears. Never empty.
-3. **The mental model.** The concepts the reviewer needs before any detail means
+2. **The mental model.** The concepts the reviewer needs before any detail means
    anything, and where this change sits among them. A diagram when they have a
    shape.
-4. **What changed, and the claim it makes.** One paragraph expanding the TL;DR
+3. **What changed, and the claim it makes.** One paragraph expanding the TL;DR
    rather than repeating it. The claim is what would be false if the change
    were wrong.
-5. **Where to look first.** Ranked reading order, plus what is safe to skim.
-6. **Testing.** Methodology, what ran, its actual output, and the gaps.
-7. **Judgment calls and low certainty.**
-8. **Production-only risks**, with a direct invitation to weigh in.
+4. **Where to look first.** Ranked reading order, plus what is safe to skim.
+5. **Testing.** Methodology, what ran, its actual output, and the gaps.
+6. **Judgment calls and low certainty.**
+7. **Production-only risks**, with a direct invitation to weigh in.
 
 Present when earned:
 
-9. **Not in scope**, when a reader would otherwise ask why something is missing.
+8. **Not in scope**, when a reader would otherwise ask why something is missing.
 
 Drop a section only when the change genuinely has nothing in it, never to reach
 a size. Any section holding an item that cleared the publish test stays,
@@ -226,7 +228,7 @@ silently — it says "none, and here is why".
 
 ## The mental model
 
-This section sits directly after the look-out list. A
+This section sits directly after the TL;DR. A
 reviewer who meets a field name before they know what the thing holding it is
 for has nowhere to put it. Type names, field names, and function names are
 the last thing a guide reaches for, not the first.
@@ -267,6 +269,15 @@ Two failure modes:
 
 Omit it only when the change touches one concept the reviewer certainly holds: a
 typo, a version bump, a rename inside one file. The burden is on omitting.
+
+**In a stack, the model is written once.** The guides in a stacked series share
+one set of concepts, and retyping them per pull request produces near-identical
+sections that no longer agree after the first edit — and a reviewer working up
+the stack rereads a page they already hold to find the two sentences that are
+new. Write the model in the base guide, link it from each guide above, and state
+only this change's delta: what it adds to the model, or what it makes false.
+A guide whose reviewer has not read the base still needs the link to be one
+click, so name the pull request, not "the guide below".
 A guide that opens on field names with no picture behind them is the failure
 this section exists to prevent, and it is the one readers report.
 
@@ -529,6 +540,8 @@ the review, not in the guide's prose.
 | "Anyone reviewing this already knows the subsystem." | Then one line saying so releases them. Assuming it strands everyone else. |
 | "The details are the review; context is padding." | A detail with nothing to attach to is not reviewed, only read. |
 | "Every PR deserves a full guide." | A guide with nothing in it teaches reviewers to skim the next one. |
+| "Each guide in the stack should stand alone." | Then each one restates the model, and the copies disagree by the third edit. Link the base and state the delta. |
+| "The look-out list makes the asks impossible to miss." | It also states them where the reviewer cannot follow them yet, and again where they can. One ask, in the TL;DR, numbered to its evidence. |
 | "Establishing the before-state makes it long." | Length is not the cost. A reader who cannot follow it is. |
 | "I am only rewording this section." | The words are claims about code. Re-read the code, or you are polishing a guess. |
 | "'Writes nothing' is obviously about the disk." | It writes to buffers and publishes to the bus. Name the scope or the claim is false. |
@@ -543,10 +556,13 @@ the review, not in the guide's prose.
 - The body opens with a heading instead of a TL;DR.
 - The ask is fused onto the last clause of the summary instead of standing as
   its own paragraph.
-- The ask is folded into the summary instead of standing as its own list.
-- The look-out list is absent rather than saying nothing needs a decision,
-  or contains an item the author could have settled.
+- The ask is missing rather than saying nothing needs a decision, or contains
+  an item the author could have settled.
+- The ask argues its items rather than naming them, so the reviewer meets the
+  reasoning before the mental model that makes it readable.
 - A numbered item is never marked again where its evidence appears.
+- A stacked guide restates the shared mental model instead of linking the guide
+  that holds it and stating this change's delta.
 - A cross-reference names a section by description rather than by its heading,
   so the reviewer has to guess which one was meant.
 - An identifier the change did not introduce is used with no gloss, as though

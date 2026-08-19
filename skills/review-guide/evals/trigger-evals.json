@@ -404,6 +404,42 @@
         "Say what the machine does still do, so the claim is not read as idleness",
         "Treat an unqualified absolute as a false claim rather than as shorthand"
       ]
+    },
+    {
+      "name": "the ask closes the summary rather than opening a section",
+      "prompt": "Draft the body for a change with two decisions I want opinions on. Where do the asks go?",
+      "expectations": [
+        "Put the asks in the paragraph closing the TL;DR, numbered",
+        "Do not create a separate section for them",
+        "Mark each number again where its evidence appears"
+      ]
+    },
+    {
+      "name": "an ask that argues its own items",
+      "prompt": "My opening list says: '1. One repository-wide setting for a fact that differs between the vessel and the simulator. The registry is deployment-independent by design; I chose a single flag plus an override rather than teaching it about deployment profiles.' Is that right?",
+      "expectations": [
+        "Cut the argument from the ask and leave the naming clause",
+        "Point out the reviewer cannot evaluate it before the mental model",
+        "Keep the reasoning where the evidence for it appears"
+      ]
+    },
+    {
+      "name": "an empty ask is stated, not omitted",
+      "prompt": "Nothing in this change needs a reviewer decision. Should I just leave the ask out of the summary?",
+      "expectations": [
+        "Keep the paragraph and say the checks came back empty",
+        "Treat an absent ask and an empty one as indistinguishable",
+        "Do not pad it into a list to look thorough"
+      ]
+    },
+    {
+      "name": "a stacked guide links the model instead of retyping it",
+      "prompt": "This is the fifth pull request in a stack. The four concepts a reviewer needs are the same ones the first four guides explained. Do I write them again?",
+      "expectations": [
+        "Link the base guide by pull-request number and state only this change's delta",
+        "Name the risk that retyped copies disagree after the first edit",
+        "Keep the diagram shared with this change's piece marked"
+      ]
     }
   ]
 }
