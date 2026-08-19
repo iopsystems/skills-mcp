@@ -51,6 +51,15 @@
         "Extend the convention rather than force the domain",
         "Record the override and its reason"
       ]
+    },
+    {
+      "name": "ownership needs the buffer drawn",
+      "prompt": "Two units both mention the queue in their descriptions. Which one owns it?",
+      "expectations": [
+        "Draw the queue as its own node so the ownership edge has somewhere to land",
+        "Say a unit that owns a buffer and one that borrows it look identical until it is drawn",
+        "Split a box that names both a unit and something that outlives it"
+      ]
     }
   ]
 }

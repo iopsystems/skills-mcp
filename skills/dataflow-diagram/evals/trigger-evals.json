@@ -167,11 +167,38 @@
     },
     {
       "name": "a domain the defaults do not partition",
-      "prompt": "Our nodes are sources, transforms, and sinks \u2014 three kinds, not compute-versus-data. Force them into two?",
+      "prompt": "Our nodes are sources, transforms, and sinks — three kinds, not compute-versus-data. Force them into two?",
       "expectations": [
         "Decline to force the domain into the default partition",
         "Extend or replace the convention for this chart",
         "Record the override and its reason as feedback on the skill"
+      ]
+    },
+    {
+      "name": "state gets its own node",
+      "prompt": "I labeled the input box 'recorded streams → rings' since the ring is just how the bytes get there.",
+      "expectations": [
+        "Split the box into the recording and the ring as separate nodes",
+        "Say a component holding data across invocations is not an implementation detail of its reader",
+        "Name what the ring node carries that the label cannot: capacity, lapping, who else writes it"
+      ]
+    },
+    {
+      "name": "buried state hides a convergence",
+      "prompt": "Two pipelines feed the same program. Each column ends at the program box.",
+      "expectations": [
+        "Draw the shared buffer both paths write into",
+        "Point out that the convergence is an architectural fact a label cannot state",
+        "Reconsider where the shared region of the chart begins"
+      ]
+    },
+    {
+      "name": "loss needs somewhere to live",
+      "prompt": "The chart shows four processes and no buffers. Where does dropped data appear?",
+      "expectations": [
+        "Say loss happens at the thing with a capacity",
+        "Note that a chart of only processes implies a lossless path",
+        "Draw the bounded buffers so the loss has a node"
       ]
     }
   ]
