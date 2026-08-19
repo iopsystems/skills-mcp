@@ -5,7 +5,7 @@ updated: 2026-08-18
 beta_skills: [review-guide]
 ---
 
-# The look-out list, retired by the guides it produced
+# The look-out list, and the structure that replaced it
 
 ## Goal
 
@@ -43,18 +43,26 @@ request, about 1,650 words of duplicate text.
 
 ## Design and Implementation
 
-The section is gone. The paragraph that closes the TL;DR carries the ask, which
-it already did for one line; it now numbers the items when there is more than
-one, and each number is marked again where its evidence appears.
+The first attempt folded the asks into a prose paragraph closing the TL;DR,
+numbered, each marked again at its evidence. The reader rejected it, and the
+rejection is the finding: the defect was never that the items were a list. It
+was that a decision stated without its context is not yet a decision, and no
+amount of moving or reformatting supplies context that the summary structurally
+cannot carry.
 
-That placement is what makes it readable. The TL;DR carries no identifiers by an
-existing rule, so it is the one part of a guide written entirely in the domain's
-terms — the only place an ask can be stated before the mental model without
-depending on it. The ask therefore names each item and argues none of them: the
-case is made below, under the same number, where the evidence is.
+So each decision now gets its own subsection, in a fixed order: the context
+that makes it a choice, the `path:line` reference so the reviewer can look
+rather than trust the description, then the question. Context first is the rule;
+the reference in the middle is what stops the context from being a story about
+code nobody can check. The section holding them is `## Decisions`, which is the
+old certainty section renamed to what it is.
 
-The empty case survives the move. "Nothing here needs a decision; the four
-checks came back empty" now closes the summary instead of heading a section,
+The summary keeps one line, demoted to a pointer: how many decisions want the
+reviewer, whether any block, and where they are. Naming them there costs the
+context that makes them decisions, which is the same failure in a shorter form.
+
+The empty case survives both revisions. "Nothing here needs a decision; the four
+checks came back empty" is what the pointer says when the checks are empty,
 because an absent ask and an empty one still read identically.
 
 The stack duplication is a second rule, in the mental-model section: write the
@@ -64,12 +72,12 @@ about the prose the diagram sits in.
 
 ## Outcome
 
-Shipped. The corpus went from forty-four cases to forty-eight, `cargo fmt
+Shipped. The corpus went from forty-four cases to forty-nine, `cargo fmt
 --check` passed, 150 tests pass, and the citation guard stayed green.
 
-Whether the ask survives at the end of a paragraph rather than as a heading is
-unmeasured. The failure it replaces was reported; this shape has not been read
-by anyone yet.
+Whether a reviewer answers more decisions when each has a subsection is
+unmeasured. Two of the three shapes tried here were rejected by the one reader
+who has looked at the output, which is the only evidence any of this rests on.
 
 ## Derived Documents
 
@@ -91,6 +99,11 @@ None.
   them unreadable instead, because it placed them ahead of the vocabulary they
   are written in. The rule that produced it — meet each item twice — was stated
   without saying what the first meeting may contain.
+- **Friction** — the first fix was to move and reformat the asks, not to give
+  them context. The skill states that a reader reporting confusion is evidence
+  the claim is wrong rather than the wording, and the same trap has a second
+  form the skill does not name: a structural complaint answered structurally
+  when what was missing is material.
 - **Friction** — the skill has now had a section added and retired twice in five
   days: the routing block, and this. Nothing in it distinguishes a provisional
   rule from a settled one, which was recorded as a reopen item on the first

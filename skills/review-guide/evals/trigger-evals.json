@@ -406,24 +406,6 @@
       ]
     },
     {
-      "name": "the ask closes the summary rather than opening a section",
-      "prompt": "Draft the body for a change with two decisions I want opinions on. Where do the asks go?",
-      "expectations": [
-        "Put the asks in the paragraph closing the TL;DR, numbered",
-        "Do not create a separate section for them",
-        "Mark each number again where its evidence appears"
-      ]
-    },
-    {
-      "name": "an ask that argues its own items",
-      "prompt": "My opening list says: '1. One repository-wide setting for a fact that differs between the vessel and the simulator. The registry is deployment-independent by design; I chose a single flag plus an override rather than teaching it about deployment profiles.' Is that right?",
-      "expectations": [
-        "Cut the argument from the ask and leave the naming clause",
-        "Point out the reviewer cannot evaluate it before the mental model",
-        "Keep the reasoning where the evidence for it appears"
-      ]
-    },
-    {
       "name": "an empty ask is stated, not omitted",
       "prompt": "Nothing in this change needs a reviewer decision. Should I just leave the ask out of the summary?",
       "expectations": [
@@ -439,6 +421,33 @@
         "Link the base guide by pull-request number and state only this change's delta",
         "Name the risk that retyped copies disagree after the first edit",
         "Keep the diagram shared with this change's piece marked"
+      ]
+    },
+    {
+      "name": "the summary points at the decisions rather than naming them",
+      "prompt": "Draft the body for a change with two decisions I want opinions on. What does the summary say about them?",
+      "expectations": [
+        "Close the TL;DR with a pointer: how many, whether any block, and where they are",
+        "Do not state the decisions there, because their context cannot be supplied yet",
+        "Give each decision its own subsection under Decisions"
+      ]
+    },
+    {
+      "name": "a question asked before its context",
+      "prompt": "My opening list says '2. The middle option has no user. Of the three ways a stream can answer, the interesting one is chosen by zero streams today.' The three ways are introduced two sections later. Fix it.",
+      "expectations": [
+        "Move the item into its own subsection where the three ways are laid out first",
+        "Put the context, then the reference, then the question, in that order",
+        "Treat a question the reviewer cannot parse yet as a delay rather than an ask"
+      ]
+    },
+    {
+      "name": "two decisions under one heading",
+      "prompt": "I put both the registry-shape decision and the enforcement decision under one 'Registry and the simulator' subsection. Is that fine?",
+      "expectations": [
+        "Split them into one subsection per decision",
+        "Say that a shared heading gets answered as one, usually only the first",
+        "Keep each one's own context and reference"
       ]
     }
   ]
