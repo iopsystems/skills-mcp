@@ -185,7 +185,7 @@ fn installed_state_records_the_exact_clean_base_and_declared_customizations() {
     assert_eq!(state.source.commit, SOURCE_COMMIT);
     assert!(is_lower_hex(&state.source.commit, 40));
     assert_eq!(state.installed_at, "2026-07-14");
-    assert_eq!(state.last_upgraded_at, None);
+    assert_eq!(state.last_upgraded_at.as_deref(), Some("2026-08-24"));
     assert!(is_lower_hex(&state.base.aggregate_sha256, 64));
 
     assert_eq!(manifest.schema_version, 1);
@@ -195,7 +195,7 @@ fn installed_state_records_the_exact_clean_base_and_declared_customizations() {
     assert!(manifest.compatibility.iter().any(|value| value == "codex"));
     assert_eq!(
         state.base.aggregate_sha256,
-        "d27f6594f7cbc7ed7a379bdec16d53031ca039a5e01e3b89f1feb9166f9389a7"
+        "0912f10292270d4e7c7fa56dbca3329425545de04fe019ac603e7ee0aa84a97a"
     );
     assert_eq!(
         state.base.aggregate_sha256,
