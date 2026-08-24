@@ -2,7 +2,7 @@
 name: review-guide
 description: |
   Draft the pull-request body as a guide for the human reviewing it: where to
-  look first, what was tested and what was not, which calls were judgment
+  look more closely, what was tested and what was not, which calls were
   rather than deduction, and what will only show up in production. Use when
   asked to "draft the PR body", "write the PR description", "make this
   reviewable", "write a review guide", or whenever opening or updating a pull
@@ -98,10 +98,18 @@ It is a short essay, not a label, and it answers three questions in order:
 3. **What is true once it lands?** The state the reviewer should expect
    afterwards, including what still does not work.
 
-Close with one line naming what the change asks of the reviewer, **as its own
-paragraph**. Fused to the end of the summary it disappears into the sentence
-before it; the line break is what makes it findable. What to look out for
-expands it into the numbered items.
+Close with a pointer to the ask, **as its own paragraph**: how many decisions
+want the reviewer, whether any block, and where they are. Fused to the end of
+the summary it disappears into the sentence before it; the line break is what
+makes it findable.
+
+A pointer, not the asks themselves. Naming a decision costs the context that
+makes it a decision, and the summary is the one place that context cannot be
+supplied — so "three decisions want your opinion, none blocking; each is its own
+subsection under Decisions" is the whole paragraph. Never leave it out: when
+nothing needs the reviewer, it says so — "Nothing here needs a decision; the four
+checks came back empty" — because an absent ask and an empty one read
+identically, and only one of them means you looked.
 
 Length follows those answers and nothing else. A change that crosses subsystems
 earns a paragraph. A small change collapses all three into one sentence, because
@@ -115,7 +123,7 @@ reviewer must then read to use.
 the strongest available signal that you described the change instead of the
 reason for it. The reviewer meets `StreamSpec` before they know what a stream
 is, and a name they cannot resolve costs them the sentence it appears in. Names
-belong under Where to look first, after the mental model has given them
+belong under Where to look more closely, after the mental model has given them
 somewhere to land.
 
 A worked example, answering the three questions above. The change splits one
@@ -138,77 +146,91 @@ name pre-loaded.
 The test: if a reader who has not seen the codebase cannot say what problem the
 change solves, the TL;DR is describing the edit rather than the reason.
 
-### What to look out for
+### One subsection per decision
 
-The reviewer has read one paragraph. They cannot answer a question yet, and a
-list of questions at the top of a page is a quiz before the lesson. So the ask
-is not a request for answers — it is the set of things to carry while reading.
+A decision the reviewer can act on needs three things in front of it, in this
+order, and the order is the rule:
 
-Number them. Then mark each one again, by number, at the place further down
-where its evidence appears. The reviewer meets the item twice: once as a flag to
-hold, once as the detail that lets them settle it.
+1. **The context.** What the arrangement was, and what about it forces a choice.
+   Written so someone who has not opened the code can follow it.
+2. **The reference.** `path:line` for the place the choice is made, so the
+   reviewer can go and look rather than take the description on trust.
+3. **The question**, last, once both of those are standing. What was chosen,
+   what was rejected, and what would change it.
+
+Each decision is its own subsection under `## Decisions`, with a heading that
+names it. That is what makes the guide navigable — a reviewer can answer one and
+leave the rest, and a thread can point at a heading.
 
 ```markdown
-## What to look out for
+## Decisions
 
-Two calls and one risk, none blocking. Carry these while you read; each is
-marked again where its evidence appears.
+### One repository-wide setting for a fact that differs by deployment
 
-1. [ ] **Which machine publishes the operator's commands.** A claim about the
-       vessel rather than about the code, and the recorded labels disagree.
-       I cannot check this from here.
-2. [ ] **Refusing to start on an unnameable machine.** Deliberate, but it turns
-       a naming mistake into no recorder at all.
-3. [ ] **Message-size headroom**, to accept or to send back for widening.
+The registry is deployment-independent: one row per stream, the same on the boat
+and in the simulator. But whether a sensor labels its own records is not the
+same in both — it is true on the boat and false in the simulator, which
+publishes a sensor's topics without running the sensor.
+
+`packages/agrippa-config/src/streams.rs:290`
+
+I chose one flag stating the vessel's truth, plus an explicit override for the
+simulator, rather than teaching the registry about deployment profiles. The
+override stops scaling at a third deployment that differs again.
+
+**Is a single flag the right shape here, or should the registry carry the
+deployment dimension?**
 ```
 
-Then, in the section that carries the evidence:
+Rules that keep the section honest:
 
-<!-- cite-ignore -->
-> **[1]** `src/registry/streams.rs:490` — the comment asserting that the four
-> command streams originate on the cabin machine …
-
-Rules that keep the list honest:
-
-- **One item per thing to watch**, numbered, and marked again below. An item
-  never marked again is a flag the reviewer carries to no purpose.
+- **Context before question, always.** A question a reviewer cannot yet parse is
+  not an ask, it is a delay: they carry it until the context arrives, then have
+  to come back. This is the failure that retired an earlier design, in which the
+  asks were listed together above the mental model.
 - **Only what the reviewer can settle.** If you can settle it, settle it in the
-  guide and leave it out. An item you already know the answer to is a quiz.
-- **Say what each will need by the end** — a decision, a confirmation of fact,
-  or an acknowledgment of a risk. Those cost different amounts.
-- **Say which block the merge**, if any, in the opening sentence.
-- **Never empty.** When nothing needs the reviewer, write one line saying so:
-  "Nothing here needs a decision — the checks that would produce one came back
-  empty." An absent list and an empty one read identically, and only one of them
-  means you looked.
+  guide and leave it out. A decision you already know the answer to is a quiz.
+- **Say what each needs** — a decision, a confirmation of fact, or an
+  acknowledgment of a risk. Those cost different amounts.
+- **Say which block the merge**, in the subsection, not only in the pointer.
+- **One subsection per decision.** Two decisions under one heading get answered
+  as one, and usually only the first gets answered at all.
+- **Never a bare list of headings.** A subsection with a question and no context
+  is the old failure with extra structure.
+
+Calls that need no answer do not get subsections. They stay a short list at the
+end of the section, one line each, under a sentence saying they are recorded
+rather than asked. That is the third tier: the point of the change, then what
+you are merely unsure of, then what you are only putting on the record.
 
 ### Then the mental model
 
-The order of the opening is the point. The TL;DR says why this exists; the
-look-out list says what to carry while reading. **The mental model comes next**,
-before any section that names a type, because it is what the rest of the guide
-is written in terms of. Content for it is below under The mental model.
+The order of the opening is the point. The TL;DR says why this exists and
+closes by pointing at the decisions. **The mental model comes next**, before any section that
+names a type, because it is what the rest of the guide is written in terms of.
+Content for it is below under The mental model.
 
 Always present, in this order:
 
 1. **TL;DR.** Why, the key idea, and what is true afterwards — as long as those
    three answers need, and no longer.
-2. **What to look out for.** Numbered items to carry while reading, each
-   marked again where its evidence appears. Never empty.
-3. **The mental model.** The concepts the reviewer needs before any detail means
+2. **The mental model.** The concepts the reviewer needs before any detail means
    anything, and where this change sits among them. A diagram when they have a
    shape.
-4. **What changed, and the claim it makes.** One paragraph expanding the TL;DR
+3. **What changed, and the claim it makes.** One paragraph expanding the TL;DR
    rather than repeating it. The claim is what would be false if the change
    were wrong.
-5. **Where to look first.** Ranked reading order, plus what is safe to skim.
+4. **Decisions.** One subsection per decision that wants the reviewer, each
+   laying out its context before it asks its question. Then the calls that need
+   no answer, as a short list.
+5. **Where to look more closely.** Ranked reading order, plus what is safe to
+   skim.
 6. **Testing.** Methodology, what ran, its actual output, and the gaps.
-7. **Judgment calls and low certainty.**
-8. **Production-only risks**, with a direct invitation to weigh in.
+7. **Production-only risks**, with a direct invitation to weigh in.
 
 Present when earned:
 
-9. **Not in scope**, when a reader would otherwise ask why something is missing.
+8. **Not in scope**, when a reader would otherwise ask why something is missing.
 
 Drop a section only when the change genuinely has nothing in it, never to reach
 a size. Any section holding an item that cleared the publish test stays,
@@ -221,12 +243,12 @@ drops the others.
 A very small change reduces to a single sentence, but only when the publish test
 found nothing at all. That sentence is the TL;DR, and nothing follows it.
 
-The certainty section is the exception to emptiness: it never disappears
-silently — it says "none, and here is why".
+Decisions is the exception to emptiness: it never disappears silently — it says
+"none, and here is why".
 
 ## The mental model
 
-This section sits directly after the look-out list. A
+This section sits directly after the TL;DR. A
 reviewer who meets a field name before they know what the thing holding it is
 for has nowhere to put it. Type names, field names, and function names are
 the last thing a guide reaches for, not the first.
@@ -241,12 +263,12 @@ Establish, in this order:
    exists to do for them.
 3. **Where this change sits** among those concepts, and what it moves.
 
-Only then can Where to look first name a type, because the name now has
+Only then can Where to look more closely name a type, because the name now has
 somewhere to land.
 
 State the starting point you assume, and name where to jump by its heading:
-"This assumes you know the ring protocol; skip to Where to look first if you
-do." That costs one line and releases the reviewer who already holds the model.
+"This assumes you know the ring protocol; skip to Where to look more closely
+if you do." That costs one line and releases the reviewer who already holds the model.
 
 A cross-reference names a section exactly as its heading reads. "The reading
 order" and "the certainty section" are descriptions, not addresses; a reviewer
@@ -267,6 +289,15 @@ Two failure modes:
 
 Omit it only when the change touches one concept the reviewer certainly holds: a
 typo, a version bump, a rename inside one file. The burden is on omitting.
+
+**In a stack, the model is written once.** The guides in a stacked series share
+one set of concepts, and retyping them per pull request produces near-identical
+sections that no longer agree after the first edit — and a reviewer working up
+the stack rereads a page they already hold to find the two sentences that are
+new. Write the model in the base guide, link it from each guide above, and state
+only this change's delta: what it adds to the model, or what it makes false.
+A guide whose reviewer has not read the base still needs the link to be one
+click, so name the pull request, not "the guide below".
 A guide that opens on field names with no picture behind them is the failure
 this section exists to prevent, and it is the one readers report.
 
@@ -333,7 +364,62 @@ wrong, not only that the wording is. Go back to the code before reaching for
 better sentences. The temptation runs the other way, because rewording is fast
 and re-reading is not.
 
-## Where to look first
+## Decisions
+
+This is the section the reviewer cannot reconstruct alone, and the one faked
+most often in both directions. Its shape — context, reference, question, one
+subsection each — is under One subsection per decision above.
+
+**Two things earn a reviewer's attention, and they are not equal.** The first is
+what the change is *for* — the choice the whole change rests on, the one that
+would make the work wrong if it were wrong. The second is everything the author
+happens to be unsure about. They often overlap, and when they do the item
+appears once, at the top.
+
+So the section is ordered by centrality, not by severity and not by the order the
+questions occurred to you. It opens with the decision that is the point of the
+change. Then a line demoting the rest — "the rest is lower stakes: things I am
+less sure of rather than what this change is for" — and the remaining
+subsections after it.
+
+That ordering is the guide's only defense against a reviewer spending their
+attention evenly. A leftover uncertainty presented beside the change's central
+question reads as equally weighted, and the reviewer answers whichever is
+easiest.
+
+When the point of the change is not itself in question, say so in one line and
+go straight to the rest. A manufactured question about the central choice is
+worse than admitting it was deducible.
+
+Every subsection cites concrete evidence:
+
+- a requirement sentence that admits two readings, quoted
+- a path with no test
+- an assumption made and never verified
+- a measurement not taken
+- an interface whose contract the caller and callee state differently
+
+Every one carries the call that was made, the alternative that was rejected, and
+what evidence would change it. Without those three it is a worry, not a finding;
+drop it.
+
+Two failure modes, both defects:
+
+- **Manufactured uncertainty.** Hedging to look careful. If nothing was
+  genuinely unsettled, say so and say why the change was deducible.
+- **Suppressed uncertainty.** Presenting one reading of a vague requirement as
+  the only reading. If a requirement was ambiguous and a choice was made, the
+  reviewer owns that choice as much as the author.
+
+Do not rate confidence. A number invites the reviewer to trust a self-report
+that carries no information. The evidence carries the signal.
+
+## Where to look more closely
+
+This follows Decisions, so the reviewer reaches it already knowing what is being
+asked of them and can read for those answers rather than reading evenly. It also
+means an item here can point at a decision by its heading instead of restating
+it.
 
 Rank by the cost of a missed defect multiplied by the chance the reviewer
 misses it. Never rank by file size, path order, or the order the diff happened
@@ -347,6 +433,10 @@ Highest attention first:
    held elsewhere, a caller not shown, an ordering another module guarantees.
 3. Code no test covers.
 4. Code the author is least sure of.
+
+The heading says *more closely*, not *first*, because by this point the reviewer
+has already read three sections. What it ranks is attention, not order — where
+to slow down, against a guide they are reading straight through.
 
 Then name what is safe to skim, and why: generated output, mechanical renames,
 formatting, a change repeated identically across many files. Naming the skimmable
@@ -404,34 +494,6 @@ percentage; it answers a question nobody asked and hides the gap that matters.
 Never state that a command ran when it did not. If a check was skipped, say
 which and why. A skipped benchmark named is useful; a skipped benchmark implied
 to have passed is a defect in the guide.
-
-## Judgment calls and low certainty
-
-This is the section the reviewer cannot reconstruct alone, and the one faked
-most often in both directions.
-
-Every item cites concrete evidence:
-
-- a requirement sentence that admits two readings, quoted
-- a path with no test
-- an assumption made and never verified
-- a measurement not taken
-- an interface whose contract the caller and callee state differently
-
-Every item carries the call that was made, the alternative that was rejected,
-and what evidence would change it. An item without those three is a worry, not
-a finding; drop it.
-
-Two failure modes, both defects:
-
-- **Manufactured uncertainty.** Hedging to look careful. If nothing was
-  genuinely unsettled, say so and say why the change was deducible.
-- **Suppressed uncertainty.** Presenting one reading of a vague requirement as
-  the only reading. If a requirement was ambiguous and a choice was made, the
-  reviewer owns that choice as much as the author.
-
-Do not rate confidence. A number invites the reviewer to trust a self-report
-that carries no information. The evidence carries the signal.
 
 ## Production-only risks
 
@@ -506,8 +568,9 @@ rules carry most of the weight here:
   its sections destroys the association each section was building.
 
 One interaction belongs to this skill alone. A guide quotes evidence: real
-command output in Testing, a requirement sentence in the certainty section, a
-flag or a path under Where to look first. Those are untouchable under that skill's
+command output in Testing, a requirement sentence under Decisions, a
+flag or a path under Where to look more closely. Those are untouchable under that
+skill's
 own rule, and a word-level pass that edits a pasted result, a quoted error, or
 an identifier has broken the evidence it was cleaning.
 
@@ -529,6 +592,11 @@ the review, not in the guide's prose.
 | "Anyone reviewing this already knows the subsystem." | Then one line saying so releases them. Assuming it strands everyone else. |
 | "The details are the review; context is padding." | A detail with nothing to attach to is not reviewed, only read. |
 | "Every PR deserves a full guide." | A guide with nothing in it teaches reviewers to skim the next one. |
+| "Each guide in the stack should stand alone." | Then each one restates the model, and the copies disagree by the third edit. Link the base and state the delta. |
+| "The look-out list makes the asks impossible to miss." | It states them where the reviewer cannot follow them yet. A decision needs its context in front of it, which is why each gets a subsection. |
+| "Listing the asks up front is friendlier than making them scroll." | Not when the list is unreadable there. The summary points; the subsection asks. |
+| "All the open questions matter, so they go in one flat list." | Then the reviewer answers the easiest one. Lead with what the change is for; the rest is a by-the-way. |
+| "Leading with the central choice buries my real worry." | If the worry is what the change is for, it *is* the central choice. If it is not, it is a by-the-way, and saying so is what makes the first one findable. |
 | "Establishing the before-state makes it long." | Length is not the cost. A reader who cannot follow it is. |
 | "I am only rewording this section." | The words are claims about code. Re-read the code, or you are polishing a guess. |
 | "'Writes nothing' is obviously about the disk." | It writes to buffers and publishes to the bus. Name the scope or the claim is false. |
@@ -543,10 +611,22 @@ the review, not in the guide's prose.
 - The body opens with a heading instead of a TL;DR.
 - The ask is fused onto the last clause of the summary instead of standing as
   its own paragraph.
-- The ask is folded into the summary instead of standing as its own list.
-- The look-out list is absent rather than saying nothing needs a decision,
-  or contains an item the author could have settled.
-- A numbered item is never marked again where its evidence appears.
+- The ask is missing rather than saying nothing needs a decision, or contains
+  an item the author could have settled.
+- A decision is stated before the context that makes it a decision, so the
+  reviewer meets the question before they can parse it.
+- The summary names the decisions instead of pointing at them, which costs the
+  context they need and gives the reviewer the question twice.
+- Two decisions share one subsection, so they get answered as one — usually
+  only the first.
+- The decisions are ordered by when they occurred to the author, or by severity,
+  rather than by which one the change is for.
+- A leftover uncertainty sits above the central question, or beside it with
+  nothing marking the two as different weights.
+- A decision has a question and no reference, so the reviewer has to take the
+  description of the code on trust.
+- A stacked guide restates the shared mental model instead of linking the guide
+  that holds it and stating this change's delta.
 - A cross-reference names a section by description rather than by its heading,
   so the reviewer has to guess which one was meant.
 - An identifier the change did not introduce is used with no gloss, as though
