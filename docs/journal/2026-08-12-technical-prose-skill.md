@@ -47,7 +47,7 @@ Three structural facts about this repository constrain the design:
   therefore exactly one file, and a shared rule set cannot be a servable
   sub-file — it must be its own skill with its own trigger.
 - `skills/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
-  and `:37` ("use `dataflow-diagram` directly") establish the precedent for one
+  and `:38` ("use `dataflow-diagram` directly") establish the precedent for one
   skill deferring to another in prose, by name, with no import mechanism.
 - `templates/document-feature-skill/` is an inert template, seeded and
   customized per project. A reference from it to an MCP-served skill dangles in

@@ -34,10 +34,10 @@ does not. All five line citations in tracked markdown resolved correctly when
 checked by hand before any code was written:
 
 - `src/main.rs:38` embeds `skills/` through `include_dir!`.
-- `skills/architecture-diagram/SKILL.md:30` reads "treat this skill as
+- `skills/architecture-diagram/SKILL.md:31` reads "treat this skill as
   **beta**".
 - `skills/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
-  and `:37` ("use `dataflow-diagram` directly") are the two deferral precedents.
+  and `:38` ("use `dataflow-diagram` directly") are the two deferral precedents.
 - `Cargo.toml:6` declares "MIT OR Apache-2.0".
 
 That finding reframed the work. **A repository linter would have caught none of
@@ -70,7 +70,7 @@ backticked and double-quoted spans as candidate anchors, and requires one to
 appear verbatim at the cited line.
 
 <!-- cite-ignore -->
-A bare `` `:37` `` inherits the path from the previous citation in its
+A bare `` `:38` `` inherits the path from the previous citation in its
 paragraph, an idiom two entries already use.
 
 When no anchor sits at the cited line, the checker relocates on the nearest candidate

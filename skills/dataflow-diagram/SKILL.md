@@ -42,13 +42,16 @@ back here. A convention someone rejected for a stated reason is worth more
 than one nobody has tested, and this skill has more of the second kind than
 it should.
 
-One such contact has now happened: the `architecture-diagram` skill
+Two such contacts have now happened. The `architecture-diagram` skill
 carries these principles into system-architecture charts — a build-time
 structure chart plus runtime thread/request charts — and records where the
 defaults fought (arrows dropped from the structure chart, provenance
 demoted from a channel, geometry emitted directly). Use it for that duo;
 this skill remains the home for dataflow and pipeline charts of a single
-running program.
+running program. The second contact was a request-lifecycle chart of an
+io_uring runtime library, whose reader found the defects the sections on
+placement and on the perceptual gate below now name: every one of them was
+inside the viewport, and every one was the first thing the reader saw.
 
 This skill ships in two forms with one structure: the skill itself is
 complete working defaults — enough for a single-use chart in a repository
@@ -279,6 +282,14 @@ Number the compute nodes with their position in the evaluation order, as a
 circled digit (U+2460 onward). That is a real fact about the program, and
 numbering is only honest when order carries information.
 
+Where one chart would carry two materially different implementations of the
+same flow, give each its own panel on an obvious comparison axis — top and
+bottom — and repeat the stages they share. Interleaving two backends'
+operation names inside one set of nodes makes the shared lifecycle look like
+shared mechanism, which is the opposite of what a comparison is for.
+Repetition costs a reader less than one node carrying two vocabularies, and
+what the variants genuinely share belongs in the prose beside the chart.
+
 ## The key is a graph, not a picture of one
 
 Draw the key with the same node shapes the chart draws, from the same
@@ -317,6 +328,18 @@ Make the check fail the build rather than warn. The free region moves
 whenever an element is added, and a warning about a diagram nobody is
 currently looking at is a warning nobody reads.
 
+A layout engine is doing more placement work than the inset key makes
+visible, and a generator that emits geometry itself inherits all of it: a
+label anchored and centered against the shape it names rather than a nominal
+coordinate, a multiline label treated as one line group before its baselines
+are placed, the connectors on one shape distributed as a group rather than
+chosen one at a time, routing that lands on a resolved border rather than the
+column the shape is supposed to sit in, and children that stay inside their
+parent's content area. `architecture-diagram` carries that set, because
+emitting geometry directly is its default. Bounds are the weakest check of
+the group and the only one most generators run: every defect in that list
+sits comfortably inside the viewport.
+
 ## Verify the rendering, not the source
 
 Layout engines accept attributes they ignore. A setting on the wrong graph,
@@ -333,6 +356,34 @@ Keep the output a text format whose source is the artifact — a `.dot` or
 `.d2` that renders to SVG, not a pasted raster. A text source diffs, greps,
 and survives review; an image is opaque to half the readers of a pull
 request and to every tool.
+
+## The perceptual gate
+
+Assertions catch drift, not confusion. A chart whose every claim is derived
+and whose every element is in bounds can still label the wrong thing, name
+one concept twice, or lay a group out so that the eye reads a difference the
+program does not have. Nothing in the generator will report that, so a human
+reads every new chart and every visual change, and approval of one revision
+does not carry to the next.
+
+When the raster preview that review depends on is unavailable, say so and
+name what stood in for it — markup validity, deterministic regeneration
+compared by hash, bounds and collision checks, a reviewer reading the
+committed artifact. A gate skipped without that record reads afterwards as a
+gate passed.
+
+Then convert what the reader found into an assertion. A visual defect fixed
+in coordinates comes back at the next layout change; the same defect fixed as
+a check on the generator's output does not. This is the only mechanism that
+turns one reader's afternoon into a property of the chart.
+
+One thing readers catch that no check will: a label that spends one word on
+two meanings. A stage named for `poll` in a chart comparing readiness polling
+with task polling names neither, and the reader cannot tell which one the
+node is about. Reach for the lifecycle word — `schedule` — and leave the
+mechanism to the prose, unless the mechanism is the distinction the chart
+exists to draw. This is `technical-prose`'s one-name-one-thing rule, and a
+label, with no sentence around it to recover in, is where it hides best.
 
 ## Prose in the chart
 
@@ -351,6 +402,15 @@ both overrides nothing and reads as several authors.
 - An inset element positioned by adjusting a number until it looked right.
 - A collision check that inspects nodes but not edges, or that silently
   matched fewer elements than the graph contains.
+- A multiline label centered by its first baseline rather than by its line
+  group.
+- Connectors attached to one shape at points chosen one at a time.
+- A child shape crossing the bounds of the cluster that contains it.
+- Two implementations interleaved in one flow rather than drawn as panels.
+- A label carrying a word that means two things in the chart it sits in.
+- A reported visual defect fixed in coordinates rather than in an assertion.
+- A chart shipped without a human reading it, or a review gate skipped for an
+  unavailable preview with no record of what stood in for it.
 - A layout attribute added without confirming the rendered size changed.
 - A diagram checked in as an image with no source beside it.
 - Two visual channels carrying the same distinction, or one channel
