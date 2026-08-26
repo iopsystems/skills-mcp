@@ -1,4 +1,5 @@
 use sha2::{Digest, Sha256};
+use std::collections::BTreeSet;
 use std::fs;
 use std::path::PathBuf;
 use std::process::Command;
@@ -308,4 +309,125 @@ fn markdown_anchor(heading: &str) -> String {
             }
         })
         .collect()
+}
+
+/// The README's library overview is hand-maintained: the minimap names every
+/// skill and template with no description, and the section under it names each
+/// one again with a line of purpose. Both drift silently when a skill is added,
+/// renamed, or removed, which is the failure mode three skills in this
+/// repository exist to prevent — and neither had anything behind it.
+///
+/// The minimap is checked by set equality, so an addition and a stale name both
+/// fail. The prose is checked by presence plus an allowlist of the tokens it
+/// legitimately backticks that are not skills.
+#[test]
+fn readme_library_overview_matches_the_skills_and_templates_on_disk() {
+    /// Backticked tokens in the prose that are not skill or template ids.
+    const NON_ID_TOKENS: &[&str] = &[
+        ".agents/skills/document-feature/",
+        "knowledge-iop",
+        "skill_catalog",
+        "skill_template_get",
+        "vault_*",
+    ];
+    const MAX_MINIMAP_COLUMNS: usize = 78;
+
+    fn directory_names(parent: &str, marker: &str) -> BTreeSet<String> {
+        fs::read_dir(root().join(parent))
+            .unwrap_or_else(|error| panic!("read {parent}: {error}"))
+            .map(|entry| entry.unwrap().path())
+            .filter(|path| path.join(marker).is_file())
+            .map(|path| path.file_name().unwrap().to_string_lossy().into_owned())
+            .collect()
+    }
+
+    let readme = read("README.md");
+    let start = readme
+        .find("## What the library contains")
+        .expect("library overview heading");
+    let section = &readme[start..];
+    let end = section[1..]
+        .find("\n## ")
+        .map(|offset| offset + 2)
+        .expect("a section must follow the library overview");
+    let section = &section[..end];
+
+    let fence = section
+        .find("```")
+        .expect("the overview opens with a minimap");
+    let fence_end = fence
+        + 3
+        + section[fence + 3..]
+            .find("```")
+            .expect("unclosed minimap fence");
+    let minimap = &section[fence + 3..fence_end];
+    let prose = format!("{}{}", &section[..fence], &section[fence_end + 3..]);
+
+    let mut expected = directory_names("skills", "SKILL.md");
+    expected.extend(directory_names("templates", "template.yaml"));
+    assert_eq!(
+        expected.len(),
+        28,
+        "inventory size changed; update the README"
+    );
+
+    // Names sit after the dot leader on a labeled line, or alone on a
+    // continuation line. The root line and the group banners carry neither.
+    let mut drawn: Vec<String> = Vec::new();
+    for (index, line) in minimap
+        .lines()
+        .filter(|line| !line.trim().is_empty())
+        .enumerate()
+    {
+        if index == 0 || line.chars().any(|character| character.is_ascii_uppercase()) {
+            continue;
+        }
+        assert!(
+            line.chars().count() <= MAX_MINIMAP_COLUMNS,
+            "minimap line wraps at {MAX_MINIMAP_COLUMNS} columns: {line}"
+        );
+        let names = match line.rfind("··") {
+            Some(leader) => &line[leader + "··".len()..],
+            None => line,
+        };
+        drawn.extend(
+            names
+                .split('·')
+                .map(|name| name.trim_matches(|c: char| !c.is_ascii_alphanumeric()))
+                .filter(|name| !name.is_empty())
+                .map(str::to_owned),
+        );
+    }
+
+    let unique: BTreeSet<_> = drawn.iter().cloned().collect();
+    assert_eq!(
+        unique.len(),
+        drawn.len(),
+        "a name is drawn twice: {drawn:?}"
+    );
+    assert_eq!(
+        unique, expected,
+        "the minimap disagrees with skills/ and templates/"
+    );
+
+    let allowed: BTreeSet<&str> = NON_ID_TOKENS.iter().copied().collect();
+    for name in &expected {
+        let quoted = format!("`{name}`");
+        assert!(
+            prose.contains(&quoted),
+            "{name} is in the minimap but not in the overview prose"
+        );
+    }
+    for token in prose
+        .split('`')
+        .skip(1)
+        .step_by(2)
+        .collect::<BTreeSet<&str>>()
+    {
+        assert!(
+            expected.contains(token) || allowed.contains(token),
+            "the overview prose names {token:?}, which is neither a skill, a \
+             template, nor a declared exception"
+        );
+    }
 }
