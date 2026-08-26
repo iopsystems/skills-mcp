@@ -1,5 +1,5 @@
 ---
-status: open
+status: shipped
 opened: 2026-08-25
 updated: 2026-08-25
 prs: [47, 48]
@@ -55,12 +55,16 @@ appears exactly once, and no line passes 75 columns.
 
 ## Outcome
 
-Partly landed. The overview shipped in #47, merged as `5ff5884`. The minimap is
-open in #48.
+Shipped. The overview landed in #47, merged as `5ff5884`; the minimap and this
+entry landed in #48, merged as `41023d1`.
 
 The charter gates visual-hierarchy and navigation changes on maintainer review,
-with the evidence recorded here. The maintainer merged #47, which is that
-approval for the overview; #48 is unreviewed.
+with the evidence recorded here. The maintainer merged both pull requests, which
+is that approval.
+
+The guide for #48 went through three drafts before it was proportionate to a
+32-line addition: 733 words, then 293, then 216. Only the last was published
+before the merge.
 
 ## Derived Documents
 
