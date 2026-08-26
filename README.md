@@ -144,7 +144,8 @@ Once connected, the server exposes three families of tools:
   **`vault_*`** tools for querying the knowledge vault.
 
 A good first step is to ask your agent to call `skill_catalog`, or to ask the
-recommendation question below. The only time you feed the binary directly is the
+recommendation question below. "What the library contains" further down groups
+every active skill and template by purpose. The only time you feed the binary directly is the
 raw JSON-RPC check in the "Raw MCP smoke and debugging" section.
 
 ## Ask for recommendations and use an active skill
@@ -172,13 +173,127 @@ copied into the project.
 | Use through MCP without copying it | Seed and customize locally only when the project needs adaptation | Use the customized workflow through the project's harness |
 | Updated with the server repository | Retrieved only from its declared manifest files | Tracks base version, immutable commit, digests, and local customizations in `template-state.yaml` |
 
-Current adoption surfaces include:
+## What the library contains
 
-| Kind | IDs | Purpose |
-| --- | --- | --- |
-| Active skills | `recommend-skills`, `seed-skill-template`, `engineering-journal`, plus inquiry and vault workflows | Invocable shared workflows |
-| Inert templates | `document-feature-skill`, `engineering-journal-skill` | Project-specific workflow bases |
-| Installed instance in this repository | `.agents/skills/document-feature/` | Customized documentation workflow used to produce this README |
+Twenty-four active skills and four inert templates. They are grouped below by
+where a skill's output lands, and then by what it produces. Skills marked
+*(beta)* say so in their own text: parts of what they assert rest on judgment
+rather than on evidence, and each one asks for the friction it causes to be
+recorded through `engineering-journal`.
+
+### Active skills that work in a repository
+
+**Orientation and durable record**
+
+- `catchup` — what changed in this repository since you last looked, grouped by
+  theme with the risky changes called out.
+- `engineering-journal` — one durable entry per non-trivial effort: goal,
+  evidence, outcome, and lessons, including measured negative results.
+
+**Diagrams derived from code, not drawn beside it**
+
+- `architecture-diagram` *(beta)* — a build-time structure chart plus runtime
+  thread and request charts, derived from the build manifest and held to the
+  source by assertions.
+- `dataflow-diagram` — a pipeline, DAG, or stream-topology chart generated from
+  the program's own wiring.
+- `format-layout-diagram` *(beta)* — a byte anatomy of a memory or wire format,
+  with every span decoded through the shipping codec.
+
+**Prose that ships with a change**
+
+- `technical-prose` — the word-level bar: no hedged modality, no vocabulary that
+  carries no fact, one name per thing.
+- `sweep-comments` — comments and docstrings held to that bar, and swept for
+  staleness before a pull request.
+- `review-guide` *(beta)* — the pull-request body written as a guide for the
+  person who has to review it.
+- `review-exchange` — threaded review notes exchanged with a second local agent
+  over a repo-local git bridge.
+
+### Active skills that work in the knowledge vault
+
+These read and write the `knowledge-iop` vault and need access to it. The
+`vault_*` tools listed under "Using the server" are the programmatic query layer
+over the same index.
+
+**Look before you write**
+
+- `vault-search` — check what the vault already holds, so new work supersedes or
+  frames from an existing artifact instead of orphaning itself.
+
+**Narrative frames**
+
+- `open-arc` / `close-arc` — open and close an arc: a unit of change with a
+  beginning, middle, and end, spanning weeks to quarters.
+- `define-scope` — register a scope: a stable reference frame the vault tracks
+  for years rather than for the length of an arc.
+
+**Paired briefs and the decisions that cite them**
+
+- `frame-problem` — a problem brief, written before any solution is proposed.
+- `propose-design` — a design brief, which must declare the problem brief it
+  frames.
+- `record-decision` — a decision citing its design briefs, giving three-hop
+  traceability from *why do we do this* back to *because of this problem*.
+
+**Parallel inquiry**
+
+- `open-inquiry` — a bounded inquiry for when several people should explore a
+  question independently before anyone converges.
+- `submit-exploration` — one explorer's take, drafted without seeing the others.
+- `synthesize` — the synthesis that closes an inquiry once the barrier releases.
+
+**Capture and hygiene**
+
+- `discuss` — a discussion or session note, plus a triage of which existing
+  artifacts it implicates.
+- `reconcile-vault` — graph hygiene: interactive after a phase skill commits, or
+  a whole-vault pass on a schedule.
+
+**Spanning both**
+
+- `plan-feature` — a multi-turn Q&A that scopes a feature end to end, then fans
+  the result into paired vault briefs and, optionally, a design doc in the
+  feature's own repository.
+
+### Active skills that work on this catalog
+
+- `recommend-skills` — which of these skills to use through MCP, seed locally, or
+  skip, ranked against evidence from your project.
+- `seed-skill-template` — the approval-gated seed, customize, or upgrade of a
+  project-local instance.
+
+### Skill templates
+
+Three of these four have an active twin above. Where both exist, the active
+skill is a complete set of working defaults and the template adds a charter: the
+bindings no default can supply, plus any deviation with its reason. Use the
+active skill while the defaults hold; seed the template when the workflow has to
+be bound to a project's own toolchain, audiences, or reviewers.
+
+**Documentation**
+
+- `document-feature-skill` — source-backed documentation of a feature across
+  README, code documentation, rendered CLI help, and diagrams, evaluated against
+  frozen tasks per audience. The only one with no active twin: its first step is
+  a charter ranking the project's audiences, which no default can supply.
+
+**Durable record**
+
+- `engineering-journal-skill` — the journal workflow bound to a project's own
+  lifecycle vocabulary and conventions.
+
+**Diagrams**
+
+- `architecture-diagram-skill` *(beta)* — the build/runtime duo bound to a
+  project's generator, freshness check, and review gate.
+- `dataflow-diagram-skill` — the dataflow workflow bound to a project's
+  generator, palette, and conventions.
+
+This repository also carries one installed instance of its own:
+`.agents/skills/document-feature/`, the customized documentation workflow that
+produces this README.
 
 Use `skill_catalog` for the complete current active-skill and template metadata.
 Use `skill_template_get` to retrieve only a template's manifest-declared files.

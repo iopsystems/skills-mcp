@@ -1,7 +1,7 @@
 schema_version: 1
 id: architecture-diagram-skill
 version: 0.1.0
-purpose: Adapt a derived, claim-checked architecture diagram duo (build-time structure chart plus runtime thread/request charts) to a project's toolchain and conventions. Beta — duo conventions tested against one system so far.
+purpose: Adapt a derived, claim-checked architecture diagram duo (build-time structure chart plus runtime thread/request charts) to a project's toolchain and conventions. Beta — duo conventions tested against two systems so far.
 entrypoint: SKILL.md
 compatibility:
   - agent-skills-common-subset
