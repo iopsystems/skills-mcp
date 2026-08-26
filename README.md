@@ -181,6 +181,38 @@ where a skill's output lands, and then by what it produces. Skills marked
 rather than on evidence, and each one asks for the friction it causes to be
 recorded through `engineering-journal`.
 
+```
+skills-mcp
+│
+├── ACTIVE ─ repository
+│   ├── orientation & record ····· catchup · engineering-journal
+│   ├── diagrams from code ······· architecture-diagram · dataflow-diagram
+│   │                              format-layout-diagram
+│   └── prose with a change ······ technical-prose · sweep-comments
+│                                  review-guide · review-exchange
+│
+├── ACTIVE ─ knowledge vault
+│   ├── look first ··············· vault-search
+│   ├── narrative frames ········· open-arc · close-arc · define-scope
+│   ├── briefs & decisions ······· frame-problem · propose-design
+│   │                              record-decision
+│   ├── parallel inquiry ········· open-inquiry · submit-exploration
+│   │                              synthesize
+│   ├── capture & hygiene ········ discuss · reconcile-vault
+│   └── spanning both ············ plan-feature
+│
+├── ACTIVE ─ this catalog
+│   └······························ recommend-skills · seed-skill-template
+│
+└── TEMPLATES
+    ├── documentation ············ document-feature-skill
+    ├── durable record ··········· engineering-journal-skill
+    └── diagrams ················· architecture-diagram-skill
+                                   dataflow-diagram-skill
+```
+
+The rest of this section is the same map with a line of purpose on each entry.
+
 ### Active skills that work in a repository
 
 **Orientation and durable record**
