@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-08-25 | [A README the library fits in](2026-08-25-readme-library-overview.md) | open |
 | 2026-08-24 | [Diagram layout rules from the ringline journal](2026-08-24-diagram-layout-from-ringline.md) | shipped |
 | 2026-08-17 | [Review guide opening, rebuilt by its reader](2026-08-17-review-guide-reader-arc.md) | shipped |
 | 2026-08-17 | [Review guide mental model](2026-08-17-review-guide-mental-model.md) | shipped |
