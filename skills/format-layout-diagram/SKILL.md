@@ -116,6 +116,18 @@ parsers; and a root style setting maximum width with automatic height, which
 collapsed the canvas to zero height in the rasterizer while looking correct
 locally.
 
+Rasterizing proves the figure drew; it does not prove the figure is balanced.
+A bracket label nearer a neighboring span than its own, a two-line label
+centered by its first baseline, an offset arrow attached wherever the code
+reached first — each is inside the frame and each is what a reader sees
+first. `architecture-diagram` carries those placement rules as a set; a byte
+grid inherits them the moment it emits its own geometry, which this skill
+requires. And when the rasterizer a check depends on is unavailable, say so
+and name what stood in for it — markup validity, a deterministic regenerate
+compared by hash, bounds and collision checks, a reviewer reading the
+committed artifact. A check skipped without that record reads afterwards as a
+check passed.
+
 Also: emit fixed ink over an opaque ground rather than colors inherited from
 the page, because a host that embeds the figure as an image strips that
 context. Give the figure a text alternative twice — an accessible label inside
@@ -182,6 +194,9 @@ is. The figure carries the shape; the entry carries the argument.
   it.
 - A fixture that is not the one the tests pin.
 - Cells past the drawing bounds, silently clipped.
+- A bracket or arrow label nearer a neighboring span than the one it names.
+- A rasterization check skipped for unavailable tooling, with no record of
+  what stood in for it.
 - An artifact committed without being rasterized the way the host will.
 - A figure that inherits its colors from the reader's theme.
 - A schematic that omits which half is reserved.
