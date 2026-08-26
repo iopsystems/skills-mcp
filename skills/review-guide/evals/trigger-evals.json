@@ -476,6 +476,33 @@
         "Go straight to the leftover uncertainties as the lower-stakes tier",
         "Do not manufacture a question about the central choice to fill the slot"
       ]
+    },
+    {
+      "name": "a small change does not grow seven headings",
+      "prompt": "This adds thirty lines to the README and nothing else. Do I still write all seven sections?",
+      "expectations": [
+        "Answer all seven, but give a heading only to the answers that need a paragraph",
+        "Fold the one-clause answers into the opening paragraph rather than heading each one",
+        "Do not drop an answer that holds an item which cleared the publish test"
+      ]
+    },
+    {
+      "name": "a heading over one sentence is furniture",
+      "prompt": "My testing section says 'the suite passes and no test covers README content'. Keep the heading?",
+      "expectations": [
+        "Drop the heading and keep the sentence in the opening paragraph",
+        "Note that losing a heading is not the same as dropping the answer",
+        "Flag that a section reading the same on every change of its kind is a category rather than an answer"
+      ]
+    },
+    {
+      "name": "a value is recorded, not asked",
+      "prompt": "I abbreviated some labels so no line passes 75 columns. I am curious whether that was right. Own subsection?",
+      "expectations": [
+        "Put it in the recorded-rather-than-asked list as one clause",
+        "Say that wanting an answer does not by itself earn a subsection",
+        "Give the reason: it turns on a value, its alternatives are obvious, and one edit reverses it"
+      ]
     }
   ]
 }

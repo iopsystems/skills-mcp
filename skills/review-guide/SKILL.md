@@ -203,6 +203,17 @@ end of the section, one line each, under a sentence saying they are recorded
 rather than asked. That is the third tier: the point of the change, then what
 you are merely unsure of, then what you are only putting on the record.
 
+**Wanting an answer is not enough to earn a subsection.** A subsection costs a
+context paragraph, a reference, and a question, and that cost is the same
+whether the item is the shape of a new interface or the width of a label. Two
+items belong in the recorded list however curious you are about them: one whose
+context is already visible in the diff, so the paragraph would narrate what the
+reviewer is looking at; and one that turns on a value rather than an approach —
+a width, a name, a threshold, a label — where the alternatives are obvious and
+the choice is reversible in one edit. Record those in a clause. Asking them in
+full costs the reviewer the same attention as the decision the change is for,
+which is the one thing the ordering rule above exists to protect.
+
 ### Then the mental model
 
 The order of the opening is the point. The TL;DR says why this exists and
@@ -210,7 +221,20 @@ closes by pointing at the decisions. **The mental model comes next**, before any
 names a type, because it is what the rest of the guide is written in terms of.
 Content for it is below under The mental model.
 
-Always present, in this order:
+These are the answers a guide owes its reviewer, in this order. They are not a
+list of headings to fill. **A heading is earned by its content.** An answer that
+needs a clause is a clause in the opening paragraph; an answer that needs a
+paragraph gets its heading. So a change that crosses subsystems grows all seven
+headings, and a one-file addition answers most of them in its first sentence and
+carries the two that have something in them.
+
+The distinction matters because the two failures look identical from the outside
+and are opposites. Dropping an answer publishes a guide that cannot say why it
+exists. Giving a one-clause answer its own heading pads the guide to look
+thorough, and the padding lands hardest on the reviewer of a small change, who
+now reads seven sections to find the two that mattered.
+
+Answer every one of these. Give a heading only to the ones that need it:
 
 1. **TL;DR.** Why, the key idea, and what is true afterwards — as long as those
    three answers need, and no longer.
@@ -232,10 +256,12 @@ Present when earned:
 
 8. **Not in scope**, when a reader would otherwise ask why something is missing.
 
-Drop a section only when the change genuinely has nothing in it, never to reach
-a size. Any section holding an item that cleared the publish test stays,
+Drop an answer only when the change genuinely has nothing in it, never to reach
+a size. Any answer holding an item that cleared the publish test stays,
 whatever the size of the change: dropping it would publish a guide that cannot
-say why it exists. A small change often carries only the claim and the reading
+say why it exists. Losing its *heading* is not dropping it — a testing answer
+that is one sentence long is one sentence in the opening paragraph, and a
+testing heading over that one sentence is furniture. A small change often carries only the claim and the reading
 order because the later sections are empty, not because it is small — and a
 change that clears the bar on production risk alone keeps that section and
 drops the others.
@@ -621,6 +647,13 @@ the review, not in the guide's prose.
   only the first.
 - The decisions are ordered by when they occurred to the author, or by severity,
   rather than by which one the change is for.
+- A Decisions section longer than the rest of the body combined.
+- A subsection asking about a value — a width, a name, a label — that one edit
+  would reverse.
+- A heading over a single sentence, or more headings than items that cleared the
+  publish test.
+- A section that would read the same on every change of its kind: "no test
+  covers README content" is a category, not a testing answer.
 - A leftover uncertainty sits above the central question, or beside it with
   nothing marking the two as different weights.
 - A decision has a question and no reference, so the reviewer has to take the
