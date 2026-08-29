@@ -1,7 +1,7 @@
 ---
 status: shipped
 opened: 2026-08-25
-updated: 2026-08-25
+updated: 2026-08-26
 prs: [47, 48]
 beta_skills: [review-guide]
 ---
@@ -72,12 +72,14 @@ None.
 
 ## Deferred or Reopen Items
 
-- Nothing checks the minimap against `skills/` and `templates/`. A skill added
-  under `skills/` reaches `skill_catalog` and nothing else, and the map goes
-  quietly wrong — the failure mode three skills in this repository exist to
-  prevent. The natural home is a test beside the citation guard, which already
-  scans `README.md` for a different kind of decay.
-- The prose overview has the same exposure and no script behind it at all.
+- ~~Nothing checks the minimap against `skills/` and `templates/`.~~ Resolved
+  2026-08-26 in #50: `readme_library_overview_matches_the_skills_and_templates_on_disk`
+  in `tests/repository_documentation.rs` holds the minimap to set equality with
+  the two directories, and the prose to presence. It landed with a failure
+  matrix — an added skill, a dropped name, a stale name, a name missing from the
+  prose, and an over-wide line each observed to fail it.
+- The prose half is checked for presence only. A duplicate bullet, or a purpose
+  line that has drifted from what the skill does, still passes.
 
 ## Skill Feedback
 
