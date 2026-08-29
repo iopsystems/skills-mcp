@@ -221,6 +221,50 @@ its fact from the code plus the language's own semantics:
 
 ## Writing new comments
 
+### The cheapest form that carries the fact
+
+The tiers decide whether a fact is stated at all. This decides what it
+costs the reader once it is. Walk the rungs in order and **stop at the
+first one that carries the fact intact**:
+
+1. **No comment.** The tiers already ruled: locally derivable is
+   deleted, and an echo of a distant model becomes a pointer or
+   nothing.
+2. **A name.** A fact a rename carries is not a comment.
+   `retry_after_ms` needs no comment giving the unit, and a comment
+   that exists to explain a name is a bug report against the name.
+   This is the rung most often skipped, because renaming is work and
+   a comment is not.
+3. **Trailing, on the line it qualifies.** A fact binding one line
+   rides on that line. It cannot drift away from what it describes, it
+   costs no vertical space, and the reader meets it with the line
+   under their eye rather than one beat before.
+4. **One line above.** For a fact binding a block rather than a line,
+   or a trailing form that would push the line past the column limit.
+5. **A doc paragraph on the item.** For a contract a caller reads
+   without reading the body: parameters, errors, panics.
+6. **The model home.** Prose explaining a shape, stated once, pointed
+   at from everywhere else.
+
+Rungs 3 and 4 are where most comments belong and where few of them
+sit. The drift is upward and it is invisible one step at a time: a
+fact that would have fit after the line becomes a line above it, then
+a sentence, then a paragraph with a lead-in, and no step buys the
+reader anything.
+
+**A rung is available only if the fact survives it intact.** Modality,
+the subject of a claim, negations, and scope qualifiers do not
+compress onto a trailing comment merely because the line has room.
+When they will not fit, that rung is not available and you take the
+next one. A shortening that changes what a comment says is not a
+shorter comment — the same rule the fragment section states about
+wording, here about placement.
+
+**Be lazy about the form, never about the reading.** A rung is chosen
+after the fact is understood, not instead of understanding it. A
+one-line comment written to avoid reading the call sites is worse than
+the paragraph it replaced: now it is both wrong and cheap to skim.
+
 ### Prefer the fragment
 
 A comment is a label on code, not prose to be read aloud, and the
@@ -397,6 +441,24 @@ the current design, not the design it was written for: a comment
 referring to anything deleted or renamed is rewritten to the truth or
 deleted.
 
+**Report pass 1 as one line per finding**, so the sweep can be checked
+without re-reading the diff:
+
+```
+<file>:<line>: <tag> <what it said>. <what stands there now>.
+```
+
+Tags are the dispositions: `drop` for a tier-1 deletion with no
+replacement, `point` for an echo reduced to a pointer at its home,
+`shrink` for a survivor compressed, `inline` for one moved onto the
+line it qualifies, `rename` for one deleted because a name now carries
+it, and `keep` for a tier-3 fact left alone. Close with the count:
+`net: -N comment lines`.
+
+A diff with nothing to cut says so in the same form — "no tier 1 or 2
+comments in the touched files" is a claim, and a claim can be wrong,
+which is what makes it worth more than silence.
+
 **Pass 2 — restore.** Walk the edit sites — every place a future
 change could land, not every place a comment currently sits — and at
 each one ask the retrieval test: could a reader who saw this site and
@@ -521,3 +583,11 @@ has a home, and it is not the code:
 - A shortened comment that dropped `only`, `at most`, or a negation.
 - A model home rewritten into fragments: explanation is the one place
   prose is doing the work.
+- A comment above a line whose fact binds that line alone.
+- A comment whose job is to explain the name directly beneath it.
+- A block comment that survived because it was already a block, rather
+  than because a shorter rung would have lost something.
+- A trailing comment that dropped a `must`, a `never`, or an `only` to
+  fit the column limit.
+- A pass-1 report that is prose rather than one line per finding, so a
+  reader cannot tell which comments were touched.
