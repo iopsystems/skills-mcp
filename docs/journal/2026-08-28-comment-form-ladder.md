@@ -1,7 +1,7 @@
 ---
 status: shipped
 opened: 2026-08-28
-updated: 2026-08-28
+updated: 2026-08-31
 beta_skills: [review-guide]
 ---
 
@@ -115,12 +115,27 @@ None.
 
 ### review-guide (beta)
 
+- **Friction** — the published guide asked the reviewer whether an exception to
+  the echo test was justified. There was no exception. The duplication it
+  described is the carve-out the swept skill already grants: an edit constraint
+  is stated at its home and "in one sentence at the site that can break it"
+  (`skills/sweep-comments/SKILL.md:207`), and this same rule is already "stated
+  in both places on purpose" (`:311`) for the reason the guide gave. The
+  reviewer answered by pointing at the rules.
+
+  The instruction that covers this tests what the author knows: settle what you
+  can settle, and leave it out of the guide. Nothing tells the author to check
+  the document being edited for an answer before asking about it, which is a
+  different move from recalling one. The gap is narrow and this is one case:
+  reopen on a second, with a form that names where to look rather than adding
+  another thing to know.
 - **Confirmation** — first use of the rule from
   `2026-08-25-review-guide-proportional.md` on a change that genuinely earns
-  sections. The guide for this change carries three headings because three
-  answers needed paragraphs, and the reading order and production risk are a
-  clause each. The rule did not fight a change that warranted length, which is
-  the failure it could plausibly have had.
+  sections. The guide carries three headings because three answers needed
+  paragraphs, and the reading order and production risk are a clause each. The
+  rule did not fight a change that warranted length, which is the failure it
+  could plausibly have had. Removing the manufactured question afterwards took
+  the guide from 628 words to 562 without touching a heading.
 
 ## Appendix: Skills Invoked
 
