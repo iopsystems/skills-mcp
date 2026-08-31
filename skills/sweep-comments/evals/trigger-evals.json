@@ -244,6 +244,42 @@
         "Do not shorten to the point that a red CI run stops saying what broke",
         "Test bar governs, not the production bar"
       ]
+    },
+    {
+      "name": "the fact fits after the line",
+      "prompt": "I wrote a two-line comment above a single statement explaining why the timeout is 30 seconds. Keep it there?",
+      "expectations": [
+        "Move it onto the line it qualifies if it fits, because the fact binds that one line",
+        "Take the line above only when a trailing form would pass the column limit or lose part of the fact",
+        "Do not keep a block form merely because it was written as one"
+      ]
+    },
+    {
+      "name": "the comment explains the name",
+      "prompt": "There is a comment saying `// milliseconds` above a field called `retry_after`. What happens to it?",
+      "expectations": [
+        "Rename the field to carry the unit and delete the comment",
+        "Treat a comment that exists to explain a name as a defect in the name",
+        "Do not shorten the comment and leave the name alone"
+      ]
+    },
+    {
+      "name": "a rung that would drop the modality",
+      "prompt": "The comment says the buffer must never be reused after this point. It will not fit as a trailing comment without cutting 'never'. What do I do?",
+      "expectations": [
+        "Take the next rung up and keep the sentence whole",
+        "Say that a rung is available only if the fact survives it intact",
+        "Refuse the shortening, because dropping the modality changes what the comment says"
+      ]
+    },
+    {
+      "name": "reporting the first pass",
+      "prompt": "How do I report what pass 1 did?",
+      "expectations": [
+        "One line per finding, giving file and line, a disposition tag, what it said, and what stands there now",
+        "Close with the net count of comment lines removed",
+        "State the empty result in the same form rather than saying nothing"
+      ]
     }
   ]
 }
