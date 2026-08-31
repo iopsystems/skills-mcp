@@ -1,7 +1,7 @@
 ---
 name: reconcile-vault
 description: |
-  Reconcile the knowledge-iop vault. Two modes, same skill. **Interactive** — invoked after a phase skill commits an artifact; scoped to the touched artifact and its immediate graph neighborhood; applies and commits clean transitions by default. **Dream** — invoked by a Claude Max scheduled task; runs across the whole vault; writes a session-note with Part A (graph hygiene — deterministic) and Part B (strategic reflection — judgment), then commits it by default. Use whenever the user says things like "reconcile the vault", "what needs attention", "dream over the vault", "check for blocked transitions", "what's the state of the project", "run reconciliation". Route blockers, warnings, ambiguity, and failed validation to human review. A pull request is opened only when the user asks for one or a finding needs human review; the clean path commits on the current branch and stops. The vault has no force_accept and neither does this skill.
+  Reconcile the knowledge-iop vault. Two modes, same skill. **Interactive** — invoked after a phase skill commits an artifact; scoped to the touched artifact and its immediate graph neighborhood; applies and commits clean transitions by default. **Dream** — invoked by a Claude Max scheduled task; runs across the whole vault; writes a session-note with Part A (graph hygiene — deterministic) and Part B (strategic reflection — judgment), applies the transitions that pass the same clean-run test interactive mode uses, and merges both in one pull request by default. Use whenever the user says things like "reconcile the vault", "what needs attention", "dream over the vault", "check for blocked transitions", "what's the state of the project", "run reconciliation". Route blockers, warnings, ambiguity, and failed validation to human review. Interactive mode opens a pull request only when the user asks for one or a finding needs human review; dream mode always opens one, because it writes unattended. The vault has no force_accept and neither does this skill.
 ---
 
 # Reconcile vault
@@ -139,8 +139,23 @@ trigger its own interactive reconciliation if needed.
 
 ## Mode B: Dream
 
-Scope: the full vault. Write one session-note; do not mutate other artifacts
-from this mode.
+Scope: the full vault. Write one session-note, and apply the transitions that
+pass Mode A Step 5's clean-run test. Everything that test does not clear stays
+a proposal.
+
+**Mode B applies what Mode A would apply, and nothing more.** The test is Step
+5's, reused unchanged: `allowed` with no blockers or warnings, direct and
+sufficient evidence, exactly one justified next state, repository validation
+passing. This is permission to land what the invariant machinery already
+cleared, not permission to reach past it — a proposal the dream pass may only
+describe is one Mode A could not have applied either.
+
+The reason is that a proposal nobody can act on from where they are reading it
+is re-derived rather than acted on. Three consecutive dreams carried the same
+four cleared transitions and none of them landed, because the note could
+describe an edit and not make it, and each next reader had to rebuild the
+argument before applying it or defer and let the following dream rebuild it
+again.
 
 ### Step 1 — Run the reflection report
 
@@ -212,10 +227,23 @@ dream pass.
 - **Stale open arcs** (no activity past <min_days_stale_arc> days):
   list all. Each is either forgotten or needs explicit pause/close.
 
-### Proposed transitions
+### Transitions
 For each gap that suggests a transition, call `vault_check_transition`
-with the candidate new status and record the result. Do NOT propose
-transitions you haven't pre-flighted.
+with the candidate new status and record the result. Do NOT list a
+transition you have not pre-flighted.
+
+Record them under two headings, because a reader acts on the two
+differently — one is a changelog, the other is a worklist:
+
+- **APPLIED** — cleared Step 5's test and was edited in this pass.
+  One line each: id, type, old status, new status, the evidence cited.
+- **PROPOSED** — did not clear it. One line each, plus the exact
+  reason it did not: blocker, warning, thin evidence, more than one
+  plausible next state, or failed validation.
+
+An empty APPLIED list on a run whose Part A found cleared transitions
+is a failure, not a clean bill: it means the pass described edits it
+was allowed to make.
 
 ## Part B — Strategic reflection
 
@@ -247,9 +275,12 @@ transitions you haven't pre-flighted.
 
 ## Do not
 
-- Do not commit any artifact edits from this pass. The dream pass
-  writes ONE file: this session-note. Transitions are proposals for
-  the user to triage.
+- Do not apply a transition that does not clear Mode A Step 5's test.
+  Cleared transitions are applied in this pass and listed under
+  APPLIED; everything else stays a proposal for the user to triage.
+- Do not apply anything from Part B. Part B is judgment written to be
+  read by a human, and none of its recommendations are transitions
+  this pass may enact.
 - Do not invent offenders or fabricate citations. Every claim in
   Part B traces to a Part A row or a discussion id.
 - Do not recommend force-applying a blocker. If `vault_check_transition`
@@ -257,24 +288,42 @@ transitions you haven't pre-flighted.
   <blocker>" — and the follow-up is on the user.
 ```
 
-### Step 4 — Commit and choose the disposition
+### Step 4 — Apply, commit, and choose the disposition
 
-Commit the note and push the current branch:
+Apply every transition on the APPLIED list with a direct frontmatter
+edit, run the repository's validation, and inspect the diff. Then commit
+the note and those edits together and push the current branch:
 
-`git add discussions/<id>.md && git commit -m "Reconciler dream:
-<YYYY-MM-DD>"`.
+`git add discussions/<id>.md <edited artifacts> && git commit -m
+"Reconciler dream: <YYYY-MM-DD>"`.
+
+One commit, not two. The note is the record of what the edits were for,
+and splitting them leaves a reader holding one half.
+
+If validation fails after applying, revert the edits, move every
+transition to PROPOSED with the failure as its reason, and commit the
+note alone. A dream pass never leaves the vault failing validation.
+
+Then open or update a pull request for the branch.
+
+**Dream mode keeps its pull request; interactive mode does not.** The
+difference is who is present. Interactive runs immediately after a phase
+skill commits, on a branch someone already owns and will land, so a
+second pull request reviews an edit its owner is already reviewing.
+Dream runs unattended on a schedule, and once this pass lands artifact
+edits rather than a napkin, the pull request is the only review event
+those edits ever get. It is not ceremony over a note any more; it is the
+merge record for autonomous writes to the vault.
 
 Apply the shared review gate below. If the report contains no
-review-required finding and repository validation passes, the commit is
-the end of the run — open a pull request only when the user asked for
-one. If the report contains a blocker, warning, ambiguous evidence,
-multiple plausible outcomes, or failed validation, surface the exact
-reason for human review, and leave open any pull request the branch
-already has.
+review-required finding and validation passes, merge normally. If it
+contains a blocker, warning, ambiguous evidence, multiple plausible
+outcomes, or failed validation, leave the pull request open and surface
+the exact reason for human review.
 
 ### Step 5 — Stop
 
-After the note is committed, or after the review-required findings are
+After the pull request merges, or after the review-required findings are
 surfaced, stop. Do not chain.
 
 ---
@@ -288,9 +337,10 @@ required when any candidate has a blocker or warning, the evidence is
 incomplete or ambiguous, more than one outcome is plausible, or validation
 fails.
 
-The default is applying, never landing. Committing on the current branch is
-where a clean run ends; opening a pull request, merging one, and asking a
-host to merge are all things this skill does only when the user asks.
+In interactive mode the default is applying, never landing: committing on
+the current branch is where a clean run ends, and opening or merging a pull
+request happens only when the user asks. Dream mode lands, because it writes
+unattended and its pull request is the only review event its edits get.
 
 Never bypass a blocker, warning, branch protection rule, or failed check.
 Never use `force_accept`, force-push, or force-merge. A refusal from the
