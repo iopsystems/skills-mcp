@@ -194,9 +194,8 @@ its fact from the code plus the language's own semantics:
    reading. Never comment it. This covers restatements of the next
    line, literal readings of a call, derivation walkthroughs of
    visible algebra — and topic is no defense: a `Relaxed` ordering
-   justified by an exclusive lock held in the same function, or
-   an atomic chosen because shared `Send` handles force a `Sync`
-   cell, is generic language knowledge the reader owns.
+   justified by an exclusive lock held in the same function is
+   generic language knowledge the reader owns.
 2. **Derivable at a distance** — true, but reconstructing it means
    enumerating call sites or reading across files (a crate-private
    protocol, a cross-module invariant). Do not cache it at each site;
@@ -236,9 +235,8 @@ carries the fact intact.**
    This is the rung most often skipped, because renaming is work and
    a comment is not.
 3. **Trailing, on the line it qualifies.** A fact binding one line
-   rides on that line. It cannot drift away from what it describes, it
-   costs no vertical space, and the reader meets it with the line
-   under their eye rather than one beat before.
+   rides on that line, where it cannot drift away from what it
+   describes and the reader meets it with the line under their eye.
 4. **One line above.** For a fact binding a block rather than a line,
    or a trailing form that would push the line past the column limit.
 5. **A doc paragraph on the item.** For a contract a caller reads
@@ -249,12 +247,9 @@ carries the fact intact.**
 Rungs 3 and 4 are where most comments belong and where few of them sit.
 
 **A rung is available only if the fact survives it intact.** Modality,
-the subject of a claim, negations, and scope qualifiers do not
-compress onto a trailing comment merely because the line has room.
-When they will not fit, that rung is not available and you take the
-next one. A shortening that changes what a comment says is not a
-shorter comment — the same rule the fragment section states about
-wording, here about placement.
+the subject of a claim, negations, and scope qualifiers do not compress
+onto a trailing comment merely because the line has room. When they
+will not fit, take the next rung up.
 
 ### Prefer the fragment
 
@@ -382,12 +377,10 @@ comments: a comment written for iteration 3 still sitting on the code
 of iteration 12. Before opening or updating a PR:
 
 **Do the sweep yourself, in one context. Do not partition it across
-subagents.** A comment's value is holistic: whether it earns its place
-depends on the model home, the neighboring comments, and the session's
-pivots — context no per-file delegate has. Splitting the reading and
-keeping the "judgment" is the same violation through a keyhole. If the
-diff is large, sweep it in one pass anyway; reading the whole diff is
-what the sweep *is*.
+subagents.** Whether a comment earns its place depends on the model
+home, the neighboring comments, and the session's pivots — context no
+per-file delegate has. If the diff is large, sweep it in one pass
+anyway; reading the whole diff is what the sweep *is*.
 
 The sweep runs as two passes with opposite polarity, and they are not
 interleaved. One pass removes and the other restores; trying to do
@@ -397,30 +390,26 @@ wants it gone, and the frame wins.
 **Setup, before reading a single comment:**
 
 1. Partition the touched files by which bar applies: production, test,
-   demo. Do this first and write it down. A file read under the wrong
-   bar gets the wrong rule applied to every comment in it, and no
-   later carve-out recovers it — the production bar deletes a test's
-   claim bindings before it ever occurs to you that a different bar
-   was owed.
+   demo. Write it down first. A file read under the wrong bar gets the
+   wrong rule applied to every comment in it, and no later carve-out
+   recovers it — the production bar deletes a test's claim bindings
+   before it occurs to you that a different bar was owed.
 2. Build the model inventory: list every design principle the touched
-   code *relies on* — not just the ones it states, and not just the one
-   you already have in mind — and assign each **a home and a form**.
-   The echo test is only as good as this inventory: a principle with no
-   assigned home leaves every copy of it looking like a local keeper.
-   If a model is stated nowhere, that is the first fix — write it once,
-   where the reader forms it. Recording the form is what stops every
-   model defaulting to prose; see below for choosing one.
+   code *relies on* — not only the ones it states — and assign each
+   **a home and a form**. A principle with no assigned home leaves
+   every copy of it looking like a local keeper. If a model is stated
+   nowhere, that is the first fix. Recording the form is what stops
+   every model defaulting to prose; see below for choosing one.
 
    **Inventory the subsystem, not the changed lines.** A diff does not
-   contain its own model homes, and any change that adds a *consumer*
-   of existing code will have most of its models homed elsewhere: a
-   parent branch in a stacked PR, a dependency crate, a module doc the
-   change never touched. For each model, write down where it is stated
-   and whether that file is in this diff; anything homed outside it
-   makes every statement of it inside the diff an echo until the
-   retrieval test says otherwise. Skipping this reads as a diff full of
-   local keepers, because from inside the diff that is exactly what
-   they look like.
+   contain its own model homes, and any change adding a *consumer* of
+   existing code has most of its models homed elsewhere: a parent
+   branch, a dependency crate, a module doc the change never touched.
+   Write down where each is stated and whether that file is in this
+   diff; anything homed outside it makes every statement inside the
+   diff an echo until the retrieval test says otherwise. Skip this and
+   the diff reads as full of local keepers, because from inside it that
+   is exactly what they look like.
 
 **Pass 1 — subtract.** Classify every comment and docstring into a
 tier against the inventory. Tier 1 is deleted; tier 2 lives only at
