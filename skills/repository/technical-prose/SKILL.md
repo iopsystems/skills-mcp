@@ -15,7 +15,8 @@ description: |
 
 # Technical prose
 
-This skill owns **word choice**. It does not own sentence shape.
+This skill owns **what carries a fact** — at the scale of a word, and at the
+scale of the material around it. It does not own sentence shape.
 
 That boundary is not a division of labor; it follows from what varies between
 readers. A word carries the same fact wherever it lands — "gracefully handles"
@@ -29,6 +30,11 @@ other.
 So the calling skill decides sentence length, articles, and whether fragments
 are correct at its sites. This skill never overrides those, and a rewrite that
 converts a fragment to a sentence — or the reverse — is out of scope here.
+
+The same test admits a paragraph: one restating the paragraph above it carries
+no fact anywhere, exactly as the empty word does not. So the ladder below is in
+scope and fragment-versus-sentence is not — one asks whether material earns its
+place, the other what shape the survivors take.
 
 ## Modality
 
@@ -141,6 +147,43 @@ Two carve-outs, both absolute:
   stops reading one clause earlier, and never loads an instruction that does
   not apply to them.
 
+## The cheapest form that carries the fact
+
+Borrowed from [ponytail](https://github.com/DietrichGebert/ponytail), whose
+ladder has an agent stop at the first rung that solves the problem rather than
+writing the fullest thing it can. Walk it before writing, and again when
+cutting. **Stop at the first rung that carries the fact intact.**
+
+1. **Nothing.** The reader already holds it, or a sentence nearby already says
+   it.
+2. **A word** added to a sentence that already exists.
+3. **A clause.**
+4. **A sentence.**
+5. **A paragraph.**
+6. **A section with a heading.**
+
+The drift is upward and invisible one step at a time: a clause becomes a
+sentence, then a paragraph with a lead-in, then a section, and no single step
+looks wrong.
+
+**Be lazy about the prose, never about the thinking.** A rung is chosen after
+the material is understood, not instead of understanding it. A short paragraph
+written to avoid working out what is true is worse than the long one it
+replaced.
+
+**Cut assertions before examples.** When a paragraph and the example under it
+say the same thing, the example survives. It shows; the paragraph asserts, and
+an assertion is what the reader was going to take on trust anyway.
+
+**Never cut:** modality, the subject of a claim, negations, scope qualifiers,
+quoted evidence, and everything under Untouchables. A rung that loses one of
+these is not available, and the shortening that drops one is not a shorter
+text — it is a different claim.
+
+**A document that states a bar is subject to it.** An instruction file arguing
+for succinctness in three hundred words has refuted itself, and its author is
+the reader least likely to notice.
+
 ## Untouchables
 
 Never rewrite these, even when they break every rule above:
@@ -166,10 +209,16 @@ When a rule and a name conflict, the name wins silently.
 | "This skill says complete sentences, so my fragments are wrong" | This skill rules on words, not sentence shape. Fragments are the calling skill's call, and in some places they are correct. |
 | "Passive voice is more objective" | It is more anonymous. "The value is cached" leaves the reader asking by what, which is usually the fact they came for. |
 | "'Etc.' implies the reader knows the rest" | It implies the writer stopped. If the list is obvious, finishing it costs a line; if it is not, "etc." dropped real content. |
+| "The paragraph gives it room to breathe." | Name the fact the room carries. If there is none, the rung below fits. |
+| "The rule needs its rationale spelled out." | Once. Not once as a metaphor, once as a restatement, and once as a summary. |
 
 ## Red flags
 
 - A requirement whose only modal is `should`.
+- A paragraph that would be equally true with its first sentence deleted.
+- A metaphor restating the rule its own paragraph just stated.
+- An opening that establishes an audience the rule already implies.
+- A document that states a bar its own prose does not meet.
 - `may` rewritten to `can` without checking whether it marked permission.
 - An adjective asserting a quality with no measurement anywhere near it.
 - A sentence that survives deletion of its first six words with no loss.

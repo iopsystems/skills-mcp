@@ -114,9 +114,11 @@ None.
   over-explaining needed that much prose. Everything removed was elaboration the
   skill's own bar forbids: an audience the rule implies, a metaphor restating
   the rule, sentences restating their own guards. The skill states the bar for
-  the guides it produces and nowhere applies it to its own text, and this is the
+  the guides it produces and nowhere applied it to its own text, and this was the
   second edit this month where the fix was cutting what the skill would have cut
-  from a guide.
+  from a guide. Now closed generally rather than here:
+  `2026-09-01-prose-ladder.md` puts the ladder in `technical-prose`, which every
+  skill defers to, with the rule that a document stating a bar is subject to it.
 - **Confirmation** — the proportionality rule did not have to be weakened to fit
   this. It counts answers rather than words, which turned out to be the formulation
   that survives a change making every answer longer. A word-count rule would have

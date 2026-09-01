@@ -223,9 +223,10 @@ its fact from the code plus the language's own semantics:
 
 ### The cheapest form that carries the fact
 
-The tiers decide whether a fact is stated at all. This decides what it
-costs the reader once it is. Walk the rungs in order and **stop at the
-first one that carries the fact intact**:
+`technical-prose` owns the general ladder and the reason it works. This
+is its comment-specific rungs: the tiers decide whether a fact is stated,
+these decide what it costs once it is. **Stop at the first rung that
+carries the fact intact.**
 
 1. **No comment.** The tiers already ruled: locally derivable is
    deleted, and an echo of a distant model becomes a pointer or
@@ -246,11 +247,7 @@ first one that carries the fact intact**:
 6. **The model home.** Prose explaining a shape, stated once, pointed
    at from everywhere else.
 
-Rungs 3 and 4 are where most comments belong and where few of them
-sit. The drift is upward and it is invisible one step at a time: a
-fact that would have fit after the line becomes a line above it, then
-a sentence, then a paragraph with a lead-in, and no step buys the
-reader anything.
+Rungs 3 and 4 are where most comments belong and where few of them sit.
 
 **A rung is available only if the fact survives it intact.** Modality,
 the subject of a claim, negations, and scope qualifiers do not
@@ -259,11 +256,6 @@ When they will not fit, that rung is not available and you take the
 next one. A shortening that changes what a comment says is not a
 shorter comment — the same rule the fragment section states about
 wording, here about placement.
-
-**Be lazy about the form, never about the reading.** A rung is chosen
-after the fact is understood, not instead of understanding it. A
-one-line comment written to avoid reading the call sites is worse than
-the paragraph it replaced: now it is both wrong and cheap to skim.
 
 ### Prefer the fragment
 
