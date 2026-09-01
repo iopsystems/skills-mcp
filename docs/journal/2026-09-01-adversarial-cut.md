@@ -78,14 +78,34 @@ range shifted by a comma — and each survives as an instruction.
 
 None.
 
+## All twenty-four, read
+
+The pass was then extended to every skill. Four files changed: `review-guide`
+609 words, `dataflow-diagram` 149, `sweep-comments` 115, `format-layout-diagram`
+11. Twenty were read and left alone. Total 884 words of 43,901, two percent.
+
+That distribution is the result. `review-guide` is the outlier because it was
+revised a dozen times this month and each revision brought its own
+justification; the removable prose was the seams between additions, not any one
+addition.
+
+The twenty untouched fall into three shapes, and none of them accumulate the
+same way. The vault skills are lists and templates around a spine of prose —
+`frame-problem` has 109 words of it across six paragraphs. `seed-skill-template`
+is specification: its long paragraphs are safety contracts where every clause is
+an obligation, and cutting one drops a requirement. `review-exchange` looked
+bloated to the detector and is not — its long blocks are shell functions inside
+fences the paragraph splitter mis-read.
+
+This time that claim is worth something, because the files were read rather than
+scanned. The previous entry made the same claim from a scanner's silence.
+
 ## Deferred or Reopen Items
 
-- The other four skills have not had this pass. The detectors were run over them
-  and found little, which this entry establishes means little.
-- The two detectors are still worth keeping, but their output is a floor rather
-  than a result. Nothing in the repository distinguishes "I read this
-  adversarially and it held" from "I ran a scan and it found nothing", and the
-  first sweep's entry is now an example of the second reported as the first.
+- Nothing in the repository distinguishes "I read this adversarially and it
+  held" from "I ran a scan and it found nothing". The first sweep's entry is an
+  example of the second reported as the first, and only a human noticing the
+  discrepancy caught it.
 
 ## Appendix: Skills Invoked
 

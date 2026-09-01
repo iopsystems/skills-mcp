@@ -13,8 +13,6 @@ problem before it is a drawing problem.
 
 ## What this is, and what it is not yet
 
-Two kinds of claim live below, and they are not equally well founded.
-
 The **principles** — derive rather than draw, fail loudly on the
 unclassified, treat every channel as a claim, check placement rather than
 eyeball it — come from failures that were observed, diagnosed, and fixed.
@@ -24,23 +22,20 @@ The **conventions** — the specific palette, rounded-versus-square, the edge
 styles, the frame grammar — are defaults distilled from one project's
 diagrams. They are internally consistent and worth adopting wholesale
 rather than assembling from scratch, but they have not been tried against a
-dataflow that is shaped differently: one with three kinds of node rather
-than two, one read mainly in print or on a projector, one where the
-interesting distinction is timing rather than kind.
+dataflow shaped differently.
 
-So when you apply this, **say which conventions you are adopting and ask
-where they fight the domain.** Concretely, ask:
+So **say which conventions you are adopting and ask where they fight the
+domain**:
 
 - Does compute-versus-data actually partition this system's nodes, or is
   there a third kind that fits neither?
 - Does the palette survive the medium it will be read in?
 - Is there a distinction the reader needs that no channel here carries?
 
-And when the answer is that a default does not fit, **that override is the
-finding this skill is missing.** Capture it with its reason and bring it
-back here. A convention someone rejected for a stated reason is worth more
-than one nobody has tested, and this skill has more of the second kind than
-it should.
+When a default does not fit, **that override is the finding this skill is
+missing.** Capture it with its reason and bring it back here: a convention
+rejected for a stated reason is worth more than one nobody has tested, and
+this skill has more of the second kind than it should.
 
 Two such contacts have now happened. The `architecture-diagram` skill
 carries these principles into system-architecture charts — a build-time
@@ -71,10 +66,9 @@ A hand-maintained diagram is a second source of truth. It is correct on the
 day it is drawn and wrong on the first refactor, and nothing reports the
 divergence: the picture keeps rendering. Deriving it means a renamed topic
 either appears renamed or breaks the generator, and both are better than a
-drawing that quietly describes last quarter's design.
-
-This is also what makes the diagram cheap to keep. A generated chart is
-regenerated; a drawn one is renegotiated.
+drawing that quietly describes last quarter's design. It is also what makes
+the chart cheap to keep: a generated chart is regenerated, a drawn one
+renegotiated.
 
 ## Fail loudly on anything unclassified
 
@@ -82,10 +76,9 @@ A generator maps program elements onto visual properties through tables:
 this operation is that role, this topic is that category. **An element no
 table covers must stop the run, not be skipped.**
 
-Silent omission is the worst failure mode available here, because the
-output still looks complete. A reader cannot tell a pipeline with four
-stages from a five-stage pipeline whose fifth stage nobody classified. A
-missing node is invisible in a way a missing field never is.
+Silent omission is the worst failure available here, because the output
+still looks complete: a reader cannot tell a pipeline with four stages from
+a five-stage pipeline whose fifth stage nobody classified.
 
 The same applies in reverse: a table entry naming an element the program no
 longer has is a stale classification, and should fail just as loudly.
@@ -124,9 +117,9 @@ plausible mark is worse than an unknown that renders as a gap.
 ## Draw the state, do not bury it
 
 Before a shape can distinguish compute from data, both have to be nodes. The
-failure that precedes a silhouette mistake is a stateful component folded into
-the label of the thing that reads or writes it: "recorded streams → rings",
-"writes to the queue", "the cache".
+failure comes first as a stateful component folded into the label of the thing
+that reads or writes it: "recorded streams → rings", "writes to the queue",
+"the cache".
 
 A component that holds data across invocations — a ring, a queue, a cache, a
 store, a cursor — is not an implementation detail of its reader. Draw it. The
@@ -149,10 +142,6 @@ is a phrase:
 The test: **if a box names both a process and something that outlives it, split
 it.** A file being read and the buffer it is read into are two nodes, and only
 one of them can lap.
-
-This is also what makes the segmented glyph honest. A queue drawn as a queue
-asserts a history; a queue named inside a process box asserts nothing, and the
-reader has to take the depth on trust.
 
 ## Compute and data must not share a silhouette
 
@@ -196,10 +185,9 @@ already has:
 - **Segmentation, size, a corner** for structure within the kind.
 
 These compose. One shape plus three annotation channels expresses more
-distinctions than four shapes, and expresses them in a way the reader
-decodes incrementally: *queue, so a history — framed, so recorded —
-dashed, so only sometimes.* Four unrelated shapes have to be memorised
-whole.
+distinctions than four unrelated shapes, and the reader decodes them
+incrementally: *queue, so a history — framed, so recorded — dashed, so
+only sometimes.*
 
 The test for whether something has earned a new shape: **would a reader who
 knows the base shape still recognize it?** A framed queue is a queue. A
@@ -305,11 +293,10 @@ reader to translate, fails a colorblind reader entirely, and is
 inconsistent with every other entry that shows the thing itself.
 
 A key earns its place once the chart carries more than about two
-orthogonal channels — the point at which a reader can no longer infer the
+orthogonal channels — the point at which a reader stops inferring the
 encodings from context and starts guessing. Below that it is furniture: a
 three-node chain with one edge style needs no legend, and adding one
-implies distinctions the chart does not draw. Above it, the key is what
-makes the other channels safe to use at all.
+implies distinctions the chart does not draw.
 
 Keep it subordinate. Smaller type than the chart, tight rows, and seated
 in the chart's own whitespace rather than stacked beneath it if the layout
@@ -348,9 +335,8 @@ the number is identical, the change did not land, however plausible the
 source looks.
 
 Keep the output a text format whose source is the artifact — a `.dot` or
-`.d2` that renders to SVG, not a pasted raster. A text source diffs, greps,
-and survives review; an image is opaque to half the readers of a pull
-request and to every tool.
+`.d2` that renders to SVG, not a pasted raster. A text source diffs and
+greps; an image is opaque to every tool.
 
 ## The perceptual gate
 
