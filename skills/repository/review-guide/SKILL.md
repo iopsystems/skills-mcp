@@ -104,12 +104,11 @@ the summary it disappears into the sentence before it; the line break is what
 makes it findable.
 
 A pointer, not the asks themselves. Naming a decision costs the context that
-makes it a decision, and the summary is the one place that context cannot be
-supplied — so "three decisions want your opinion, none blocking; each is its own
-subsection under Decisions" is the whole paragraph. Never leave it out: when
-nothing needs the reviewer, it says so — "Nothing here needs a decision; the four
-checks came back empty" — because an absent ask and an empty one read
-identically, and only one of them means you looked.
+makes it one, which the summary cannot supply — so "three decisions want your
+opinion, none blocking; each is its own subsection under Decisions" is the whole
+paragraph. Never leave it out: when nothing needs the reviewer it says so —
+"Nothing here needs a decision; the four checks came back empty" — because an
+absent ask and an empty one read identically, and only one means you looked.
 
 Length follows those answers and nothing else. A change that crosses subsystems
 earns a paragraph. A small change collapses all three into one sentence, because
@@ -204,22 +203,19 @@ rather than asked. That is the third tier: the point of the change, then what
 you are merely unsure of, then what you are only putting on the record.
 
 **Wanting an answer is not enough to earn a subsection.** A subsection costs a
-context paragraph, a reference, and a question, and that cost is the same
-whether the item is the shape of a new interface or the width of a label. Two
-items belong in the recorded list however curious you are about them: one whose
-context is already visible in the diff, so the paragraph would narrate what the
-reviewer is looking at; and one that turns on a value rather than an approach —
-a width, a name, a threshold, a label — where the alternatives are obvious and
-the choice is reversible in one edit. Record those in a clause. Asking them in
-full costs the reviewer the same attention as the decision the change is for,
-which is the one thing the ordering rule above exists to protect.
+context paragraph, a reference, and a question, whatever the item is worth. Two
+kinds belong in the recorded list however curious you are: one whose context is
+already visible in the diff, so the paragraph would narrate what the reviewer is
+looking at; and one that turns on a value rather than an approach — a width, a
+name, a threshold — where the alternatives are obvious and one edit reverses the
+choice. Record those in a clause. Asked in full they cost the reviewer the
+attention the decision the change is for was owed.
 
 ### Then the mental model
 
 The order of the opening is the point. The TL;DR says why this exists and
-closes by pointing at the decisions. **The mental model comes next**, before any section that
-names a type, because it is what the rest of the guide is written in terms of.
-Content for it is below under The mental model.
+closes by pointing at the decisions. **The mental model comes next**, before any
+section that names a type; its content is below under The mental model.
 
 These are the answers a guide owes its reviewer, in this order. They are not a
 list of headings to fill. **A heading is earned by its content.** An answer that
@@ -228,11 +224,10 @@ paragraph gets its heading. So a change that crosses subsystems grows all seven
 headings, and a one-file addition answers most of them in its first sentence and
 carries the two that have something in them.
 
-The distinction matters because the two failures look identical from the outside
-and are opposites. Dropping an answer publishes a guide that cannot say why it
-exists. Giving a one-clause answer its own heading pads the guide to look
-thorough, and the padding lands hardest on the reviewer of a small change, who
-now reads seven sections to find the two that mattered.
+The two failures look identical from outside and are opposites. Dropping an
+answer publishes a guide that cannot say why it exists. Heading a one-clause
+answer pads it to look thorough, and that lands hardest on the reviewer of a
+small change, who reads seven sections to find the two that mattered.
 
 Answer every one of these. Give a heading only to the ones that need it:
 
@@ -257,14 +252,12 @@ Present when earned:
 8. **Not in scope**, when a reader would otherwise ask why something is missing.
 
 Drop an answer only when the change genuinely has nothing in it, never to reach
-a size. Any answer holding an item that cleared the publish test stays,
-whatever the size of the change: dropping it would publish a guide that cannot
-say why it exists. Losing its *heading* is not dropping it — a testing answer
-that is one sentence long is one sentence in the opening paragraph, and a
-testing heading over that one sentence is furniture. A small change often carries only the claim and the reading
-order because the later sections are empty, not because it is small — and a
-change that clears the bar on production risk alone keeps that section and
-drops the others.
+a size. Any answer holding an item that cleared the publish test stays: dropping
+it would publish a guide that cannot say why it exists. Losing its *heading* is
+not dropping it — a one-sentence testing answer is one sentence in the opening
+paragraph, and a heading over it is furniture. A small change carries the claim
+and the reading order because the later answers are empty, not because it is
+small.
 
 A very small change reduces to a single sentence, but only when the publish test
 found nothing at all. That sentence is the TL;DR, and nothing follows it.
@@ -274,10 +267,9 @@ Decisions is the exception to emptiness: it never disappears silently — it say
 
 ## The mental model
 
-This section sits directly after the TL;DR. A
-reviewer who meets a field name before they know what the thing holding it is
-for has nowhere to put it. Type names, field names, and function names are
-the last thing a guide reaches for, not the first.
+A reviewer who meets a field name before they know what the thing holding it is
+for has nowhere to put it. Type, field, and function names are the last thing a
+guide reaches for, not the first.
 
 Establish, in this order:
 
@@ -316,16 +308,13 @@ Two failure modes:
 Omit it only when the change touches one concept the reviewer certainly holds: a
 typo, a version bump, a rename inside one file. The burden is on omitting.
 
-**In a stack, the model is written once.** The guides in a stacked series share
-one set of concepts, and retyping them per pull request produces near-identical
-sections that no longer agree after the first edit — and a reviewer working up
-the stack rereads a page they already hold to find the two sentences that are
-new. Write the model in the base guide, link it from each guide above, and state
-only this change's delta: what it adds to the model, or what it makes false.
-A guide whose reviewer has not read the base still needs the link to be one
-click, so name the pull request, not "the guide below".
-A guide that opens on field names with no picture behind them is the failure
-this section exists to prevent, and it is the one readers report.
+**In a stack, the model is written once.** Retyping it per pull request
+produces near-identical sections that disagree after the first edit, and makes a
+reviewer working up the stack reread a page they hold to find the two new
+sentences. Write it in the base guide, link it from each guide above, and state
+only this change's delta: what it adds, or what it makes false. Name the pull
+request, not "the guide below" — a reviewer who has not read the base needs the
+link to be one click.
 
 ### Before, problem, change
 
@@ -350,12 +339,11 @@ to inflate this is to state the "before" twice, once plainly and once as the
 problem.
 
 **Gloss what you did not introduce.** Below the TL;DR, identifiers are allowed;
-undefined ones are not. An identifier the change **adds** introduces itself —
-the sentence that adds it says what it is. An identifier that **already
-existed** has no such sentence, which is exactly why it is the one left
-undefined, and the guide then reads as though the reviewer should have known it.
-The "before" beat is where it gets its one clause, in the domain's terms: not
-its type, its job.
+undefined ones are not. One the change **adds** introduces itself, in the
+sentence that adds it. One that **already existed** has no such sentence, which
+is why it is the one left undefined, and the guide then reads as though the
+reviewer should have known it. The "before" beat gives it one clause, in the
+domain's terms: not its type, its job.
 
 <!-- cite-ignore -->
 > **Undefined.** `StreamSpec.topic` was answering two questions at once.
@@ -442,10 +430,9 @@ that carries no information. The evidence carries the signal.
 
 ## Where to look more closely
 
-This follows Decisions, so the reviewer reaches it already knowing what is being
-asked of them and can read for those answers rather than reading evenly. It also
-means an item here can point at a decision by its heading instead of restating
-it.
+This follows Decisions, so the reviewer arrives knowing what is asked of them
+and reads for those answers rather than evenly — and an item here can point at a
+decision by its heading instead of restating it.
 
 Rank by the cost of a missed defect multiplied by the chance the reviewer
 misses it. Never rank by file size, path order, or the order the diff happened
@@ -460,14 +447,12 @@ Highest attention first:
 3. Code no test covers.
 4. Code the author is least sure of.
 
-The heading says *more closely*, not *first*, because by this point the reviewer
-has already read three sections. What it ranks is attention, not order — where
-to slow down, against a guide they are reading straight through.
+The heading says *more closely*, not *first*: three sections in, what this ranks
+is attention rather than order.
 
 Then name what is safe to skim, and why: generated output, mechanical renames,
-formatting, a change repeated identically across many files. Naming the skimmable
-half is half the value. A reviewer who spends attention on a rename has none
-left for the invariant.
+formatting, a change repeated identically across many files. A reviewer who
+spends attention on a rename has none left for the invariant.
 
 Point at a specific place, not a file. Cite the line where a wrong review would
 cost the most.
@@ -488,12 +473,11 @@ cited line in the same paragraph, so the number stays re-derivable from the
 text. `tests/citations.rs` enforces this and can repair a number that moved; it
 cannot repair a citation that never carried a phrase.
 
-Read every line you cite, at the moment you cite it. Not most of them. A line
-number you did not open in this session is not a citation you may write — it is
-a guess that looks exactly like a fact, and the reviewer cannot tell which one
-they are holding. Partial verification is the failure mode here: checking four
-anchors and estimating the fifth produces a body that is wrong in a way its own
-care makes harder to doubt.
+Read every line you cite, at the moment you cite it. Not most of them: checking
+four anchors and estimating the fifth produces a body wrong in a way its own
+care makes harder to doubt. A line number you did not open in this session is a
+guess that looks exactly like a fact, and the reviewer cannot tell which one
+they hold.
 
 ## Testing
 
@@ -570,6 +554,26 @@ pull request: the reviewer learns one model and reuses it across the stack.
 When a change makes an existing diagram wrong, say so. A stale diagram left
 unmentioned costs more than no diagram.
 
+## Explain it, then name it
+
+**Say what a thing does before you name it.** "A pull request runs automatic
+checks before a change lands, and those were one of the four conditions" beats
+"required PR checks were part of the clean-run gate" — including for the reader
+who knows both terms, who then no longer unpacks a phrase to recover the fact.
+
+Hardest on vocabulary this change invented. A phrase coined in the design
+discussion is jargon everyone outside it lacks, and the one an author will not
+notice using.
+
+**Precision is untouched.** Numbers, identifiers, paths, and quoted errors stay
+exact. The register changes; the claims do not.
+
+**Length is not the objection.** Plain wording runs longer, and proportionality
+counts answers rather than words: three plain sentences are still one answer.
+Padding is material with nothing in it.
+
+The test: **could a competent engineer outside this subsystem act on it?**
+
 ## Boundaries
 
 `engineering-journal` owns the durable record: effort-scoped, written for
@@ -631,6 +635,8 @@ the review, not in the guide's prose.
 | "The identifier is the change." | The reviewer cannot resolve a name in sentence one. Name the motion, not the symbol. |
 | "Saying why it exists is context, not summary." | A summary of an edit nobody can place is not a summary. |
 | "The change was trivial, so I skipped the check." | Run it anyway and say the four were empty. Silence looks like not looking. |
+| "Anyone reviewing this knows the term." | The reader who knows still pays to unpack it. The one who does not is stuck. |
+| "That is just the standard term." | Standard among the people in the design discussion is not standard. |
 
 ## Red flags
 
@@ -664,6 +670,11 @@ the review, not in the guide's prose.
   so the reviewer has to guess which one was meant.
 - An identifier the change did not introduce is used with no gloss, as though
   the reviewer should already hold it.
+- A term of art in the summary or the ask that the guide never unpacks.
+- A phrase coined during this change's own design, used as established
+  vocabulary.
+- Precision traded for readability: a number rounded or a quoted error
+  paraphrased so a sentence flows.
 - A change is stated as a fact rather than as the response to a problem the
   paragraph just named.
 - A sentence restates the previous sentence's point from another angle, most
