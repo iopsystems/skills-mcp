@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-08-31 | [The dream pass may land what it has already cleared](2026-08-31-dream-applies-clean-transitions.md) | shipped |
 | 2026-08-31 | [Reconciliation applies; it does not land](2026-08-31-reconcile-vault-pr-opt-in.md) | shipped |
 | 2026-08-28 | [The cheapest form that carries the fact](2026-08-28-comment-form-ladder.md) | shipped |
 | 2026-08-25 | [A guide the size of its change](2026-08-25-review-guide-proportional.md) | shipped |
