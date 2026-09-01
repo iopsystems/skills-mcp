@@ -94,6 +94,30 @@ because the diff now earns it.
 So the two changes split on mode rather than agreeing: interactive opens a pull
 request only on request, dream always opens one.
 
+## Human review is a consumer, not a gate
+
+The first version of this change kept the shared review gate: a run whose
+report contained a blocker, a warning, or ambiguous evidence left its pull
+request open for a human. The reviewer pointed out that gating on a reviewer is
+the design weakness, not the fix for it.
+
+They are right, and the evidence is the run this change exists to repair. A
+dream that leaves its pull request open waits for a human who is not there, so
+the next night's pass re-derives the same findings and opens a second pull
+request beside it. Forty-four notes exist; the arc twelve of them recommend
+closing is still open. The queue grew and the signal did not, and the
+transitions that were already clear stayed unapplied exactly as long as the
+unclear ones did — though nothing about a judgment call makes a mechanical edit
+less correct.
+
+So the merge is unconditional except on failed validation, which is a broken
+vault rather than an undecided one. What needs judgment travels in the merged
+note under a "Needs you" block above Part A: one line per item, what is being
+asked, what it is waiting for, and an explicit "nothing this pass" when there is
+nothing. That block is what the run's notification carries, which matches the
+brief's own statement that notification is the routine's contract and the pull
+request is a landing pad rather than the delivery mechanism.
+
 ## Outcome
 
 Shipped. `cargo test --locked` and `cargo fmt --all -- --check` pass. The skill
