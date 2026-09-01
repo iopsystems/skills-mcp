@@ -1,7 +1,7 @@
 ---
 name: reconcile-vault
 description: |
-  Reconcile the knowledge-iop vault. Two modes, same skill. **Interactive** — invoked after a phase skill commits an artifact; scoped to the touched artifact and its immediate graph neighborhood; applies and merges clean transitions by default. **Dream** — invoked by a Claude Max scheduled task; runs across the whole vault; writes a session-note with Part A (graph hygiene — deterministic) and Part B (strategic reflection — judgment), then merges a clean PR by default. Use whenever the user says things like "reconcile the vault", "what needs attention", "dream over the vault", "check for blocked transitions", "what's the state of the project", "run reconciliation". Route blockers, warnings, ambiguity, failed validation, and refused merges to human review. The vault has no force_accept and neither does this skill.
+  Reconcile the knowledge-iop vault. Two modes, same skill. **Interactive** — invoked after a phase skill commits an artifact; scoped to the touched artifact and its immediate graph neighborhood; applies and commits clean transitions by default. **Dream** — invoked by a Claude Max scheduled task; runs across the whole vault; writes a session-note with Part A (graph hygiene — deterministic) and Part B (strategic reflection — judgment), then commits it by default. Use whenever the user says things like "reconcile the vault", "what needs attention", "dream over the vault", "check for blocked transitions", "what's the state of the project", "run reconciliation". Route blockers, warnings, ambiguity, and failed validation to human review. A pull request is opened only when the user asks for one or a finding needs human review; the clean path commits on the current branch and stops. The vault has no force_accept and neither does this skill.
 ---
 
 # Reconcile vault
@@ -68,17 +68,24 @@ For every transition you want to propose:
 
 ### Step 5 — Choose the disposition
 
-Auto-merge is the default. A run is clean only when every proposed
+Applying is the default. A run is clean only when every proposed
 transition:
 
 - is `allowed` with no blockers or warnings;
 - cites direct, sufficient evidence;
 - has exactly one justified next state; and
-- passes repository validation and required PR checks.
+- passes repository validation.
 
 Require human review if any transition is blocked or warned, evidence is
-incomplete or ambiguous, multiple outcomes are plausible, validation or a
-required check fails, or the hosting service refuses a normal merge.
+incomplete or ambiguous, multiple outcomes are plausible, or validation
+fails.
+
+Repository validation is the whole gate on the clean path. It used to
+share the job with a pull request's required checks, and dropping the
+pull request drops those, so a check that only ever ran in CI no longer
+runs before the commit lands. Nothing else moves: an uncertain
+transition is still not applied, and the review package below is still
+produced.
 
 ### Step 6 — Apply or request review
 
@@ -86,18 +93,23 @@ For a clean run:
 
 1. Apply every transition with a direct frontmatter edit.
 2. Run the repository's validation and inspect the diff.
-3. Commit and push the current branch.
-4. Create a PR, or update the existing PR for the branch.
-5. Merge the PR normally once required checks pass.
+3. Commit and push the current branch, then stop.
 
-Do not ask for confirmation on this path. Do not bypass branch protection,
-force-push, force-merge, or report a refused merge as success.
+Whatever opened the branch owns landing it — this skill rides along with
+the phase skill's own change rather than opening a second one. Open a
+pull request only when the user asked for one, and update rather than
+duplicate an existing one for the branch.
+
+Do not ask for confirmation on this path. Do not commit to `main`
+directly, bypass branch protection, or force-push. When the current
+branch is `main`, branch first and say so; a reconciliation that lands
+unreviewed on the default branch is the ceremony being removed for the
+wrong reason.
 
 When human review is required, do not apply the uncertain or invalid
-transition and do not merge the PR. Leave any existing PR open and produce
-a concise review package:
-
-Produce a concise proposal list:
+transition. Surface it where the user will see it: in an existing pull
+request for the branch, left open, or in the session when there is
+none. Produce a concise proposal list:
 
 ```
 PROPOSED TRANSITIONS (N)
@@ -114,13 +126,13 @@ NO ACTION NEEDED
 ```
 
 State the exact review reason for each item: blocker, warning, ambiguous
-evidence, multiple plausible outcomes, failed validation/check, or refused
-merge. Ask the user to decide only those items.
+evidence, multiple plausible outcomes, or failed validation. Ask the user
+to decide only those items.
 
 ### Step 7 — Stop
 
-After the PR merges, or after the review package is presented, interactive
-reconciliation is done. Do NOT cascade further — the next phase skill invocation will
+After the clean transitions are committed, or after the review package is
+presented, interactive reconciliation is done. Do NOT cascade further — the next phase skill invocation will
 trigger its own interactive reconciliation if needed.
 
 ---
@@ -245,45 +257,52 @@ transitions you haven't pre-flighted.
   <blocker>" — and the follow-up is on the user.
 ```
 
-### Step 4 — Commit, open the PR, and choose the disposition
+### Step 4 — Commit and choose the disposition
 
-Commit the note, push the current branch, and create or update its PR:
+Commit the note and push the current branch:
 
 `git add discussions/<id>.md && git commit -m "Reconciler dream:
 <YYYY-MM-DD>"`.
 
 Apply the shared review gate below. If the report contains no
-review-required finding and repository validation plus required PR checks
-pass, merge the PR normally. If the report contains a blocker, warning,
-ambiguous evidence, multiple plausible outcomes, or a failed/refused check
-or merge, leave the PR open and surface the exact reason for human review.
+review-required finding and repository validation passes, the commit is
+the end of the run — open a pull request only when the user asked for
+one. If the report contains a blocker, warning, ambiguous evidence,
+multiple plausible outcomes, or failed validation, surface the exact
+reason for human review, and leave open any pull request the branch
+already has.
 
 ### Step 5 — Stop
 
-After the PR merges, or after the review-required findings are surfaced,
-stop. Do not chain.
+After the note is committed, or after the review-required findings are
+surfaced, stop. Do not chain.
 
 ---
 
 ## Shared rules
 
-### Default to merge; gate on observable risk
+### Default to apply; gate on observable risk
 
-Apply and merge clean, evidence-backed work by default. Human review is
+Apply and commit clean, evidence-backed work by default. Human review is
 required when any candidate has a blocker or warning, the evidence is
-incomplete or ambiguous, more than one outcome is plausible, validation or
-required checks fail, or a normal merge is refused.
+incomplete or ambiguous, more than one outcome is plausible, or validation
+fails.
+
+The default is applying, never landing. Committing on the current branch is
+where a clean run ends; opening a pull request, merging one, and asking a
+host to merge are all things this skill does only when the user asks.
 
 Never bypass a blocker, warning, branch protection rule, or failed check.
-Never use `force_accept`, force-push, or force-merge. A merge refusal is a
-review result, not permission to work around the host.
+Never use `force_accept`, force-push, or force-merge. A refusal from the
+host is a review result, not permission to work around it.
 
 That prohibition is what SCHEMA.md states. Its escape hatches —
 `withdraw_exploration` and `abandon_inquiry` — are explicit and logged, and
 there is deliberately no `force_accept` or `override_blocking`: "You can get
 unstuck; you can't pretend something is resolved when it isn't." The sentence
 governs bypassing an invariant, not who applies a transition that satisfies
-every invariant. Do not cite it for either side of the auto-merge question.
+every invariant. Do not cite it for either side of the question of who
+applies.
 
 ### Token budget
 
@@ -301,5 +320,6 @@ If the report balloons, your rubric is wrong. Cut.
 
 If a proposal is ambiguous — two plausible next states, or the offender
 evidence is thin — classify the run as human-review-required, name the
-ambiguity, and leave the PR open. Reconciliation that hallucinates certainty
-is worse than reconciliation that names uncertainty.
+ambiguity, and leave open any pull request the branch already has.
+Reconciliation that hallucinates certainty is worse than reconciliation
+that names uncertainty.
