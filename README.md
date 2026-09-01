@@ -169,7 +169,7 @@ copied into the project.
 | Active skill | Inert template | Installed instance |
 | --- | --- | --- |
 | Invocable instruction exposed by the MCP server | Read-only catalog content, never directly invocable | Project-local copy under a harness discovery path |
-| Lives at `skills/<name>/SKILL.md` | Lives at `templates/<id>/` and is indexed by `templates/catalog.yaml` | Usually lives at `.agents/skills/<name>/` |
+| Lives at `skills/<cluster>/<name>/SKILL.md` | Lives at `templates/<id>/` and is indexed by `templates/catalog.yaml` | Usually lives at `.agents/skills/<name>/` |
 | Use through MCP without copying it | Seed and customize locally only when the project needs adaptation | Use the customized workflow through the project's harness |
 | Updated with the server repository | Retrieved only from its declared manifest files | Tracks base version, immutable commit, digests, and local customizations in `template-state.yaml` |
 
@@ -352,7 +352,8 @@ digest mismatch, or unresolved intent.
 Concrete development experience is welcome. Choose the boundary that matches the
 lesson:
 
-- add or improve an invocable workflow at `skills/<name>/SKILL.md`;
+- add or improve an invocable workflow at `skills/<cluster>/<name>/SKILL.md`,
+  where `<cluster>` is `repository`, `vault`, or `catalog`;
 - add or improve an inert reusable base under `templates/<id>/`, update its
   `template.yaml` digests, and register a new template in
   `templates/catalog.yaml` when needed;

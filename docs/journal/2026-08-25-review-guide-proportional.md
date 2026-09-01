@@ -16,7 +16,7 @@ down to 216.
 
 ## Scope
 
-`skills/review-guide/SKILL.md` and its corpus. No change to the publish test,
+`skills/repository/review-guide/SKILL.md` and its corpus. No change to the publish test,
 the TL;DR rules, the mental-model content, the centrality ordering, or the
 prose bar.
 

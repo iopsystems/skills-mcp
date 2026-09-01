@@ -15,7 +15,7 @@ another repository and reporting what failed.
 
 ## Scope
 
-`skills/review-guide/SKILL.md` and its corpus, plus the six guides in
+`skills/repository/review-guide/SKILL.md` and its corpus, plus the six guides in
 `agrippa-industries/agrippa-core` that were rewritten as each rule landed. The
 publish test, the attention ranking, the certainty rules, and the testing rules
 are untouched — every change here is to the opening and to how explanations are

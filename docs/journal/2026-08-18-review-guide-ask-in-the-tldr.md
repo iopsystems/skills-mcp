@@ -15,7 +15,7 @@ not been given yet.
 
 ## Scope
 
-`skills/review-guide/SKILL.md` and its corpus. The publish test, the attention
+`skills/repository/review-guide/SKILL.md` and its corpus. The publish test, the attention
 ranking, the certainty rules, and the testing rules are untouched.
 
 ## Evidence

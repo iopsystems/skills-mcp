@@ -15,7 +15,7 @@ requested by the user after reading guides the skill produced.
 
 ## Scope
 
-`skills/review-guide/SKILL.md` and its corpus. No change to the publish test,
+`skills/repository/review-guide/SKILL.md` and its corpus. No change to the publish test,
 the attention ranking, the certainty rules, or the citation guidance added in
 pull request 32.
 

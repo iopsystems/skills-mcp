@@ -16,7 +16,7 @@ details to attach to.
 
 ## Scope
 
-`skills/review-guide/SKILL.md` and its corpus. No change to the publish test,
+`skills/repository/review-guide/SKILL.md` and its corpus. No change to the publish test,
 the attention ranking, the certainty rules, the TL;DR, the routing block, or the
 prose bar.
 

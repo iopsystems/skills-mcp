@@ -10,12 +10,12 @@ use sha2::{Digest, Sha256};
 const ADVERSARIAL_CATALOG_PATH: &str =
     "docs/evals/fixtures/recommend-skills-adversarial-catalog-v1.json";
 const ADVERSARIAL_FIXTURE_PATH: &str = "docs/evals/fixtures/recommend-skills-adversarial-v1.md";
-const EVAL_PATH: &str = "skills/recommend-skills/evals/trigger-evals.json";
+const EVAL_PATH: &str = "skills/catalog/recommend-skills/evals/trigger-evals.json";
 const FIXTURE_PATH: &str = "docs/evals/fixtures/recommend-skills-v1.md";
 const JOURNAL_PATH: &str = "docs/journal/2026-07-13-skill-templates-and-project-documentation.md";
 const OBSERVED_SKILL_SHA256: &str =
     "9d754d51582172b583f2e2ba0260870dee109f2710c0b720b63ba04cefd922b0";
-const SKILL_PATH: &str = "skills/recommend-skills/SKILL.md";
+const SKILL_PATH: &str = "skills/catalog/recommend-skills/SKILL.md";
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -535,7 +535,7 @@ fn journal_records_honest_protocol_hashes_trace_and_historical_limits() {
         &[
             "2026-07-14",
             "fresh Codex subagent",
-            "skills/recommend-skills/SKILL.md",
+            "skills/catalog/recommend-skills/SKILL.md",
             ADVERSARIAL_FIXTURE_PATH,
             ADVERSARIAL_CATALOG_PATH,
             EVAL_PATH,

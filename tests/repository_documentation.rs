@@ -47,7 +47,7 @@ fn readme_exposes_recommendation_and_adoption_paths() {
         "seed and customize locally",
         "provenance",
         "separate explicit approval",
-        "skills/<name>/SKILL.md",
+        "skills/<cluster>/<name>/SKILL.md",
         "templates/catalog.yaml",
         "templates/<id>/",
     ] {
@@ -230,8 +230,8 @@ fn open_template_system_journal_has_review_and_verification_evidence() {
         "### Unresolved limitations and reopen conditions",
         "src/templates.rs",
         "src/main.rs",
-        "skills/recommend-skills/SKILL.md",
-        "skills/seed-skill-template/SKILL.md",
+        "skills/catalog/recommend-skills/SKILL.md",
+        "skills/catalog/seed-skill-template/SKILL.md",
         "templates/engineering-journal-skill/",
         "templates/document-feature-skill/",
         ".agents/skills/document-feature/",
@@ -332,13 +332,26 @@ fn readme_library_overview_matches_the_skills_and_templates_on_disk() {
     ];
     const MAX_MINIMAP_COLUMNS: usize = 78;
 
+    /// Every directory under `parent` holding `marker`, at any depth. Skills
+    /// live one cluster directory down (`skills/vault/open-arc/SKILL.md`);
+    /// templates sit directly under `templates/`.
     fn directory_names(parent: &str, marker: &str) -> BTreeSet<String> {
-        fs::read_dir(root().join(parent))
-            .unwrap_or_else(|error| panic!("read {parent}: {error}"))
-            .map(|entry| entry.unwrap().path())
-            .filter(|path| path.join(marker).is_file())
-            .map(|path| path.file_name().unwrap().to_string_lossy().into_owned())
-            .collect()
+        fn walk(dir: &std::path::Path, marker: &str, out: &mut BTreeSet<String>) {
+            for entry in fs::read_dir(dir).unwrap_or_else(|e| panic!("read {dir:?}: {e}")) {
+                let path = entry.unwrap().path();
+                if !path.is_dir() {
+                    continue;
+                }
+                if path.join(marker).is_file() {
+                    out.insert(path.file_name().unwrap().to_string_lossy().into_owned());
+                } else {
+                    walk(&path, marker, out);
+                }
+            }
+        }
+        let mut out = BTreeSet::new();
+        walk(&root().join(parent), marker, &mut out);
+        out
     }
 
     let readme = read("README.md");

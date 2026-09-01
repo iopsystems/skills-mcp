@@ -267,6 +267,7 @@ fn diagram_skills_active_and_template_bodies_stay_in_sync() {
         let active_text = read(
             repository_root()
                 .join("skills")
+                .join("repository")
                 .join(active)
                 .join("SKILL.md"),
         );

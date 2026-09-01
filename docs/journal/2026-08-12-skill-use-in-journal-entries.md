@@ -33,7 +33,7 @@ that will eventually read these sections.
 
 Three facts constrained the design:
 
-- Beta is prose today, not a field. `skills/architecture-diagram/SKILL.md:31`
+- Beta is prose today, not a field. `skills/repository/architecture-diagram/SKILL.md:31`
   instructs the reader to "treat this skill as **beta**", and
   `templates/architecture-diagram-skill/template.yaml:4` opens its purpose with
   "Beta —". No `maturity:` key exists anywhere in the repository.
@@ -83,14 +83,14 @@ promotion decision it exists to inform.
 
 Artifacts:
 
-- `skills/engineering-journal/SKILL.md` — a `Record Skill Use` section, the
+- `skills/repository/engineering-journal/SKILL.md` — a `Record Skill Use` section, the
   frontmatter key, two entry headings, an update obligation, and three
   reconciliation checks with the no-backfill prohibition
 - `templates/engineering-journal-skill/SKILL.md` — the same contract in the
   project-contract register, gated on the profile's policy
 - `templates/engineering-journal-skill/references/project-profile.md` — a
   skill-feedback policy field and a project-declared beta list
-- `skills/engineering-journal/evals/trigger-evals.json`, ten cases to fifteen,
+- `skills/repository/engineering-journal/evals/trigger-evals.json`, ten cases to fifteen,
   adding friction, confirmation, the no-beta-skill case, incomplete history, and
   the no-backfill boundary
 - `templates/engineering-journal-skill/evals/trigger-evals.json`, seven cases to

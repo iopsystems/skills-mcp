@@ -26,7 +26,7 @@ the rule that was replaced cited that document as its justification.
 
 ## Scope
 
-`skills/reconcile-vault/SKILL.md` only, 63 insertions and 20 deletions. No Rust,
+`skills/vault/reconcile-vault/SKILL.md` only, 63 insertions and 20 deletions. No Rust,
 no evals, no template. The skill's two modes, its token budget, and its
 pre-flight step through `vault_check_transition` are unchanged.
 
@@ -101,7 +101,7 @@ evidence was found that this case was considered.
 
 Shipped in pull request 27, merged 2026-08-13T09:02:34Z as `38ef909`. The branch
 was based on an unmerged commit of `yao/review-guide-skill` rather than on
-`main`, so it carried `skills/review-guide/` and a `src/main.rs` test as
+`main`, so it carried `skills/repository/review-guide/` and a `src/main.rs` test as
 inherited files; because pull request 26 merged first, the merge took the newer
 copies and nothing was reverted. This was verified after the fact: the beta
 marker, the publish test, the emptiness rule, and the 22-case corpus with its
