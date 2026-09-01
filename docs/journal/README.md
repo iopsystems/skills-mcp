@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-09-01 | [A ladder for how much to write](2026-09-01-prose-ladder.md) | shipped |
 | 2026-09-01 | [Skills grouped by what they act on](2026-09-01-cluster-skills-by-subject.md) | shipped |
 | 2026-08-31 | [The dream pass may land what it has already cleared](2026-08-31-dream-applies-clean-transitions.md) | shipped |
 | 2026-08-31 | [Reconciliation applies; it does not land](2026-08-31-reconcile-vault-pr-opt-in.md) | shipped |

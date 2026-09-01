@@ -120,7 +120,7 @@ None.
   described is the carve-out the swept skill already grants: an edit constraint
   is stated at its home and "in one sentence at the site that can break it"
   (`skills/repository/sweep-comments/SKILL.md:207`), and this same rule is already "stated
-  in both places on purpose" (`:311`) for the reason the guide gave. The
+  in both places on purpose" (`:303`) for the reason the guide gave. The
   reviewer answered by pointing at the rules.
 
   The instruction that covers this tests what the author knows: settle what you
