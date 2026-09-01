@@ -570,6 +570,44 @@ pull request: the reviewer learns one model and reuses it across the stack.
 When a change makes an existing diagram wrong, say so. A stale diagram left
 unmentioned costs more than no diagram.
 
+## Explain it, do not name it
+
+A guide is read by whoever opens the pull request, and that is not reliably
+someone who holds your vocabulary. It may be a reviewer new to the subsystem,
+the person who owns the next layer down, or you in four months. Jargon is
+compression, and compression only pays when the reader already has the
+dictionary.
+
+**Say what the thing does, then name it.** "A pull request runs automatic
+checks before a change lands, and those checks were one of the four conditions
+the skill required" beats "required PR checks were part of the clean-run gate"
+— and it beats it for the reader who knows both, because the second sentence
+asks them to unpack a phrase to recover something the first just handed over. A
+name is a handle for a thing. A guide that offers the handle without the thing
+has given the reader a lookup instead of an explanation.
+
+This applies hardest to the terms your own change invents. A phrase coined in
+the design discussion is jargon that not even the rest of the team holds yet,
+and it is the phrase an author is least likely to notice using.
+
+**It is not a licence to be vague.** Every number, identifier, path,
+measurement, and quoted error stays exactly as precise as it was. The register
+changes; the claims do not. A guide that reads easily and can no longer be
+checked has failed twice — once as prose and once as evidence. When a plain
+sentence would blur a distinction the reviewer needs, keep the distinction and
+spend the extra clause.
+
+**Plain language costs words, and they are worth it.** A guide rewritten this
+way runs longer than the jargon version, sometimes by half again. That does not
+collide with proportionality: the rule counts *answers*, never words, and an
+answer that takes three plain sentences instead of one dense clause is still
+one answer. Padding is material with nothing in it — not material a reader can
+follow without stopping.
+
+The test: **would a competent engineer outside this subsystem know what to do
+after reading it?** If acting on the guide requires holding a term the guide
+never unpacks, it was written for its author.
+
 ## Boundaries
 
 `engineering-journal` owns the durable record: effort-scoped, written for
@@ -631,6 +669,9 @@ the review, not in the guide's prose.
 | "The identifier is the change." | The reviewer cannot resolve a name in sentence one. Name the motion, not the symbol. |
 | "Saying why it exists is context, not summary." | A summary of an edit nobody can place is not a summary. |
 | "The change was trivial, so I skipped the check." | Run it anyway and say the four were empty. Silence looks like not looking. |
+| "Anyone reviewing this already knows what a clean-run gate is." | The reader who knows still pays to unpack it. The one who does not is stuck. |
+| "Spelling it out would double the length." | The rule counts answers, not words. A longer answer is still one answer. |
+| "That is just the standard term." | Standard among the three people in the design discussion is not standard. |
 
 ## Red flags
 
@@ -664,6 +705,12 @@ the review, not in the guide's prose.
   so the reviewer has to guess which one was meant.
 - An identifier the change did not introduce is used with no gloss, as though
   the reviewer should already hold it.
+- A term of art in the summary or the ask that the guide never unpacks.
+- A phrase coined during this change's own design, used as though it were
+  established vocabulary.
+- A sentence a reader cannot act on without opening the diff to decode a word.
+- Precision traded for readability: a number rounded, a path shortened, a
+  quoted error paraphrased, to make a sentence flow.
 - A change is stated as a fact rather than as the response to a problem the
   paragraph just named.
 - A sentence restates the previous sentence's point from another angle, most

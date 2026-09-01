@@ -503,6 +503,42 @@
         "Say that wanting an answer does not by itself earn a subsection",
         "Give the reason: it turns on a value, its alternatives are obvious, and one edit reverses it"
       ]
+    },
+    {
+      "name": "a term of art in the ask",
+      "prompt": "My ask says 'confirm the clean-run gate still holds after dropping required PR checks'. Fine?",
+      "expectations": [
+        "Say what a pull request's automatic checks are and which condition they satisfied, then use the name",
+        "Note that the reader who knows the term still pays to unpack it and the one who does not is stuck",
+        "Keep every identifier, number, and path exactly as precise as it was"
+      ]
+    },
+    {
+      "name": "vocabulary this change invented",
+      "prompt": "The design discussion started calling it the retrieval test, so the guide uses that phrase throughout. Is that established enough?",
+      "expectations": [
+        "Treat a phrase coined during this change's own design as jargon nobody else holds yet",
+        "Unpack it on first use rather than assuming the reviewer sat in the discussion",
+        "Flag that this is the term the author is least likely to notice using"
+      ]
+    },
+    {
+      "name": "plain language made the guide longer",
+      "prompt": "Rewriting in plain words took the guide from 400 to 700 words. Should I cut it back?",
+      "expectations": [
+        "Keep the length: the proportionality rule counts answers, not words",
+        "Say that three plain sentences replacing one dense clause is still one answer",
+        "Distinguish padding, which is material with nothing in it, from material a reader can follow"
+      ]
+    },
+    {
+      "name": "readability at the cost of the claim",
+      "prompt": "The exact error string is ugly, so I paraphrased it and rounded the latency number. Reads much better.",
+      "expectations": [
+        "Restore the quoted error and the exact number: the register changes, the claims do not",
+        "Say a guide that reads easily and can no longer be checked has failed twice",
+        "Keep a distinction the reviewer needs even when it costs an extra clause"
+      ]
     }
   ]
 }
