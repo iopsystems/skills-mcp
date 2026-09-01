@@ -225,9 +225,10 @@ headings, and a one-file addition answers most of them in its first sentence and
 carries the two that have something in them.
 
 The two failures look identical from outside and are opposites. Dropping an
-answer publishes a guide that cannot say why it exists. Heading a one-clause
-answer pads it to look thorough, and that lands hardest on the reviewer of a
-small change, who reads seven sections to find the two that mattered.
+answer publishes a guide that cannot say why it exists — the rule below. Heading
+a one-clause answer pads it to look thorough, and that lands hardest on the
+reviewer of a small change, who reads seven sections to find the two that
+mattered.
 
 Answer every one of these. Give a heading only to the ones that need it:
 
@@ -526,8 +527,8 @@ which. A risk nobody accepted is a risk nobody owns.
 ## Diagrams
 
 A diagram belongs in the mental model, where it does the work prose is bad at:
-carrying a shape. Reach for one when the concepts have a topology, a pipeline, a
-set of hosts, or a before and after.
+carrying a shape. The mental model section says when to reach for one; this says
+which kind.
 
 Which kind:
 
@@ -582,8 +583,9 @@ reviewer this week. They can overlap, and the guide may restate a decision
 rather than making the reviewer click through. The guide never becomes the
 durable record — when an entry exists, link it.
 
-`technical-prose` owns word choice, and every guide is held to it. Three of its
-rules carry most of the weight here:
+`technical-prose` owns what carries a fact — a word, and the material around it
+— and every guide is held to it. Three of its rules carry most of the weight
+here:
 
 - **Modality.** A judgment call written with `should` is not a softer claim, it
   is a different one, and the reviewer who treats it as optional has read you

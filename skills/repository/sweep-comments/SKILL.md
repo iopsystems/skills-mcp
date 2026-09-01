@@ -27,7 +27,7 @@ language's own rules guarantee. They arrive through the file: module
 doc first, then the internals. A reader who did not read the code is
 not a reader the codebase serves — their confusion is not grounds for
 a comment. Assuming an incompetent reader is what produces restatement
-comments; assuming this one is what keeps them out.
+comments.
 
 The **coding agent** has that same competence and none of that reading
 order. It arrives at a function by grep or symbol lookup, holding that
@@ -64,8 +64,7 @@ Code materializes the leaves of that tree completely, which is why
 comments have value at every altitude above the code and none at zero:
 a comment at the code's own level restates what is already
 materialized, while prose is the only medium that can state the
-interior nodes — intent, models, protocols, why. Comments own the
-interior of the design tree; code owns its leaves. The two media trade
+interior nodes — intent, models, protocols, why. The two media trade
 in opposite directions: code must be functionally sound and so cannot
 be vague — it is forced to total precision at the leaf level — while
 prose is licensed to abstract and omit, which is exactly what lets it
@@ -294,15 +293,13 @@ the constraint. When a fragment cannot keep these, write the sentence.
 
 ### The rest
 
-Word choice is not comment-specific and is not stated here. The
-`technical-prose` skill is the home for modality, for vocabulary that carries
-no fact, and for one-name-per-thing; use it directly when the problem is
-wording rather than placement. It rules on words only and defers sentence
-shape back to the calling site, which is why the fragment rule above stands
-against a standard that would otherwise demand full grammar. The modality
-requirement above is stated in both places on purpose: it is an edit
-constraint, and the reader shortening a comment here is the one who never
-opened that skill.
+`technical-prose` is the home for modality, empty vocabulary,
+one-name-per-thing, and the ladder of how much to write; use it directly when
+the problem is wording rather than placement. It disclaims sentence shape,
+which is why the fragment rule above can stand against a standard that would
+otherwise demand full grammar. The modality requirement is
+stated in both places on purpose: it is an edit constraint, and the reader
+shortening a comment here is the one who never opened that skill.
 
 The bullets below are what comment writing adds on top of that bar:
 

@@ -159,7 +159,8 @@ Adopt wholesale; override with a reason.
 `architecture-diagram` owns structure; `dataflow-diagram` owns movement. A
 reader asking which byte holds a length is asking neither.
 
-`technical-prose` owns word choice in captions and surrounding prose, including
+`technical-prose` owns wording and scale in captions and surrounding prose,
+including
 its default of American spelling. Field names, type names, and byte values are
 untouchable — they are names, and a figure that renames them to read better has
 stopped describing the format.
