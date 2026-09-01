@@ -66,8 +66,15 @@ words, so three plain sentences replacing one dense clause remain one answer.
 Padding is material with nothing in it, not material a reader can follow.
 
 The test is whether a competent engineer outside the subsystem would know what
-to do after reading the guide. Four red flags and four rationalization rows name
+to do after reading the guide. Three red flags and two rationalization rows name
 the shapes. Corpus goes from fifty-five cases to fifty-nine.
+
+The section was 376 words on first writing, and the reviewer asked whether a
+rule about not over-explaining needed that much prose. It did not: the opening
+paragraph established an audience the rule implies, one metaphor restated the
+rule twice, and two sentences restated their own guards. Cut to 151 words with
+the example, both guards, and the test intact. The example survived every cut,
+because it is the only part that shows rather than asserts.
 
 ## Outcome
 
@@ -102,6 +109,14 @@ None.
   word choice to `technical-prose`, which rules on which words are chosen and
   not on whether the reader holds them, so the gap sat between two skills that
   each looked complete.
+- **Friction** — the section that adds this rule was itself written at 376
+  words and cut to 151 after the reviewer asked whether a rule about
+  over-explaining needed that much prose. Everything removed was elaboration the
+  skill's own bar forbids: an audience the rule implies, a metaphor restating
+  the rule, sentences restating their own guards. The skill states the bar for
+  the guides it produces and nowhere applies it to its own text, and this is the
+  second edit this month where the fix was cutting what the skill would have cut
+  from a guide.
 - **Confirmation** — the proportionality rule did not have to be weakened to fit
   this. It counts answers rather than words, which turned out to be the formulation
   that survives a change making every answer longer. A word-count rule would have
