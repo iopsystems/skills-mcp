@@ -52,10 +52,7 @@ struct LoadedSkill {
 
 fn load_skills() -> Result<Vec<LoadedSkill>> {
     let mut out = Vec::new();
-    for entry in SKILLS.dirs() {
-        let Some(skill_file) = find_skill_md(entry) else {
-            continue;
-        };
+    for skill_file in collect_skill_files(&SKILLS)? {
         let raw = skill_file
             .contents_utf8()
             .with_context(|| format!("SKILL.md is not UTF-8: {}", skill_file.path().display()))?;
@@ -118,6 +115,37 @@ fn find_skill_md<'a>(dir: &'a Dir<'a>) -> Option<&'a File<'a>> {
             .map(|s| s.eq_ignore_ascii_case("SKILL.md"))
             .unwrap_or(false)
     })
+}
+
+/// Walks the embedded skill tree and returns every `SKILL.md` in it.
+///
+/// Skills are grouped into cluster directories — `repository/`, `vault/`,
+/// `catalog/` — so a skill sits one or two levels down rather than always at
+/// the top. A directory that holds a `SKILL.md` is a skill and is not
+/// descended into; one that holds only other directories is a cluster.
+///
+/// A directory that is neither is an error rather than a skip. Skipping is how
+/// a misfiled skill disappears from the tool list while the server still
+/// starts and every test still passes, which is the failure this walk exists
+/// to prevent.
+fn collect_skill_files<'a>(root: &'a Dir<'a>) -> Result<Vec<&'a File<'a>>> {
+    let mut out = Vec::new();
+    for dir in root.dirs() {
+        if let Some(skill_file) = find_skill_md(dir) {
+            out.push(skill_file);
+            continue;
+        }
+        let nested = collect_skill_files(dir)?;
+        if nested.is_empty() {
+            bail!(
+                "{} holds no SKILL.md and no skill directories: a skill placed \
+                 here would be served by nothing",
+                dir.path().display()
+            );
+        }
+        out.extend(nested);
+    }
+    Ok(out)
 }
 
 fn split_frontmatter(src: &str) -> Option<(&str, &str)> {
@@ -1078,7 +1106,7 @@ mod tests {
 
     #[test]
     fn engineering_journal_evals_cover_key_scenarios() {
-        let raw = include_str!("../skills/engineering-journal/evals/trigger-evals.json");
+        let raw = include_str!("../skills/repository/engineering-journal/evals/trigger-evals.json");
         let value: serde_json::Value =
             serde_json::from_str(raw).expect("journal evals should be valid JSON");
         let evals = value["evals"]
@@ -1145,7 +1173,7 @@ mod tests {
 
     #[test]
     fn sweep_comments_evals_cover_key_scenarios() {
-        let raw = include_str!("../skills/sweep-comments/evals/trigger-evals.json");
+        let raw = include_str!("../skills/repository/sweep-comments/evals/trigger-evals.json");
         let value: serde_json::Value =
             serde_json::from_str(raw).expect("sweep-comments evals should be valid JSON");
         let evals = value["evals"]
@@ -1164,7 +1192,7 @@ mod tests {
 
     #[test]
     fn dataflow_diagram_evals_cover_key_scenarios() {
-        let raw = include_str!("../skills/dataflow-diagram/evals/trigger-evals.json");
+        let raw = include_str!("../skills/repository/dataflow-diagram/evals/trigger-evals.json");
         let value: serde_json::Value =
             serde_json::from_str(raw).expect("dataflow-diagram evals should be valid JSON");
         let evals = value["evals"]
@@ -1183,7 +1211,7 @@ mod tests {
 
     #[test]
     fn technical_prose_evals_cover_key_scenarios() {
-        let raw = include_str!("../skills/technical-prose/evals/trigger-evals.json");
+        let raw = include_str!("../skills/repository/technical-prose/evals/trigger-evals.json");
         let value: serde_json::Value =
             serde_json::from_str(raw).expect("technical-prose evals should be valid JSON");
         let evals = value["evals"]
@@ -1202,7 +1230,8 @@ mod tests {
 
     #[test]
     fn format_layout_diagram_evals_cover_key_scenarios() {
-        let raw = include_str!("../skills/format-layout-diagram/evals/trigger-evals.json");
+        let raw =
+            include_str!("../skills/repository/format-layout-diagram/evals/trigger-evals.json");
         let value: serde_json::Value =
             serde_json::from_str(raw).expect("format-layout-diagram evals should be valid JSON");
         let evals = value["evals"]
@@ -1221,7 +1250,7 @@ mod tests {
 
     #[test]
     fn review_guide_evals_cover_key_scenarios() {
-        let raw = include_str!("../skills/review-guide/evals/trigger-evals.json");
+        let raw = include_str!("../skills/repository/review-guide/evals/trigger-evals.json");
         let value: serde_json::Value =
             serde_json::from_str(raw).expect("review-guide evals should be valid JSON");
         let evals = value["evals"]
@@ -1240,7 +1269,7 @@ mod tests {
 
     #[test]
     fn review_exchange_evals_cover_key_scenarios() {
-        let raw = include_str!("../skills/review-exchange/evals/trigger-evals.json");
+        let raw = include_str!("../skills/repository/review-exchange/evals/trigger-evals.json");
         let value: serde_json::Value =
             serde_json::from_str(raw).expect("review-exchange evals should be valid JSON");
         let evals = value["evals"]

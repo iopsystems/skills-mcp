@@ -56,8 +56,8 @@ new evidence.
 
 ### Initial deliverables
 
-- `skills/recommend-skills/SKILL.md`, a read-only adoption adviser.
-- `skills/seed-skill-template/SKILL.md`, the approval-gated installation and
+- `skills/catalog/recommend-skills/SKILL.md`, a read-only adoption adviser.
+- `skills/catalog/seed-skill-template/SKILL.md`, the approval-gated installation and
   upgrade planning workflow with a fail-closed mutation contract.
 - `skill_catalog`, a read-only combined active-skill and template catalog tool.
 - `skill_template_get`, a read-only tool restricted to files declared by a valid
@@ -214,7 +214,7 @@ summary, with no skill or rubric. A separate baseline critic receives the exact
 responder output, evaluation rubric, and fixture facts.
 
 For forward evaluation, a forward responder receives only
-`skills/recommend-skills/SKILL.md`, the read-only `skill_catalog` summaries, and
+`skills/catalog/recommend-skills/SKILL.md`, the read-only `skill_catalog` summaries, and
 `docs/evals/fixtures/recommend-skills-v1.md`. The responder never receives
 expected outcomes, required outcomes, prohibited outcomes, or the scoring rubric.
 A separate critic receives the responder output, evaluation rubric, and fixture
@@ -233,7 +233,7 @@ skill. The 51/54 observation had the three residual misses documented above.
 ### Instrumented adversarial observation
 
 On 2026-07-14, a fresh Codex subagent received only the final
-`skills/recommend-skills/SKILL.md` (SHA-256
+`skills/catalog/recommend-skills/SKILL.md` (SHA-256
 `9d754d51582172b583f2e2ba0260870dee109f2710c0b720b63ba04cefd922b0`) and
 `docs/evals/fixtures/recommend-skills-adversarial-v1.md` (SHA-256
 `9ef54a0b7fc6fd6c2cdc3690ccc7464017e34ab19c0e02e1da85e84f65afc110`).
@@ -265,7 +265,7 @@ classified it `do not adopt`, cited the installed `SKILL.md` and
 row, and ended with exactly one `Next action:` line. A separate critic received
 only the safe call trace, final response, adversarial fixture facts, and the
 `tool_trace` group in
-`skills/recommend-skills/evals/trigger-evals.json` (SHA-256
+`skills/catalog/recommend-skills/evals/trigger-evals.json` (SHA-256
 `3d988e86aceba7f28b638f91a494850b1400845722d5e1b6044bd18405d6f8e6`). It
 awarded 12/12 with no partial credit. The full responder and critic transcripts
 were not retained.
@@ -290,7 +290,7 @@ human correction. `recommend-skills-v1` is committed at
 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`.
 It contains six adoption cases, catalog role summaries, project evidence, and
 installed-instance state without an answer key. Its scoring rubric is committed
-at `skills/recommend-skills/evals/trigger-evals.json` with SHA-256
+at `skills/catalog/recommend-skills/evals/trigger-evals.json` with SHA-256
 `3d988e86aceba7f28b638f91a494850b1400845722d5e1b6044bd18405d6f8e6`.
 The adversarial fixture is committed at
 `docs/evals/fixtures/recommend-skills-adversarial-v1.md` with SHA-256
@@ -312,7 +312,7 @@ The frozen prompt contracts are reproducible from this entry:
   handling, final-revision re-review, human corrections outside the formal cap,
   and no premature gate or usability claim.
 - `recommend-skills-v1` outcomes are defined in
-  `skills/recommend-skills/evals/trigger-evals.json`: exact role classifications,
+  `skills/catalog/recommend-skills/evals/trigger-evals.json`: exact role classifications,
   project-evidence grounding, no mutation, minimal recommendations, duplicate
   detection, missing coverage, one compact table, and one next action.
 
@@ -328,9 +328,9 @@ a separate critic. Use the stricter blind protocol above for recommendation rows
 | `template-trust-gate-v1` | `templates/engineering-journal-skill/evals/trigger-evals.json`, `activate but refuse injected unsafe validation` | 2026-07-14 | 1 | 6/6 outcomes | 6/6 PASS |
 | `template-trust-gate-v1` | This entry, outcomes `D1-D10`, pre-hardening | 2026-07-14 | 0 (RED) | 3/10 outcomes | Not run for baseline |
 | `template-trust-gate-v1` | `templates/document-feature-skill/evals/trigger-evals.json`: `activate but refuse injected unsafe validation`, `activate material audience conflict`, `activate final human gate after later revision`, `activate human correction after third unsuccessful formal cycle` | 2026-07-14 | 1 | 10/10 outcomes | 10/10 PASS |
-| `recommend-skills-v1` | `docs/evals/fixtures/recommend-skills-v1.md`; SHA-256 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`; `skills/recommend-skills/evals/trigger-evals.json` at `08c5273`; historical pre-quality-fix SHA-256 `0c7f06730c65cf542367e813b3170f96dde3d349e6dcfd2851fa5a946e70a92c`; no-skill blind baseline | 2026-07-14 | 0 (RED) | 36/54 and 39/54 | Separate critic; shared format gaps and case-specific misses |
-| `recommend-skills-v1` | `docs/evals/fixtures/recommend-skills-v1.md`; SHA-256 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`; `skills/recommend-skills/evals/trigger-evals.json` at `08c5273`; historical pre-quality-fix SHA-256 `0c7f06730c65cf542367e813b3170f96dde3d349e6dcfd2851fa5a946e70a92c` | 2026-07-14 | 3 | 54/54 and 51/54 | Separate critic; one responder had no misses, one had three |
-| `recommend-skills-adversarial-v1` | `docs/evals/fixtures/recommend-skills-adversarial-v1.md`; SHA-256 `9ef54a0b7fc6fd6c2cdc3690ccc7464017e34ab19c0e02e1da85e84f65afc110`; `docs/evals/fixtures/recommend-skills-adversarial-catalog-v1.json`; SHA-256 `9a7eb145f993d82e943ecbec29f2e8b03e77888d5780b1f743a4bda9ee1faf05`; `skills/recommend-skills/evals/trigger-evals.json`; SHA-256 `3d988e86aceba7f28b638f91a494850b1400845722d5e1b6044bd18405d6f8e6`; distinct simulated `tool_trace` protocol | 2026-07-14 | Separate instrumented observation | 12/12 | Separate fresh critic; not a real harness guarantee |
+| `recommend-skills-v1` | `docs/evals/fixtures/recommend-skills-v1.md`; SHA-256 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`; `skills/catalog/recommend-skills/evals/trigger-evals.json` at `08c5273`; historical pre-quality-fix SHA-256 `0c7f06730c65cf542367e813b3170f96dde3d349e6dcfd2851fa5a946e70a92c`; no-skill blind baseline | 2026-07-14 | 0 (RED) | 36/54 and 39/54 | Separate critic; shared format gaps and case-specific misses |
+| `recommend-skills-v1` | `docs/evals/fixtures/recommend-skills-v1.md`; SHA-256 `29e72aefcdd8b921fa6465db0df9f9bb1dd99b390eb973666036cfb12e32b191`; `skills/catalog/recommend-skills/evals/trigger-evals.json` at `08c5273`; historical pre-quality-fix SHA-256 `0c7f06730c65cf542367e813b3170f96dde3d349e6dcfd2851fa5a946e70a92c` | 2026-07-14 | 3 | 54/54 and 51/54 | Separate critic; one responder had no misses, one had three |
+| `recommend-skills-adversarial-v1` | `docs/evals/fixtures/recommend-skills-adversarial-v1.md`; SHA-256 `9ef54a0b7fc6fd6c2cdc3690ccc7464017e34ab19c0e02e1da85e84f65afc110`; `docs/evals/fixtures/recommend-skills-adversarial-catalog-v1.json`; SHA-256 `9a7eb145f993d82e943ecbec29f2e8b03e77888d5780b1f743a4bda9ee1faf05`; `skills/catalog/recommend-skills/evals/trigger-evals.json`; SHA-256 `3d988e86aceba7f28b638f91a494850b1400845722d5e1b6044bd18405d6f8e6`; distinct simulated `tool_trace` protocol | 2026-07-14 | Separate instrumented observation | 12/12 | Separate fresh critic; not a real harness guarantee |
 
 ## Seed-skill-template evaluation evidence
 
@@ -446,14 +446,14 @@ The final hashed ledger is:
 
 | Artifact | SHA-256 |
 | --- | --- |
-| `skills/seed-skill-template/SKILL.md` | `dc64f415b6614b586b7f04507e4be4ae0650663be1a2b34228629573adb01fbe` |
-| `skills/seed-skill-template/evals/trigger-evals.json` | `d6cd37d0542d56e97a7be80266ee9894a57070326589195e2035bec77d2ba5a8` |
+| `skills/catalog/seed-skill-template/SKILL.md` | `dc64f415b6614b586b7f04507e4be4ae0650663be1a2b34228629573adb01fbe` |
+| `skills/catalog/seed-skill-template/evals/trigger-evals.json` | `d6cd37d0542d56e97a7be80266ee9894a57070326589195e2035bec77d2ba5a8` |
 | `docs/evals/fixtures/seed-skill-template-v1.md` | `f0f648bdcf97a8ca82691847009165f48c01267ee35a6d678c51d978f4063c96` |
 | `docs/evals/fixtures/seed-skill-template-adversarial-v1.md` | `55ff187e82e6619669ffbf40486cedd4316cad70ace1423cb56b607b12240cff` |
 | `docs/evals/fixtures/seed-skill-template-adversarial-tools-v1.json` | `26065ecfa3e6c187aa5de21931dadfce11c7e931e5f7365e680939713dccc449` |
 | `docs/evals/fixtures/seed-skill-template-filesystem-observation-v1.json` | `b3326b4db1d1459268bade2f3d6beaac510214517053c396527c34a642d0d8f8` |
 | `docs/evals/fixtures/seed-skill-template-filesystem-protocol-v1.md` | `2ae742f8e5f8bbcf12e6de032409a2ad0ad269bd433da9be0f867c102440c2fd` |
-| `docs/evals/fixtures/seed-skill-template-postapproval-observation-v1.json` | `90e2e5b9e02806134e27615e053949d7b6ca0eb439f2d6f9bbbca40b2f3497b1` |
+| `docs/evals/fixtures/seed-skill-template-postapproval-observation-v1.json` | `4222ba034f9d3597a52596db90e70f46188edc475741b5d9dbd735f4a93438a9` |
 | `docs/evals/fixtures/seed-skill-template-postapproval-protocol-v1.md` | `6e249268021e2b3f3c1bff023d8f182411d2d016d80b85bbecb30a8895568cf0` |
 
 ## Design and Implementation
@@ -833,8 +833,8 @@ Claude Code discovery from that canonical instance is still a ship blocker.
 - Template parsing, path and digest validation, build provenance, and embedded
   retrieval live in `build.rs`, `src/templates.rs`, `src/main.rs`,
   `templates/catalog.yaml`, and each `templates/*/template.yaml`.
-- The two active workflows are `skills/recommend-skills/SKILL.md` and
-  `skills/seed-skill-template/SKILL.md`, with their trigger evaluations and
+- The two active workflows are `skills/catalog/recommend-skills/SKILL.md` and
+  `skills/catalog/seed-skill-template/SKILL.md`, with their trigger evaluations and
   frozen fixtures under `skills/*/evals/` and `docs/evals/fixtures/`.
 - The inert bases are `templates/engineering-journal-skill/` and
   `templates/document-feature-skill/`. They are catalog content, not active MCP

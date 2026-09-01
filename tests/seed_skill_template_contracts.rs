@@ -10,7 +10,7 @@ use sha2::{Digest, Sha256};
 const ADVERSARIAL_FIXTURE_PATH: &str = "docs/evals/fixtures/seed-skill-template-adversarial-v1.md";
 const ADVERSARIAL_TOOLS_PATH: &str =
     "docs/evals/fixtures/seed-skill-template-adversarial-tools-v1.json";
-const EVAL_PATH: &str = "skills/seed-skill-template/evals/trigger-evals.json";
+const EVAL_PATH: &str = "skills/catalog/seed-skill-template/evals/trigger-evals.json";
 const FIXTURE_PATH: &str = "docs/evals/fixtures/seed-skill-template-v1.md";
 const FILESYSTEM_OBSERVATION_PATH: &str =
     "docs/evals/fixtures/seed-skill-template-filesystem-observation-v1.json";
@@ -21,7 +21,7 @@ const POSTAPPROVAL_OBSERVATION_PATH: &str =
 const POSTAPPROVAL_PROTOCOL_PATH: &str =
     "docs/evals/fixtures/seed-skill-template-postapproval-protocol-v1.md";
 const JOURNAL_PATH: &str = "docs/journal/2026-07-13-skill-templates-and-project-documentation.md";
-const SKILL_PATH: &str = "skills/seed-skill-template/SKILL.md";
+const SKILL_PATH: &str = "skills/catalog/seed-skill-template/SKILL.md";
 
 #[derive(Debug, Deserialize)]
 #[serde(deny_unknown_fields)]

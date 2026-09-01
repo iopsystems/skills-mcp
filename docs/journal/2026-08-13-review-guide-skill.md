@@ -33,7 +33,7 @@ each of which has a skill already. No template counterpart is created.
 The repository carries twenty-one skills before this change, each a single
 `SKILL.md` served as instruction text, and skills defer to each other by name in
 prose rather than through any import mechanism —
-`skills/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
+`skills/repository/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
 and `:38` ("use `dataflow-diagram` directly") are the precedent this follows for
 pictures.
 
@@ -118,8 +118,8 @@ what turns each use into evidence instead of an anecdote.
 
 Artifacts:
 
-- `skills/review-guide/SKILL.md`
-- `skills/review-guide/evals/trigger-evals.json`, twenty-two cases covering the
+- `skills/repository/review-guide/SKILL.md`
+- `skills/repository/review-guide/evals/trigger-evals.json`, twenty-two cases covering the
   publish test in both directions, a qualifying section surviving a small
   change, proportional output, refused padding, ranking against path order,
   test-reporting honesty, both uncertainty failure modes, refused confidence
@@ -138,7 +138,7 @@ The pull request body for this change was written with the skill itself, which
 is the only test available before a human reads one. It caught a real defect:
 the first draft cited three line ranges that were each off by a section, because
 the model estimated them rather than checking. The rule at
-`skills/review-guide/SKILL.md` requiring a specific place rather than a module
+`skills/repository/review-guide/SKILL.md` requiring a specific place rather than a module
 was violated on first use by the model that wrote it. The mistake was corrected,
 kept in the body as an uncertainty item, and produced a risk that had not been
 listed: line-precise citations rot as soon as a file is edited.

@@ -17,7 +17,7 @@ vault, on the branch `claude/elegant-ramanujan-prg2v9`.
 
 ## Scope
 
-`skills/reconcile-vault/SKILL.md`, Mode B and the shared review gate. Mode A is
+`skills/vault/reconcile-vault/SKILL.md`, Mode B and the shared review gate. Mode A is
 untouched by this change, which is the brief's constraint: the dream pass moves
 to match interactive, not the reverse.
 

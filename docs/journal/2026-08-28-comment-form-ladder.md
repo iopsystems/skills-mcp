@@ -16,7 +16,7 @@ every rule in the skill.
 
 ## Scope
 
-`skills/sweep-comments/SKILL.md` and its corpus. No change to the tiers, the
+`skills/repository/sweep-comments/SKILL.md` and its corpus. No change to the tiers, the
 retrieval test, the model home, the two-pass structure, or the one-context
 requirement.
 
@@ -119,7 +119,7 @@ None.
   the echo test was justified. There was no exception. The duplication it
   described is the carve-out the swept skill already grants: an edit constraint
   is stated at its home and "in one sentence at the site that can break it"
-  (`skills/sweep-comments/SKILL.md:207`), and this same rule is already "stated
+  (`skills/repository/sweep-comments/SKILL.md:207`), and this same rule is already "stated
   in both places on purpose" (`:311`) for the reason the guide gave. The
   reviewer answered by pointing at the rules.
 

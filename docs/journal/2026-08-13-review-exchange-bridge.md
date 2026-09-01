@@ -96,7 +96,7 @@ unquotable in practice, and a file on disk is what makes the next property
 possible.
 
 That property is the load-bearing one. The script exists nowhere in this
-repository except as a heredoc inside `skills/review-exchange/SKILL.md`, between
+repository except as a heredoc inside `skills/repository/review-exchange/SKILL.md`, between
 `<!-- INSTALLER-BEGIN -->` and `<!-- INSTALLER-END -->` markers.
 `scripts/review-bridge-test.sh` extracts that block with `awk` and executes it,
 so the bytes CI tests are the bytes the skill distributes. The skill text is the
@@ -105,8 +105,8 @@ effort.
 
 Artifacts:
 
-- `skills/review-exchange/SKILL.md`
-- `skills/review-exchange/evals/trigger-evals.json`, fourteen cases covering
+- `skills/repository/review-exchange/SKILL.md`
+- `skills/repository/review-exchange/evals/trigger-evals.json`, fourteen cases covering
   install and upgrade detection, both roles, disputed and deferred findings,
   convergence and refusing to declare it for the other agent, refused
   manufactured findings, missing identity, and the durability boundary

@@ -15,7 +15,7 @@ finding needs somewhere durable to be reviewed.
 
 ## Scope
 
-`skills/reconcile-vault/SKILL.md`. No change to the transition pre-flight, the
+`skills/vault/reconcile-vault/SKILL.md`. No change to the transition pre-flight, the
 evidence rules, the review package, the token budget, or the prohibition on
 `force_accept`.
 

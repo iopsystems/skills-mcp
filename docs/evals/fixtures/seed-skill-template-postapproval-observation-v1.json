@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "observed_at": "2026-07-15",
-  "skill_path": "skills/seed-skill-template/SKILL.md",
+  "skill_path": "skills/catalog/seed-skill-template/SKILL.md",
   "skill_sha256": "dc64f415b6614b586b7f04507e4be4ae0650663be1a2b34228629573adb01fbe",
   "protocol": "docs/evals/fixtures/seed-skill-template-postapproval-protocol-v1.md",
   "runner": {

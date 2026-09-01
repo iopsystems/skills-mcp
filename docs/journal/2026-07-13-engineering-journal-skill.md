@@ -26,11 +26,11 @@ replace issues or pull requests and does not create problem or design briefs.
 ## Evidence
 
 The workflow was informed by the engineering-journal practices in
-[iopsystems/rezolus](https://github.com/iopsystems/rezolus/blob/main/.claude/skills/engineering-journal/SKILL.md)
+[iopsystems/rezolus](https://github.com/iopsystems/rezolus/blob/main/.claude/skills/repository/engineering-journal/SKILL.md)
 and
-[iopsystems/hpc-research](https://github.com/iopsystems/hpc-research/blob/main/.claude/skills/engineering-journal/SKILL.md).
-The implementation is grounded in `skills/engineering-journal/SKILL.md`, the ten
-cases in `skills/engineering-journal/evals/trigger-evals.json`, and embedded
+[iopsystems/hpc-research](https://github.com/iopsystems/hpc-research/blob/main/.claude/skills/repository/engineering-journal/SKILL.md).
+The implementation is grounded in `skills/repository/engineering-journal/SKILL.md`, the ten
+cases in `skills/repository/engineering-journal/evals/trigger-evals.json`, and embedded
 loader contract tests in `src/main.rs`.
 
 ## Design and Implementation

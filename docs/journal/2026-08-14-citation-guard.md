@@ -34,9 +34,9 @@ does not. All five line citations in tracked markdown resolved correctly when
 checked by hand before any code was written:
 
 - `src/main.rs:38` embeds `skills/` through `include_dir!`.
-- `skills/architecture-diagram/SKILL.md:31` reads "treat this skill as
+- `skills/repository/architecture-diagram/SKILL.md:31` reads "treat this skill as
   **beta**".
-- `skills/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
+- `skills/repository/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
   and `:38` ("use `dataflow-diagram` directly") are the two deferral precedents.
 - `Cargo.toml:6` declares "MIT OR Apache-2.0".
 
@@ -54,7 +54,7 @@ rather than read. In change 30 four anchors were read and the fifth estimated,
 which produced `:194` for a line reading `done`.
 
 The durability failure has not happened yet but is one edit away: editing
-`skills/architecture-diagram/SKILL.md` would have silently invalidated three
+`skills/repository/architecture-diagram/SKILL.md` would have silently invalidated three
 journal entries, and nothing would have noticed.
 
 ## Design and Implementation
@@ -131,7 +131,7 @@ stands alone, whatever surrounds it.
 ### Verification beyond the unit tests
 
 Unit tests do not show that the guard works on the real corpus. A two-line
-insertion into `skills/architecture-diagram/SKILL.md` was used to drive the full
+insertion into `skills/repository/architecture-diagram/SKILL.md` was used to drive the full
 cycle: the check flagged five citations across three journal entries and
 identified every shifted reference; `CITATIONS_FIX=1` rewrote all five to their
 new lines; restoring the source and repairing again returned them to `30`, `27`,

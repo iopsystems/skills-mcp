@@ -46,7 +46,7 @@ Three structural facts about this repository constrain the design:
   and no active skill has a `references/` directory. An active skill is
   therefore exactly one file, and a shared rule set cannot be a servable
   sub-file — it must be its own skill with its own trigger.
-- `skills/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
+- `skills/repository/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
   and `:38` ("use `dataflow-diagram` directly") establish the precedent for one
   skill deferring to another in prose, by name, with no import mechanism.
 - `templates/document-feature-skill/` is an inert template, seeded and
@@ -88,13 +88,13 @@ another skill, not general prose authoring. A broad trigger would compete with
 
 Artifacts:
 
-- `skills/technical-prose/SKILL.md`
-- `skills/technical-prose/evals/trigger-evals.json`, eighteen cases covering
+- `skills/repository/technical-prose/SKILL.md`
+- `skills/repository/technical-prose/evals/trigger-evals.json`, eighteen cases covering
   modality, vocabulary, untouchables, and two boundary cases asserting the skill
   declines to rule on fragments and sentence length
 - `technical_prose_evals_cover_key_scenarios` in `src/main.rs`, mirroring
   `sweep_comments_evals_cover_key_scenarios`
-- a reference in `skills/sweep-comments/SKILL.md` under "Writing new comments"
+- a reference in `skills/repository/sweep-comments/SKILL.md` under "Writing new comments"
 
 Attribution: the slop table is adapted under MIT from AminBlg/SimpleEnglish; the
 rules paraphrase ASD-STE100, unaffiliated with ASD or STEMG. The repository has
