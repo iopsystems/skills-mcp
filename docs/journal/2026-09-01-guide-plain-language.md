@@ -76,6 +76,25 @@ rule twice, and two sentences restated their own guards. Cut to 151 words with
 the example, both guards, and the test intact. The example survived every cut,
 because it is the only part that shows rather than asserts.
 
+## Applying the ladder to the file that states it
+
+`2026-09-01-prose-ladder.md` merged first, so the rule existed before this
+change landed and the file was swept to it rather than only extended by it.
+
+Ten paragraphs were cut, none of which lost a rule: a bolded-rule and list-item
+diff before and after shows the same set, with one bold marker reflowed across a
+line break. What went was restatement. The two mental-model sections each stated
+that the model sits after the TL;DR and before any identifier, so the ordering
+section keeps the placement and the content section keeps the concrete reason. A
+144-word decisions paragraph carried an example restating the sentence after it
+and a closing clause restating the ordering rule it cited. A stack paragraph
+carried the section's own motivation, which belongs at the section's opening.
+
+6,815 words to 6,588 — 227 cut, about 3%. Paragraphs over eighty words went from
+seven to five, and the five that remain are dense rather than padded: each
+carries several distinct facts. That is the limit the ladder names and no check
+resolves, since length is not the defect and restatement is.
+
 ## Outcome
 
 Shipped. `cargo test --locked`, `cargo fmt --all -- --check`, and clippy pass.
