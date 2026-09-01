@@ -50,8 +50,7 @@ demoted from a channel, geometry emitted directly). Use it for that duo;
 this skill remains the home for dataflow and pipeline charts of a single
 running program. The second contact was a request-lifecycle chart of an
 io_uring runtime library, whose reader found the defects the sections on
-placement and on the perceptual gate below now name: every one of them was
-inside the viewport, and every one was the first thing the reader saw.
+placement and on the perceptual gate below now name.
 
 This skill ships in two forms with one structure: the skill itself is
 complete working defaults — enough for a single-use chart in a repository
@@ -261,8 +260,7 @@ engine trying to satisfy it.
 Decoration layers onto a glyph without changing its kind, so give it the
 same solid/dashed grammar the edges use: a solid frame for a property that
 always holds, a dashed frame for one that holds conditionally, no frame for
-absent. Three states from one channel, and the unframed case reads as a
-gap in a series rather than as an unmarked node. Scale the frame with the
+absent — three states from one channel. Scale the frame with the
 glyph — a padding that is a hairline at chart size is a slab on a key's
 smaller copy.
 
@@ -329,16 +327,13 @@ whenever an element is added, and a warning about a diagram nobody is
 currently looking at is a warning nobody reads.
 
 A layout engine is doing more placement work than the inset key makes
-visible, and a generator that emits geometry itself inherits all of it: a
-label anchored and centered against the shape it names rather than a nominal
-coordinate, a multiline label treated as one line group before its baselines
-are placed, the connectors on one shape distributed as a group rather than
-chosen one at a time, routing that lands on a resolved border rather than the
-column the shape is supposed to sit in, and children that stay inside their
-parent's content area. `architecture-diagram` carries that set, because
-emitting geometry directly is its default. Bounds are the weakest check of
-the group and the only one most generators run: every defect in that list
-sits comfortably inside the viewport.
+visible, and a generator that emits geometry itself inherits all of it —
+anchoring, centering a multiline label as one line group, distributing the
+connectors on one shape, routing to a resolved border, keeping children inside
+their parent. `architecture-diagram` carries that set, because emitting
+geometry directly is its default. Bounds are the weakest check of the group and
+the only one most generators run: every one of those defects sits comfortably
+inside the viewport.
 
 ## Verify the rendering, not the source
 

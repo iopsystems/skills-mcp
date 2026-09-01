@@ -204,8 +204,8 @@ starting from it beats assembling from scratch.
   rasterizers).
 - **Edges**: heavy (2.4) crossing the process boundary, thin (1.4)
   internal; orthogonal only; labels above arrows.
-- **Panels**: one per variant, stacked vertically, right-margin annotations
-  vertically centered.
+- **Panels**: right-margin annotations vertically centered; the runtime-chart
+  rule above sets one per variant, stacked.
 
 ## Bounds are not balance
 
@@ -268,10 +268,9 @@ core — derive from the program's real structures, classify through
 fail-loud tables, use the default visual language — and keeps the generator
 script with the artifact, wherever the work lives. What it loses is
 freshness: nothing will catch drift, so stamp the chart with the commit it
-was derived from and present it as a dated snapshot. Skip the charter and
-the review gate; keep derivation and fail-loudly, which cost nothing and
-make even a one-off chart trustworthy. A chart worth keeping makes the
-script the seed of the installed generator.
+was derived from and present it as a dated snapshot. Skip the charter and the
+review gate. A chart worth keeping makes the script the seed of the installed
+generator.
 
 ## Workflow
 
