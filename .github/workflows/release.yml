@@ -5,10 +5,10 @@ name: Release
 # The tagged commit must contain this workflow, so merge it to the default
 # branch first. `workflow_dispatch` can rebuild assets for an existing tag.
 #
-# Publishing the release is not the last step: the final job asks the Homebrew
-# tap to bump its formula, using `TAP_DISPATCH_TOKEN`, a token with write access
-# to iopsystems/homebrew-iop and to nothing here. If that job is red, check
-# whether the token expired.
+# Publishing the release ends this workflow. The Homebrew tap bumps its own
+# formula from a daily cron, and opens a pull request that a person labels
+# `pr-pull` to land. To bump it now rather than tomorrow:
+#   gh workflow run update-skills-mcp.yml -R iopsystems/homebrew-iop
 
 on:
   push:
@@ -132,34 +132,3 @@ jobs:
           files: |
             dist/*.tar.gz
             dist/*.tar.gz.sha256
-
-  notify-tap:
-    name: notify homebrew tap
-    needs: release
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    # This job holds no permissions on this repository. It reaches another one,
-    # with a token stored here.
-    permissions: {}
-    steps:
-      # The tap also checks daily on a cron. That cron is the backstop: if this
-      # job fails, or the token expires, the release still reaches users within
-      # a day, which is why a failure here is worth marking red rather than
-      # worth retrying in place.
-      - name: Ask the tap to bump the formula
-        env:
-          GH_TOKEN: ${{ secrets.TAP_DISPATCH_TOKEN }}
-          TAG: ${{ github.event.inputs.tag || github.ref_name }}
-        run: |
-          set -euo pipefail
-          if [ -z "${GH_TOKEN:-}" ]; then
-            echo "TAP_DISPATCH_TOKEN is unset. The release is published; the tap" >&2
-            echo "will pick it up on its daily cron instead of within the minute." >&2
-            exit 1
-          fi
-          # The tag travels in the payload so the tap never has to ask which
-          # release this was. Asking would race the releases API, which has just
-          # been written to by the job above.
-          jq -n --arg tag "$TAG" \
-            '{event_type: "skills-mcp-released", client_payload: {tag: $tag}}' \
-            | gh api repos/iopsystems/homebrew-iop/dispatches --input -
