@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-09-01 | [The first sweep was deferential](2026-09-01-adversarial-cut.md) | shipped |
 | 2026-09-01 | [The heavy skills were dense, not padded](2026-09-01-sweep-heavy-skills.md) | shipped |
 | 2026-09-01 | [A ladder for how much to write](2026-09-01-prose-ladder.md) | shipped |
 | 2026-09-01 | [A guide explains before it names](2026-09-01-guide-plain-language.md) | shipped |

@@ -24,36 +24,27 @@ The reviewer already has the diff. This skill does not summarize it. It decides
 where a human's limited attention buys the most, and states plainly what the
 author could not settle.
 
-The output is the pull-request body. "The guide" and "the body" name that one
-artifact throughout; nothing else here is called either.
-
-Do not create a file for it. If the user asks for a checked-in document, write
-that instead, but that is a different request.
+The output is the pull-request body; "the guide" and "the body" both mean it.
+Do not create a file. A checked-in document is a different request.
 
 ## What this is, and what it is not yet
 
-Treat this skill as **beta**. Its two central rules are asserted rather than
-derived. The attention ranking below has never been measured against where
-defects were actually found, and the four items of the publish test are a
-judgment about what a reviewer cannot get from a diff, not a finding. No guide
-this skill produced has yet been read by a reviewer who then said whether it
-helped.
+Treat this skill as **beta**. Both central rules are asserted: the attention
+ranking has never been checked against where defects were found, and the publish
+test is a judgment about what a diff cannot carry. No guide it produced has been
+read back by a reviewer.
 
-Use the rules wholesale anyway. A stated default that fails teaches more than a
-hedge that cannot. When one fights the change in front of you, the override and
-its reason are the most valuable thing the effort produces: record them through
-`engineering-journal`, which names this skill in `beta_skills` and takes the
-account under `## Skill Feedback` — what was asked, which instruction misfired,
-and what you did instead.
+Use them wholesale anyway — a stated default that fails teaches more than a
+hedge that cannot. When one fights the change in front of you, record the
+override and its reason through `engineering-journal`.
 
 Record the defaults that held, too. A channel collecting only complaints will
 retire rules that were working.
 
 ## Always run; publish only when it earns it
 
-Run on every change. The assessment costs little and its result is information
-either way: a change with nothing to say is a fact about the change, not a
-reason to have skipped looking.
+Run on every change: a change with nothing to say is a fact about the change,
+not a reason to have skipped looking.
 
 What you publish is proportional to the change and to its complexity. A
 one-file mechanical edit earns a sentence. A change that crosses subsystems,
@@ -61,10 +52,8 @@ alters an interface, or makes a performance claim earns every section. Length
 is a consequence of what the change actually carries, never a target.
 
 **When accessibility and brevity conflict, accessibility wins.** Establishing a
-starting point the reviewer does not hold costs words and buys the whole
-section; cutting it saves a paragraph and loses the reader. The rule against
-padding forbids material with nothing in it — not material that is longer than
-you would like.
+starting point the reviewer does not hold costs a paragraph and buys the section
+it opens.
 
 ### The publish test
 
@@ -76,10 +65,9 @@ from the diff itself:
 - a judgment call
 - a production-only risk
 
-If all four are empty, do not publish a guide. Write one sentence describing
-the change, and state that you checked those four and found nothing. The empty
-result is a claim, and stating it is what makes the claim checkable — silence
-is indistinguishable from not having looked.
+If all four are empty, do not publish a guide. Write one sentence describing the
+change and state that you checked those four and found nothing: silence is
+indistinguishable from not having looked.
 
 Never pad to reach the bar. A guide inflated to look thorough costs the
 reviewer more than no guide, because it teaches them to skim the next one.
@@ -98,22 +86,15 @@ It is a short essay, not a label, and it answers three questions in order:
 3. **What is true once it lands?** The state the reviewer should expect
    afterwards, including what still does not work.
 
-Close with a pointer to the ask, **as its own paragraph**: how many decisions
-want the reviewer, whether any block, and where they are. Fused to the end of
-the summary it disappears into the sentence before it; the line break is what
-makes it findable.
+Close with a pointer to the ask, **as its own paragraph** — fused to the summary
+it disappears into the sentence before it. A pointer, not the asks themselves,
+because naming a decision costs the context that makes it one: "three decisions
+want your opinion, none blocking; each is its own subsection under Decisions" is
+the whole paragraph. Never leave it out — an absent ask and an empty one read
+identically, so when nothing needs the reviewer it says so.
 
-A pointer, not the asks themselves. Naming a decision costs the context that
-makes it one, which the summary cannot supply — so "three decisions want your
-opinion, none blocking; each is its own subsection under Decisions" is the whole
-paragraph. Never leave it out: when nothing needs the reviewer it says so —
-"Nothing here needs a decision; the four checks came back empty" — because an
-absent ask and an empty one read identically, and only one means you looked.
-
-Length follows those answers and nothing else. A change that crosses subsystems
-earns a paragraph. A small change collapses all three into one sentence, because
-its why, its idea, and its effect are the same fact seen three ways. A change
-that clears nothing on the publish test is one sentence and stops there.
+A small change collapses all three answers into one sentence, because its why,
+its idea, and its effect are the same fact seen three ways.
 
 A TL;DR that restates the title is wasted. So is one that opens a list the
 reviewer must then read to use.
@@ -157,9 +138,8 @@ order, and the order is the rule:
 3. **The question**, last, once both of those are standing. What was chosen,
    what was rejected, and what would change it.
 
-Each decision is its own subsection under `## Decisions`, with a heading that
-names it. That is what makes the guide navigable — a reviewer can answer one and
-leave the rest, and a thread can point at a heading.
+Each gets its own subsection under `## Decisions`, with a heading that names it,
+so a reviewer can answer one and leave the rest and a thread can point at it.
 
 ```markdown
 ## Decisions
@@ -181,56 +161,46 @@ override stops scaling at a third deployment that differs again.
 deployment dimension?**
 ```
 
-Rules that keep the section honest:
+Rules:
 
-- **Context before question, always.** A question a reviewer cannot yet parse is
-  not an ask, it is a delay: they carry it until the context arrives, then have
-  to come back. This is the failure that retired an earlier design, in which the
-  asks were listed together above the mental model.
-- **Only what the reviewer can settle.** If you can settle it, settle it in the
-  guide and leave it out. A decision you already know the answer to is a quiz.
+- **Context before question, always.** A question the reviewer cannot yet parse
+  is a delay, not an ask: they carry it until the context arrives, then come
+  back. A subsection with a question and no context is that failure with extra
+  structure.
+- **Only what the reviewer can settle.** A decision you already know the answer
+  to is a quiz. Settle it in the guide and leave it out.
 - **Say what each needs** — a decision, a confirmation of fact, or an
   acknowledgment of a risk. Those cost different amounts.
 - **Say which block the merge**, in the subsection, not only in the pointer.
-- **One subsection per decision.** Two decisions under one heading get answered
-  as one, and usually only the first gets answered at all.
-- **Never a bare list of headings.** A subsection with a question and no context
-  is the old failure with extra structure.
+- **One per subsection.** Two under one heading get answered as one, and usually
+  only the first.
 
-Calls that need no answer do not get subsections. They stay a short list at the
-end of the section, one line each, under a sentence saying they are recorded
-rather than asked. That is the third tier: the point of the change, then what
-you are merely unsure of, then what you are only putting on the record.
-
-**Wanting an answer is not enough to earn a subsection.** A subsection costs a
-context paragraph, a reference, and a question, whatever the item is worth. Two
-kinds belong in the recorded list however curious you are: one whose context is
+**Wanting an answer is not enough to earn a subsection**, which costs a context
+paragraph, a reference, and a question whatever the item is worth. Two kinds go
+in the recorded list instead, however curious you are: one whose context is
 already visible in the diff, so the paragraph would narrate what the reviewer is
-looking at; and one that turns on a value rather than an approach — a width, a
-name, a threshold — where the alternatives are obvious and one edit reverses the
-choice. Record those in a clause. Asked in full they cost the reviewer the
-attention the decision the change is for was owed.
+looking at; and one turning on a value rather than an approach — a width, a
+name, a threshold — where one edit reverses the choice. A clause each, under a
+sentence saying they are recorded rather than asked. That is the third tier:
+what the change is for, what you are unsure of, what you are only recording.
 
 ### Then the mental model
 
-The order of the opening is the point. The TL;DR says why this exists and
-closes by pointing at the decisions. **The mental model comes next**, before any
-section that names a type; its content is below under The mental model.
+**The mental model comes next**, before any section that names a type; its
+content is below under The mental model.
 
-These are the answers a guide owes its reviewer, in this order. They are not a
-list of headings to fill. **A heading is earned by its content.** An answer that
-needs a clause is a clause in the opening paragraph; an answer that needs a
-paragraph gets its heading. So a change that crosses subsystems grows all seven
-headings, and a one-file addition answers most of them in its first sentence and
-carries the two that have something in them.
+Below are the answers a guide owes its reviewer, in order — not a list of
+headings to fill. **A heading is earned by its content.** An answer needing a
+clause is a clause in the opening paragraph; one needing a paragraph gets its
+heading. A change crossing subsystems grows all seven; a one-file addition
+answers most in its first sentence and heads the two with something in them.
 
 The two failures look identical from outside and are opposites. Dropping an
-answer publishes a guide that cannot say why it exists — the rule below. Heading
-a one-clause answer pads it to look thorough, and that lands hardest on the
-reviewer of a small change, who reads seven sections to find the two that
-mattered.
+answer publishes a guide that cannot say why it exists. Heading a one-clause
+answer pads it to look thorough, and that lands hardest on the reviewer of a
+small change, who reads seven sections to find the two that mattered.
 
-Answer every one of these. Give a heading only to the ones that need it:
+Answer every one. Give a heading only where it is earned:
 
 1. **TL;DR.** Why, the key idea, and what is true afterwards — as long as those
    three answers need, and no longer.
@@ -253,18 +223,13 @@ Present when earned:
 8. **Not in scope**, when a reader would otherwise ask why something is missing.
 
 Drop an answer only when the change genuinely has nothing in it, never to reach
-a size. Any answer holding an item that cleared the publish test stays: dropping
-it would publish a guide that cannot say why it exists. Losing its *heading* is
-not dropping it — a one-sentence testing answer is one sentence in the opening
-paragraph, and a heading over it is furniture. A small change carries the claim
-and the reading order because the later answers are empty, not because it is
-small.
+a size: any answer holding an item that cleared the publish test stays. Losing
+its *heading* is not dropping it — a one-sentence testing answer is one sentence
+in the opening paragraph, and a heading over it is furniture.
 
-A very small change reduces to a single sentence, but only when the publish test
-found nothing at all. That sentence is the TL;DR, and nothing follows it.
-
-Decisions is the exception to emptiness: it never disappears silently — it says
-"none, and here is why".
+A change that cleared nothing at all reduces to the TL;DR, and nothing follows
+it. Decisions is the exception to emptiness: it never disappears silently — it
+says "none, and here is why".
 
 ## The mental model
 
@@ -282,9 +247,6 @@ Establish, in this order:
    exists to do for them.
 3. **Where this change sits** among those concepts, and what it moves.
 
-Only then can Where to look more closely name a type, because the name now has
-somewhere to land.
-
 State the starting point you assume, and name where to jump by its heading:
 "This assumes you know the ring protocol; skip to Where to look more closely
 if you do." That costs one line and releases the reviewer who already holds the model.
@@ -294,9 +256,8 @@ order" and "the certainty section" are descriptions, not addresses; a reviewer
 sent to one has to guess which heading was meant.
 
 Reach for a diagram when the concepts have a shape — a topology, a pipeline, a
-set of hosts, a before and after. Prose carries a sequence; a picture carries a
-shape, and re-deriving a shape from prose is the work being pushed back onto the
-reviewer. See Diagrams below for which kind.
+set of hosts, a before and after. Prose carries a sequence; re-deriving a shape
+from one is work pushed back onto the reviewer. See Diagrams for which kind.
 
 Two failure modes:
 
@@ -309,13 +270,11 @@ Two failure modes:
 Omit it only when the change touches one concept the reviewer certainly holds: a
 typo, a version bump, a rename inside one file. The burden is on omitting.
 
-**In a stack, the model is written once.** Retyping it per pull request
-produces near-identical sections that disagree after the first edit, and makes a
-reviewer working up the stack reread a page they hold to find the two new
-sentences. Write it in the base guide, link it from each guide above, and state
-only this change's delta: what it adds, or what it makes false. Name the pull
-request, not "the guide below" — a reviewer who has not read the base needs the
-link to be one click.
+**In a stack, the model is written once.** Retyped per pull request it produces
+near-identical sections that disagree after the first edit, and makes a reviewer
+working up the stack reread a page they hold. Write it in the base guide, link
+it from each guide above by pull-request number, and state only this change's
+delta: what it adds, or what it makes false.
 
 ### Before, problem, change
 
@@ -333,11 +292,8 @@ whole section:
 > arriving over the link instead, the topic alone can no longer tell the two
 > paths apart. So a second label is needed, and this change adds it.
 
-Three beats, three sentences. Each appears once: a sentence that makes the
-previous sentence's point from a new angle reads as emphasis and costs the
-reader exactly what new information would have cost them. The most common way
-to inflate this is to state the "before" twice, once plainly and once as the
-problem.
+Three beats, three sentences, each appearing once. The common inflation is
+stating the "before" twice: plainly, and then again as the problem.
 
 **Gloss what you did not introduce.** Below the TL;DR, identifiers are allowed;
 undefined ones are not. One the change **adds** introduces itself, in the
@@ -364,15 +320,12 @@ better, because nothing constrained it.
 
 **Re-read the source behind a section before rewriting that section.** Not the
 section. The source. Editing prose from prose is how a wrong claim survives
-every revision: the second draft inherits the first draft's errors and adds
-fluency, so each pass makes the mistake harder to doubt while changing nothing
-about whether it is true.
+every revision: each draft inherits the last one's errors and adds fluency.
 
-The failure this prevents has a specific shape, and it is not the shape a
-missing rule produces. The structure can be right — a before beat, a problem, a
-change, in that order — with the before beat filled by an arrangement that never
-existed. A reader who does not know the code cannot tell, and a reviewer who
-does will stop trusting the rest.
+The structure can be right — a before beat, a problem, a change, in that order —
+with the before beat filled by an arrangement that never existed. A reader who
+does not know the code cannot tell, and a reviewer who does stops trusting the
+rest.
 
 When a reader says a section does not make sense, that is evidence the claim is
 wrong, not only that the wording is. Go back to the code before reaching for
@@ -391,16 +344,13 @@ would make the work wrong if it were wrong. The second is everything the author
 happens to be unsure about. They often overlap, and when they do the item
 appears once, at the top.
 
-So the section is ordered by centrality, not by severity and not by the order the
-questions occurred to you. It opens with the decision that is the point of the
-change. Then a line demoting the rest — "the rest is lower stakes: things I am
-less sure of rather than what this change is for" — and the remaining
-subsections after it.
+So the section is ordered by centrality — not by severity, and not by the order
+the questions occurred to you. It opens with the decision the change is for,
+then a line demoting the rest — "the rest is lower stakes: things I am less sure
+of rather than what this change is for" — then the remaining subsections.
 
-That ordering is the guide's only defense against a reviewer spending their
-attention evenly. A leftover uncertainty presented beside the change's central
-question reads as equally weighted, and the reviewer answers whichever is
-easiest.
+A leftover uncertainty presented beside the change's central question reads as
+equally weighted, and the reviewer answers whichever is easiest.
 
 When the point of the change is not itself in question, say so in one line and
 go straight to the rest. A manufactured question about the central choice is
@@ -482,8 +432,8 @@ they hold.
 
 ## Testing
 
-Discover what the repository actually has before writing this section. Do not
-assume a taxonomy. Consider each surface and say which apply:
+Discover what the repository actually has before writing this section, rather
+than assuming a taxonomy. Consider each surface and say which apply:
 
 - unit and functional tests
 - integration or contract tests
@@ -520,9 +470,8 @@ State what cannot manifest before deployment, and what would reveal it:
 For each, name what would surface it — a metric, a log line, an alert, a canary
 — so the reviewer can judge whether the change is observable after it ships.
 
-Then invite a response. The reviewer is being asked either to weigh in or to
-become comfortable with the risk before the next stage. Say which risks are
-which. A risk nobody accepted is a risk nobody owns.
+Then invite a response, and say which risks want a judgment and which want
+acceptance. A risk nobody accepted is a risk nobody owns.
 
 ## Diagrams
 
@@ -548,9 +497,8 @@ Where it lives follows how long it is worth:
   enough to read without scrolling — a diagram a reviewer must pan is prose
   with extra steps.
 
-A stacked series shares one shape. Draw it once, and in each guide show the same
-picture with this change's piece marked, rather than a different diagram per
-pull request: the reviewer learns one model and reuses it across the stack.
+A stacked series shares one shape. Draw it once and mark this change's piece in
+each guide, rather than a different diagram per pull request.
 
 When a change makes an existing diagram wrong, say so. A stale diagram left
 unmentioned costs more than no diagram.
@@ -587,24 +535,21 @@ durable record — when an entry exists, link it.
 — and every guide is held to it. Three of its rules carry most of the weight
 here:
 
-- **Modality.** A judgment call written with `should` is not a softer claim, it
-  is a different one, and the reviewer who treats it as optional has read you
-  correctly. A risk that `might` happen is one that `can` happen. Permission-
-  sense `may not` survives intact.
+- **Modality.** A judgment call written with `should` reads as optional, and the
+  reviewer who treats it so has read you correctly. Permission-sense `may not`
+  survives intact.
 - **Words that carry no fact.** "Gracefully handles" in a testing row names a
-  quality of the handling instead of the handling, which is the failure the
-  Testing section exists to prevent. "Robust" asserts what the reviewer cannot
-  check; if the property is real it has a measurement, and the measurement is
-  the row.
-- **One name per thing.** A guide that calls one component three names across
-  its sections destroys the association each section was building.
+  quality of the handling instead of the handling — the failure Testing exists
+  to prevent. "Robust" asserts what the reviewer cannot check; if the property
+  is real it has a measurement, and the measurement is the row.
+- **One name per thing.** Three names for one component across three sections
+  destroys the association each section was building.
 
-One interaction belongs to this skill alone. A guide quotes evidence: real
-command output in Testing, a requirement sentence under Decisions, a
-flag or a path under Where to look more closely. Those are untouchable under that
-skill's
-own rule, and a word-level pass that edits a pasted result, a quoted error, or
-an identifier has broken the evidence it was cleaning.
+One interaction belongs to this skill alone. A guide quotes evidence — real
+command output in Testing, a requirement sentence under Decisions, a flag or a
+path under Where to look more closely — and a word-level pass that edits a
+pasted result, a quoted error, or an identifier has broken the evidence it was
+cleaning.
 
 `sweep-comments` owns the comments inside the diff; a comment defect belongs in
 the review, not in the guide's prose.
