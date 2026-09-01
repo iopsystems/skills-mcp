@@ -5,7 +5,7 @@ set -euo pipefail
 unset REVIEW_AGENT
 
 ROOT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)
-SKILL="$ROOT_DIR/skills/review-exchange/SKILL.md"
+SKILL="$ROOT_DIR/skills/repository/review-exchange/SKILL.md"
 TMP_DIR=$(mktemp -d "${TMPDIR:-/tmp}/review-bridge-test.XXXXXX")
 
 cleanup() { rm -rf "$TMP_DIR"; }
