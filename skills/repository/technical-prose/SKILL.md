@@ -10,13 +10,16 @@ description: |
   "blazingly fast", "seamlessly"), throat-clearing openers ("it is worth noting
   that"), a behavior described as "gracefully handled" rather than stated, the
   same thing called three names across one document, or an action buried in a
-  nominalization ("perform compression of" for "compress").
+  nominalization ("perform compression of" for "compress"), a referent that
+  resolves only for someone who was in the room ("this arc", "the fix"), or a
+  metaphor standing where the fact should be. Also use for a cold read: "would
+  this make sense to someone with no context?"
 ---
 
 # Technical prose
 
-This skill owns **what carries a fact** — at the scale of a word, and at the
-scale of the material around it. It does not own sentence shape.
+This skill owns **what carries a fact to its reader** — at the scale of a word,
+and at the scale of the material around it. It does not own sentence shape.
 
 That boundary is not a division of labor; it follows from what varies between
 readers. A word carries the same fact wherever it lands — "gracefully handles"
@@ -35,6 +38,32 @@ The same test admits a paragraph: one restating the paragraph above it carries
 no fact anywhere, exactly as the empty word does not. So the ladder below is in
 scope and fragment-versus-sentence is not — one asks whether material earns its
 place, the other what shape the survivors take.
+
+## The reader is not you
+
+Name the reader before writing: who they are, and what they lack that you hold
+now — the diff, the thread, the meeting, the last hour. Every rule below is
+applied for that reader. **The default failure is writing for yourself a minute
+ago.** A writer cannot un-know what they know, so the gap never shows from the
+inside.
+
+**The cold read.** Reread as the named reader. Every phrase that resolves only
+because you were in the room gets its referent stated: "this arc" becomes the
+review it names; "operator-chosen label" becomes what the label is and where it
+lives. Grammar does not catch these: "this arc" is well formed and carries
+nothing.
+
+**Content before style.** Run the cold read before the word pass. Tightening
+cannot find a missing noun: in the session that produced this rule, two
+rewrites of one commit body each carried an unresolved referent through
+untouched, and each was caught by a reader asking "what's that?"
+
+**What ships with the text sets the bar.** A commit body ships with its diff. A
+backlog entry, a journal line, or a message found by grep ships alone.
+
+**A metaphor standing where the fact should be** is the same failure at the
+word scale. "A wrong answer wearing a right one's clothes" costs every future
+reader a decoding to recover "output that looks correct and is not".
 
 ## Modality
 
@@ -154,8 +183,9 @@ ladder has an agent stop at the first rung that solves the problem rather than
 writing the fullest thing it can. Walk it before writing, and again when
 cutting. **Stop at the first rung that carries the fact intact.**
 
-1. **Nothing.** The reader already holds it, or a sentence nearby already says
-   it.
+1. **Nothing.** The named reader already holds it, or a sentence nearby
+   already says it. Not the writer: this is the rung the curse of knowledge
+   picks.
 2. **A word** added to a sentence that already exists.
 3. **A clause.**
 4. **A sentence.**
@@ -211,9 +241,16 @@ When a rule and a name conflict, the name wins silently.
 | "'Etc.' implies the reader knows the rest" | It implies the writer stopped. If the list is obvious, finishing it costs a line; if it is not, "etc." dropped real content. |
 | "The paragraph gives it room to breathe." | Name the fact the room carries. If there is none, the rung below fits. |
 | "The rule needs its rationale spelled out." | Once. Not once as a metaphor, once as a restatement, and once as a summary. |
+| "The reviewer knows what 'this arc' means." | Today. The text was written for whoever reads the log, the backlog, or the grep hit in six months, and they were not in the room. |
+| "I tightened it, so it is done." | Tightening finds needless words, not missing ones. A missing referent survives every style pass; only a cold read finds it. |
 
 ## Red flags
 
+- A demonstrative with no antecedent in the text: "this arc", "that fix", "the
+  review".
+- A noun phrase that resolves only for someone who was in the room.
+- A tightening pass that finished without a cold read.
+- A metaphor or coined compound standing where the fact should be.
 - A requirement whose only modal is `should`.
 - A paragraph that would be equally true with its first sentence deleted.
 - A metaphor restating the rule its own paragraph just stated.
@@ -237,6 +274,10 @@ The vocabulary substitutions are adapted under the MIT license from
 table is that project's original work rather than ASD material. The remaining
 rules paraphrase ASD-STE100 Simplified Technical English, restricted here to its
 reader-agnostic vocabulary rules.
+
+The reader rule follows Steven Pinker, *The Sense of Style*, on the curse of
+knowledge as the primary cause of unclear expert writing, and Google's
+technical writing guidance on knowing the audience.
 
 This skill is unaffiliated with ASD and STEMG and is not an STE compliance tool.
 ASD-STE100 is a registered trademark of ASD; the official standard is a free

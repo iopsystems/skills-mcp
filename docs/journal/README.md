@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-09-03 | [The reader is not you](2026-09-03-prose-reader.md) | shipped |
 | 2026-09-01 | [The automation that never ran in anger](2026-09-01-drop-tap-dispatch.md) | shipped |
 | 2026-09-01 | [The first sweep was deferential](2026-09-01-adversarial-cut.md) | shipped |
 | 2026-09-01 | [The heavy skills were dense, not padded](2026-09-01-sweep-heavy-skills.md) | shipped |

@@ -177,6 +177,42 @@
         "Keep the chosen spelling consistent throughout",
         "Apply every other rule unchanged"
       ]
+    },
+    {
+      "name": "commit body with insider referents",
+      "prompt": "Tighten this commit message: 'Closes the last open item from the review: two narrow holes, both needing an operator-chosen label value, and both the same species this arc kept finding.'",
+      "expectations": [
+        "Name the reader and what they lack before editing words",
+        "State the referents of 'this arc' and 'operator-chosen label' rather than tightening around them",
+        "Run the cold read before the word pass, and say so"
+      ]
+    },
+    {
+      "name": "cold read request",
+      "prompt": "Would this backlog entry make sense to someone who wasn't in the review?",
+      "expectations": [
+        "Reread as a reader with no diff, thread, or meeting open",
+        "Flag every noun phrase that resolves only for someone who was in the room",
+        "Treat a backlog entry as text that ships alone"
+      ]
+    },
+    {
+      "name": "self-sufficiency set by what ships with the text",
+      "prompt": "Should this commit body explain the whole subsystem, or is that overkill?",
+      "expectations": [
+        "Set the bar by what the reader will have open: a commit body ships with its diff",
+        "Distinguish it from a backlog line or journal entry, which ship alone",
+        "Refuse a fixed level of self-sufficiency for all text"
+      ]
+    },
+    {
+      "name": "metaphor standing where the fact should be",
+      "prompt": "Is 'a wrong answer wearing a right one's clothes' fine in a commit message?",
+      "expectations": [
+        "Replace the metaphor with the fact it stands for",
+        "Name the cost as one paid by every future reader",
+        "Leave any quoted error or identifier untouched"
+      ]
     }
   ]
 }
