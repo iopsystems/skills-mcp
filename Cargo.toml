@@ -1,6 +1,6 @@
 [package]
 name = "skills-mcp"
-version = "0.5.1"
+version = "0.5.2"
 edition = "2021"
 description = "Single-binary MCP server for embedded agent skills and workflows over stdio."
 license = "MIT OR Apache-2.0"
