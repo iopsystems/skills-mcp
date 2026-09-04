@@ -13,7 +13,8 @@ description: |
   nominalization ("perform compression of" for "compress"), a referent that
   resolves only for someone who was in the room ("this arc", "the fix"), or a
   metaphor standing where the fact should be. Also use for a cold read: "would
-  this make sense to someone with no context?"
+  this make sense to someone with no context?" Naming the reader is the
+  prerequisite: inherit it, infer it from the artifact, or ask.
 ---
 
 # Technical prose
@@ -41,11 +42,15 @@ place, the other what shape the survivors take.
 
 ## The reader is not you
 
-Name the reader before writing: who they are, and what they lack that you hold
-now — the diff, the thread, the meeting, the last hour. Every rule below is
-applied for that reader. **The default failure is writing for yourself a minute
-ago.** A writer cannot un-know what they know, so the gap never shows from the
-inside.
+**Naming the reader comes first.** Nothing below is applied until you can say
+who will read this and what they lack that you hold now — the diff, the
+thread, the meeting, the last hour. The reader is inherited when the user or a
+calling skill names one, and inferred when the artifact does: a doc comment is
+read by the file's next editor, a commit body by whoever has the log and the
+diff open. **When neither settles it, ask.** A reader chosen on a guess is
+the default failure with the guess in your place: writing for yourself a
+minute ago. A writer cannot un-know what they know, so the gap never shows
+from the inside.
 
 **The cold read.** Reread as the named reader. Every phrase that resolves only
 because you were in the room gets its referent stated: "this arc" becomes the
@@ -242,10 +247,13 @@ When a rule and a name conflict, the name wins silently.
 | "The paragraph gives it room to breathe." | Name the fact the room carries. If there is none, the rung below fits. |
 | "The rule needs its rationale spelled out." | Once. Not once as a metaphor, once as a restatement, and once as a summary. |
 | "The reviewer knows what 'this arc' means." | Today. The text was written for whoever reads the log, the backlog, or the grep hit in six months, and they were not in the room. |
+| "Asking who the reader is would be overhead; I'll assume an engineer." | An assumed reader is the writer's guess, and the writer is the one person who cannot check it. When the artifact does not settle it and nobody said, one question costs less than the rewrite. |
 | "I tightened it, so it is done." | Tightening finds needless words, not missing ones. A missing referent survives every style pass; only a cold read finds it. |
 
 ## Red flags
 
+- A reader chosen without the user, a calling skill, or the artifact naming
+  one.
 - A demonstrative with no antecedent in the text: "this arc", "that fix", "the
   review".
 - A noun phrase that resolves only for someone who was in the room.

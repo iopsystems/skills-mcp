@@ -1,7 +1,7 @@
 ---
 status: shipped
 opened: 2026-09-03
-updated: 2026-09-03
+updated: 2026-09-04
 beta_skills: [technical-prose]
 ---
 
@@ -49,6 +49,21 @@ The section was 288 words on first writing and 236 after its own read: one
 example restating the sentence before it, one assertion the example already
 proved, one restatement of a heading, and one flourish about vividness in the
 paragraph that bans flourishes.
+
+## Refinement, 2026-09-04
+
+The section said to name the reader and did not say what to do when the
+writer could not. An agent under that rule picks one, and a picked reader is
+the failure the section exists to prevent, with a guess standing in for the
+writer's own context.
+
+Naming the reader is now the prerequisite rather than the first step: nothing
+in the skill applies until the reader is known. Three sources, in order — the
+user or a calling skill names one; the artifact implies one, as a doc comment
+implies the file's next editor; and when neither settles it, the agent asks
+rather than deciding on assumed knowledge of who the reader is. One
+rationalization row, one red flag, two corpus cases; the count goes from
+twenty-four to twenty-six.
 
 ## Outcome
 
