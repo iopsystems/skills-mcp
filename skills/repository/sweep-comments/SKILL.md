@@ -1,7 +1,7 @@
 ---
 name: sweep-comments
 description: |
-  Hold code comments and docstrings to a strict quality bar. Use whenever writing or editing comments — adding a comment to new code, being asked to "document this", "add comments", or "make this reviewer-ready" — and as a dedicated staleness sweep before opening or updating a pull request. Symptoms that this skill applies: comments that restate the adjacent code, the same design explanation sprinkled across several sites, docstring boilerplate on small internal helpers, derivation walkthroughs, war-story narration, comments describing behavior a design pivot has since deleted, commented-out code kept "just in case", ticketless TODOs, banner comments, docstrings written only to silence a linter, or an invariant reduced to a pointer at the very site where a wrong edit would silently break it.
+  Hold code comments and docstrings to a strict quality bar. Use whenever writing or editing comments — adding a comment to new code, being asked to "document this", "add comments", or "make this reviewer-ready" — and as a dedicated staleness sweep before opening or updating a pull request. Symptoms that this skill applies: comments that restate the adjacent code, the same design explanation sprinkled across several sites, docstring boilerplate on small internal helpers, derivation walkthroughs, war-story narration, comments describing behavior a design pivot has since deleted, commented-out code kept "just in case", ticketless TODOs, banner comments, docstrings written only to silence a linter, an invariant reduced to a pointer at the very site where a wrong edit would silently break it, or a comment asserting what the code does, has, or lacks that nobody checked against the code.
 ---
 
 # Sweep comments
@@ -344,6 +344,23 @@ Genericized from real sweeps; recognize the pattern, not the wording:
 - "After several failed attempts we discovered that the renderer
   ignores these edges during coordinate assignment" — the constraint
   survives in one sentence; the journey does not.
+- A test's direction note reading "the reverse direction is not
+  testable yet: no producer attaches metadata to its message stream" —
+  false when written and false when reworded, since four producers did
+  and a sibling test forwarded one of their message streams. Corrected
+  to the truth, and the claim it made became a second test rather than
+  a sentence.
+- A field doc reading "the hosts that read this message stream" over a
+  list of hosts on which nothing read it — they consumed the data over
+  another transport, and the list staged the path they would move to.
+  Rewritten as the forward-looking claim it was: "hosts a process on
+  which consumes the message stream's data, by whatever transport
+  carries it today; naming them stages the message stream they will
+  read once they move."
+- A fixture helper documented as producing metadata "the real producer
+  could have written", beside an `emit` that hardcoded the message kind
+  and invented the source id — either every field comes from the
+  registry entry, or the claim goes.
 
 ## Tests are labeled, not explained
 
@@ -419,6 +436,36 @@ the current design, not the design it was written for: a comment
 referring to anything deleted or renamed is rewritten to the truth or
 deleted.
 
+**Then check each survivor's claims against the code, not the design.**
+The staleness check above catches a comment that names something
+deleted or renamed. It does not catch a comment that names nothing
+deleted and is wrong anyway, and neither does anything in the tiers:
+a false claim can be well placed, tersely worded, and not an echo. For
+every kept or written comment, list the claims a reader could verify
+and verify each with one grep or one test name, against the code as it
+is:
+
+- **Claims of absence or exclusivity** — "no X yet", "only Y", "nothing
+  else does Z". These age fastest and are the ones a reviewer catches:
+  a note that "no producer attaches metadata yet" survived a rewrite
+  in a crate whose own test asserted that one did.
+- **Claims of equivalence** — "the same as", "mirrors", "looks like the
+  one the real writer produces". Check every field the claim covers: a
+  fixture described as "metadata the real producer could have written"
+  took its payload type from the registry and still hardcoded the
+  message kind and an invented source id.
+- **Present-tense claims about who does what** — "reads", "consumes",
+  "forwards", "subscribes". A field documented as "hosts that read this
+  message stream" named hosts on which nothing read it; they consumed
+  the same data over a different transport, and the list was staging a
+  path they had not yet moved to. A claim about the future is written
+  as one.
+
+An inherited comment being rewritten gets the same check as a new one.
+Rewording carries the old claims forward under new authority, so a
+false one gets worse, not better; the prose pass finds needless words,
+never false ones.
+
 **Report pass 1 as one line per finding**, so the sweep can be checked
 without re-reading the diff:
 
@@ -430,8 +477,9 @@ Tags are the dispositions: `drop` for a tier-1 deletion with no
 replacement, `point` for an echo reduced to a pointer at its home,
 `shrink` for a survivor compressed, `inline` for one moved onto the
 line it qualifies, `rename` for one deleted because a name now carries
-it, and `keep` for a tier-3 fact left alone. Close with the count:
-`net: -N comment lines`.
+it, `correct` for a claim the code contradicted, rewritten to what the
+code does, and `keep` for a tier-3 fact left alone. Close with the
+count: `net: -N comment lines`.
 
 A diff with nothing to cut says so in the same form — "no tier 1 or 2
 comments in the touched files" is a claim, and a claim can be wrong,
@@ -519,6 +567,8 @@ has a home, and it is not the code:
 | "A TODO is free — I'll leave it in case we want this later" | A TODO with no ticket or commitment is a stale-comment seed with no owner. It costs nothing today and lies within a quarter. |
 | "Suppressing the linter is cheating; writing the docstring is compliance" | The manufactured docstring is the cheat — it fakes documentation to green a check. A visible suppression records the deliberate absence honestly. |
 | "I'll keep the old code commented out until the new path is proven in prod" | If prod breaks you revert the commit; you don't uncomment a block that stopped compiling against its neighbors weeks ago. |
+| "The comment was already there; I only reworded it" | Rewording re-asserts every claim under your name. An inherited claim is checked like a new one, and the prose pass will not do it for you. |
+| "It's true in the design, so the comment is true" | The comment is read against the code. A design that has not landed is a future-tense fact, and stating it in the present is a false claim with a plan behind it. |
 
 ## Red flags — stop and re-check
 
@@ -569,3 +619,10 @@ has a home, and it is not the code:
   fit the column limit.
 - A pass-1 report that is prose rather than one line per finding, so a
   reader cannot tell which comments were touched.
+- A comment saying "no", "only", "nothing else", "the same as", or
+  "looks like" whose claim was not checked with a grep before the
+  sweep kept it.
+- A rewritten comment whose claims were inherited from the old one and
+  never re-verified.
+- A present-tense "reads", "consumes", or "subscribes" over code where
+  the named party does no such thing yet.
