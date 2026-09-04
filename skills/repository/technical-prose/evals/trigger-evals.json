@@ -213,6 +213,24 @@
         "Name the cost as one paid by every future reader",
         "Leave any quoted error or identifier untouched"
       ]
+    },
+    {
+      "name": "no reader named and none inferable",
+      "prompt": "Make this plainer.",
+      "expectations": [
+        "Ask who will read it and what they will have open before editing",
+        "Do not choose a reader on assumed knowledge of who they are",
+        "Apply the word-level rules only once the reader is settled"
+      ]
+    },
+    {
+      "name": "reader inherited from the caller",
+      "prompt": "review-guide is producing a pull-request body for a reviewer outside the subsystem; apply the prose bar to it.",
+      "expectations": [
+        "Take the reader from the calling skill rather than asking again",
+        "Apply the cold read for that reader",
+        "Leave the calling skill's sentence-shape decisions alone"
+      ]
     }
   ]
 }
