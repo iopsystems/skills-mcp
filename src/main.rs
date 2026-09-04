@@ -1180,7 +1180,7 @@ mod tests {
             .as_array()
             .expect("sweep-comments evals should contain an evals array");
 
-        assert_eq!(evals.len(), 32);
+        assert_eq!(evals.len(), 34);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());
