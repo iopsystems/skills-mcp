@@ -345,20 +345,22 @@ Genericized from real sweeps; recognize the pattern, not the wording:
   ignores these edges during coordinate assignment" — the constraint
   survives in one sentence; the journey does not.
 - A test's direction note reading "the reverse direction is not
-  testable yet: no producer-side stream is enveloped at origin" — false
-  when written and false when reworded, since four such streams existed
-  and a sibling test forwarded one. Corrected to the truth, and the
-  claim it made became a second test rather than a sentence.
-- A field doc reading "the hosts that read this stream" over a list of
-  hosts on which nothing read it — they consumed the data over another
-  transport, and the list staged the path they would move to. Rewritten
-  as the forward-looking claim it was: "hosts a process on which
-  consumes the stream's data, by whatever transport carries it today;
-  naming them stages the ring they will read once they move."
-- A fixture helper documented as producing an envelope "the real
-  producer could have minted", beside an `emit` that hardcoded the kind
-  and invented the origin — either every field comes from the registry
-  entry, or the claim goes.
+  testable yet: no producer attaches metadata to its message stream" —
+  false when written and false when reworded, since four producers did
+  and a sibling test forwarded one of their message streams. Corrected
+  to the truth, and the claim it made became a second test rather than
+  a sentence.
+- A field doc reading "the hosts that read this message stream" over a
+  list of hosts on which nothing read it — they consumed the data over
+  another transport, and the list staged the path they would move to.
+  Rewritten as the forward-looking claim it was: "hosts a process on
+  which consumes the message stream's data, by whatever transport
+  carries it today; naming them stages the message stream they will
+  read once they move."
+- A fixture helper documented as producing metadata "the real producer
+  could have written", beside an `emit` that hardcoded the message kind
+  and invented the source id — either every field comes from the
+  registry entry, or the claim goes.
 
 ## Tests are labeled, not explained
 
@@ -445,18 +447,19 @@ is:
 
 - **Claims of absence or exclusivity** — "no X yet", "only Y", "nothing
   else does Z". These age fastest and are the ones a reviewer catches:
-  a note that "no producer-side stream is enveloped yet" survived a
-  rewrite in a crate whose own test asserted that one was.
+  a note that "no producer attaches metadata yet" survived a rewrite
+  in a crate whose own test asserted that one did.
 - **Claims of equivalence** — "the same as", "mirrors", "looks like the
   one the real writer produces". Check every field the claim covers: a
-  fixture described as "one the real producer could have minted" took
-  its payload type from the registry and still hardcoded the message
-  kind and an invented origin id.
+  fixture described as "metadata the real producer could have written"
+  took its payload type from the registry and still hardcoded the
+  message kind and an invented source id.
 - **Present-tense claims about who does what** — "reads", "consumes",
   "forwards", "subscribes". A field documented as "hosts that read this
-  stream" named hosts on which nothing read it; they consumed the same
-  data over a different transport, and the list was staging a path they
-  had not yet moved to. A claim about the future is written as one.
+  message stream" named hosts on which nothing read it; they consumed
+  the same data over a different transport, and the list was staging a
+  path they had not yet moved to. A claim about the future is written
+  as one.
 
 An inherited comment being rewritten gets the same check as a new one.
 Rewording carries the old claims forward under new authority, so a

@@ -283,18 +283,18 @@
     },
     {
       "name": "inherited false claim of absence",
-      "prompt": "Reword this test's module note for clarity. It currently says the reverse direction is untestable because no producer-side stream is enveloped at origin yet.",
+      "prompt": "Reword this test's module note for clarity. It currently says the reverse direction is untestable because no producer attaches metadata to its message stream yet.",
       "expectations": [
         "Check the claim against the registry and the crate's own tests before rewording it",
-        "Correct the note when a producer-side stream does envelope at origin",
+        "Correct the note when a producer does attach metadata",
         "Prefer making the claim a second test over restating it as prose"
       ]
     },
     {
       "name": "present tense over a future path",
-      "prompt": "Document the new `consumers` field as the hosts that read each stream; the list names the display host for the four streams its UI shows.",
+      "prompt": "Document the new `consumers` field as the hosts that read each message stream; the list names the display host for the four message streams its UI shows.",
       "expectations": [
-        "Verify that a process on the named host reads the stream by the transport the comment implies",
+        "Verify that a process on the named host reads the message stream by the transport the comment implies",
         "Write the claim in the future tense when the named reader consumes the data another way today",
         "Do not assert a reader that a grep of the host's code cannot find"
       ]
