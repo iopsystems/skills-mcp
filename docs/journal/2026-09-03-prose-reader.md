@@ -1,7 +1,7 @@
 ---
 status: shipped
 opened: 2026-09-03
-updated: 2026-09-04
+updated: 2026-09-09
 beta_skills: [technical-prose]
 ---
 
@@ -64,6 +64,24 @@ implies the file's next editor; and when neither settles it, the agent asks
 rather than deciding on assumed knowledge of who the reader is. One
 rationalization row, one red flag, two corpus cases; the count goes from
 twenty-four to twenty-six.
+
+## Refinement, 2026-09-09
+
+The session that produced the reader rule applied The Elements of Style, and
+the skill did not say so. Four of its rules were already here under other
+names: omit needless words, active voice, definite and concrete language, and
+one the skill lacked, parallel ideas in parallel form, which that session kept
+on purpose in one rewrite. The attribution now names the book and the four,
+and the parallel-form rule joins The rest with one corpus case.
+
+The fifth, against a succession of loose sentences, moved the boundary. Every
+rewrite in the session applied it, and the skill had left all sentence shape
+to the calling skill on the argument that shape does not travel between a doc
+comment and a README paragraph. Grammar does not travel; a clause chain does,
+since three claims joined by "and" cost the same reading in both. The boundary
+now reads: this skill owns how many claims a sentence carries, and the calling
+skill owns whether the unit is a fragment or a sentence. One rule, one red
+flag, one corpus case; the count goes from twenty-six to twenty-eight.
 
 ## Outcome
 

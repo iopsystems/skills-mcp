@@ -10,7 +10,8 @@ description: |
   "blazingly fast", "seamlessly"), throat-clearing openers ("it is worth noting
   that"), a behavior described as "gracefully handled" rather than stated, the
   same thing called three names across one document, or an action buried in a
-  nominalization ("perform compression of" for "compress"), a referent that
+  nominalization ("perform compression of" for "compress"), a sentence
+  chaining three clauses with "and", "but", "so", or a dash, a referent that
   resolves only for someone who was in the room ("this arc", "the fix"), or a
   metaphor standing where the fact should be. Also use for a cold read: "would
   this make sense to someone with no context?" Naming the reader is the
@@ -20,20 +21,22 @@ description: |
 # Technical prose
 
 This skill owns **what carries a fact to its reader** — at the scale of a word,
-and at the scale of the material around it. It does not own sentence shape.
+and at the scale of the material around it, including how many claims one
+sentence carries. It does not own whether a unit is a fragment or a sentence.
 
 That boundary is not a division of labor; it follows from what varies between
 readers. A word carries the same fact wherever it lands — "gracefully handles"
 is a promise with no content in a doc comment, a README, and an error message
-alike, so one rule serves all three. Sentence shape does not travel: a doc
-comment sits beneath a declaration that already supplies its subject and its
-article, while a README paragraph stands alone and must supply both. A rule that
-mandated complete grammar everywhere would be right for one and wrong for the
-other.
+alike, so one rule serves all three. So does a clause chain: three claims
+joined by "and" cost the same reading in a doc comment and a README. Grammar
+does not travel: a doc comment sits beneath a declaration that already
+supplies its subject and its article, while a README paragraph stands alone
+and must supply both. A rule that mandated complete grammar everywhere would
+be right for one and wrong for the other.
 
-So the calling skill decides sentence length, articles, and whether fragments
-are correct at its sites. This skill never overrides those, and a rewrite that
-converts a fragment to a sentence — or the reverse — is out of scope here.
+So the calling skill decides articles and whether fragments are correct at its
+sites. This skill never overrides those, and a rewrite that converts a fragment
+to a sentence — or the reverse — is out of scope here.
 
 The same test admits a paragraph: one restating the paragraph above it carries
 no fact anywhere, exactly as the empty word does not. So the ladder below is in
@@ -172,6 +175,15 @@ Two carve-outs, both absolute:
   the verb it gets is always empty — perform, conduct, undertake.
 - **Active voice**, except where the actor is genuinely unknown or irrelevant.
   Passive hides who acts, which is exactly the fact an instruction needs.
+- **One claim per sentence.** A sentence chaining clauses with "and", "but",
+  "so", or a dash hands the reader several claims to hold at once. Split it.
+  Whether the pieces are sentences or fragments is the calling skill's call;
+  that each carries one claim is this one's.
+- **Parallel ideas in parallel form.** Items that do the same job get the
+  same shape: "both need a label with whitespace, and both match the pattern"
+  keeps its "both"; a list whose first item is a sentence and second a
+  fragment has changed shape without changing meaning, and the reader looks
+  for the meaning.
 - **No phrasal verbs where a single verb exists**: "set up" is `configure` or
   `install`, "go down" is `decrease` or `stop`, "spin up" is `start`.
 - **No Latin abbreviations.** "e.g." is "for example", "i.e." is "that is", and
@@ -259,6 +271,8 @@ When a rule and a name conflict, the name wins silently.
 - A noun phrase that resolves only for someone who was in the room.
 - A tightening pass that finished without a cold read.
 - A metaphor or coined compound standing where the fact should be.
+- A sentence joining three or more clauses with "and", "but", "so", or a
+  dash.
 - A requirement whose only modal is `should`.
 - A paragraph that would be equally true with its first sentence deleted.
 - A metaphor restating the rule its own paragraph just stated.
@@ -282,6 +296,10 @@ The vocabulary substitutions are adapted under the MIT license from
 table is that project's original work rather than ASD material. The remaining
 rules paraphrase ASD-STE100 Simplified Technical English, restricted here to its
 reader-agnostic vocabulary rules.
+
+Five rules restate Strunk and White, *The Elements of Style*: omit needless
+words, use the active voice, use definite and concrete language, keep parallel
+ideas in parallel form, and avoid a succession of loose sentences.
 
 The reader rule follows Steven Pinker, *The Sense of Style*, on the curse of
 knowledge as the primary cause of unclear expert writing, and Google's
