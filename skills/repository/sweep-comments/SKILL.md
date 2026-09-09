@@ -290,9 +290,9 @@ the constraint. When a fragment cannot keep these, write the sentence.
 
 `technical-prose` is the home for modality, empty vocabulary,
 one-name-per-thing, and the ladder of how much to write; use it directly when
-the problem is wording rather than placement. It disclaims sentence shape,
-which is why the fragment rule above can stand against a standard that would
-otherwise demand full grammar. The modality requirement is
+the problem is wording rather than placement. It disclaims fragment versus
+sentence, which is why the fragment rule above can stand against a standard
+that would otherwise demand full grammar. The modality requirement is
 stated in both places on purpose: it is an edit constraint, and the reader
 shortening a comment here is the one who never opened that skill.
 

@@ -231,6 +231,24 @@
         "Apply the cold read for that reader",
         "Leave the calling skill's sentence-shape decisions alone"
       ]
+    },
+    {
+      "name": "parallel items in mixed form",
+      "prompt": "Tighten this list: the first bullet is a full sentence, the second is a noun phrase, the third starts with a verb.",
+      "expectations": [
+        "Give items that do the same job the same shape",
+        "Keep the shape the document's convention sets rather than imposing one",
+        "Do not change any item's claim while reshaping it"
+      ]
+    },
+    {
+      "name": "clause chain in a doc comment",
+      "prompt": "This doc comment is one sentence with four clauses joined by 'and' and a dash. Tighten it without changing what it says.",
+      "expectations": [
+        "Split the chain so each unit carries one claim",
+        "Keep the units as fragments if the file's doc comments are fragments",
+        "Preserve every claim, including the one after the dash"
+      ]
     }
   ]
 }
