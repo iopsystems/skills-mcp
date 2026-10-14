@@ -175,7 +175,7 @@ copied into the project.
 
 ## What the library contains
 
-Twenty-four active skills and four inert templates. They are grouped below by
+Twenty-five active skills and four inert templates. They are grouped below by
 where a skill's output lands, and then by what it produces. Skills marked
 *(beta)* say so in their own text: parts of what they assert rest on judgment
 rather than on evidence, and each one asks for the friction it causes to be
@@ -186,6 +186,7 @@ skills-mcp
 │
 ├── ACTIVE ─ repository
 │   ├── orientation & record ····· catchup · engineering-journal
+│   ├── source organization ······ rust-source-layout
 │   ├── diagrams from code ······· architecture-diagram · dataflow-diagram
 │   │                              format-layout-diagram
 │   └── prose with a change ······ technical-prose · sweep-comments
@@ -222,11 +223,18 @@ The rest of this section is the same map with a line of purpose on each entry.
 - `engineering-journal` — one durable entry per non-trivial effort: goal,
   evidence, outcome, and lessons, including measured negative results.
 
+**Source organization**
+
+- [`rust-source-layout`](skills/repository/rust-source-layout/SKILL.md) — cohesive
+  Rust modules, manageable source growth, and refactoring that preserves public
+  paths. Draft guidance with a scenario corpus; independent behavioral
+  evaluation remains open.
+
 **Diagrams derived from code, not drawn beside it**
 
-- `architecture-diagram` *(beta)* — a build-time structure chart plus runtime
-  thread and request charts, derived from the build manifest and held to the
-  source by assertions.
+- `architecture-diagram` *(beta)* — a build-time structure chart, an optional
+  weighted-source-at-a-glance companion with area proportional to LOC, and
+  runtime thread/request charts, derived from build and source evidence.
 - `dataflow-diagram` — a pipeline, DAG, or stream-topology chart generated from
   the program's own wiring.
 - `format-layout-diagram` *(beta)* — a byte anatomy of a memory or wire format,
@@ -318,8 +326,8 @@ be bound to a project's own toolchain, audiences, or reviewers.
 
 **Diagrams**
 
-- `architecture-diagram-skill` *(beta)* — the build/runtime duo bound to a
-  project's generator, freshness check, and review gate.
+- `architecture-diagram-skill` *(beta)* — structure, weighted source size, and
+  runtime views bound to a project's generator, freshness check, and review gate.
 - `dataflow-diagram-skill` — the dataflow workflow bound to a project's
   generator, palette, and conventions.
 
