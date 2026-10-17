@@ -5,109 +5,109 @@
 <text x="24.0" y="38.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="bold" fill="#000" text-anchor="start">Pelikan — weighted source at a glance</text>
 <text x="24.0" y="64.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="start">Area ∝ physical LOC (comments and blanks included). 31,551 lines across 248 tracked .rs files in 23 workspace crates. Revision 46b98c9.</text>
 <text x="24.0" y="82.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#4D4D4D" text-anchor="start">Adjacency claims no dependency and no execution order. Rendered on branch spec/ziplist-collections.</text>
-<rect x="24.0" y="94.0" width="309.6" height="158.2" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
+<rect x="24.0" y="94.0" width="313.6" height="160.1" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
 <text x="32.0" y="109.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Product  ·  1,646 LOC  ·  5.2%</text>
-<rect x="24.0" y="252.2" width="309.6" height="433.8" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
-<text x="32.0" y="267.2" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Core  ·  5,486 LOC  ·  17.4%</text>
-<rect x="333.6" y="94.0" width="694.9" height="592.0" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
-<text x="341.6" y="109.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Protocol  ·  17,007 LOC  ·  53.9%</text>
-<rect x="1028.5" y="94.0" width="347.5" height="105.5" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
-<text x="1036.5" y="109.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Storage  ·  1,028 LOC  ·  3.3%</text>
-<rect x="1028.5" y="199.5" width="347.5" height="301.7" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
-<text x="1036.5" y="214.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Foundation  ·  4,110 LOC  ·  13.0%</text>
-<rect x="1028.5" y="501.2" width="347.5" height="184.8" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
-<text x="1036.5" y="516.2" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Tooling  ·  2,274 LOC  ·  7.2%</text>
-<rect x="341.1" y="129.5" width="325.9" height="529.0" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="341.1" y="516.2" width="325.9" height="142.3" fill="url(#hatch)"/>
-<line x1="341.1" y1="516.2" x2="667.0" y2="516.2" stroke="#4D4D4D" stroke-width="0.8"/>
-<text x="504.0" y="314.9" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">protocol-resp</text>
-<text x="504.0" y="331.9" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">8,191 · 26.0%</text>
-<rect x="670.0" y="129.5" width="351.0" height="417.2" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="670.0" y="467.5" width="351.0" height="79.2" fill="url(#hatch)"/>
-<line x1="670.0" y1="467.5" x2="1021.0" y2="467.5" stroke="#4D4D4D" stroke-width="0.8"/>
-<text x="845.5" y="290.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">protocol-memcache</text>
-<text x="845.5" y="307.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">6,963 · 22.1%</text>
-<rect x="1036.0" y="235.0" width="184.7" height="258.7" fill="#F2F2F2" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="1036.0" y="486.3" width="184.7" height="7.4" fill="url(#hatch)"/>
-<line x1="1036.0" y1="486.3" x2="1220.8" y2="486.3" stroke="#4D4D4D" stroke-width="0.8"/>
-<text x="1128.4" y="352.6" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">config</text>
-<text x="1128.4" y="369.6" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">2,300 · 7.3%</text>
-<rect x="1036.0" y="536.7" width="332.5" height="141.8" fill="#FFFFFF" stroke="#9E9E9E" stroke-width="1.2" stroke-dasharray="4 3"/>
-<text x="1202.3" y="599.6" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">xtask</text>
-<text x="1202.3" y="616.6" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">2,274 · 7.2%</text>
-<rect x="31.5" y="287.7" width="155.0" height="214.1" fill="#CCEBC5" stroke="#4D4D4D" stroke-width="1.2"/>
-<text x="109.0" y="386.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">server</text>
-<text x="109.0" y="403.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">1,606 · 5.1%</text>
-<rect x="189.5" y="287.7" width="136.5" height="214.1" fill="#CCEBC5" stroke="#4D4D4D" stroke-width="1.2"/>
-<text x="257.8" y="386.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">proxy</text>
-<text x="257.8" y="403.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">1,418 · 4.5%</text>
-<rect x="1223.8" y="235.0" width="144.7" height="195.4" fill="#F2F2F2" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="1223.8" y="422.1" width="144.7" height="8.3" fill="url(#hatch)"/>
-<line x1="1223.8" y1="422.1" x2="1368.5" y2="422.1" stroke="#4D4D4D" stroke-width="0.8"/>
-<text x="1296.1" y="320.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">pelikan-net</text>
-<text x="1296.1" y="337.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">1,372 · 4.3%</text>
-<rect x="31.5" y="504.8" width="149.9" height="173.7" fill="#CCEBC5" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="31.5" y="652.0" width="149.9" height="26.5" fill="url(#hatch)"/>
-<line x1="31.5" y1="652.0" x2="181.4" y2="652.0" stroke="#4D4D4D" stroke-width="0.8"/>
-<text x="106.5" y="570.4" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">session</text>
-<text x="106.5" y="587.4" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">1,265 · 4.0%</text>
-<rect x="31.5" y="129.5" width="140.5" height="115.2" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.2"/>
-<rect x="67.3" y="129.5" width="104.8" height="115.2" fill="url(#hatch)"/>
-<line x1="67.3" y1="129.5" x2="67.3" y2="244.7" stroke="#4D4D4D" stroke-width="0.8"/>
-<rect x="35.1" y="170.1" width="133.4" height="34" fill="#F5F5F5" fill-opacity="0.92" rx="2"/>
-<text x="101.8" y="179.1" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">pelikan-segcache</text>
-<text x="101.8" y="196.1" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">794 · 2.5%</text>
-<rect x="184.4" y="504.8" width="141.7" height="111.4" fill="#CCEBC5" stroke="#4D4D4D" stroke-width="1.2"/>
-<text x="255.2" y="552.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">admin</text>
-<text x="255.2" y="569.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">775 · 2.5%</text>
-<rect x="670.0" y="549.7" width="133.4" height="108.8" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="774.9" y="549.7" width="28.5" height="108.8" fill="url(#hatch)"/>
-<line x1="774.9" y1="549.7" x2="774.9" y2="658.5" stroke="#4D4D4D" stroke-width="0.8"/>
-<rect x="681.8" y="587.1" width="109.9" height="34" fill="#FBB4AE" fill-opacity="0.92" rx="2"/>
-<text x="736.7" y="596.1" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">protocol-http</text>
-<text x="736.7" y="613.1" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">714 · 2.3%</text>
-<rect x="1036.0" y="129.5" width="188.6" height="62.5" fill="#B3CDE3" stroke="#4D4D4D" stroke-width="1.2"/>
-<text x="1130.3" y="152.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">entrystore</text>
-<text x="1130.3" y="169.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">587 · 1.9%</text>
-<rect x="806.4" y="549.7" width="107.6" height="108.8" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="806.4" y="628.5" width="107.6" height="30.0" fill="url(#hatch)"/>
-<line x1="806.4" y1="628.5" x2="914.0" y2="628.5" stroke="#4D4D4D" stroke-width="0.8"/>
-<text x="860.2" y="604.1" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">1</text>
-<rect x="175.0" y="129.5" width="99.1" height="115.2" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.2"/>
-<rect x="175.0" y="169.9" width="99.1" height="74.8" fill="url(#hatch)"/>
-<line x1="175.0" y1="169.9" x2="274.2" y2="169.9" stroke="#4D4D4D" stroke-width="0.8"/>
-<text x="224.6" y="141.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">pelikan-rds</text>
-<text x="224.6" y="158.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">565 · 1.8%</text>
-<rect x="917.0" y="549.7" width="104.0" height="94.6" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="991.4" y="549.7" width="29.6" height="94.6" fill="url(#hatch)"/>
-<line x1="991.4" y1="549.7" x2="991.4" y2="644.3" stroke="#4D4D4D" stroke-width="0.8"/>
-<text x="969.0" y="597.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">2</text>
-<rect x="184.4" y="619.2" width="141.7" height="59.3" fill="#CCEBC5" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="281.1" y="619.2" width="45.0" height="59.3" fill="url(#hatch)"/>
-<line x1="281.1" y1="619.2" x2="281.1" y2="678.5" stroke="#4D4D4D" stroke-width="0.8"/>
-<text x="232.7" y="640.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">queues</text>
-<text x="232.7" y="657.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">422 · 1.3%</text>
-<rect x="1227.6" y="129.5" width="100.4" height="62.5" fill="#B3CDE3" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="1295.8" y="129.5" width="32.2" height="62.5" fill="url(#hatch)"/>
-<line x1="1295.8" y1="129.5" x2="1295.8" y2="192.0" stroke="#4D4D4D" stroke-width="0.8"/>
-<rect x="1234.6" y="143.7" width="86.4" height="34" fill="#B3CDE3" fill-opacity="0.92" rx="2"/>
-<text x="1277.8" y="152.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">bloom</text>
-<text x="1277.8" y="169.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">317 · 1.0%</text>
-<rect x="1223.8" y="433.4" width="78.6" height="60.3" fill="#F2F2F2" stroke="#4D4D4D" stroke-width="1.2"/>
-<rect x="1295.3" y="433.4" width="7.1" height="60.3" fill="url(#hatch)"/>
-<line x1="1295.3" y1="433.4" x2="1295.3" y2="493.7" stroke="#4D4D4D" stroke-width="0.8"/>
-<text x="1263.1" y="463.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">3</text>
-<rect x="1305.4" y="433.4" width="63.1" height="60.3" fill="#F2F2F2" stroke="#4D4D4D" stroke-width="1.2"/>
-<text x="1336.9" y="463.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">4</text>
-<rect x="277.2" y="129.5" width="48.9" height="67.4" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.2"/>
-<text x="301.6" y="163.2" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">5</text>
-<rect x="1331.0" y="129.5" width="37.5" height="62.5" fill="#B3CDE3" stroke="#4D4D4D" stroke-width="1.2"/>
-<text x="1349.8" y="160.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">6</text>
-<rect x="277.2" y="199.9" width="48.9" height="44.8" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.2"/>
-<text x="301.6" y="222.3" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">7</text>
-<rect x="917.0" y="647.3" width="104.0" height="11.2" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2"/>
-<line x1="969.0" y1="652.9" x2="969.0" y2="662.0" stroke="#4D4D4D" stroke-width="1"/>
-<text x="969.0" y="670.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">8</text>
+<rect x="24.0" y="254.1" width="313.6" height="431.9" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
+<text x="32.0" y="269.1" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Core  ·  5,486 LOC  ·  17.4%</text>
+<rect x="337.6" y="94.0" width="687.9" height="592.0" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
+<text x="345.6" y="109.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Protocol  ·  17,007 LOC  ·  53.9%</text>
+<rect x="1025.5" y="94.0" width="350.5" height="107.6" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
+<text x="1033.5" y="109.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Storage  ·  1,028 LOC  ·  3.3%</text>
+<rect x="1025.5" y="201.6" width="350.5" height="301.0" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
+<text x="1033.5" y="216.6" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Foundation  ·  4,110 LOC  ·  13.0%</text>
+<rect x="1025.5" y="502.6" width="350.5" height="183.4" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>
+<text x="1033.5" y="517.6" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="17" font-weight="bold" fill="#000" text-anchor="start">Tooling  ·  2,274 LOC  ·  7.2%</text>
+<rect x="345.1" y="129.5" width="320.8" height="529.0" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2" data-component="protocol-resp" data-part="tile"/>
+<rect x="345.1" y="514.0" width="320.8" height="144.5" fill="url(#hatch)" data-component="protocol-resp" data-part="hatch"/>
+<line x1="345.1" y1="514.0" x2="665.9" y2="514.0" stroke="#4D4D4D" stroke-width="0.8"/>
+<text x="505.5" y="313.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">protocol-resp</text>
+<text x="505.5" y="330.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">8,191 · 26.0%</text>
+<rect x="668.9" y="129.5" width="349.1" height="413.2" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2" data-component="protocol-memcache" data-part="tile"/>
+<rect x="668.9" y="461.9" width="349.1" height="80.8" fill="url(#hatch)" data-component="protocol-memcache" data-part="hatch"/>
+<line x1="668.9" y1="461.9" x2="1018.0" y2="461.9" stroke="#4D4D4D" stroke-width="0.8"/>
+<text x="843.4" y="287.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">protocol-memcache</text>
+<text x="843.4" y="304.7" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">6,963 · 22.1%</text>
+<rect x="1033.0" y="237.1" width="184.7" height="258.0" fill="#F2F2F2" stroke="#4D4D4D" stroke-width="1.2" data-component="config" data-part="tile"/>
+<rect x="1033.0" y="484.9" width="184.7" height="10.2" fill="url(#hatch)" data-component="config" data-part="hatch"/>
+<line x1="1033.0" y1="484.9" x2="1217.7" y2="484.9" stroke="#4D4D4D" stroke-width="0.8"/>
+<text x="1125.3" y="353.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">config</text>
+<text x="1125.3" y="370.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">2,300 · 7.3%</text>
+<rect x="1033.0" y="538.1" width="335.5" height="140.4" fill="#FFFFFF" stroke="#9E9E9E" stroke-width="1.2" stroke-dasharray="4 3" data-component="xtask" data-part="tile"/>
+<text x="1200.7" y="600.3" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">xtask</text>
+<text x="1200.7" y="617.3" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">2,274 · 7.2%</text>
+<rect x="31.5" y="289.6" width="157.0" height="211.9" fill="#CCEBC5" stroke="#4D4D4D" stroke-width="1.2" data-component="server" data-part="tile"/>
+<text x="110.0" y="387.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">server</text>
+<text x="110.0" y="404.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">1,606 · 5.1%</text>
+<rect x="191.5" y="289.6" width="138.6" height="211.9" fill="#CCEBC5" stroke="#4D4D4D" stroke-width="1.2" data-component="proxy" data-part="tile"/>
+<text x="260.8" y="387.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">proxy</text>
+<text x="260.8" y="404.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">1,418 · 4.5%</text>
+<rect x="1220.7" y="237.1" width="147.8" height="192.3" fill="#F2F2F2" stroke="#4D4D4D" stroke-width="1.2" data-component="pelikan-net" data-part="tile"/>
+<rect x="1220.7" y="418.5" width="147.8" height="10.9" fill="url(#hatch)" data-component="pelikan-net" data-part="hatch"/>
+<line x1="1220.7" y1="418.5" x2="1368.5" y2="418.5" stroke="#4D4D4D" stroke-width="0.8"/>
+<text x="1294.6" y="319.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">pelikan-net</text>
+<text x="1294.6" y="336.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">1,372 · 4.3%</text>
+<rect x="31.5" y="504.5" width="150.6" height="174.0" fill="#CCEBC5" stroke="#4D4D4D" stroke-width="1.2" data-component="session" data-part="tile"/>
+<rect x="31.5" y="649.5" width="150.6" height="29.0" fill="url(#hatch)" data-component="session" data-part="hatch"/>
+<line x1="31.5" y1="649.5" x2="182.1" y2="649.5" stroke="#4D4D4D" stroke-width="0.8"/>
+<text x="106.8" y="569.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">session</text>
+<text x="106.8" y="586.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">1,265 · 4.0%</text>
+<rect x="31.5" y="129.5" width="140.5" height="117.1" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.2" data-component="pelikan-segcache" data-part="tile"/>
+<rect x="66.5" y="129.5" width="105.5" height="117.1" fill="url(#hatch)" data-component="pelikan-segcache" data-part="hatch"/>
+<line x1="66.5" y1="129.5" x2="66.5" y2="246.6" stroke="#4D4D4D" stroke-width="0.8"/>
+<rect x="35.0" y="171.0" width="133.4" height="34" fill="#F5F5F5" fill-opacity="0.92" rx="2"/>
+<text x="101.8" y="180.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">pelikan-segcache</text>
+<text x="101.8" y="197.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">794 · 2.5%</text>
+<rect x="185.1" y="504.5" width="145.0" height="110.7" fill="#CCEBC5" stroke="#4D4D4D" stroke-width="1.2" data-component="admin" data-part="tile"/>
+<text x="257.6" y="551.9" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">admin</text>
+<text x="257.6" y="568.9" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">775 · 2.5%</text>
+<rect x="668.9" y="545.7" width="131.1" height="112.8" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2" data-component="protocol-http" data-part="tile"/>
+<rect x="769.7" y="545.7" width="30.3" height="112.8" fill="url(#hatch)" data-component="protocol-http" data-part="hatch"/>
+<line x1="769.7" y1="545.7" x2="769.7" y2="658.5" stroke="#4D4D4D" stroke-width="0.8"/>
+<rect x="679.5" y="585.1" width="109.9" height="34" fill="#FBB4AE" fill-opacity="0.92" rx="2"/>
+<text x="734.4" y="594.1" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">protocol-http</text>
+<text x="734.4" y="611.1" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">714 · 2.3%</text>
+<rect x="1033.0" y="129.5" width="188.2" height="64.6" fill="#B3CDE3" stroke="#4D4D4D" stroke-width="1.2" data-component="entrystore" data-part="tile"/>
+<text x="1127.1" y="153.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">entrystore</text>
+<text x="1127.1" y="170.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">587 · 1.9%</text>
+<rect x="803.0" y="545.7" width="106.3" height="112.8" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2" data-component="protocol-ping" data-part="tile"/>
+<rect x="803.0" y="625.2" width="106.3" height="33.3" fill="url(#hatch)" data-component="protocol-ping" data-part="hatch"/>
+<line x1="803.0" y1="625.2" x2="909.3" y2="625.2" stroke="#4D4D4D" stroke-width="0.8"/>
+<text x="856.2" y="602.1" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">1</text>
+<rect x="175.0" y="129.5" width="100.0" height="117.1" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.2" data-component="pelikan-rds" data-part="tile"/>
+<rect x="175.0" y="169.5" width="100.0" height="77.1" fill="url(#hatch)" data-component="pelikan-rds" data-part="hatch"/>
+<line x1="175.0" y1="169.5" x2="275.0" y2="169.5" stroke="#4D4D4D" stroke-width="0.8"/>
+<text x="225.0" y="141.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">pelikan-rds</text>
+<text x="225.0" y="158.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">565 · 1.8%</text>
+<rect x="912.3" y="545.7" width="105.7" height="95.9" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2" data-component="protocol-admin" data-part="tile"/>
+<rect x="985.8" y="545.7" width="32.2" height="95.9" fill="url(#hatch)" data-component="protocol-admin" data-part="hatch"/>
+<line x1="985.8" y1="545.7" x2="985.8" y2="641.6" stroke="#4D4D4D" stroke-width="0.8"/>
+<text x="965.2" y="593.6" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">2</text>
+<rect x="185.1" y="618.2" width="145.0" height="60.3" fill="#CCEBC5" stroke="#4D4D4D" stroke-width="1.2" data-component="queues" data-part="tile"/>
+<rect x="282.0" y="618.2" width="48.1" height="60.3" fill="url(#hatch)" data-component="queues" data-part="hatch"/>
+<line x1="282.0" y1="618.2" x2="282.0" y2="678.5" stroke="#4D4D4D" stroke-width="0.8"/>
+<text x="233.6" y="640.4" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">queues</text>
+<text x="233.6" y="657.4" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">422 · 1.3%</text>
+<rect x="1224.1" y="129.5" width="101.6" height="64.6" fill="#B3CDE3" stroke="#4D4D4D" stroke-width="1.2" data-component="bloom" data-part="tile"/>
+<rect x="1291.1" y="129.5" width="34.6" height="64.6" fill="url(#hatch)" data-component="bloom" data-part="hatch"/>
+<line x1="1291.1" y1="129.5" x2="1291.1" y2="194.1" stroke="#4D4D4D" stroke-width="0.8"/>
+<rect x="1231.7" y="144.8" width="86.4" height="34" fill="#B3CDE3" fill-opacity="0.92" rx="2"/>
+<text x="1274.9" y="153.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">bloom</text>
+<text x="1274.9" y="170.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="middle">317 · 1.0%</text>
+<rect x="1220.7" y="432.4" width="80.0" height="62.7" fill="#F2F2F2" stroke="#4D4D4D" stroke-width="1.2" data-component="common" data-part="tile"/>
+<rect x="1290.8" y="432.4" width="9.9" height="62.7" fill="url(#hatch)" data-component="common" data-part="hatch"/>
+<line x1="1290.8" y1="432.4" x2="1290.8" y2="495.1" stroke="#4D4D4D" stroke-width="0.8"/>
+<text x="1260.7" y="463.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">3</text>
+<rect x="1303.7" y="432.4" width="64.8" height="62.7" fill="#F2F2F2" stroke="#4D4D4D" stroke-width="1.2" data-component="logger" data-part="tile"/>
+<text x="1336.1" y="463.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">4</text>
+<rect x="278.0" y="129.5" width="52.1" height="68.0" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.2" data-component="pelikan-pingproxy" data-part="tile"/>
+<text x="304.0" y="163.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">5</text>
+<rect x="1328.8" y="129.5" width="39.7" height="64.6" fill="#B3CDE3" stroke="#4D4D4D" stroke-width="1.2" data-component="storage-types" data-part="tile"/>
+<text x="1348.6" y="161.8" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">6</text>
+<rect x="278.0" y="200.5" width="52.1" height="46.1" fill="#F5F5F5" stroke="#9E9E9E" stroke-width="1.2" data-component="pelikan-pingserver" data-part="tile"/>
+<text x="304.0" y="223.5" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">7</text>
+<rect x="912.3" y="644.6" width="105.7" height="13.9" fill="#FBB4AE" stroke="#4D4D4D" stroke-width="1.2" data-component="protocol-common" data-part="tile"/>
+<line x1="965.2" y1="651.5" x2="965.2" y2="662.0" stroke="#4D4D4D" stroke-width="1"/>
+<text x="965.2" y="670.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="bold" fill="#000" text-anchor="middle">8</text>
 <rect x="24" y="691" width="28" height="14" fill="url(#hatch)" stroke="#4D4D4D" stroke-width="0.8"/>
 <text x="60.0" y="698.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#000" text-anchor="start">Hatched: verification source (tests, benches, examples, fuzz targets, proof harnesses), 5,710 LOC · 18.1% of the total, drawn to the same area scale.</text>
 <text x="60.0" y="716.0" dy="0.35em" font-family="Helvetica, Arial, sans-serif" font-size="14" font-weight="normal" fill="#4D4D4D" text-anchor="start">A strip under 4 px is tabled, not drawn.</text>

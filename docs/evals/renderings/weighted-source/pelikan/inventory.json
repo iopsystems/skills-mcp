@@ -10,7 +10,7 @@
     ".ringline-runtime-followups/",
     "resp-proto-kani/"
   ],
-  "inventory_digest_sha256": "1120183e5538e945febbba70bdfdfc148f46ebc178f5731fa1cdbdd183333993",
+  "inventory_digest_sha256": "658b74baa86ccb01513a486d88d42bf7c5a0e31472d1bebe4c98e2c487c04349",
   "generated": "2026-10-16",
   "scope": "all tracked *.rs files in Cargo workspace members, one owner each (longest manifest directory); not the code compiled into any one binary",
   "counting_policy": "physical LOC: every line including comments and blanks; a final unterminated line counts as one line",

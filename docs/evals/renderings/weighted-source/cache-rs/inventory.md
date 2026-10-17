@@ -1,6 +1,6 @@
 # cache-rs weighted source inventory
 
-Revision `5cf04dd1b47e4bdda1a7a4a5872648b87743d42e` on `feature/ziplist-chain` (2026-10-16). Tracked files modified: 2. Untracked paths present: 0. Inventory digest `6114c1d21e1e734f…`.
+Revision `5cf04dd1b47e4bdda1a7a4a5872648b87743d42e` on `feature/ziplist-chain` (2026-10-16). Tracked files modified: 2. Untracked paths present: 0. Inventory digest `10d707e754568e08…`.
 
 **Scope.** all tracked *.rs files in Cargo workspace members, one owner each (longest manifest directory); not the code compiled into any one binary.
 

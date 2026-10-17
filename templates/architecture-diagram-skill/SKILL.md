@@ -225,9 +225,11 @@ the other charts, while keeping their palette and typography.
 
 For each leaf, `area = k * LOC` using one scale within the view. Assert the
 ratio on the allocated data rectangles before pixel rounding, with an
-explicit rounding tolerance for rendered geometry. Partition the available
-data area by weight; leave headers, borders, gutters, and legend outside
-the quantitative area. Parent totals equal the sum of their children, and
+explicit rounding tolerance for rendered geometry, and assert it again on
+the rectangles as serialized: a gutter subtracted after the check passes
+shrinks every tile by a fixed border, and small tiles most. Partition the
+available data area by weight; leave headers, borders, gutters, and legend
+outside the quantitative area. Parent totals equal the sum of their children, and
 the root equals the counted inventory total.
 
 Do not enlarge small tiles to fit labels, apply a minimum area, use log

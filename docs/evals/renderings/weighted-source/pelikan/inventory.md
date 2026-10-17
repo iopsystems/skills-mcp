@@ -1,6 +1,6 @@
 # Pelikan weighted source inventory
 
-Revision `46b98c9dc6fb70848808b903ba1d60a9655150be` on `spec/ziplist-collections` (2026-10-16). Tracked files modified: 0. Untracked paths present: 5. Inventory digest `1120183e5538e945…`.
+Revision `46b98c9dc6fb70848808b903ba1d60a9655150be` on `spec/ziplist-collections` (2026-10-16). Tracked files modified: 0. Untracked paths present: 5. Inventory digest `658b74baa86ccb01…`.
 
 **Scope.** all tracked *.rs files in Cargo workspace members, one owner each (longest manifest directory); not the code compiled into any one binary.
 

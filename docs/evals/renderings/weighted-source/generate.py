@@ -77,6 +77,36 @@ def physical_loc(path):
     return data.count(b"\n") + (0 if data.endswith(b"\n") else 1)
 
 
+def assign_owners(files, pkgs):
+    """Map each tracked file to exactly one package by longest manifest
+    directory. Cargo reports a root package's directory as ".", which owns
+    every file no deeper manifest claims. Returns (owner, path relative to
+    the owning manifest directory)."""
+    prefixes = sorted(((n, "" if d == "." else d.rstrip("/") + "/") for n, d in pkgs.items()),
+                      key=lambda nd: -len(nd[1]))
+    owner, rel = {}, {}
+    for f in files:
+        hits = [(n, pre) for n, pre in prefixes if f.startswith(pre)]
+        if not hits:
+            sys.exit(f"unmapped source file: {f}")
+        n, pre = hits[0]
+        owner[f] = n
+        rel[f] = f[len(pre):]
+    return owner, rel
+
+
+def inventory_digest(repo, files):
+    """SHA-256 over every tracked source file's path and content hash, so two
+    dirty states with equal line counts never share a digest."""
+    h = hashlib.sha256()
+    for f in sorted(files):
+        h.update(f.encode())
+        h.update(b"\0")
+        h.update(hashlib.sha256(open(os.path.join(repo, f), "rb").read()).hexdigest().encode())
+        h.update(b"\n")
+    return h.hexdigest()
+
+
 def inventory(repo):
     meta = json.loads(sh(["cargo", "metadata", "--no-deps", "--format-version", "1"], repo))
     root = meta["workspace_root"]
@@ -102,13 +132,7 @@ def inventory(repo):
                      f"tagged {sorted(tagged)}, derived {sorted(derived)}")
 
     files = sh(["git", "ls-files", "--", "*.rs"], repo).split()
-    by_dir = sorted(pkgs.items(), key=lambda kv: -len(kv[1]))
-    owner = {}
-    for f in files:
-        hits = [n for n, d in by_dir if f.startswith(d + "/")]
-        if not hits:
-            sys.exit(f"unmapped source file: {f}")
-        owner[f] = hits[0]  # longest manifest dir wins; nested crates are distinct members
+    owner, relpath = assign_owners(files, pkgs)
     counts = {n: 0 for n in pkgs}
     parts = {n: {"production": 0, **{k: 0 for k in KINDS}} for n in pkgs}
     nfiles = {n: 0 for n in pkgs}
@@ -117,7 +141,7 @@ def inventory(repo):
     # file under such a module's directory.
     whole = {}
     for f in files:
-        rel = f[len(pkgs[owner[f]]) + 1:]
+        rel = relpath[f]
         top = rel.split("/")[0]
         if top in DIR_KIND:
             whole[f] = DIR_KIND[top]
@@ -161,8 +185,7 @@ def inventory(repo):
     status = sh(["git", "status", "--porcelain"], repo).splitlines()
     modified = [l for l in status if not l.startswith("??")]
     untracked = [l[3:] for l in status if l.startswith("??")]
-    digest = hashlib.sha256("\n".join(f"{f} {physical_loc(os.path.join(repo, f))}"
-                                      for f in sorted(files)).encode()).hexdigest()
+    digest = inventory_digest(repo, files)
     # Exclusions are derived: tracked non-.rs extensions, and any .rs on disk
     # that git does not track (vendored or untracked trees).
     tracked = sh(["git", "ls-files"], repo).split()
@@ -288,19 +311,74 @@ def build_layout(inv, callout=None):
         for L in order:
             if inner[L] > 0:
                 outer_w[L] *= (k * layer_loc[L]) / inner[L]
+    # Leaf gutters are outside the quantitative area too: each leaf's outer
+    # allocation is iterated until its drawn rectangle, the one serialized to
+    # SVG, has area k * LOC. The layer loop above then re-balances on the sum
+    # of drawn areas, so one k holds across the whole view.
+    def drawn_leaves(L, rect):
+        x, y, w, h = rect
+        ix, iy, iw, ih = x + PAD, y + HEADER_H + PAD, w - 2 * PAD, h - HEADER_H - 2 * PAD - extra[L]
+        cs = sorted((c for c in layers[L] if c["loc"] > 0), key=lambda c: (-c["loc"], c["name"]))
+        ow = {c["name"]: float(c["loc"]) for c in cs}
+        loc = {c["name"]: c["loc"] for c in cs}
+        if not cs:
+            return {}
+        # Drawn area is affine in the allocation, (w - GAP) * (h - GAP), and
+        # which dimension responds to a weight change depends on the row the
+        # squarified layout puts the tile in. Rather than model that, solve
+        # each leaf's weight by bisection against the actual layout, holding
+        # the others fixed, and sweep until every drawn area meets k * LOC.
+        # Bisection cannot oscillate; a layout with no solution fails loudly.
+        def drawn_of(weights):
+            alloc = squarify([(n, weights[n]) for n in weights], ix, iy, iw, ih)
+            return alloc, {n: max(0.0, r[2] - GAP) * max(0.0, r[3] - GAP) for n, r in alloc.items()}
+
+        worst = 1.0
+        for sweep in range(120):
+            alloc, drawn = drawn_of(ow)
+            kl = sum(drawn.values()) / sum(loc.values())
+            worst = max(abs(drawn[n] / (kl * loc[n]) - 1) if drawn[n] > 0 else 1.0 for n in ow)
+            if worst < 1e-9 and sweep > 1:
+                break
+            for n in ow:
+                target = kl * loc[n]
+                lo, hi = ow[n] / 64.0, ow[n] * 64.0
+                for _ in range(60):
+                    mid = (lo * hi) ** 0.5
+                    trial = dict(ow)
+                    trial[n] = mid
+                    _, d = drawn_of(trial)
+                    if d[n] < target:
+                        lo = mid
+                    else:
+                        hi = mid
+                ow[n] = (lo * hi) ** 0.5
+        alloc, drawn = drawn_of(ow)
+        assert worst < 1e-6, f"leaf layout did not converge in layer {L}: worst deviation {worst}"
+        return {n: (r[0] + GAP / 2, r[1] + GAP / 2, r[2] - GAP, r[3] - GAP) for n, r in alloc.items()}
+
+    for it in range(200):
+        rects = squarify([(L, outer_w[L]) for L in order], data_x, data_y, data_w, data_h)
+        per_layer = {L: drawn_leaves(L, rects[L]) for L in order}
+        dsum = {L: sum(r[2] * r[3] for r in per_layer[L].values()) for L in order}
+        k = sum(dsum.values()) / sum(layer_loc.values())
+        worst = 0.0
+        for L in order:
+            ratio = dsum[L] / (k * layer_loc[L]) if dsum[L] > 0 else 0.25
+            worst = max(worst, abs(ratio - 1))
+            outer_w[L] *= ratio ** -0.5
+        if worst < 1e-9 and it > 2:
+            break
+    assert worst < 1e-6, f"layer layout did not converge: worst deviation {worst}"
     leaves = {}
     layer_rects = {}
     for L in order:
-        x, y, w, h = rects[L]
-        layer_rects[L] = (x, y, w, h)
-        ix, iy, iw, ih = x + PAD, y + HEADER_H + PAD, w - 2 * PAD, h - HEADER_H - 2 * PAD - extra[L]
-        cs = sorted(layers[L], key=lambda c: (-c["loc"], c["name"]))
-        sub = squarify([(c["name"], c["loc"]) for c in cs], ix, iy, iw, ih)
-        for name, r in sub.items():
+        layer_rects[L] = rects[L]
+        for name, r in per_layer[L].items():
             leaves[name] = (L, r)
     k = sum(r[2] * r[3] for _, r in leaves.values()) / inv["root_total_loc"]
     need = {L for name, (L, (x, y, w, h)) in leaves.items()
-            if (w - GAP < MIN_NUM_W or h - GAP < MIN_NUM_H)}
+            if (w < MIN_NUM_W or h < MIN_NUM_H)}
     if need - callout:
         return build_layout(inv, callout | need)
     return layer_rects, leaves, k, layer_loc
@@ -319,30 +397,59 @@ def verify(inv, layer_rects, leaves, k, layer_loc):
             continue
         ratio = (w * h) / (k * loc)
         assert abs(ratio - 1) < RATIO_TOL, f"area ratio {name}: {ratio}"
+        # the numbers that reach the SVG are rounded to 0.1 px; the error that
+        # rounding can introduce is bounded, and the serialized area must sit
+        # inside that bound
+        rw, rh = float(f"{w:.1f}"), float(f"{h:.1f}")
+        bound = 0.05 * (rw + rh) + 0.0025
+        assert abs(rw * rh - k * loc) <= bound + 1e-9, f"serialized area {name}: {rw * rh} vs {k * loc}"
         lx, ly, lw, lh = layer_rects[L]
         assert x >= lx - 1e-6 and y >= ly - 1e-6 and x + w <= lx + lw + 1e-6 and y + h <= ly + lh + 1e-6, f"leaf outside layer: {name}"
     for L, (x, y, w, h) in layer_rects.items():
         px, py, pw, ph = panel
         assert x >= px - 1e-6 and y >= py - 1e-6 and x + w <= px + pw + 1e-6 and y + h <= py + ph + 1e-6, f"layer outside panel: {L}"
-    # verification strip: partition by weight gives area k * verification LOC exactly
+    # verification strip: a partition of the drawn tile by weight, no inset
     for name, (L, (x, y, w, h)) in leaves.items():
         v = comps[name]["verification"]
         if v:
-            frac = v / comps[name]["loc"]
-            strip_area = (w * frac) * h if w >= h else w * (h * frac)
-            assert abs(strip_area / (k * v) - 1) < RATIO_TOL, f"hatch ratio {name}"
-    # rendered geometry: rounding to 0.5px must keep every leaf within tolerance
-    for name, (L, (x, y, w, h)) in leaves.items():
-        rw, rh = round(w * 2) / 2, round(h * 2) / 2
-        assert abs(rw - w) <= PIXEL_TOL and abs(rh - h) <= PIXEL_TOL, f"rounding {name}"
-    # no two leaves overlap
+            sx, sy, sw, sh = hatch_rect((x, y, w, h), v / comps[name]["loc"])
+            assert abs((sw * sh) / (k * v) - 1) < RATIO_TOL, f"hatch ratio {name}"
+    # no two drawn leaves overlap
     items = list(leaves.items())
     for i in range(len(items)):
         for j in range(i + 1, len(items)):
             a, b = items[i][1][1], items[j][1][1]
             ox = min(a[0] + a[2], b[0] + b[2]) - max(a[0], b[0])
             oy = min(a[1] + a[3], b[1] + b[3]) - max(a[1], b[1])
-            assert ox <= GAP + 1e-6 or oy <= GAP + 1e-6 or ox * oy < 1e-6, f"overlap {items[i][0]}/{items[j][0]}"
+            assert ox <= 1e-6 or oy <= 1e-6, f"overlap {items[i][0]}/{items[j][0]}"
+
+
+def hatch_rect(tile, frac):
+    """The verification strip: a partition of the drawn tile along its longer
+    side, so strip area / tile area == frac exactly."""
+    x, y, w, h = tile
+    if w >= h:
+        return (x + w - w * frac, y, w * frac, h)
+    return (x, y + h - h * frac, w, h * frac)
+
+
+def check_svg_geometry(svg, leaves, k, comps):
+    """Read the rectangles back out of the SVG text and hold them to k * LOC.
+    This is the check the reviewer asked for: on what was serialized, not on
+    what was allocated."""
+    import re
+    seen = set()
+    for m in re.finditer(r'<rect [^>]*data-component="([^"]+)" data-part="(tile|hatch)"[^>]*/>', svg):
+        name, part = m.group(1), m.group(2)
+        attrs = dict(re.findall(r'(?<![\w-])(x|y|width|height)="([\d.]+)"', m.group(0)))  # not stroke-width
+        area = float(attrs["width"]) * float(attrs["height"])
+        want = k * (comps[name]["loc"] if part == "tile" else comps[name]["verification"])
+        bound = 0.05 * (float(attrs["width"]) + float(attrs["height"])) + 0.0025
+        assert abs(area - want) <= bound + 1e-9, f"svg {part} {name}: {area:.2f} vs {want:.2f}"
+        seen.add((name, part))
+    for name in leaves:
+        if comps[name]["loc"] > 0:
+            assert (name, "tile") in seen, f"tile not serialized: {name}"
 
 
 # --- rendering ---
@@ -383,37 +490,30 @@ def render(inv, layer_rects, leaves, k, layer_loc):
         out.append(f'<rect x="{x:.1f}" y="{y:.1f}" width="{w:.1f}" height="{h:.1f}" fill="#FAFAFA" stroke="#9E9E9E" stroke-width="1.5"/>')
         out.append(text(x + PAD + 2, y + HEADER_H / 2 + 1,
                         f"{L}  ·  {layer_loc[L]:,} LOC  ·  {100 * layer_loc[L] / total:.1f}%", H2, "bold"))
-    for name, (L, (x, y, w, h)) in sorted(leaves.items(), key=lambda kv: -comps[kv[0]]["loc"]):
-        gx, gy, gw, gh = x + GAP / 2, y + GAP / 2, w - GAP, h - GAP
+    for name, (L, (gx, gy, gw, gh)) in sorted(leaves.items(), key=lambda kv: -comps[kv[0]]["loc"]):
         if gw <= 0 or gh <= 0:
             continue
         stroke = STROKE.get(L, "#4D4D4D")
         dash = ' stroke-dasharray="4 3"' if L in B.get("dashed", []) else ""
         out.append(f'<rect x="{gx:.1f}" y="{gy:.1f}" width="{gw:.1f}" height="{gh:.1f}" '
-                   f'fill="{FILL[L]}" stroke="{stroke}" stroke-width="1.2"{dash}/>')
+                   f'fill="{FILL[L]}" stroke="{stroke}" stroke-width="1.2"{dash} '
+                   f'data-component="{esc(name)}" data-part="tile"/>')
         c = comps[name]
-        # Verification share as a hatched strip along the tile's longer side,
-        # partitioned by weight so its area is k * verification LOC. Drawn only
-        # when the strip is at least HATCH_MIN_PX wide; otherwise tabled.
+        # Verification share as a hatched partition of the drawn tile along its
+        # longer side, so its area is k * verification LOC. Drawn only when the
+        # strip is at least HATCH_MIN_PX across; otherwise tabled.
         sx, sy, sw, sh = gx, gy, gw, gh  # solid part, for the label
         if c["verification"] > 0:
-            frac = c["verification"] / c["loc"]
-            if w >= h:
-                strip = w * frac
-                hx, hy, hw, hh = x + w - strip, y, strip, h
-            else:
-                strip = h * frac
-                hx, hy, hw, hh = x, y + h - strip, w, strip
-            if strip - GAP >= HATCH_MIN_PX:
-                hgx, hgy, hgw, hgh = hx + GAP / 2, hy + GAP / 2, hw - GAP, hh - GAP
-                out.append(f'<rect x="{hgx:.1f}" y="{hgy:.1f}" width="{hgw:.1f}" height="{hgh:.1f}" fill="url(#hatch)"/>')
-                out.append(f'<line x1="{hgx:.1f}" y1="{hgy:.1f}" x2="{(hgx if w < h else hgx):.1f}" y2="{(hgy + hgh if w >= h else hgy):.1f}" stroke="{stroke}" stroke-width="0.8"/>' if False else
-                           (f'<line x1="{hgx:.1f}" y1="{gy:.1f}" x2="{hgx:.1f}" y2="{gy + gh:.1f}" stroke="#4D4D4D" stroke-width="0.8"/>' if w >= h else
-                            f'<line x1="{gx:.1f}" y1="{hgy:.1f}" x2="{gx + gw:.1f}" y2="{hgy:.1f}" stroke="#4D4D4D" stroke-width="0.8"/>'))
-                if w >= h:
-                    sw = hgx - gx
+            hx, hy, hw, hh = hatch_rect((gx, gy, gw, gh), c["verification"] / c["loc"])
+            if min(hw, hh) >= HATCH_MIN_PX:
+                out.append(f'<rect x="{hx:.1f}" y="{hy:.1f}" width="{hw:.1f}" height="{hh:.1f}" fill="url(#hatch)" '
+                           f'data-component="{esc(name)}" data-part="hatch"/>')
+                out.append(f'<line x1="{hx:.1f}" y1="{gy:.1f}" x2="{hx:.1f}" y2="{gy + gh:.1f}" stroke="#4D4D4D" stroke-width="0.8"/>' if gw >= gh else
+                           f'<line x1="{gx:.1f}" y1="{hy:.1f}" x2="{gx + gw:.1f}" y2="{hy:.1f}" stroke="#4D4D4D" stroke-width="0.8"/>')
+                if gw >= gh:
+                    sw = hx - gx
                 else:
-                    sh = hgy - gy
+                    sh = hy - gy
             else:
                 unhatched.append(name)
         label = f"{c['loc']:,} · {100 * c['share']:.1f}%"
@@ -527,16 +627,18 @@ def textual(inv, layer_loc):
 # --- self-test on synthetic inventories ---
 
 def self_test():
-    global LAYER_ORDER, FILL
+    global LAYER_ORDER, FILL, B
     LAYER_ORDER = ["Core", "Protocol", "Storage"]
     FILL = {L: "#FFFFFF" for L in LAYER_ORDER}
+    B = {"title": "self-test", "repository": "test"}
     def inv_of(pairs):
         comps = [{"name": n, "path": n, "layer": L, "files": 1, "loc": loc, "verification": loc // 5,
                   "breakdown": {"production": loc - loc // 5, "test": loc // 5, "bench": 0, "example": 0, "fuzz": 0, "proof": 0}} for n, L, loc in pairs]
         total = sum(c["loc"] for c in comps)
         for c in comps:
             c["share"] = c["loc"] / total if total else 0
-        return {"root_total_loc": total, "components": comps, "revision": "test", "generated": "test"}
+        return {"root_total_loc": total, "components": comps, "revision": "test0000", "generated": "test",
+                "branch": "main", "tracked_files_modified": [], "untracked_paths": [], "inventory_digest_sha256": "0" * 64}
 
     # 1:4 weights allocate 1:4 areas, across layers
     inv = inv_of([("a", "Core", 100), ("b", "Protocol", 400)])
@@ -549,6 +651,22 @@ def self_test():
     lr, leaves, k, ll = build_layout(inv)
     verify(inv, lr, leaves, k, ll)
     assert "zero" not in leaves, "zero-LOC gets no tile"
+    # the serialized rectangles, not only the allocated ones, carry k * LOC
+    inv = inv_of([("a", "Core", 100), ("b", "Protocol", 400), ("c", "Storage", 37)])
+    lr, leaves, k, ll = build_layout(inv)
+    verify(inv, lr, leaves, k, ll)
+    check_svg_geometry(render(inv, lr, leaves, k, ll), leaves, k, {c["name"]: c for c in inv["components"]})
+    # a package at the workspace root owns what no deeper manifest claims
+    owner, rel = assign_owners(["src/lib.rs", "crates/sub/src/lib.rs"], {"root": ".", "sub": "crates/sub"})
+    assert owner == {"src/lib.rs": "root", "crates/sub/src/lib.rs": "sub"}, owner
+    assert rel == {"src/lib.rs": "src/lib.rs", "crates/sub/src/lib.rs": "src/lib.rs"}, rel
+    # two dirty states with equal line counts get different digests
+    import tempfile
+    with tempfile.TemporaryDirectory() as d:
+        open(os.path.join(d, "a.rs"), "w").write("/* version A */\n")
+        da = inventory_digest(d, ["a.rs"])
+        open(os.path.join(d, "a.rs"), "w").write("/* version B */\n")
+        assert inventory_digest(d, ["a.rs"]) != da, "digest ignores content"
     # a file shared by two products is an ownership error, not a double count
     try:
         owners = {"x.rs": ["p1", "p2"]}
@@ -579,6 +697,7 @@ def main():
         f.write("\n")
     svg = render(inv, lr, leaves, k, ll)
     check_text_bounds(svg, lr, leaves)
+    check_svg_geometry(svg, leaves, k, {c["name"]: c for c in inv["components"]})
     with open(os.path.join(a.out, "weighted-source.svg"), "w") as f:
         f.write(svg)
     with open(os.path.join(a.out, "inventory.md"), "w") as f:

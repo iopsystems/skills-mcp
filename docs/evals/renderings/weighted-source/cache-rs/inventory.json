@@ -7,7 +7,7 @@
     " M crates/data-structure/ziplist/tests/model.rs"
   ],
   "untracked_paths": [],
-  "inventory_digest_sha256": "6114c1d21e1e734fb2bc0625e51d6561f090d5b8fc76e88d6ce9e996a3667ced",
+  "inventory_digest_sha256": "10d707e754568e088f65e3c0421ed43b924cd9810a485f4e2e64fe503b54d23c",
   "generated": "2026-10-16",
   "scope": "all tracked *.rs files in Cargo workspace members, one owner each (longest manifest directory); not the code compiled into any one binary",
   "counting_policy": "physical LOC: every line including comments and blanks; a final unterminated line counts as one line",

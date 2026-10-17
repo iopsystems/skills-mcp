@@ -162,6 +162,42 @@ The raster caught one more thing: a label that spans the hatched strip is
 hard to read on the hatching. Labels that cannot sit in the solid part now
 sit on a halo in the tile's own fill.
 
+## Review, 2026-10-16
+
+A second agent reviewed the committed snapshot through the review bridge
+and found three defects in the generator, each reproduced with a fixture.
+
+The first is the one that matters for the skill. The generator asserted
+`area = k * LOC` on the allocated rectangles and then subtracted a gutter
+from both dimensions before serializing, so the rendered area was
+`(w - GAP) * (h - GAP)`: a fixed border off every tile, which is a larger
+share of a small one. The reviewer measured `protocol-common` at 77% of
+its due area in a view whose legend said areas were exact, and the
+built-in check passed because it looked at the wrong rectangles. The skill
+said to keep gutters outside the quantitative area and to assert before
+rounding; it did not say to assert on what was serialized, and the gap
+between those is exactly where the defect lived. Leaf gutters are now
+outside the quantitative rectangles, which took a solver: drawn area is
+affine in the allocation and which dimension responds to a weight depends
+on the row, so each leaf's weight is found by bisection against the real
+layout and swept to convergence. The rectangles are then read back out of
+the SVG text and held to `k * LOC` within the bound that rounding to a
+tenth of a pixel allows. Worst deviation across both views is now under
+0.2%. The skill's sentence gained the clause.
+
+The second: a package at the workspace root has manifest directory `.`,
+and the owner mapping required every path to start with that directory
+plus a slash. A single-package repository aborted. The third: the
+provenance digest hashed paths and line counts, so two dirty versions of a
+file with equal line counts shared a digest, which fails the skill's own
+content-digest requirement. Both fixed, both covered by self-tests.
+
+The reviewer's method is worth recording: the committed SVGs were
+regenerated from the committed inventories, byte-compared, and then the
+emitted rectangles were measured independently of the generator's checks.
+That is the step that found the first defect, and it is the step a
+generator cannot perform on itself.
+
 ## Deferred or Reopen Items
 
 - Independent behavioral evaluation of the scenario corpus remains unrun.
