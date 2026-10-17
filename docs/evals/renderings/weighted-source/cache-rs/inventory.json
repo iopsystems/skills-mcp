@@ -1,0 +1,92 @@
+{
+  "repository": "pelikan-io/cache-rs",
+  "revision": "5cf04dd1b47e4bdda1a7a4a5872648b87743d42e",
+  "branch": "feature/ziplist-chain",
+  "tracked_files_modified": [
+    " M crates/data-structure/ziplist/tests/golden.rs",
+    " M crates/data-structure/ziplist/tests/model.rs"
+  ],
+  "untracked_paths": [],
+  "inventory_digest_sha256": "6114c1d21e1e734fb2bc0625e51d6561f090d5b8fc76e88d6ce9e996a3667ced",
+  "generated": "2026-10-16",
+  "scope": "all tracked *.rs files in Cargo workspace members, one owner each (longest manifest directory); not the code compiled into any one binary",
+  "counting_policy": "physical LOC: every line including comments and blanks; a final unterminated line counts as one line",
+  "breakdown_policy": "src/tests/benches/examples by target directory within the crate; inline #[cfg(test)] modules stay in src (inline mixed, not measured)",
+  "exclusions": [
+    "tracked non-.rs files (md: 31, toml: 8, yml: 3, lock: 3, svg: 3, gitignore: 2, json: 1, yaml: 1)",
+    "target/ and vendored dependencies (not tracked)"
+  ],
+  "root_total_loc": 27363,
+  "components": [
+    {
+      "name": "cuckoo-cache",
+      "path": "crates/cuckoo",
+      "layer": "Engine",
+      "files": 7,
+      "loc": 1171,
+      "breakdown": {
+        "src": 1171,
+        "tests": 0,
+        "benches": 0,
+        "examples": 0
+      },
+      "share": 0.042795015166465666
+    },
+    {
+      "name": "datatier",
+      "path": "crates/datatier",
+      "layer": "Foundation",
+      "files": 1,
+      "loc": 794,
+      "breakdown": {
+        "src": 794,
+        "tests": 0,
+        "benches": 0,
+        "examples": 0
+      },
+      "share": 0.02901728611628842
+    },
+    {
+      "name": "keyvalue",
+      "path": "crates/keyvalue",
+      "layer": "Foundation",
+      "files": 7,
+      "loc": 1309,
+      "breakdown": {
+        "src": 1309,
+        "tests": 0,
+        "benches": 0,
+        "examples": 0
+      },
+      "share": 0.047838321821437706
+    },
+    {
+      "name": "segcache",
+      "path": "crates/segcache",
+      "layer": "Engine",
+      "files": 40,
+      "loc": 15487,
+      "breakdown": {
+        "src": 14776,
+        "tests": 538,
+        "benches": 173,
+        "examples": 0
+      },
+      "share": 0.5659832620692176
+    },
+    {
+      "name": "ziplist",
+      "path": "crates/data-structure/ziplist",
+      "layer": "Codec",
+      "files": 20,
+      "loc": 8602,
+      "breakdown": {
+        "src": 5927,
+        "tests": 2245,
+        "benches": 180,
+        "examples": 250
+      },
+      "share": 0.31436611482659066
+    }
+  ]
+}

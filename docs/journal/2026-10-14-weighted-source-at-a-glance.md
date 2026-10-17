@@ -72,7 +72,7 @@ the user's request; behavioral evaluation remains open.
 The conventions were run against Pelikan at `46b98c9`, a 23-crate workspace
 whose structure chart already follows this skill. The generator, inventory,
 textual equivalent, and rendered view are in
-`docs/evals/renderings/weighted-source-pelikan-v1/`. It is a standalone
+`docs/evals/renderings/weighted-source/pelikan/`. It is a standalone
 script rather than an addition to `cargo xtask diagrams`, because this is a
 trial of the conventions, not a change to Pelikan.
 
@@ -104,9 +104,37 @@ which is the case the skill's human-review gate makes. The rendered view is
 posted on skills-mcp#67 for that review; this entry does not record it as
 passed.
 
+## Second repository, 2026-10-16
+
+cache-rs at `5cf04dd`, five crates, 27,363 physical LOC, rendered as checked
+out: branch `feature/ziplist-chain`, two tracked test files modified, both
+disclosed in the caption and the inventory. The generator now takes its
+layer table and palette from a bindings file, one per project, under
+`docs/evals/renderings/weighted-source/`; the Pelikan geometry was
+byte-compared across the refactor and only the caption lines moved.
+
+cache-rs has no structure chart, so there was no layer table or palette to
+reuse. The bindings follow the project's own description: engines depend on
+`keyvalue`, `ziplist` is a byte-format codec, `keyvalue` and `datatier` are
+foundation. The Engine layer is validated against the dependency graph at
+generation time, which is the skill's rule for curated tables. The colors
+are the shared palette's tints by role, stated in the bindings as a choice.
+
+Two more things the raster caught: a project footer that ran off the canvas
+once a longer note was bound, and the keyed legend's third row sitting
+eighteen pixels above the footer. The text check now fails on any two texts
+whose estimated boxes overlap, and the footer note has its own line.
+
+The Pelikan checkout turned out to be on a feature branch too. The first
+record stamped the revision and said nothing about the branch; the caption
+now names any branch other than `main`.
+
 ## Deferred or Reopen Items
 
 - Independent behavioral evaluation of the scenario corpus remains unrun.
+- Both views are normalized to their own total. Comparing them shows
+  proportions, not absolute size: `segcache` at 56.6% of cache-rs is 15,487
+  lines, `protocol-resp` at 26.0% of Pelikan is 8,191.
 - The Pelikan view awaits its maintainer's review; a rendering that passed
   its own checks is not a rendering that reads.
 - Whether a project adopting the companion should extend its existing

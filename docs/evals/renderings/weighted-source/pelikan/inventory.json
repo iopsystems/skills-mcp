@@ -1,6 +1,7 @@
 {
   "repository": "iopsystems/pelikan",
   "revision": "46b98c9dc6fb70848808b903ba1d60a9655150be",
+  "branch": "spec/ziplist-collections",
   "tracked_files_modified": [],
   "untracked_paths": [
     ".benchmark-harness-fix-test",
@@ -13,10 +14,9 @@
   "generated": "2026-10-16",
   "scope": "all tracked *.rs files in Cargo workspace members, one owner each (longest manifest directory); not the code compiled into any one binary",
   "counting_policy": "physical LOC: every line including comments and blanks; a final unterminated line counts as one line",
-  "breakdown_policy": "src/tests/benches by target directory within the crate; inline #[cfg(test)] modules stay in src (inline mixed, not measured)",
+  "breakdown_policy": "src/tests/benches/examples by target directory within the crate; inline #[cfg(test)] modules stay in src (inline mixed, not measured)",
   "exclusions": [
-    "non-.rs files (toml, md, yml, sh, py, json, dict)",
-    "resp-proto-kani/ (present on disk, not tracked by git)",
+    "tracked non-.rs files (toml: 37, md: 30, gitignore: 6, sh: 4, yml: 4, dict: 4, json: 3, svg: 3)",
     "target/ and vendored dependencies (not tracked)"
   ],
   "root_total_loc": 31551,
@@ -30,7 +30,8 @@
       "breakdown": {
         "src": 775,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.02456340528033977
     },
@@ -43,7 +44,8 @@
       "breakdown": {
         "src": 266,
         "tests": 0,
-        "benches": 51
+        "benches": 51,
+        "examples": 0
       },
       "share": 0.010047225127571235
     },
@@ -56,7 +58,8 @@
       "breakdown": {
         "src": 242,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.00767012139076416
     },
@@ -69,7 +72,8 @@
       "breakdown": {
         "src": 2300,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.07289784792875027
     },
@@ -82,7 +86,8 @@
       "breakdown": {
         "src": 587,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.0186047985800767
     },
@@ -95,7 +100,8 @@
       "breakdown": {
         "src": 196,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.006212164432189154
     },
@@ -108,7 +114,8 @@
       "breakdown": {
         "src": 1372,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.043485151025324076
     },
@@ -121,7 +128,8 @@
       "breakdown": {
         "src": 171,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.00541979651992013
     },
@@ -134,7 +142,8 @@
       "breakdown": {
         "src": 116,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.003676587112928275
     },
@@ -147,7 +156,8 @@
       "breakdown": {
         "src": 193,
         "tests": 269,
-        "benches": 103
+        "benches": 103,
+        "examples": 0
       },
       "share": 0.01790751481727996
     },
@@ -160,7 +170,8 @@
       "breakdown": {
         "src": 198,
         "tests": 500,
-        "benches": 96
+        "benches": 96,
+        "examples": 0
       },
       "share": 0.025165604893664227
     },
@@ -173,7 +184,8 @@
       "breakdown": {
         "src": 455,
         "tests": 0,
-        "benches": 34
+        "benches": 34,
+        "examples": 0
       },
       "share": 0.015498716363982125
     },
@@ -186,7 +198,8 @@
       "breakdown": {
         "src": 71,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.0022503248708440303
     },
@@ -199,7 +212,8 @@
       "breakdown": {
         "src": 549,
         "tests": 165,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.02263002757440335
     },
@@ -212,7 +226,8 @@
       "breakdown": {
         "src": 6889,
         "tests": 0,
-        "benches": 74
+        "benches": 74,
+        "examples": 0
       },
       "share": 0.22069031092516878
     },
@@ -225,7 +240,8 @@
       "breakdown": {
         "src": 544,
         "tests": 0,
-        "benches": 35
+        "benches": 35,
+        "examples": 0
       },
       "share": 0.018351240848150614
     },
@@ -238,7 +254,8 @@
       "breakdown": {
         "src": 8191,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.2596114227758233
     },
@@ -251,7 +268,8 @@
       "breakdown": {
         "src": 1418,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.04494310798389908
     },
@@ -264,7 +282,8 @@
       "breakdown": {
         "src": 422,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.013375170359101138
     },
@@ -277,7 +296,8 @@
       "breakdown": {
         "src": 1606,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.05090171468416215
     },
@@ -290,7 +310,8 @@
       "breakdown": {
         "src": 1265,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.040093816360812655
     },
@@ -303,7 +324,8 @@
       "breakdown": {
         "src": 124,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.003930144844854363
     },
@@ -316,7 +338,8 @@
       "breakdown": {
         "src": 2274,
         "tests": 0,
-        "benches": 0
+        "benches": 0,
+        "examples": 0
       },
       "share": 0.07207378529999049
     }

@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
-"""Weighted source at a glance, for the Pelikan workspace.
+"""Weighted source at a glance, for a Cargo workspace.
 
 Trial generator for the `weighted-source-at-a-glance` conventions in
 skills-mcp's architecture-diagram skill. Standalone on purpose: it derives
-from `cargo metadata` and `git ls-files`, borrows the layer table and palette
-from pelikan's `xtask/src/arch.rs` and `xtask/src/svg.rs`, and writes a
-treemap SVG, a machine-readable inventory, and a textual equivalent.
+from `cargo metadata` and `git ls-files`, takes the project's layer table and
+palette from a bindings file (the charter's role), and writes a treemap SVG,
+a machine-readable inventory, and a textual equivalent.
 
-    python3 generate.py --repo ../pelikan --out out/
+    python3 generate.py --repo ../pelikan --bindings pelikan.json --out out/
     python3 generate.py --self-test
 """
 import argparse
@@ -18,28 +18,27 @@ import subprocess
 import sys
 from datetime import date
 
-# --- bindings copied from pelikan xtask (validated against cargo metadata) ---
+# --- bindings: loaded from the project's JSON file, validated against cargo metadata ---
 
-LAYER = {
-    "pelikan-segcache": "Product", "pelikan-rds": "Product",
-    "pelikan-pingserver": "Product", "pelikan-pingproxy": "Product",
-    "server": "Core", "proxy": "Core", "admin": "Core",
-    "session": "Core", "queues": "Core",
-    "protocol-admin": "Protocol", "protocol-common": "Protocol",
-    "protocol-http": "Protocol", "protocol-memcache": "Protocol",
-    "protocol-ping": "Protocol", "protocol-resp": "Protocol",
-    "entrystore": "Storage", "storage-types": "Storage", "bloom": "Storage",
-    "common": "Foundation", "config": "Foundation",
-    "logger": "Foundation", "pelikan-net": "Foundation",
-}
-TOOLING = {"xtask": "Tooling"}
-LAYER_ORDER = ["Product", "Core", "Protocol", "Storage", "Foundation", "Tooling"]
-FILL = {  # xtask/src/svg.rs role colors; Product and Tooling are chart conventions
-    "Product": "#F5F5F5", "Core": "#CCEBC5", "Protocol": "#FBB4AE",
-    "Storage": "#B3CDE3", "Foundation": "#F2F2F2", "Tooling": "#FFFFFF",
-}
-STROKE = {"Product": "#9E9E9E", "Tooling": "#9E9E9E"}
+B = {}  # title, repository, layers {crate: layer}, order, fill, stroke, dashed,
+        # outside_chart (layers the structure chart excludes), derived (validation rules)
+LAYER = {}
+LAYER_ORDER = []
+FILL = {}
+STROKE = {}
 FONT = "Helvetica, Arial, sans-serif"
+
+
+def load_bindings(path):
+    global B, LAYER, LAYER_ORDER, FILL, STROKE
+    B = json.load(open(path))
+    LAYER = B["layers"]
+    LAYER_ORDER = B["order"]
+    FILL = B["fill"]
+    STROKE = B.get("stroke", {})
+    missing = set(LAYER.values()) - set(LAYER_ORDER)
+    assert not missing, f"layers without an order: {missing}"
+    assert set(LAYER_ORDER) <= set(FILL), "every layer needs a fill"
 H1, H2, BODY = 20, 17, 14  # the build chart's ramp (charter override, #183)
 
 # --- geometry ---
@@ -47,7 +46,7 @@ H1, H2, BODY = 20, 17, 14  # the build chart's ramp (charter override, #183)
 W, H = 1400, 900
 MARGIN = 24
 TITLE_H = 70
-LEGEND_H = 150
+LEGEND_H = 165
 HEADER_H = 28     # layer header strip, outside the quantitative area
 PAD = 6           # gutter inside a layer, outside the quantitative area
 GAP = 3           # gutter between leaves
@@ -81,11 +80,22 @@ def inventory(repo):
     for p in meta["packages"]:
         d = os.path.relpath(os.path.dirname(p["manifest_path"]), root)
         pkgs[p["name"]] = d
-    known = {**LAYER, **TOOLING}
+    known = LAYER
     missing = sorted(set(pkgs) - set(known))
     stale = sorted(set(known) - set(pkgs))
     if missing or stale:
         sys.exit(f"classification drift: unclassified {missing}, stale {stale}")
+    # Curated layers are validated against the derived dependency graph where
+    # the bindings state a rule, e.g. "Engine" == "depends on keyvalue".
+    ws_deps = {p["name"]: {d["name"] for d in p["dependencies"]
+                           if d["name"] in pkgs and d.get("kind") is None} for p in meta["packages"]}
+    for layer, rule in B.get("derived", {}).items():
+        dep = rule["depends_on"]
+        tagged = {n for n, l in known.items() if l == layer}
+        derived = {n for n, ds in ws_deps.items() if dep in ds}
+        if tagged != derived:
+            sys.exit(f"layer {layer!r} disagrees with the dependency graph: "
+                     f"tagged {sorted(tagged)}, derived {sorted(derived)}")
 
     files = sh(["git", "ls-files", "--", "*.rs"], repo).split()
     by_dir = sorted(pkgs.items(), key=lambda kv: -len(kv[1]))
@@ -96,7 +106,7 @@ def inventory(repo):
             sys.exit(f"unmapped source file: {f}")
         owner[f] = hits[0]  # longest manifest dir wins; nested crates are distinct members
     counts = {n: 0 for n in pkgs}
-    parts = {n: {"src": 0, "tests": 0, "benches": 0} for n in pkgs}
+    parts = {n: {"src": 0, "tests": 0, "benches": 0, "examples": 0} for n in pkgs}
     nfiles = {n: 0 for n in pkgs}
     for f, n in owner.items():
         loc = physical_loc(os.path.join(repo, f))
@@ -104,7 +114,7 @@ def inventory(repo):
         nfiles[n] += 1
         rel = f[len(pkgs[n]) + 1:]
         top = rel.split("/")[0]
-        parts[n][top if top in ("tests", "benches") else "src"] += loc
+        parts[n][top if top in ("tests", "benches", "examples") else "src"] += loc
     empty = [n for n, c in nfiles.items() if c == 0]
     if empty:
         sys.exit(f"members with no tracked .rs files: {empty}")
@@ -115,6 +125,19 @@ def inventory(repo):
     untracked = [l[3:] for l in status if l.startswith("??")]
     digest = hashlib.sha256("\n".join(f"{f} {physical_loc(os.path.join(repo, f))}"
                                       for f in sorted(files)).encode()).hexdigest()
+    # Exclusions are derived: tracked non-.rs extensions, and any .rs on disk
+    # that git does not track (vendored or untracked trees).
+    tracked = sh(["git", "ls-files"], repo).split()
+    exts = {}
+    for f in tracked:
+        if "." in os.path.basename(f) and not f.endswith(".rs"):
+            exts[f.rsplit(".", 1)[1]] = exts.get(f.rsplit(".", 1)[1], 0) + 1
+    untracked_rs = sh(["git", "ls-files", "--others", "--exclude-standard", "--", "*.rs"], repo).split()
+    untracked_trees = sorted({f.split("/")[0] for f in untracked_rs})
+    exclusions = ["tracked non-.rs files (" + ", ".join(f"{e}: {c}" for e, c in sorted(exts.items(), key=lambda kv: -kv[1])[:8]) + ")"]
+    if untracked_trees:
+        exclusions.append("untracked .rs under " + ", ".join(t + "/" for t in untracked_trees))
+    exclusions.append("target/ and vendored dependencies (not tracked)")
     comps = []
     for n in sorted(pkgs):
         comps.append({"name": n, "path": pkgs[n], "layer": known[n],
@@ -122,9 +145,11 @@ def inventory(repo):
     total = sum(counts.values())
     for c in comps:
         c["share"] = c["loc"] / total
+    branch = sh(["git", "rev-parse", "--abbrev-ref", "HEAD"], repo).strip()
     return {
-        "repository": "iopsystems/pelikan",
+        "repository": B["repository"],
         "revision": rev,
+        "branch": branch,
         "tracked_files_modified": modified,
         "untracked_paths": untracked,
         "inventory_digest_sha256": digest,
@@ -133,11 +158,9 @@ def inventory(repo):
                  "(longest manifest directory); not the code compiled into any one binary",
         "counting_policy": "physical LOC: every line including comments and blanks; "
                            "a final unterminated line counts as one line",
-        "breakdown_policy": "src/tests/benches by target directory within the crate; "
+        "breakdown_policy": "src/tests/benches/examples by target directory within the crate; "
                             "inline #[cfg(test)] modules stay in src (inline mixed, not measured)",
-        "exclusions": ["non-.rs files (toml, md, yml, sh, py, json, dict)",
-                       "resp-proto-kani/ (present on disk, not tracked by git)",
-                       "target/ and vendored dependencies (not tracked)"],
+        "exclusions": exclusions,
         "root_total_loc": total,
         "components": comps,
     }
@@ -289,13 +312,15 @@ def render(inv, layer_rects, leaves, k, layer_loc):
     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
            '<!-- generated by generate.py (weighted-source trial), do not edit -->',
            '<rect width="100%" height="100%" fill="white"/>']
-    out.append(text(MARGIN, MARGIN + 14, "Pelikan — weighted source at a glance", H1, "bold"))
+    out.append(text(MARGIN, MARGIN + 14, f"{B['title']} — weighted source at a glance", H1, "bold"))
     out.append(text(MARGIN, MARGIN + 40,
                     f"Area ∝ physical LOC (comments and blanks included). {total:,} lines across "
                     f"{sum(c['files'] for c in comps.values())} tracked .rs files in {len(comps)} workspace crates. "
                     f"Revision {inv['revision'][:7]}.", BODY))
+    state = (f" Rendered on branch {inv['branch']}" if inv['branch'] != 'main' else '')
+    state += (f" with {len(inv['tracked_files_modified'])} tracked files modified" if inv['tracked_files_modified'] else '')
     out.append(text(MARGIN, MARGIN + 58,
-                    "Adjacency claims no dependency and no execution order; see architecture.svg for layering.",
+                    "Adjacency claims no dependency and no execution order." + (state + "." if state else ""),
                     BODY, fill="#4D4D4D"))
     keyed = []
     callouts = []
@@ -309,7 +334,7 @@ def render(inv, layer_rects, leaves, k, layer_loc):
         if gw <= 0 or gh <= 0:
             continue
         stroke = STROKE.get(L, "#4D4D4D")
-        dash = ' stroke-dasharray="4 3"' if L == "Tooling" else ""
+        dash = ' stroke-dasharray="4 3"' if L in B.get("dashed", []) else ""
         out.append(f'<rect x="{gx:.1f}" y="{gy:.1f}" width="{gw:.1f}" height="{gh:.1f}" '
                    f'fill="{FILL[L]}" stroke="{stroke}" stroke-width="1.2"{dash}/>')
         c = comps[name]
@@ -339,12 +364,13 @@ def render(inv, layer_rects, leaves, k, layer_loc):
         cx = MARGIN + (i % 3) * col_w
         cy = ly + 22 + (i // 3) * 20
         out.append(text(cx, cy, f"{i + 1}. {name} — {c['loc']:,} LOC · {100 * c['share']:.1f}% ({c['layer']})", BODY))
+    if B.get("footer"):
+        out.append(text(MARGIN, H - MARGIN - 42, B["footer"], BODY, fill="#4D4D4D"))
     out.append(text(MARGIN, H - MARGIN - 24,
-                    "Scope: all tracked .rs in workspace members, each file counted once under its crate. "
-                    "xtask (tooling) sits outside the architecture chart and is dashed here.",
+                    "Scope: all tracked .rs in workspace members, each file counted once under its crate.",
                     BODY, fill="#4D4D4D"))
     out.append(text(MARGIN, H - MARGIN - 6,
-                    "Excluded: non-Rust files, untracked resp-proto-kani/. "
+                    "Excluded: non-Rust files and untracked source (see inventory.md). "
                     "LOC measures source footprint, not runtime cost, complexity, or quality.",
                     BODY, fill="#4D4D4D"))
     out.append("</svg>")
@@ -356,6 +382,7 @@ def check_text_bounds(svg, layer_rects, leaves):
     labels inside their tile. Estimates are generous (0.56 em per character)."""
     import re
     tiles = [r for _, r in leaves.values()] + list(layer_rects.values())
+    boxes = []
     for m in re.finditer(r'<text x="([\d.]+)" y="([\d.]+)"[^>]*font-size="(\d+)"[^>]*text-anchor="(\w+)">([^<]*)</text>', svg):
         x, y, size, anchor, s = float(m[1]), float(m[2]), int(m[3]), m[4], m[5]
         s = s.replace("&amp;", "&").replace("&lt;", "<")
@@ -363,17 +390,24 @@ def check_text_bounds(svg, layer_rects, leaves):
         x0 = x - tw / 2 if anchor == "middle" else x
         x1 = x0 + tw
         assert x0 >= 0 and x1 <= W and y - size / 2 >= 0 and y + size / 2 <= H, f"text off canvas: {s[:40]!r} ({x0:.0f}..{x1:.0f})"
+        boxes.append((x0, y - size / 2, x1, y + size / 2, s))
         if anchor == "middle":  # an in-tile label: find its tile and require containment
             tile = [t for t in tiles if t[0] <= x <= t[0] + t[2] and t[1] <= y <= t[1] + t[3]]
             if tile:
                 t = min(tile, key=lambda t: t[2] * t[3])
                 assert x0 >= t[0] - 1 and x1 <= t[0] + t[2] + 1, f"label wider than tile: {s!r}"
+    # no two texts overlap (estimated boxes)
+    for i in range(len(boxes)):
+        for j in range(i + 1, len(boxes)):
+            a, b = boxes[i], boxes[j]
+            if a[0] < b[2] and b[0] < a[2] and a[1] < b[3] and b[1] < a[3]:
+                raise AssertionError(f"texts overlap: {a[4][:30]!r} / {b[4][:30]!r}")
 
 
 def textual(inv, layer_loc):
     total = inv["root_total_loc"]
-    lines = ["# Pelikan weighted source inventory", "",
-             f"Revision `{inv['revision']}` ({inv['generated']}). "
+    lines = [f"# {B['title']} weighted source inventory", "",
+             f"Revision `{inv['revision']}` on `{inv['branch']}` ({inv['generated']}). "
              f"Tracked files modified: {len(inv['tracked_files_modified'])}. "
              f"Untracked paths present: {len(inv['untracked_paths'])}. "
              f"Inventory digest `{inv['inventory_digest_sha256'][:16]}…`.", "",
@@ -385,21 +419,24 @@ def textual(inv, layer_loc):
              "| Layer | LOC | Share |", "| --- | ---: | ---: |"]
     for L in [l for l in LAYER_ORDER if l in layer_loc]:
         lines.append(f"| {L} | {layer_loc[L]:,} | {100 * layer_loc[L] / total:.1f}% |")
-    lines += ["", "| Crate | Layer | Path | Files | LOC | Share | src | tests | benches |",
-              "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |"]
+    lines += ["", "| Crate | Layer | Path | Files | LOC | Share | src | tests | benches | examples |",
+              "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for c in sorted(inv["components"], key=lambda c: (-c["loc"], c["name"])):
         b = c["breakdown"]
         lines.append(f"| {c['name']} | {c['layer']} | `{c['path']}` | {c['files']} | {c['loc']:,} | "
-                     f"{100 * c['share']:.1f}% | {b['src']:,} | {b['tests']:,} | {b['benches']:,} |")
+                     f"{100 * c['share']:.1f}% | {b['src']:,} | {b['tests']:,} | {b['benches']:,} | {b['examples']:,} |")
     return "\n".join(lines) + "\n"
 
 
 # --- self-test on synthetic inventories ---
 
 def self_test():
+    global LAYER_ORDER, FILL
+    LAYER_ORDER = ["Core", "Protocol", "Storage"]
+    FILL = {L: "#FFFFFF" for L in LAYER_ORDER}
     def inv_of(pairs):
         comps = [{"name": n, "path": n, "layer": L, "files": 1, "loc": loc,
-                  "breakdown": {"src": loc, "tests": 0, "benches": 0}} for n, L, loc in pairs]
+                  "breakdown": {"src": loc, "tests": 0, "benches": 0, "examples": 0}} for n, L, loc in pairs]
         total = sum(c["loc"] for c in comps)
         for c in comps:
             c["share"] = c["loc"] / total if total else 0
@@ -429,12 +466,14 @@ def self_test():
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--repo")
+    ap.add_argument("--bindings")
     ap.add_argument("--out", default="out")
     ap.add_argument("--self-test", action="store_true")
     a = ap.parse_args()
     if a.self_test:
         self_test()
         return
+    load_bindings(a.bindings)
     inv = inventory(os.path.abspath(a.repo))
     lr, leaves, k, ll = build_layout(inv)
     verify(inv, lr, leaves, k, ll)
