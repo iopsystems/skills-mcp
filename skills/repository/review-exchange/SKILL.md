@@ -184,14 +184,25 @@ cmd_note() {
   dir="$(store_dir)/threads/$(slug "$branch")"
   mkdir -p "$dir"
   while : ; do
+    attempt=$((attempt + 1))
+    [ "$attempt" -le 100 ] || die 'could not claim a round number after 100 attempts'
     n=$(next_round "$dir")
     claim=$(printf '%s/.claim-%03d' "$dir" "$n")
-    # mkdir is atomic and fails if the name exists, so exactly one racing
-    # writer wins a given round number.
-    if mkdir "$claim" 2>/dev/null; then break; fi
-    attempt=$((attempt + 1))
-    [ "$attempt" -lt 10 ] || die 'could not claim a round number after 10 attempts'
+    # O_EXCL through bash's own noclobber: exactly one racing writer holds a
+    # given claim. Not mkdir(1): uutils coreutils 0.8.0 checks for the name
+    # and then creates it, so two racing mkdirs of one path both succeed.
+    { set -C; : > "$claim"; } 2>/dev/null || continue
+    # A claim is released once its round file exists, so a writer that
+    # computed n before the claim was taken can win the mkdir after it is
+    # released. The file is the durable record; if one with this number
+    # exists, the number was spent and the claim is stale.
+    if set -- "$dir"/"$(printf '%03d' "$n")"-*.md && [ -e "$1" ]; then
+      rm -f "$claim"
+      continue
+    fi
+    break
   done
+  set +C
   path=$(printf '%s/%03d-%s-%s.md' "$dir" "$n" "$agent" "$short")
 
   {
@@ -210,7 +221,7 @@ cmd_note() {
     printf -- '---\n\n'
     printf '%s\n' "$body"
   } > "$path"
-  rmdir "$claim" 2>/dev/null || true
+  rm -f "$claim"
 
   set_cursor "$branch" "$agent" "$n"
   printf '%s\n' "$path"
