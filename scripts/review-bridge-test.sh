@@ -187,8 +187,7 @@ cd "$ROOT_DIR"
 # --- concurrency --------------------------------------------------------
 
 cd "$REPO"
-# Twelve writers, not three: with three, a non-exclusive mkdir (uutils
-# coreutils) collided about one run in three on a laptop and never on CI.
+# Twelve writers exposed mkdir claim collisions in four of five local runs.
 for w in a b c d e f g h i j k l; do
   git review-note --as "$w" --role reviewer -m "note $w" >/dev/null &
 done

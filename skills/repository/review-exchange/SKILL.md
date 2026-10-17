@@ -82,10 +82,8 @@ USAGE
 }
 
 next_round() {
-  # Counts written rounds and in-flight claims alike. A claim that is not yet a
-  # file must still reserve its number, or two writers racing under different
-  # agent names would each believe the number is free — their filenames differ,
-  # so no file-level exclusion would catch it.
+  # Count active claims to reserve their round numbers. Writers use different
+  # filenames, so excluding duplicate files does not prevent duplicate rounds.
   local dir=$1 max=0 f base num
   for f in "$dir"/[0-9][0-9][0-9]-*.md "$dir"/.claim-[0-9][0-9][0-9]; do
     [ -e "$f" ] || continue
@@ -188,14 +186,11 @@ cmd_note() {
     [ "$attempt" -le 100 ] || die 'could not claim a round number after 100 attempts'
     n=$(next_round "$dir")
     claim=$(printf '%s/.claim-%03d' "$dir" "$n")
-    # O_EXCL through bash's own noclobber: exactly one racing writer holds a
-    # given claim. Not mkdir(1): uutils coreutils 0.8.0 checks for the name
-    # and then creates it, so two racing mkdirs of one path both succeed.
+    # Bash noclobber uses O_EXCL to give one writer the claim.
+    # uutils mkdir 0.8.0 admitted concurrent writers.
     { set -C; : > "$claim"; } 2>/dev/null || continue
-    # A claim is released once its round file exists, so a writer that
-    # computed n before the claim was taken can win the mkdir after it is
-    # released. The file is the durable record; if one with this number
-    # exists, the number was spent and the claim is stale.
+    # Another writer can publish this round and release its claim before
+    # we acquire it. Retry if the round file already exists.
     if set -- "$dir"/"$(printf '%03d' "$n")"-*.md && [ -e "$1" ]; then
       rm -f "$claim"
       continue
