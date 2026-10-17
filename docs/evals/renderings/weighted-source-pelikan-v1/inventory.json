@@ -1,0 +1,324 @@
+{
+  "repository": "iopsystems/pelikan",
+  "revision": "46b98c9dc6fb70848808b903ba1d60a9655150be",
+  "tracked_files_modified": [],
+  "untracked_paths": [
+    ".benchmark-harness-fix-test",
+    ".pr318-body.md",
+    ".ringline-runtime-followups-tls/",
+    ".ringline-runtime-followups/",
+    "resp-proto-kani/"
+  ],
+  "inventory_digest_sha256": "1120183e5538e945febbba70bdfdfc148f46ebc178f5731fa1cdbdd183333993",
+  "generated": "2026-10-16",
+  "scope": "all tracked *.rs files in Cargo workspace members, one owner each (longest manifest directory); not the code compiled into any one binary",
+  "counting_policy": "physical LOC: every line including comments and blanks; a final unterminated line counts as one line",
+  "breakdown_policy": "src/tests/benches by target directory within the crate; inline #[cfg(test)] modules stay in src (inline mixed, not measured)",
+  "exclusions": [
+    "non-.rs files (toml, md, yml, sh, py, json, dict)",
+    "resp-proto-kani/ (present on disk, not tracked by git)",
+    "target/ and vendored dependencies (not tracked)"
+  ],
+  "root_total_loc": 31551,
+  "components": [
+    {
+      "name": "admin",
+      "path": "src/core/admin",
+      "layer": "Core",
+      "files": 1,
+      "loc": 775,
+      "breakdown": {
+        "src": 775,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.02456340528033977
+    },
+    {
+      "name": "bloom",
+      "path": "src/storage/bloom",
+      "layer": "Storage",
+      "files": 2,
+      "loc": 317,
+      "breakdown": {
+        "src": 266,
+        "tests": 0,
+        "benches": 51
+      },
+      "share": 0.010047225127571235
+    },
+    {
+      "name": "common",
+      "path": "src/common",
+      "layer": "Foundation",
+      "files": 7,
+      "loc": 242,
+      "breakdown": {
+        "src": 242,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.00767012139076416
+    },
+    {
+      "name": "config",
+      "path": "src/config",
+      "layer": "Foundation",
+      "files": 22,
+      "loc": 2300,
+      "breakdown": {
+        "src": 2300,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.07289784792875027
+    },
+    {
+      "name": "entrystore",
+      "path": "src/entrystore",
+      "layer": "Storage",
+      "files": 6,
+      "loc": 587,
+      "breakdown": {
+        "src": 587,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.0186047985800767
+    },
+    {
+      "name": "logger",
+      "path": "src/logger",
+      "layer": "Foundation",
+      "files": 1,
+      "loc": 196,
+      "breakdown": {
+        "src": 196,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.006212164432189154
+    },
+    {
+      "name": "pelikan-net",
+      "path": "src/net",
+      "layer": "Foundation",
+      "files": 9,
+      "loc": 1372,
+      "breakdown": {
+        "src": 1372,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.043485151025324076
+    },
+    {
+      "name": "pelikan-pingproxy",
+      "path": "src/proxy/ping",
+      "layer": "Product",
+      "files": 2,
+      "loc": 171,
+      "breakdown": {
+        "src": 171,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.00541979651992013
+    },
+    {
+      "name": "pelikan-pingserver",
+      "path": "src/server/pingserver",
+      "layer": "Product",
+      "files": 1,
+      "loc": 116,
+      "breakdown": {
+        "src": 116,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.003676587112928275
+    },
+    {
+      "name": "pelikan-rds",
+      "path": "src/server/rds",
+      "layer": "Product",
+      "files": 6,
+      "loc": 565,
+      "breakdown": {
+        "src": 193,
+        "tests": 269,
+        "benches": 103
+      },
+      "share": 0.01790751481727996
+    },
+    {
+      "name": "pelikan-segcache",
+      "path": "src/server/segcache",
+      "layer": "Product",
+      "files": 6,
+      "loc": 794,
+      "breakdown": {
+        "src": 198,
+        "tests": 500,
+        "benches": 96
+      },
+      "share": 0.025165604893664227
+    },
+    {
+      "name": "protocol-admin",
+      "path": "src/protocol/admin",
+      "layer": "Protocol",
+      "files": 5,
+      "loc": 489,
+      "breakdown": {
+        "src": 455,
+        "tests": 0,
+        "benches": 34
+      },
+      "share": 0.015498716363982125
+    },
+    {
+      "name": "protocol-common",
+      "path": "src/protocol/common",
+      "layer": "Protocol",
+      "files": 1,
+      "loc": 71,
+      "breakdown": {
+        "src": 71,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.0022503248708440303
+    },
+    {
+      "name": "protocol-http",
+      "path": "src/protocol/http",
+      "layer": "Protocol",
+      "files": 7,
+      "loc": 714,
+      "breakdown": {
+        "src": 549,
+        "tests": 165,
+        "benches": 0
+      },
+      "share": 0.02263002757440335
+    },
+    {
+      "name": "protocol-memcache",
+      "path": "src/protocol/memcache",
+      "layer": "Protocol",
+      "files": 76,
+      "loc": 6963,
+      "breakdown": {
+        "src": 6889,
+        "tests": 0,
+        "benches": 74
+      },
+      "share": 0.22069031092516878
+    },
+    {
+      "name": "protocol-ping",
+      "path": "src/protocol/ping",
+      "layer": "Protocol",
+      "files": 16,
+      "loc": 579,
+      "breakdown": {
+        "src": 544,
+        "tests": 0,
+        "benches": 35
+      },
+      "share": 0.018351240848150614
+    },
+    {
+      "name": "protocol-resp",
+      "path": "src/protocol/resp",
+      "layer": "Protocol",
+      "files": 56,
+      "loc": 8191,
+      "breakdown": {
+        "src": 8191,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.2596114227758233
+    },
+    {
+      "name": "proxy",
+      "path": "src/core/proxy",
+      "layer": "Core",
+      "files": 5,
+      "loc": 1418,
+      "breakdown": {
+        "src": 1418,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.04494310798389908
+    },
+    {
+      "name": "queues",
+      "path": "src/queues",
+      "layer": "Core",
+      "files": 1,
+      "loc": 422,
+      "breakdown": {
+        "src": 422,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.013375170359101138
+    },
+    {
+      "name": "server",
+      "path": "src/core/server",
+      "layer": "Core",
+      "files": 7,
+      "loc": 1606,
+      "breakdown": {
+        "src": 1606,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.05090171468416215
+    },
+    {
+      "name": "session",
+      "path": "src/session",
+      "layer": "Core",
+      "files": 4,
+      "loc": 1265,
+      "breakdown": {
+        "src": 1265,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.040093816360812655
+    },
+    {
+      "name": "storage-types",
+      "path": "src/storage/types",
+      "layer": "Storage",
+      "files": 1,
+      "loc": 124,
+      "breakdown": {
+        "src": 124,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.003930144844854363
+    },
+    {
+      "name": "xtask",
+      "path": "xtask",
+      "layer": "Tooling",
+      "files": 6,
+      "loc": 2274,
+      "breakdown": {
+        "src": 2274,
+        "tests": 0,
+        "benches": 0
+      },
+      "share": 0.07207378529999049
+    }
+  ]
+}

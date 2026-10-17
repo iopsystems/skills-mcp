@@ -1,7 +1,7 @@
 ---
 status: open
 opened: 2026-10-14
-updated: 2026-10-14
+updated: 2026-10-16
 ---
 
 # Weighted source alongside architecture
@@ -67,12 +67,52 @@ execution of those scenarios. No diagram generator or rendered architecture
 artifact is produced by this skill edit. Prepared for pull-request review at
 the user's request; behavioral evaluation remains open.
 
+## Real repository rendering, 2026-10-16
+
+The conventions were run against Pelikan at `46b98c9`, a 23-crate workspace
+whose structure chart already follows this skill. The generator, inventory,
+textual equivalent, and rendered view are in
+`docs/evals/renderings/weighted-source-pelikan-v1/`. It is a standalone
+script rather than an addition to `cargo xtask diagrams`, because this is a
+trial of the conventions, not a change to Pelikan.
+
+What the conventions produced without trouble: a 31,551-line inventory from
+`cargo metadata` and `git ls-files`, each file owned by exactly one crate,
+classified by the structure chart's own layer table and failing on drift;
+physical LOC stated in the caption; one area scale across nested layers, with
+headers and gutters outside the quantitative area and the ratio asserted
+before rounding; a src/tests/benches breakdown by target directory, with
+inline test modules declared as unmeasured; the revision, dirty state,
+exclusions, and an inventory digest stamped.
+
+What the first rendering caught that the assertions had not:
+
+- The footer caption ran past the canvas. The generator bounds-checked every
+  rectangle and no text. The skill says bounds checks include external
+  labels; a generator that reads that as "rectangles" will pass its own
+  checks and fail the raster. Text now has an estimated-width check.
+- A 71-line crate rendered as a sliver 345 by 5 pixels, and the numeral
+  placed in it collided with the tile above. The skill says to label tiny
+  tiles outside; it does not say where, and at a panel edge there is
+  nowhere. The generator now reserves a callout strip under any layer whose
+  tiles are too small for a numeral, and draws a leader to it.
+- A fixed minimum label width let `protocol-admin` run to both edges of its
+  tile. The in-place decision now uses the same width estimate as the check.
+
+All three were visible in the raster and invisible to every numeric check,
+which is the case the skill's human-review gate makes. The rendered view is
+posted on skills-mcp#67 for that review; this entry does not record it as
+passed.
+
 ## Deferred or Reopen Items
 
-Run independent behavioral evaluation and a real repository rendering before
-claiming the quantitative conventions improve comprehension. A generated
-chart must still pass its project's human-review gate. This local edit does
-not approve a future chart or update an installed MCP binary.
+- Independent behavioral evaluation of the scenario corpus remains unrun.
+- The Pelikan view awaits its maintainer's review; a rendering that passed
+  its own checks is not a rendering that reads.
+- Whether a project adopting the companion should extend its existing
+  regeneration command or carry a second generator is unresolved; the trial
+  carried a second one and the skill's freshness rule assumes the first.
+- This entry does not update an installed MCP binary.
 
 ## Skills Used
 
