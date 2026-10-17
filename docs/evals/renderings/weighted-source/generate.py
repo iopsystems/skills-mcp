@@ -12,6 +12,7 @@ a machine-readable inventory, and a textual equivalent.
 """
 import argparse
 import hashlib
+import rustscan
 import json
 import os
 import subprocess
@@ -46,12 +47,15 @@ H1, H2, BODY = 20, 17, 14  # the build chart's ramp (charter override, #183)
 W, H = 1400, 900
 MARGIN = 24
 TITLE_H = 70
-LEGEND_H = 165
+LEGEND_H = 190
 HEADER_H = 28     # layer header strip, outside the quantitative area
 PAD = 6           # gutter inside a layer, outside the quantitative area
 GAP = 3           # gutter between leaves
 MIN_LABEL_W, MIN_LABEL_H = 96, 36
 MIN_NUM_W, MIN_NUM_H = 20, 18   # smallest tile that takes a numeral in place
+HATCH_MIN_PX = 4  # a verification strip narrower than this is not drawn, only tabled
+KINDS = ["test", "bench", "example", "fuzz", "proof"]
+DIR_KIND = {"tests": "test", "benches": "bench", "examples": "example", "fuzz": "fuzz"}
 CALLOUT_H = 20    # strip under a layer's data area for numerals that do not fit
 CHAR_W = 0.56     # text width estimate, em per character, for the text bounds check
 RATIO_TOL = 1e-6  # on allocated rectangles, before pixel rounding
@@ -106,15 +110,49 @@ def inventory(repo):
             sys.exit(f"unmapped source file: {f}")
         owner[f] = hits[0]  # longest manifest dir wins; nested crates are distinct members
     counts = {n: 0 for n in pkgs}
-    parts = {n: {"src": 0, "tests": 0, "benches": 0, "examples": 0} for n in pkgs}
+    parts = {n: {"production": 0, **{k: 0 for k in KINDS}} for n in pkgs}
     nfiles = {n: 0 for n in pkgs}
-    for f, n in owner.items():
-        loc = physical_loc(os.path.join(repo, f))
+    # Whole-file verification: a file under a target directory, or a module
+    # declared from a verification item (`#[cfg(test)] mod tests;`), and every
+    # file under such a module's directory.
+    whole = {}
+    for f in files:
+        rel = f[len(pkgs[owner[f]]) + 1:]
+        top = rel.split("/")[0]
+        if top in DIR_KIND:
+            whole[f] = DIR_KIND[top]
+    for f in files:
+        if f in whole:
+            continue
+        _, mods = rustscan.verification_lines(open(os.path.join(repo, f), encoding="utf-8", errors="replace").read())
+        for name, kind in mods:
+            child = rustscan.child_file(os.path.join(repo, f), name)
+            if child is None:
+                continue
+            crel = os.path.relpath(child, repo)
+            whole[crel] = kind
+            sub_dir = crel[:-3] + "/" if crel.endswith(".rs") and not crel.endswith("/mod.rs") else os.path.dirname(crel) + "/"
+            for g in files:
+                if g != crel and g.startswith(sub_dir) and (crel.endswith("/mod.rs") or not crel.endswith("lib.rs")):
+                    whole.setdefault(g, kind)
+    file_rows = []
+    for f, n in sorted(owner.items()):
+        src = open(os.path.join(repo, f), encoding="utf-8", errors="replace").read()
+        loc = rustscan.count_lines(src)
         counts[n] += loc
         nfiles[n] += 1
-        rel = f[len(pkgs[n]) + 1:]
-        top = rel.split("/")[0]
-        parts[n][top if top in ("tests", "benches", "examples") else "src"] += loc
+        if f in whole:
+            parts[n][whole[f]] += loc
+            file_rows.append({"path": f, "owner": n, "loc": loc, "classification": f"whole file: {whole[f]}", "verification": loc})
+        else:
+            kinds, _ = rustscan.verification_lines(src)
+            for kind, v in kinds.items():
+                parts[n][kind] += v
+            v = sum(kinds.values())
+            parts[n]["production"] += loc - v
+            file_rows.append({"path": f, "owner": n, "loc": loc,
+                              "classification": "production" if v == 0 else "mixed: " + ", ".join(f"{k} {c}" for k, c in sorted(kinds.items())),
+                              "verification": v})
     empty = [n for n, c in nfiles.items() if c == 0]
     if empty:
         sys.exit(f"members with no tracked .rs files: {empty}")
@@ -145,6 +183,7 @@ def inventory(repo):
     total = sum(counts.values())
     for c in comps:
         c["share"] = c["loc"] / total
+        c["verification"] = sum(c["breakdown"][k] for k in KINDS)
     branch = sh(["git", "rev-parse", "--abbrev-ref", "HEAD"], repo).strip()
     return {
         "repository": B["repository"],
@@ -158,11 +197,16 @@ def inventory(repo):
                  "(longest manifest directory); not the code compiled into any one binary",
         "counting_policy": "physical LOC: every line including comments and blanks; "
                            "a final unterminated line counts as one line",
-        "breakdown_policy": "src/tests/benches/examples by target directory within the crate; "
-                            "inline #[cfg(test)] modules stay in src (inline mixed, not measured)",
+        "breakdown_policy": "verification = files under tests/, benches/, examples/, fuzz/ (kind by directory); "
+                            "files declared by `mod x;` under #[cfg(test)] or #[cfg(kani)] and everything beneath them; "
+                            "and, inside any other file, items carrying #[cfg(test)], #[cfg(kani)], #[test], or "
+                            "#[kani::proof] (an any()/all() predicate containing test or kani counts; a file-level "
+                            "#![cfg(test)] makes the whole file verification), measured by a brace scanner that honors comments and literals "
+                            "(rustscan.py). cfg(not(test)) is production. Unclassifiable lines count as production.",
         "exclusions": exclusions,
         "root_total_loc": total,
         "components": comps,
+        "files": file_rows,
     }
 
 
@@ -280,6 +324,13 @@ def verify(inv, layer_rects, leaves, k, layer_loc):
     for L, (x, y, w, h) in layer_rects.items():
         px, py, pw, ph = panel
         assert x >= px - 1e-6 and y >= py - 1e-6 and x + w <= px + pw + 1e-6 and y + h <= py + ph + 1e-6, f"layer outside panel: {L}"
+    # verification strip: partition by weight gives area k * verification LOC exactly
+    for name, (L, (x, y, w, h)) in leaves.items():
+        v = comps[name]["verification"]
+        if v:
+            frac = v / comps[name]["loc"]
+            strip_area = (w * frac) * h if w >= h else w * (h * frac)
+            assert abs(strip_area / (k * v) - 1) < RATIO_TOL, f"hatch ratio {name}"
     # rendered geometry: rounding to 0.5px must keep every leaf within tolerance
     for name, (L, (x, y, w, h)) in leaves.items():
         rw, rh = round(w * 2) / 2, round(h * 2) / 2
@@ -311,7 +362,10 @@ def render(inv, layer_rects, leaves, k, layer_loc):
     total = inv["root_total_loc"]
     out = [f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" viewBox="0 0 {W} {H}">',
            '<!-- generated by generate.py (weighted-source trial), do not edit -->',
+           '<defs><pattern id="hatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">'
+           '<line x1="0" y1="0" x2="0" y2="7" stroke="#4D4D4D" stroke-width="1.4"/></pattern></defs>',
            '<rect width="100%" height="100%" fill="white"/>']
+    unhatched = []
     out.append(text(MARGIN, MARGIN + 14, f"{B['title']} — weighted source at a glance", H1, "bold"))
     out.append(text(MARGIN, MARGIN + 40,
                     f"Area ∝ physical LOC (comments and blanks included). {total:,} lines across "
@@ -338,9 +392,39 @@ def render(inv, layer_rects, leaves, k, layer_loc):
         out.append(f'<rect x="{gx:.1f}" y="{gy:.1f}" width="{gw:.1f}" height="{gh:.1f}" '
                    f'fill="{FILL[L]}" stroke="{stroke}" stroke-width="1.2"{dash}/>')
         c = comps[name]
+        # Verification share as a hatched strip along the tile's longer side,
+        # partitioned by weight so its area is k * verification LOC. Drawn only
+        # when the strip is at least HATCH_MIN_PX wide; otherwise tabled.
+        sx, sy, sw, sh = gx, gy, gw, gh  # solid part, for the label
+        if c["verification"] > 0:
+            frac = c["verification"] / c["loc"]
+            if w >= h:
+                strip = w * frac
+                hx, hy, hw, hh = x + w - strip, y, strip, h
+            else:
+                strip = h * frac
+                hx, hy, hw, hh = x, y + h - strip, w, strip
+            if strip - GAP >= HATCH_MIN_PX:
+                hgx, hgy, hgw, hgh = hx + GAP / 2, hy + GAP / 2, hw - GAP, hh - GAP
+                out.append(f'<rect x="{hgx:.1f}" y="{hgy:.1f}" width="{hgw:.1f}" height="{hgh:.1f}" fill="url(#hatch)"/>')
+                out.append(f'<line x1="{hgx:.1f}" y1="{hgy:.1f}" x2="{(hgx if w < h else hgx):.1f}" y2="{(hgy + hgh if w >= h else hgy):.1f}" stroke="{stroke}" stroke-width="0.8"/>' if False else
+                           (f'<line x1="{hgx:.1f}" y1="{gy:.1f}" x2="{hgx:.1f}" y2="{gy + gh:.1f}" stroke="#4D4D4D" stroke-width="0.8"/>' if w >= h else
+                            f'<line x1="{gx:.1f}" y1="{hgy:.1f}" x2="{gx + gw:.1f}" y2="{hgy:.1f}" stroke="#4D4D4D" stroke-width="0.8"/>'))
+                if w >= h:
+                    sw = hgx - gx
+                else:
+                    sh = hgy - gy
+            else:
+                unhatched.append(name)
         label = f"{c['loc']:,} · {100 * c['share']:.1f}%"
         name_w = max(len(name), len(label)) * BODY * CHAR_W + 8
-        if gw >= name_w and gh >= MIN_LABEL_H:
+        if sw >= name_w and sh >= MIN_LABEL_H:
+            out.append(text(sx + sw / 2, sy + sh / 2 - 8, name, BODY, "bold", "middle"))
+            out.append(text(sx + sw / 2, sy + sh / 2 + 9, label, BODY, "normal", "middle"))
+        elif gw >= name_w and gh >= MIN_LABEL_H:
+            # the label spans the hatched strip: a halo keeps it legible
+            out.append(f'<rect x="{gx + gw / 2 - name_w / 2:.1f}" y="{gy + gh / 2 - 17:.1f}" width="{name_w:.1f}" height="34" '
+                       f'fill="{FILL[L]}" fill-opacity="0.92" rx="2"/>')
             out.append(text(gx + gw / 2, gy + gh / 2 - 8, name, BODY, "bold", "middle"))
             out.append(text(gx + gw / 2, gy + gh / 2 + 9, label, BODY, "normal", "middle"))
         elif gw >= MIN_NUM_W and gh >= MIN_NUM_H:
@@ -357,7 +441,17 @@ def render(inv, layer_rects, leaves, k, layer_loc):
             out.append(f'<line x1="{gx + gw / 2:.1f}" y1="{gy + gh / 2:.1f}" x2="{cx:.1f}" y2="{cy - 8:.1f}" stroke="#4D4D4D" stroke-width="1"/>')
             out.append(text(cx, cy, str(len(keyed)), BODY, "bold", "middle"))
     # keyed legend for tiles too small to label in place
-    ly = H - LEGEND_H - MARGIN + 28
+    ly = H - LEGEND_H - MARGIN + 12
+    vtotal = sum(c["verification"] for c in comps.values())
+    out.append(f'<rect x="{MARGIN}" y="{ly - 7}" width="28" height="14" fill="url(#hatch)" stroke="#4D4D4D" stroke-width="0.8"/>')
+    out.append(text(MARGIN + 36, ly,
+                    f"Hatched: verification source (tests, benches, examples, fuzz targets, proof harnesses), "
+                    f"{vtotal:,} LOC · {100 * vtotal / total:.1f}% of the total, drawn to the same area scale.", BODY))
+    ly += 18
+    out.append(text(MARGIN + 36, ly,
+                    f"A strip under {HATCH_MIN_PX} px is tabled, not drawn"
+                    + (f": {', '.join(unhatched)}" if unhatched else "") + ".", BODY, fill="#4D4D4D"))
+    ly += 24
     out.append(text(MARGIN, ly, "Tiles labeled by number (too small for text; areas are exact):", BODY, "bold"))
     col_w = (W - 2 * MARGIN) / 3
     for i, (name, c) in enumerate(keyed):
@@ -419,12 +513,14 @@ def textual(inv, layer_loc):
              "| Layer | LOC | Share |", "| --- | ---: | ---: |"]
     for L in [l for l in LAYER_ORDER if l in layer_loc]:
         lines.append(f"| {L} | {layer_loc[L]:,} | {100 * layer_loc[L] / total:.1f}% |")
-    lines += ["", "| Crate | Layer | Path | Files | LOC | Share | src | tests | benches | examples |",
-              "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
+    vt = sum(c["verification"] for c in inv["components"])
+    lines += ["", f"**Verification source: {vt:,} LOC, {100 * vt / total:.1f}%** (tests, benches, examples, fuzz, proofs; see breakdown policy).",
+              "", "| Crate | Layer | Path | Files | LOC | Share | production | test | bench | example | fuzz | proof |",
+              "| --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |"]
     for c in sorted(inv["components"], key=lambda c: (-c["loc"], c["name"])):
         b = c["breakdown"]
         lines.append(f"| {c['name']} | {c['layer']} | `{c['path']}` | {c['files']} | {c['loc']:,} | "
-                     f"{100 * c['share']:.1f}% | {b['src']:,} | {b['tests']:,} | {b['benches']:,} | {b['examples']:,} |")
+                     f"{100 * c['share']:.1f}% | {b['production']:,} | {b['test']:,} | {b['bench']:,} | {b['example']:,} | {b['fuzz']:,} | {b['proof']:,} |")
     return "\n".join(lines) + "\n"
 
 
@@ -435,8 +531,8 @@ def self_test():
     LAYER_ORDER = ["Core", "Protocol", "Storage"]
     FILL = {L: "#FFFFFF" for L in LAYER_ORDER}
     def inv_of(pairs):
-        comps = [{"name": n, "path": n, "layer": L, "files": 1, "loc": loc,
-                  "breakdown": {"src": loc, "tests": 0, "benches": 0, "examples": 0}} for n, L, loc in pairs]
+        comps = [{"name": n, "path": n, "layer": L, "files": 1, "loc": loc, "verification": loc // 5,
+                  "breakdown": {"production": loc - loc // 5, "test": loc // 5, "bench": 0, "example": 0, "fuzz": 0, "proof": 0}} for n, L, loc in pairs]
         total = sum(c["loc"] for c in comps)
         for c in comps:
             c["share"] = c["loc"] / total if total else 0

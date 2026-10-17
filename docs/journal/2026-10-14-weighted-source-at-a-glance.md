@@ -129,9 +129,45 @@ The Pelikan checkout turned out to be on a feature branch too. The first
 record stamped the revision and said nothing about the branch; the caption
 now names any branch other than `main`.
 
+## Verification source as texture, 2026-10-16
+
+The crate tiles folded tests into source footprint. The maintainer's
+objection: with proof harnesses coming, a tile that grows when a Kani
+harness lands is a tile that misreports the engine. Two designs were
+weighed. A separate verification group keeps the weighted total honest and
+breaks containment, since tests belong to the crate they test. Texture
+keeps containment and spends the one channel the view had not used: each
+tile splits into a solid part and a hatched part, partitioned by weight, so
+the hatched area is the same `k` times verification LOC. The maintainer
+chose texture, and a second rule with it: every component is drawn, and
+significance decides only whether a tile's hatch is worth drawing. A strip
+under four pixels is tabled, not drawn, and the legend says so.
+
+The number under the hatch is measured, not guessed. The skill's warning
+against regexes over filenames is right and was being read as a reason to
+leave inline test modules in production. A brace scanner (`rustscan.py`)
+that honors comments, string, raw, byte and char literals, and lifetimes
+finds the extent of any item carrying `#[cfg(test)]`, `#[cfg(kani)]`,
+`#[test]`, or `#[kani::proof]`; `cfg(not(test))` is production; a
+`mod x;` declared under such an attribute makes the file and everything
+beneath it verification; files under `tests/`, `benches/`, `examples/`,
+and `fuzz/` are classified by directory. The inventory now lists every file
+with its classification so the figure can be audited.
+
+What that measured: Pelikan is 18.1% verification; cache-rs is 47.8%,
+with `segcache` at 7,477 of 15,487 lines and `ziplist` at 4,990 of 8,602.
+The crate-level view had called all of that production.
+
+The raster caught one more thing: a label that spans the hatched strip is
+hard to read on the hatching. Labels that cannot sit in the solid part now
+sit on a halo in the tile's own fill.
+
 ## Deferred or Reopen Items
 
 - Independent behavioral evaluation of the scenario corpus remains unrun.
+- The skill text still says to count handwritten source "including tests"
+  with no way to tell them apart. The texture rule and the parse method
+  belong in it; this trial establishes both work and does not yet move them.
 - Both views are normalized to their own total. Comparing them shows
   proportions, not absolute size: `segcache` at 56.6% of cache-rs is 15,487
   lines, `protocol-resp` at 26.0% of Pelikan is 8,191.
