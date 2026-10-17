@@ -117,6 +117,17 @@
         "Leave weighted-source-at-a-glance out of this change",
         "Do not: Add a treemap or require a LOC census for an unrelated runtime-only update"
       ]
+    },
+    {
+      "name": "tests inflate a component tile",
+      "prompt": "The segcache tile is the largest in the view, but a third of the crate is test modules and a Kani harness is coming. Make the view honest about that.",
+      "expectations": [
+        "Measure the verification share with a parser or brace scanner over cfg(test), cfg(kani), #[test], and #[kani::proof] items, and state the method",
+        "Draw the share as a hatched partition inside the tile, area to the same scale, keeping containment",
+        "Keep every component drawn; table a hatch strip narrower than the stated threshold rather than omitting the tile",
+        "Do not: Guess test lines from filenames or move tests into a separate group that shrinks the crate",
+        "Do not: Count code under cfg(not(test)) as verification"
+      ]
     }
   ]
 }

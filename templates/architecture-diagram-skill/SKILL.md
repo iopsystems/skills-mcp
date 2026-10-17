@@ -194,13 +194,21 @@ the other charts, while keeping their palette and typography.
   throughout. Do not label a newline count as code-only LOC. Handle a final
   unterminated line consistently. LOC measures source footprint, not runtime
   cost, complexity, quality, or the need for a refactor.
-- Default to repository-owned handwritten source, including tests. Exclude
-  vendored dependencies, generated output, build artifacts, and assets from
-  the weighted total; report their exclusions. If generated or vendored
-  source is requested, give it a distinct labeled group and subtotal. Treat
-  production, tests, and declarative data as named breakdowns where useful;
-  distinguish an inline mixed file from a measured separation. Do not guess
-  test LOC from filenames or regexes over Rust syntax.
+- Default to repository-owned handwritten source, including tests, and
+  measure the verification share of every component: tests, benches,
+  examples, fuzz targets, and proof harnesses. A tile that grows when a
+  proof harness lands misreports the component, and the share grows as
+  verification does. Measure it, never guess it from filenames: files under
+  the target directories classify by directory; a module declared under
+  `#[cfg(test)]` or `#[cfg(kani)]` is verification with everything beneath
+  it; inside any other file, the extent of each item carrying such an
+  attribute, `#[test]`, or `#[kani::proof]` comes from a parser or a brace
+  scanner that honors comments and literals, with `cfg(not(test))` as
+  production. State the method in the caption. Unclassifiable lines count
+  as production, so the error runs toward undercounting. Exclude vendored
+  dependencies, generated output, build artifacts, and assets from the
+  weighted total; report their exclusions. If generated or vendored source
+  is requested, give it a distinct labeled group and subtotal.
 - Assign each counted file to exactly one source owner. Count a library once
   even if several products depend on it. Validate curated ownership against
   the inventory: fail on an unmapped file, duplicate ownership, or stale
@@ -228,6 +236,16 @@ ratio). Place labels outside tiny tiles or group them into an explicit
 `Other` tile with their exact summed weight and a member list. Zero-LOC
 components get a listed zero, not an invented area. An empty inventory gets
 an empty-state explanation rather than a fabricated treemap.
+
+Draw the verification share as texture inside the tile, not as a separate
+tile: a hatched partition by weight, so its area is the same `k` times
+verification LOC and containment is unchanged. Texture is the channel
+color and area have not spent, and it reads for color-blind readers. Every
+component is drawn; significance decides only whether a tile's hatch is
+worth drawing. A strip narrower than a stated pixel threshold is tabled,
+not drawn, and the legend names the threshold and the tiles it applies
+to. A label that must span the hatch sits on a halo in the tile's own
+fill.
 
 Use deterministic ordering and tie-breaking. Every tile identifies its
 component, LOC, and share of the scoped total, either directly or through a

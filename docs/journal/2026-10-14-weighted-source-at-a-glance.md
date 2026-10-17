@@ -165,9 +165,12 @@ sit on a halo in the tile's own fill.
 ## Deferred or Reopen Items
 
 - Independent behavioral evaluation of the scenario corpus remains unrun.
-- The skill text still says to count handwritten source "including tests"
-  with no way to tell them apart. The texture rule and the parse method
-  belong in it; this trial establishes both work and does not yet move them.
+- The texture rule and the parse method are now in the skill and the
+  template: the counting bullet measures the verification share and names
+  the method, the area section draws it as a hatched partition with a
+  stated pixel threshold, the charter binds both, and one scenario covers
+  the case. Whether an agent following the text reproduces the trial is
+  the behavioral evaluation still unrun.
 - Both views are normalized to their own total. Comparing them shows
   proportions, not absolute size: `segcache` at 56.6% of cache-rs is 15,487
   lines, `protocol-resp` at 26.0% of Pelikan is 8,191.

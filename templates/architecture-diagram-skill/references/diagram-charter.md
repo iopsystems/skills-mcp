@@ -44,7 +44,10 @@ lives: `<paths>`.
 - Counting policy: `<physical LOC including comments and blank lines by
   default; counter/version/options if overridden>`
 - Ownership and categories: `<mapping to structure-chart components; shared
-  files, module facade files, inline tests, generated and vendored source>`
+  files, module facade files, generated and vendored source>`
+- Verification share: `<how tests, benches, examples, fuzz targets, and
+  proofs are measured (parser or scanner, attributes honored); hatch pixel
+  threshold below which a share is tabled rather than drawn>`
 - Inventory and textual equivalent: `<machine-readable counts, paths,
   categories, subtotals, percentages, exclusions, and content digest>`
 - Geometry: `<hierarchy, tiny-tile grouping/member list, zero handling,
