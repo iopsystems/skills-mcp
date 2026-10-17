@@ -11,7 +11,7 @@ what keeps the skill usable with no charter at all.
 
 | Chart | Half | Output | Generator module | Claims |
 | --- | --- | --- | --- | --- |
-| `<chart name>` | `<build/runtime>` | `<committed output path>` | `<source path>` | `<what holds it to the code>` |
+| `<chart name>` | `<structure/source-size/runtime>` | `<committed output path>` | `<source path>` | `<what holds it to the code>` |
 
 Record where charts are embedded and where each chart's textual equivalent
 lives: `<paths>`.
@@ -36,6 +36,24 @@ lives: `<paths>`.
   claims for asserted absences>`
 - Curated tables that need maintenance when the code changes (each validated
   at generation time so drift aborts the run): `<table names and locations>`
+
+### Weighted Source View (when in the inventory)
+
+- Source scope and revision: `<repository-owned source roots; all checked-in
+  source or selected targets/features; treatment of working-tree changes>`
+- Counting policy: `<physical LOC including comments and blank lines by
+  default; counter/version/options if overridden>`
+- Ownership and categories: `<mapping to structure-chart components; shared
+  files, module facade files, generated and vendored source>`
+- Verification share: `<how tests, benches, examples, fuzz targets, and
+  proofs are measured (parser or scanner, attributes honored); hatch pixel
+  threshold below which a share is tabled rather than drawn>`
+- Inventory and textual equivalent: `<machine-readable counts, paths,
+  categories, subtotals, percentages, exclusions, and content digest>`
+- Geometry: `<hierarchy, tiny-tile grouping/member list, zero handling,
+  rounding tolerance, and comparison scale if showing multiple panels>`
+- Checks: `<unique ownership, complete coverage, parent/root sums, area
+  proportionality, deterministic output, bounds, and label collisions>`
 
 ### Freshness
 

@@ -76,6 +76,89 @@
       "prohibited_outcomes": [
         "Mix dependency edges and request-flow edges on one chart"
       ]
+    },
+    {
+      "name": "activate for weighted source alongside structure",
+      "prompt": "Add weighted-source-at-a-glance to our Rust architecture diagram so component area reflects LOC alongside crate/module structure.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Derive an ownership-checked source inventory at the same revision as the structure chart",
+        "Render a hierarchical treemap with one linear LOC-to-area scale and shared component identifiers",
+        "Declare the physical-LOC default, source scope, exclusions, and adjacent textual equivalent",
+        "Keep dependency ordering in the structure chart and validate the source view through the same regeneration and review workflow"
+      ],
+      "prohibited_outcomes": [
+        "Hand-estimate LOC or use dependency count as a source-size proxy",
+        "Imply that treemap adjacency expresses dependency or runtime flow"
+      ]
+    },
+    {
+      "name": "shared library and parent source count once",
+      "prompt": "Two binaries share a library. The library has mod.rs plus child modules, inline tests, generated Rust output, and a vendored parser. Show where handwritten source size lives.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Count the shared library once rather than once per product",
+        "Give parent-owned mod.rs a leaf and compute parent totals from descendant leaves",
+        "Include handwritten tests, label inline mixed files honestly, and report generated/vendor exclusions",
+        "Abort on unassigned files, stale ownership mappings, or duplicate file ownership"
+      ],
+      "prohibited_outcomes": [
+        "Sum dependency closures or add parent totals to their children",
+        "Guess exact test LOC from filenames or regex over Rust syntax"
+      ]
+    },
+    {
+      "name": "area remains proportional under label pressure",
+      "prompt": "The source treemap has leaves of 100 and 400 LOC, tiny one-line files, and a zero-line component. Make every label legible by enlarging the tiny tiles.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Keep the 100:400 data-area ratio at 1:4 before documented pixel rounding",
+        "Use external labels or an exact-sum Other group with a member list for tiny tiles",
+        "List the zero component without giving it a fake positive area",
+        "Exclude decorative headers and gutters from the weighted data-area accounting"
+      ],
+      "prohibited_outcomes": [
+        "Apply a minimum tile area, logarithmic weighting, or both dimensions proportional to LOC",
+        "Rely on hover or color alone to disclose a component and its count"
+      ]
+    },
+    {
+      "name": "comparison normalization and freshness are explicit",
+      "prompt": "Compare source size before and after a refactor with two equal-sized treemap panels, and keep the result current in CI.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Use comparable scope and counting policy, and display both root totals",
+        "State whether panels share an absolute scale or are independently normalized proportions",
+        "Include both the machine-readable inventory and rendering in freshness checks",
+        "Record revision and uncommitted-content provenance without treating LOC as complexity"
+      ],
+      "prohibited_outcomes": [
+        "Infer absolute growth from equal-area independently normalized panels",
+        "Leave added or resized source files outside the regeneration inputs"
+      ]
+    },
+    {
+      "name": "runtime-only request does not force weighted companion",
+      "prompt": "Update only the worker-thread diagram after a queue rename. Do not add a source-size view.",
+      "should_trigger": true,
+      "required_outcomes": [
+        "Use the runtime chart workflow and preserve the requested scope",
+        "Leave weighted-source-at-a-glance out of this change"
+      ],
+      "prohibited_outcomes": [
+        "Add a treemap or require a LOC census for an unrelated runtime-only update"
+      ]
+    },
+    {
+      "name": "tests inflate a component tile",
+      "prompt": "The segcache tile is the largest in the view, but a third of the crate is test modules and a Kani harness is coming. Make the view honest about that.",
+      "expectations": [
+        "Measure the verification share with a parser or brace scanner over cfg(test), cfg(kani), #[test], and #[kani::proof] items, and state the method",
+        "Draw the share as a hatched partition inside the tile, area to the same scale, keeping containment",
+        "Keep every component drawn; table a hatch strip narrower than the stated threshold rather than omitting the tile",
+        "Do not: Guess test lines from filenames or move tests into a separate group that shrinks the crate",
+        "Do not: Count code under cfg(not(test)) as verification"
+      ]
     }
   ]
 }

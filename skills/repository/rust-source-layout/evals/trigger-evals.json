@@ -1,0 +1,79 @@
+{
+  "evals": [
+    {
+      "name": "mixed registry preserves public facade",
+      "prompt": "Our Rust streams.rs is 3,900 lines: 1,600 lines of stream tables, about 500 of schema/host discovery/limits/lookups, and 1,600 of tests and a witness table. Reorganize it without changing example_config::streams::* callers.",
+      "expectations": [
+        "Separate declarative registry data from substantial schema and runtime responsibilities",
+        "Keep host discovery and geometry rules in cohesive named modules rather than a leftovers helper file",
+        "Keep a facade with explicit re-exports preserving existing public paths and type identity",
+        "Move bulky tests and witness data behind cfg(test) without exposing production internals",
+        "Validate unchanged values, ordering, feature gates, and affected downstream compilation"
+      ]
+    },
+    {
+      "name": "coherent long table is not a defect by count",
+      "prompt": "This 1,200-line Rust file is a coherent declarative opcode table with a tiny lookup. Split it into files below 500 lines unless that makes maintenance worse; there is no project line limit.",
+      "expectations": [
+        "Treat the numeric size as an inspection signal rather than a universal limit",
+        "Keep the coherent table and its small lookup together if no semantic partition improves navigation",
+        "Do not create numbered chunks or one file per opcode"
+      ]
+    },
+    {
+      "name": "short mixed file still warrants a boundary",
+      "prompt": "A 280-line Rust module mixes CLI argument parsing, database retry policy, and a binary wire decoder. We are extending the decoder; suggest its source layout.",
+      "expectations": [
+        "Choose boundaries by responsibility despite the low total line count",
+        "Inspect callers and shared invariants before proposing the decoder's home",
+        "Keep the requested change scoped rather than forcing an unrelated subsystem redesign"
+      ]
+    },
+    {
+      "name": "small bug fix stays scoped",
+      "prompt": "Fix one comparison in a 2,500-line Rust module; the module has unrelated organization problems, but I only want the bug fix.",
+      "expectations": [
+        "Honor the narrow fix and avoid a broad file reorganization",
+        "Mention a concrete layout concern separately only if useful",
+        "Do not make skill use a prerequisite for unrelated cleanup"
+      ]
+    },
+    {
+      "name": "unsafe protocol stays understandable",
+      "prompt": "This ring-buffer module exceeds 500 production lines. Its atomic ordering, unsafe accesses, and lifetime rules implement one protocol. Should each impl and unsafe helper be moved to its own file?",
+      "expectations": [
+        "Keep the correctness-critical protocol visible together when fragmentation would hide its invariant",
+        "Consider independent adapters or bulky test data as safer boundaries",
+        "Do not widen visibility or add one-file-per-type modules to hit a numeric target"
+      ]
+    },
+    {
+      "name": "private unit tests remain private",
+      "prompt": "Move 1,500 lines of unit tests out of src/cache.rs. They use private internals and include a large fixture by relative path. Put them under the crate's top-level tests directory?",
+      "expectations": [
+        "Prefer a cfg(test) child module for tests requiring private internals",
+        "Keep the fixture test-only and correct its relative include path",
+        "Reserve crate-level integration tests for the public API",
+        "Do not make private implementation items public for the move"
+      ]
+    },
+    {
+      "name": "feature-gated facade retains consumers",
+      "prompt": "Split a public Rust module whose types are re-exported downstream under two platform features. The default unit tests pass after the move. Is that enough?",
+      "expectations": [
+        "Preserve feature and platform gates on moved definitions and facade re-exports",
+        "Check relevant supported feature configurations and downstream users",
+        "Report unavailable targets as a validation limit rather than claiming coverage"
+      ]
+    },
+    {
+      "name": "generated source excluded from mechanical splitting",
+      "prompt": "A generated protobuf Rust file is 8,000 lines. Make all Rust source files small without changing the generator or vendored code.",
+      "expectations": [
+        "Do not hand-edit generated output or vendored files",
+        "Explain the ownership boundary and leave generated code intact",
+        "Keep the skill focused on maintainable handwritten source rather than a blanket size gate"
+      ]
+    }
+  ]
+}

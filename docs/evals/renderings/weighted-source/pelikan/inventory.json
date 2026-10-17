@@ -1,0 +1,2154 @@
+{
+  "repository": "iopsystems/pelikan",
+  "revision": "46b98c9dc6fb70848808b903ba1d60a9655150be",
+  "branch": "spec/ziplist-collections",
+  "tracked_files_modified": [],
+  "untracked_paths": [
+    ".benchmark-harness-fix-test",
+    ".pr318-body.md",
+    ".ringline-runtime-followups-tls/",
+    ".ringline-runtime-followups/",
+    "resp-proto-kani/"
+  ],
+  "inventory_digest_sha256": "1120183e5538e945febbba70bdfdfc148f46ebc178f5731fa1cdbdd183333993",
+  "generated": "2026-10-16",
+  "scope": "all tracked *.rs files in Cargo workspace members, one owner each (longest manifest directory); not the code compiled into any one binary",
+  "counting_policy": "physical LOC: every line including comments and blanks; a final unterminated line counts as one line",
+  "breakdown_policy": "verification = files under tests/, benches/, examples/, fuzz/ (kind by directory); files declared by `mod x;` under #[cfg(test)] or #[cfg(kani)] and everything beneath them; and, inside any other file, items carrying #[cfg(test)], #[cfg(kani)], #[test], or #[kani::proof] (an any()/all() predicate containing test or kani counts; a file-level #![cfg(test)] makes the whole file verification), measured by a brace scanner that honors comments and literals (rustscan.py). cfg(not(test)) is production. Unclassifiable lines count as production.",
+  "exclusions": [
+    "tracked non-.rs files (toml: 37, md: 30, gitignore: 6, sh: 4, yml: 4, dict: 4, json: 3, svg: 3)",
+    "target/ and vendored dependencies (not tracked)"
+  ],
+  "root_total_loc": 31551,
+  "components": [
+    {
+      "name": "admin",
+      "path": "src/core/admin",
+      "layer": "Core",
+      "files": 1,
+      "loc": 775,
+      "breakdown": {
+        "production": 775,
+        "test": 0,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.02456340528033977,
+      "verification": 0
+    },
+    {
+      "name": "bloom",
+      "path": "src/storage/bloom",
+      "layer": "Storage",
+      "files": 2,
+      "loc": 317,
+      "breakdown": {
+        "production": 209,
+        "test": 57,
+        "bench": 51,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.010047225127571235,
+      "verification": 108
+    },
+    {
+      "name": "common",
+      "path": "src/common",
+      "layer": "Foundation",
+      "files": 7,
+      "loc": 242,
+      "breakdown": {
+        "production": 212,
+        "test": 30,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.00767012139076416,
+      "verification": 30
+    },
+    {
+      "name": "config",
+      "path": "src/config",
+      "layer": "Foundation",
+      "files": 22,
+      "loc": 2300,
+      "breakdown": {
+        "production": 2209,
+        "test": 91,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.07289784792875027,
+      "verification": 91
+    },
+    {
+      "name": "entrystore",
+      "path": "src/entrystore",
+      "layer": "Storage",
+      "files": 6,
+      "loc": 587,
+      "breakdown": {
+        "production": 587,
+        "test": 0,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.0186047985800767,
+      "verification": 0
+    },
+    {
+      "name": "logger",
+      "path": "src/logger",
+      "layer": "Foundation",
+      "files": 1,
+      "loc": 196,
+      "breakdown": {
+        "production": 196,
+        "test": 0,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.006212164432189154,
+      "verification": 0
+    },
+    {
+      "name": "pelikan-net",
+      "path": "src/net",
+      "layer": "Foundation",
+      "files": 9,
+      "loc": 1372,
+      "breakdown": {
+        "production": 1294,
+        "test": 78,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.043485151025324076,
+      "verification": 78
+    },
+    {
+      "name": "pelikan-pingproxy",
+      "path": "src/proxy/ping",
+      "layer": "Product",
+      "files": 2,
+      "loc": 171,
+      "breakdown": {
+        "production": 171,
+        "test": 0,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.00541979651992013,
+      "verification": 0
+    },
+    {
+      "name": "pelikan-pingserver",
+      "path": "src/server/pingserver",
+      "layer": "Product",
+      "files": 1,
+      "loc": 116,
+      "breakdown": {
+        "production": 116,
+        "test": 0,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.003676587112928275,
+      "verification": 0
+    },
+    {
+      "name": "pelikan-rds",
+      "path": "src/server/rds",
+      "layer": "Product",
+      "files": 6,
+      "loc": 565,
+      "breakdown": {
+        "production": 193,
+        "test": 269,
+        "bench": 103,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.01790751481727996,
+      "verification": 372
+    },
+    {
+      "name": "pelikan-segcache",
+      "path": "src/server/segcache",
+      "layer": "Product",
+      "files": 6,
+      "loc": 794,
+      "breakdown": {
+        "production": 198,
+        "test": 500,
+        "bench": 96,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.025165604893664227,
+      "verification": 596
+    },
+    {
+      "name": "protocol-admin",
+      "path": "src/protocol/admin",
+      "layer": "Protocol",
+      "files": 5,
+      "loc": 489,
+      "breakdown": {
+        "production": 340,
+        "test": 99,
+        "bench": 34,
+        "example": 0,
+        "fuzz": 16,
+        "proof": 0
+      },
+      "share": 0.015498716363982125,
+      "verification": 149
+    },
+    {
+      "name": "protocol-common",
+      "path": "src/protocol/common",
+      "layer": "Protocol",
+      "files": 1,
+      "loc": 71,
+      "breakdown": {
+        "production": 71,
+        "test": 0,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.0022503248708440303,
+      "verification": 0
+    },
+    {
+      "name": "protocol-http",
+      "path": "src/protocol/http",
+      "layer": "Protocol",
+      "files": 7,
+      "loc": 714,
+      "breakdown": {
+        "production": 549,
+        "test": 165,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.02263002757440335,
+      "verification": 165
+    },
+    {
+      "name": "protocol-memcache",
+      "path": "src/protocol/memcache",
+      "layer": "Protocol",
+      "files": 76,
+      "loc": 6963,
+      "breakdown": {
+        "production": 5601,
+        "test": 1105,
+        "bench": 74,
+        "example": 0,
+        "fuzz": 183,
+        "proof": 0
+      },
+      "share": 0.22069031092516878,
+      "verification": 1362
+    },
+    {
+      "name": "protocol-ping",
+      "path": "src/protocol/ping",
+      "layer": "Protocol",
+      "files": 16,
+      "loc": 579,
+      "breakdown": {
+        "production": 408,
+        "test": 120,
+        "bench": 35,
+        "example": 0,
+        "fuzz": 16,
+        "proof": 0
+      },
+      "share": 0.018351240848150614,
+      "verification": 171
+    },
+    {
+      "name": "protocol-resp",
+      "path": "src/protocol/resp",
+      "layer": "Protocol",
+      "files": 56,
+      "loc": 8191,
+      "breakdown": {
+        "production": 5954,
+        "test": 2216,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 21,
+        "proof": 0
+      },
+      "share": 0.2596114227758233,
+      "verification": 2237
+    },
+    {
+      "name": "proxy",
+      "path": "src/core/proxy",
+      "layer": "Core",
+      "files": 5,
+      "loc": 1418,
+      "breakdown": {
+        "production": 1418,
+        "test": 0,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.04494310798389908,
+      "verification": 0
+    },
+    {
+      "name": "queues",
+      "path": "src/queues",
+      "layer": "Core",
+      "files": 1,
+      "loc": 422,
+      "breakdown": {
+        "production": 282,
+        "test": 140,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.013375170359101138,
+      "verification": 140
+    },
+    {
+      "name": "server",
+      "path": "src/core/server",
+      "layer": "Core",
+      "files": 7,
+      "loc": 1606,
+      "breakdown": {
+        "production": 1606,
+        "test": 0,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.05090171468416215,
+      "verification": 0
+    },
+    {
+      "name": "session",
+      "path": "src/session",
+      "layer": "Core",
+      "files": 4,
+      "loc": 1265,
+      "breakdown": {
+        "production": 1054,
+        "test": 211,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.040093816360812655,
+      "verification": 211
+    },
+    {
+      "name": "storage-types",
+      "path": "src/storage/types",
+      "layer": "Storage",
+      "files": 1,
+      "loc": 124,
+      "breakdown": {
+        "production": 124,
+        "test": 0,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.003930144844854363,
+      "verification": 0
+    },
+    {
+      "name": "xtask",
+      "path": "xtask",
+      "layer": "Tooling",
+      "files": 6,
+      "loc": 2274,
+      "breakdown": {
+        "production": 2274,
+        "test": 0,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.07207378529999049,
+      "verification": 0
+    }
+  ],
+  "files": [
+    {
+      "path": "src/common/src/bytes.rs",
+      "owner": "common",
+      "loc": 37,
+      "classification": "mixed: test 16",
+      "verification": 16
+    },
+    {
+      "path": "src/common/src/expiry.rs",
+      "owner": "common",
+      "loc": 79,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/common/src/lib.rs",
+      "owner": "common",
+      "loc": 10,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/common/src/metrics.rs",
+      "owner": "common",
+      "loc": 32,
+      "classification": "mixed: test 14",
+      "verification": 14
+    },
+    {
+      "path": "src/common/src/signal.rs",
+      "owner": "common",
+      "loc": 9,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/common/src/ssl.rs",
+      "owner": "common",
+      "loc": 58,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/common/src/traits.rs",
+      "owner": "common",
+      "loc": 17,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/admin.rs",
+      "owner": "config",
+      "loc": 171,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/array.rs",
+      "owner": "config",
+      "loc": 40,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/buf.rs",
+      "owner": "config",
+      "loc": 56,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/dbuf.rs",
+      "owner": "config",
+      "loc": 40,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/debug.rs",
+      "owner": "config",
+      "loc": 100,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/human_size.rs",
+      "owner": "config",
+      "loc": 164,
+      "classification": "mixed: test 45",
+      "verification": 45
+    },
+    {
+      "path": "src/config/src/klog.rs",
+      "owner": "config",
+      "loc": 98,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/lib.rs",
+      "owner": "config",
+      "loc": 49,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/pingproxy.rs",
+      "owner": "config",
+      "loc": 188,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/pingserver.rs",
+      "owner": "config",
+      "loc": 180,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/proxy.rs",
+      "owner": "config",
+      "loc": 207,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/rds.rs",
+      "owner": "config",
+      "loc": 224,
+      "classification": "mixed: test 23",
+      "verification": 23
+    },
+    {
+      "path": "src/config/src/seg.rs",
+      "owner": "config",
+      "loc": 160,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/segcache.rs",
+      "owner": "config",
+      "loc": 224,
+      "classification": "mixed: test 23",
+      "verification": 23
+    },
+    {
+      "path": "src/config/src/server.rs",
+      "owner": "config",
+      "loc": 88,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/sockio.rs",
+      "owner": "config",
+      "loc": 41,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/stats_log.rs",
+      "owner": "config",
+      "loc": 53,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/tcp.rs",
+      "owner": "config",
+      "loc": 53,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/time.rs",
+      "owner": "config",
+      "loc": 44,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/tls.rs",
+      "owner": "config",
+      "loc": 42,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/units.rs",
+      "owner": "config",
+      "loc": 8,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/config/src/worker.rs",
+      "owner": "config",
+      "loc": 70,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/admin/src/lib.rs",
+      "owner": "admin",
+      "loc": 775,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/proxy/src/backend.rs",
+      "owner": "proxy",
+      "loc": 331,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/proxy/src/frontend.rs",
+      "owner": "proxy",
+      "loc": 412,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/proxy/src/lib.rs",
+      "owner": "proxy",
+      "loc": 86,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/proxy/src/listener.rs",
+      "owner": "proxy",
+      "loc": 344,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/proxy/src/process.rs",
+      "owner": "proxy",
+      "loc": 245,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/server/src/lib.rs",
+      "owner": "server",
+      "loc": 158,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/server/src/listener.rs",
+      "owner": "server",
+      "loc": 343,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/server/src/process.rs",
+      "owner": "server",
+      "loc": 166,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/server/src/workers/mod.rs",
+      "owner": "server",
+      "loc": 226,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/server/src/workers/multi.rs",
+      "owner": "server",
+      "loc": 263,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/server/src/workers/single.rs",
+      "owner": "server",
+      "loc": 287,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/core/server/src/workers/storage.rs",
+      "owner": "server",
+      "loc": 163,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/entrystore/src/lib.rs",
+      "owner": "entrystore",
+      "loc": 27,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/entrystore/src/noop/mod.rs",
+      "owner": "entrystore",
+      "loc": 27,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/entrystore/src/noop/ping.rs",
+      "owner": "entrystore",
+      "loc": 19,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/entrystore/src/segcache/memcache.rs",
+      "owner": "entrystore",
+      "loc": 391,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/entrystore/src/segcache/mod.rs",
+      "owner": "entrystore",
+      "loc": 70,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/entrystore/src/segcache/resp.rs",
+      "owner": "entrystore",
+      "loc": 53,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/logger/src/lib.rs",
+      "owner": "logger",
+      "loc": 196,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/net/src/connector.rs",
+      "owner": "pelikan-net",
+      "loc": 42,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/net/src/lib.rs",
+      "owner": "pelikan-net",
+      "loc": 48,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/net/src/listener.rs",
+      "owner": "pelikan-net",
+      "loc": 117,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/net/src/metrics.rs",
+      "owner": "pelikan-net",
+      "loc": 70,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/net/src/stream.rs",
+      "owner": "pelikan-net",
+      "loc": 196,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/net/src/tcp.rs",
+      "owner": "pelikan-net",
+      "loc": 331,
+      "classification": "mixed: test 78",
+      "verification": 78
+    },
+    {
+      "path": "src/net/src/tls_tcp/mod.rs",
+      "owner": "pelikan-net",
+      "loc": 6,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/net/src/tls_tcp/rustls_impl.rs",
+      "owner": "pelikan-net",
+      "loc": 522,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/net/src/waker.rs",
+      "owner": "pelikan-net",
+      "loc": 40,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/admin/benches/admin.rs",
+      "owner": "protocol-admin",
+      "loc": 34,
+      "classification": "whole file: bench",
+      "verification": 34
+    },
+    {
+      "path": "src/protocol/admin/fuzz/fuzz_targets/admin.rs",
+      "owner": "protocol-admin",
+      "loc": 16,
+      "classification": "whole file: fuzz",
+      "verification": 16
+    },
+    {
+      "path": "src/protocol/admin/src/admin.rs",
+      "owner": "protocol-admin",
+      "loc": 294,
+      "classification": "mixed: test 99",
+      "verification": 99
+    },
+    {
+      "path": "src/protocol/admin/src/lib.rs",
+      "owner": "protocol-admin",
+      "loc": 23,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/admin/src/snapshots.rs",
+      "owner": "protocol-admin",
+      "loc": 122,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/common/src/lib.rs",
+      "owner": "protocol-common",
+      "loc": 71,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/http/src/error.rs",
+      "owner": "protocol-http",
+      "loc": 57,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/http/src/lib.rs",
+      "owner": "protocol-http",
+      "loc": 38,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/http/src/request.rs",
+      "owner": "protocol-http",
+      "loc": 207,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/http/src/response.rs",
+      "owner": "protocol-http",
+      "loc": 208,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/http/src/util.rs",
+      "owner": "protocol-http",
+      "loc": 39,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/http/tests/request.rs",
+      "owner": "protocol-http",
+      "loc": 108,
+      "classification": "whole file: test",
+      "verification": 108
+    },
+    {
+      "path": "src/protocol/http/tests/response.rs",
+      "owner": "protocol-http",
+      "loc": 57,
+      "classification": "whole file: test",
+      "verification": 57
+    },
+    {
+      "path": "src/protocol/memcache/benches/request_parsing.rs",
+      "owner": "protocol-memcache",
+      "loc": 74,
+      "classification": "whole file: bench",
+      "verification": 74
+    },
+    {
+      "path": "src/protocol/memcache/fuzz/fuzz_targets/memcache_binary.rs",
+      "owner": "protocol-memcache",
+      "loc": 87,
+      "classification": "whole file: fuzz",
+      "verification": 87
+    },
+    {
+      "path": "src/protocol/memcache/fuzz/fuzz_targets/memcache_text.rs",
+      "owner": "protocol-memcache",
+      "loc": 96,
+      "classification": "whole file: fuzz",
+      "verification": 96
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/mod.rs",
+      "owner": "protocol-memcache",
+      "loc": 266,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/request/delete.rs",
+      "owner": "protocol-memcache",
+      "loc": 105,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/request/get.rs",
+      "owner": "protocol-memcache",
+      "loc": 271,
+      "classification": "mixed: test 138",
+      "verification": 138
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/request/header.rs",
+      "owner": "protocol-memcache",
+      "loc": 132,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/request/mod.rs",
+      "owner": "protocol-memcache",
+      "loc": 10,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/request/set.rs",
+      "owner": "protocol-memcache",
+      "loc": 135,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/request/version.rs",
+      "owner": "protocol-memcache",
+      "loc": 100,
+      "classification": "mixed: test 45",
+      "verification": 45
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/response/delete.rs",
+      "owner": "protocol-memcache",
+      "loc": 83,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/response/get.rs",
+      "owner": "protocol-memcache",
+      "loc": 158,
+      "classification": "mixed: test 31",
+      "verification": 31
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/response/header.rs",
+      "owner": "protocol-memcache",
+      "loc": 143,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/response/mod.rs",
+      "owner": "protocol-memcache",
+      "loc": 8,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/response/set.rs",
+      "owner": "protocol-memcache",
+      "loc": 90,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/binary/response/version.rs",
+      "owner": "protocol-memcache",
+      "loc": 106,
+      "classification": "mixed: test 42",
+      "verification": 42
+    },
+    {
+      "path": "src/protocol/memcache/src/lib.rs",
+      "owner": "protocol-memcache",
+      "loc": 42,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/metrics.rs",
+      "owner": "protocol-memcache",
+      "loc": 224,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/add.rs",
+      "owner": "protocol-memcache",
+      "loc": 59,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/append.rs",
+      "owner": "protocol-memcache",
+      "loc": 59,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/cas.rs",
+      "owner": "protocol-memcache",
+      "loc": 66,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/decr.rs",
+      "owner": "protocol-memcache",
+      "loc": 41,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/delete.rs",
+      "owner": "protocol-memcache",
+      "loc": 37,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/flush_all.rs",
+      "owner": "protocol-memcache",
+      "loc": 27,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/get.rs",
+      "owner": "protocol-memcache",
+      "loc": 50,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/incr.rs",
+      "owner": "protocol-memcache",
+      "loc": 41,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/mod.rs",
+      "owner": "protocol-memcache",
+      "loc": 326,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/prepend.rs",
+      "owner": "protocol-memcache",
+      "loc": 59,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/quit.rs",
+      "owner": "protocol-memcache",
+      "loc": 16,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/replace.rs",
+      "owner": "protocol-memcache",
+      "loc": 59,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/set.rs",
+      "owner": "protocol-memcache",
+      "loc": 60,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/request/version.rs",
+      "owner": "protocol-memcache",
+      "loc": 18,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/response/client_error.rs",
+      "owner": "protocol-memcache",
+      "loc": 78,
+      "classification": "mixed: test 17",
+      "verification": 17
+    },
+    {
+      "path": "src/protocol/memcache/src/response/deleted.rs",
+      "owner": "protocol-memcache",
+      "loc": 65,
+      "classification": "mixed: test 17",
+      "verification": 17
+    },
+    {
+      "path": "src/protocol/memcache/src/response/error.rs",
+      "owner": "protocol-memcache",
+      "loc": 67,
+      "classification": "mixed: test 11",
+      "verification": 11
+    },
+    {
+      "path": "src/protocol/memcache/src/response/exists.rs",
+      "owner": "protocol-memcache",
+      "loc": 65,
+      "classification": "mixed: test 17",
+      "verification": 17
+    },
+    {
+      "path": "src/protocol/memcache/src/response/mod.rs",
+      "owner": "protocol-memcache",
+      "loc": 280,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/response/not_found.rs",
+      "owner": "protocol-memcache",
+      "loc": 65,
+      "classification": "mixed: test 17",
+      "verification": 17
+    },
+    {
+      "path": "src/protocol/memcache/src/response/not_stored.rs",
+      "owner": "protocol-memcache",
+      "loc": 65,
+      "classification": "mixed: test 17",
+      "verification": 17
+    },
+    {
+      "path": "src/protocol/memcache/src/response/numeric.rs",
+      "owner": "protocol-memcache",
+      "loc": 59,
+      "classification": "mixed: test 17",
+      "verification": 17
+    },
+    {
+      "path": "src/protocol/memcache/src/response/server_error.rs",
+      "owner": "protocol-memcache",
+      "loc": 86,
+      "classification": "mixed: test 17",
+      "verification": 17
+    },
+    {
+      "path": "src/protocol/memcache/src/response/stored.rs",
+      "owner": "protocol-memcache",
+      "loc": 65,
+      "classification": "mixed: test 17",
+      "verification": 17
+    },
+    {
+      "path": "src/protocol/memcache/src/response/values.rs",
+      "owner": "protocol-memcache",
+      "loc": 238,
+      "classification": "mixed: test 49",
+      "verification": 49
+    },
+    {
+      "path": "src/protocol/memcache/src/response/version.rs",
+      "owner": "protocol-memcache",
+      "loc": 35,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/storage/mod.rs",
+      "owner": "protocol-memcache",
+      "loc": 21,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/mod.rs",
+      "owner": "protocol-memcache",
+      "loc": 260,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/add.rs",
+      "owner": "protocol-memcache",
+      "loc": 111,
+      "classification": "mixed: test 39",
+      "verification": 39
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/append.rs",
+      "owner": "protocol-memcache",
+      "loc": 115,
+      "classification": "mixed: test 39",
+      "verification": 39
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/cas.rs",
+      "owner": "protocol-memcache",
+      "loc": 166,
+      "classification": "mixed: test 41",
+      "verification": 41
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/decr.rs",
+      "owner": "protocol-memcache",
+      "loc": 79,
+      "classification": "mixed: test 22",
+      "verification": 22
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/delete.rs",
+      "owner": "protocol-memcache",
+      "loc": 112,
+      "classification": "mixed: test 22",
+      "verification": 22
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/flush_all.rs",
+      "owner": "protocol-memcache",
+      "loc": 156,
+      "classification": "mixed: test 57",
+      "verification": 57
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/get.rs",
+      "owner": "protocol-memcache",
+      "loc": 178,
+      "classification": "mixed: test 74",
+      "verification": 74
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/gets.rs",
+      "owner": "protocol-memcache",
+      "loc": 116,
+      "classification": "mixed: test 74",
+      "verification": 74
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/incr.rs",
+      "owner": "protocol-memcache",
+      "loc": 147,
+      "classification": "mixed: test 58",
+      "verification": 58
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/mod.rs",
+      "owner": "protocol-memcache",
+      "loc": 20,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/prepend.rs",
+      "owner": "protocol-memcache",
+      "loc": 115,
+      "classification": "mixed: test 39",
+      "verification": 39
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/quit.rs",
+      "owner": "protocol-memcache",
+      "loc": 40,
+      "classification": "mixed: test 15",
+      "verification": 15
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/replace.rs",
+      "owner": "protocol-memcache",
+      "loc": 115,
+      "classification": "mixed: test 39",
+      "verification": 39
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/set.rs",
+      "owner": "protocol-memcache",
+      "loc": 159,
+      "classification": "mixed: test 41",
+      "verification": 41
+    },
+    {
+      "path": "src/protocol/memcache/src/text/request/version.rs",
+      "owner": "protocol-memcache",
+      "loc": 40,
+      "classification": "mixed: test 15",
+      "verification": 15
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/add.rs",
+      "owner": "protocol-memcache",
+      "loc": 39,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/append.rs",
+      "owner": "protocol-memcache",
+      "loc": 46,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/cas.rs",
+      "owner": "protocol-memcache",
+      "loc": 49,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/decr.rs",
+      "owner": "protocol-memcache",
+      "loc": 46,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/delete.rs",
+      "owner": "protocol-memcache",
+      "loc": 46,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/flush_all.rs",
+      "owner": "protocol-memcache",
+      "loc": 39,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/get.rs",
+      "owner": "protocol-memcache",
+      "loc": 123,
+      "classification": "mixed: test 53",
+      "verification": 53
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/incr.rs",
+      "owner": "protocol-memcache",
+      "loc": 46,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/mod.rs",
+      "owner": "protocol-memcache",
+      "loc": 19,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/prepend.rs",
+      "owner": "protocol-memcache",
+      "loc": 46,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/quit.rs",
+      "owner": "protocol-memcache",
+      "loc": 21,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/replace.rs",
+      "owner": "protocol-memcache",
+      "loc": 46,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/set.rs",
+      "owner": "protocol-memcache",
+      "loc": 46,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/memcache/src/text/response/version.rs",
+      "owner": "protocol-memcache",
+      "loc": 51,
+      "classification": "mixed: test 25",
+      "verification": 25
+    },
+    {
+      "path": "src/protocol/memcache/src/util.rs",
+      "owner": "protocol-memcache",
+      "loc": 134,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/benches/ping.rs",
+      "owner": "protocol-ping",
+      "loc": 35,
+      "classification": "whole file: bench",
+      "verification": 35
+    },
+    {
+      "path": "src/protocol/ping/fuzz/fuzz_targets/ping.rs",
+      "owner": "protocol-ping",
+      "loc": 16,
+      "classification": "whole file: fuzz",
+      "verification": 16
+    },
+    {
+      "path": "src/protocol/ping/src/lib.rs",
+      "owner": "protocol-ping",
+      "loc": 79,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/src/ping/mod.rs",
+      "owner": "protocol-ping",
+      "loc": 11,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/src/ping/storage/mod.rs",
+      "owner": "protocol-ping",
+      "loc": 13,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/mod.rs",
+      "owner": "protocol-ping",
+      "loc": 11,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/request/compose.rs",
+      "owner": "protocol-ping",
+      "loc": 18,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/request/keyword.rs",
+      "owner": "protocol-ping",
+      "loc": 26,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/request/mod.rs",
+      "owner": "protocol-ping",
+      "loc": 32,
+      "classification": "mixed: test 2",
+      "verification": 2
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/request/parse.rs",
+      "owner": "protocol-ping",
+      "loc": 70,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/request/test.rs",
+      "owner": "protocol-ping",
+      "loc": 58,
+      "classification": "whole file: test",
+      "verification": 58
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/response/compose.rs",
+      "owner": "protocol-ping",
+      "loc": 18,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/response/keyword.rs",
+      "owner": "protocol-ping",
+      "loc": 26,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/response/mod.rs",
+      "owner": "protocol-ping",
+      "loc": 20,
+      "classification": "mixed: test 2",
+      "verification": 2
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/response/parse.rs",
+      "owner": "protocol-ping",
+      "loc": 88,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/ping/src/ping/wire/response/test.rs",
+      "owner": "protocol-ping",
+      "loc": 58,
+      "classification": "whole file: test",
+      "verification": 58
+    },
+    {
+      "path": "src/protocol/resp/fuzz/fuzz_targets/resp.rs",
+      "owner": "protocol-resp",
+      "loc": 21,
+      "classification": "whole file: fuzz",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/lib.rs",
+      "owner": "protocol-resp",
+      "loc": 64,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/resp/src/message/array.rs",
+      "owner": "protocol-resp",
+      "loc": 153,
+      "classification": "mixed: test 36",
+      "verification": 36
+    },
+    {
+      "path": "src/protocol/resp/src/message/bulk_string.rs",
+      "owner": "protocol-resp",
+      "loc": 129,
+      "classification": "mixed: test 24",
+      "verification": 24
+    },
+    {
+      "path": "src/protocol/resp/src/message/error.rs",
+      "owner": "protocol-resp",
+      "loc": 48,
+      "classification": "mixed: test 17",
+      "verification": 17
+    },
+    {
+      "path": "src/protocol/resp/src/message/integer.rs",
+      "owner": "protocol-resp",
+      "loc": 54,
+      "classification": "mixed: test 14",
+      "verification": 14
+    },
+    {
+      "path": "src/protocol/resp/src/message/mod.rs",
+      "owner": "protocol-resp",
+      "loc": 130,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/resp/src/message/simple_string.rs",
+      "owner": "protocol-resp",
+      "loc": 60,
+      "classification": "mixed: test 17",
+      "verification": 17
+    },
+    {
+      "path": "src/protocol/resp/src/parse/command.rs",
+      "owner": "protocol-resp",
+      "loc": 269,
+      "classification": "mixed: test 40",
+      "verification": 40
+    },
+    {
+      "path": "src/protocol/resp/src/parse/error.rs",
+      "owner": "protocol-resp",
+      "loc": 97,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/resp/src/parse/mod.rs",
+      "owner": "protocol-resp",
+      "loc": 11,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/resp/src/parse/parser.rs",
+      "owner": "protocol-resp",
+      "loc": 500,
+      "classification": "mixed: test 141",
+      "verification": 141
+    },
+    {
+      "path": "src/protocol/resp/src/request/badd.rs",
+      "owner": "protocol-resp",
+      "loc": 170,
+      "classification": "mixed: test 39",
+      "verification": 39
+    },
+    {
+      "path": "src/protocol/resp/src/request/del.rs",
+      "owner": "protocol-resp",
+      "loc": 96,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/get.rs",
+      "owner": "protocol-resp",
+      "loc": 122,
+      "classification": "mixed: test 29",
+      "verification": 29
+    },
+    {
+      "path": "src/protocol/resp/src/request/hdel.rs",
+      "owner": "protocol-resp",
+      "loc": 124,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/hexists.rs",
+      "owner": "protocol-resp",
+      "loc": 120,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/hget.rs",
+      "owner": "protocol-resp",
+      "loc": 120,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/hgetall.rs",
+      "owner": "protocol-resp",
+      "loc": 105,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/hincrby.rs",
+      "owner": "protocol-resp",
+      "loc": 112,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/hkeys.rs",
+      "owner": "protocol-resp",
+      "loc": 105,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/hlen.rs",
+      "owner": "protocol-resp",
+      "loc": 104,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/hmget.rs",
+      "owner": "protocol-resp",
+      "loc": 134,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/hset.rs",
+      "owner": "protocol-resp",
+      "loc": 166,
+      "classification": "mixed: test 36",
+      "verification": 36
+    },
+    {
+      "path": "src/protocol/resp/src/request/hvals.rs",
+      "owner": "protocol-resp",
+      "loc": 104,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/lindex.rs",
+      "owner": "protocol-resp",
+      "loc": 103,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/llen.rs",
+      "owner": "protocol-resp",
+      "loc": 86,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/lpop.rs",
+      "owner": "protocol-resp",
+      "loc": 105,
+      "classification": "mixed: test 27",
+      "verification": 27
+    },
+    {
+      "path": "src/protocol/resp/src/request/lpush.rs",
+      "owner": "protocol-resp",
+      "loc": 111,
+      "classification": "mixed: test 24",
+      "verification": 24
+    },
+    {
+      "path": "src/protocol/resp/src/request/lrange.rs",
+      "owner": "protocol-resp",
+      "loc": 107,
+      "classification": "mixed: test 22",
+      "verification": 22
+    },
+    {
+      "path": "src/protocol/resp/src/request/ltrim.rs",
+      "owner": "protocol-resp",
+      "loc": 107,
+      "classification": "mixed: test 22",
+      "verification": 22
+    },
+    {
+      "path": "src/protocol/resp/src/request/mod.rs",
+      "owner": "protocol-resp",
+      "loc": 373,
+      "classification": "mixed: test 11",
+      "verification": 11
+    },
+    {
+      "path": "src/protocol/resp/src/request/rpop.rs",
+      "owner": "protocol-resp",
+      "loc": 105,
+      "classification": "mixed: test 27",
+      "verification": 27
+    },
+    {
+      "path": "src/protocol/resp/src/request/rpush.rs",
+      "owner": "protocol-resp",
+      "loc": 111,
+      "classification": "mixed: test 24",
+      "verification": 24
+    },
+    {
+      "path": "src/protocol/resp/src/request/sadd.rs",
+      "owner": "protocol-resp",
+      "loc": 113,
+      "classification": "mixed: test 24",
+      "verification": 24
+    },
+    {
+      "path": "src/protocol/resp/src/request/sdiff.rs",
+      "owner": "protocol-resp",
+      "loc": 96,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/set.rs",
+      "owner": "protocol-resp",
+      "loc": 324,
+      "classification": "mixed: test 50",
+      "verification": 50
+    },
+    {
+      "path": "src/protocol/resp/src/request/sinter.rs",
+      "owner": "protocol-resp",
+      "loc": 96,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/sismember.rs",
+      "owner": "protocol-resp",
+      "loc": 105,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/smembers.rs",
+      "owner": "protocol-resp",
+      "loc": 96,
+      "classification": "mixed: test 29",
+      "verification": 29
+    },
+    {
+      "path": "src/protocol/resp/src/request/srem.rs",
+      "owner": "protocol-resp",
+      "loc": 109,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/sunion.rs",
+      "owner": "protocol-resp",
+      "loc": 96,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/zadd.rs",
+      "owner": "protocol-resp",
+      "loc": 320,
+      "classification": "mixed: test 143",
+      "verification": 143
+    },
+    {
+      "path": "src/protocol/resp/src/request/zcard.rs",
+      "owner": "protocol-resp",
+      "loc": 108,
+      "classification": "mixed: test 29",
+      "verification": 29
+    },
+    {
+      "path": "src/protocol/resp/src/request/zcount.rs",
+      "owner": "protocol-resp",
+      "loc": 224,
+      "classification": "mixed: test 57",
+      "verification": 57
+    },
+    {
+      "path": "src/protocol/resp/src/request/zincrby.rs",
+      "owner": "protocol-resp",
+      "loc": 134,
+      "classification": "mixed: test 34",
+      "verification": 34
+    },
+    {
+      "path": "src/protocol/resp/src/request/zmscore.rs",
+      "owner": "protocol-resp",
+      "loc": 126,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/zrange.rs",
+      "owner": "protocol-resp",
+      "loc": 844,
+      "classification": "mixed: test 590",
+      "verification": 590
+    },
+    {
+      "path": "src/protocol/resp/src/request/zrank.rs",
+      "owner": "protocol-resp",
+      "loc": 143,
+      "classification": "mixed: test 37",
+      "verification": 37
+    },
+    {
+      "path": "src/protocol/resp/src/request/zrem.rs",
+      "owner": "protocol-resp",
+      "loc": 125,
+      "classification": "mixed: test 26",
+      "verification": 26
+    },
+    {
+      "path": "src/protocol/resp/src/request/zrevrank.rs",
+      "owner": "protocol-resp",
+      "loc": 143,
+      "classification": "mixed: test 37",
+      "verification": 37
+    },
+    {
+      "path": "src/protocol/resp/src/request/zscore.rs",
+      "owner": "protocol-resp",
+      "loc": 111,
+      "classification": "mixed: test 21",
+      "verification": 21
+    },
+    {
+      "path": "src/protocol/resp/src/request/zunionstore.rs",
+      "owner": "protocol-resp",
+      "loc": 459,
+      "classification": "mixed: test 211",
+      "verification": 211
+    },
+    {
+      "path": "src/protocol/resp/src/response/mod.rs",
+      "owner": "protocol-resp",
+      "loc": 8,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/resp/src/storage/mod.rs",
+      "owner": "protocol-resp",
+      "loc": 10,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/protocol/resp/src/util.rs",
+      "owner": "protocol-resp",
+      "loc": 75,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/proxy/ping/src/lib.rs",
+      "owner": "pelikan-pingproxy",
+      "loc": 72,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/proxy/ping/src/main.rs",
+      "owner": "pelikan-pingproxy",
+      "loc": 99,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/queues/src/lib.rs",
+      "owner": "queues",
+      "loc": 422,
+      "classification": "mixed: test 140",
+      "verification": 140
+    },
+    {
+      "path": "src/server/pingserver/src/main.rs",
+      "owner": "pelikan-pingserver",
+      "loc": 116,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/server/rds/benches/benchmark.rs",
+      "owner": "pelikan-rds",
+      "loc": 103,
+      "classification": "whole file: bench",
+      "verification": 103
+    },
+    {
+      "path": "src/server/rds/src/lib.rs",
+      "owner": "pelikan-rds",
+      "loc": 62,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/server/rds/src/main.rs",
+      "owner": "pelikan-rds",
+      "loc": 131,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/server/rds/tests/common.rs",
+      "owner": "pelikan-rds",
+      "loc": 193,
+      "classification": "whole file: test",
+      "verification": 193
+    },
+    {
+      "path": "src/server/rds/tests/integration.rs",
+      "owner": "pelikan-rds",
+      "loc": 37,
+      "classification": "whole file: test",
+      "verification": 37
+    },
+    {
+      "path": "src/server/rds/tests/integration_multi.rs",
+      "owner": "pelikan-rds",
+      "loc": 39,
+      "classification": "whole file: test",
+      "verification": 39
+    },
+    {
+      "path": "src/server/segcache/benches/benchmark.rs",
+      "owner": "pelikan-segcache",
+      "loc": 96,
+      "classification": "whole file: bench",
+      "verification": 96
+    },
+    {
+      "path": "src/server/segcache/src/lib.rs",
+      "owner": "pelikan-segcache",
+      "loc": 67,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/server/segcache/src/main.rs",
+      "owner": "pelikan-segcache",
+      "loc": 131,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/server/segcache/tests/common.rs",
+      "owner": "pelikan-segcache",
+      "loc": 424,
+      "classification": "whole file: test",
+      "verification": 424
+    },
+    {
+      "path": "src/server/segcache/tests/integration.rs",
+      "owner": "pelikan-segcache",
+      "loc": 37,
+      "classification": "whole file: test",
+      "verification": 37
+    },
+    {
+      "path": "src/server/segcache/tests/integration_multi.rs",
+      "owner": "pelikan-segcache",
+      "loc": 39,
+      "classification": "whole file: test",
+      "verification": 39
+    },
+    {
+      "path": "src/session/src/buffer.rs",
+      "owner": "session",
+      "loc": 457,
+      "classification": "mixed: test 211",
+      "verification": 211
+    },
+    {
+      "path": "src/session/src/client.rs",
+      "owner": "session",
+      "loc": 202,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/session/src/lib.rs",
+      "owner": "session",
+      "loc": 345,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/session/src/server.rs",
+      "owner": "session",
+      "loc": 261,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "src/storage/bloom/benches/bloom.rs",
+      "owner": "bloom",
+      "loc": 51,
+      "classification": "whole file: bench",
+      "verification": 51
+    },
+    {
+      "path": "src/storage/bloom/src/lib.rs",
+      "owner": "bloom",
+      "loc": 266,
+      "classification": "mixed: test 57",
+      "verification": 57
+    },
+    {
+      "path": "src/storage/types/src/lib.rs",
+      "owner": "storage-types",
+      "loc": 124,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "xtask/src/arch.rs",
+      "owner": "xtask",
+      "loc": 685,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "xtask/src/claims.rs",
+      "owner": "xtask",
+      "loc": 40,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "xtask/src/dataflow.rs",
+      "owner": "xtask",
+      "loc": 521,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "xtask/src/main.rs",
+      "owner": "xtask",
+      "loc": 33,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "xtask/src/svg.rs",
+      "owner": "xtask",
+      "loc": 254,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "xtask/src/threading.rs",
+      "owner": "xtask",
+      "loc": 741,
+      "classification": "production",
+      "verification": 0
+    }
+  ]
+}

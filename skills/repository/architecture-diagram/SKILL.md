@@ -1,26 +1,30 @@
 ---
 name: architecture-diagram
-description: Use when creating or materially revising system architecture diagrams — a build-time structure chart (units, layers, product composition) or runtime charts (thread model, life-of-a-request flow). Triggers include "architecture diagram", "threading diagram", "dataflow chart", "life of a request", "diagram the system". Symptoms include a hand-maintained diagram drifting from the code, a chart that cannot say whether a thread or queue still exists, or structure and runtime claims tangled in one unreadable picture.
+description: Use when creating or materially revising system architecture diagrams — a build-time structure chart (units, layers, product composition), a weighted source-size view (LOC alongside source structure), or runtime charts (thread model, life-of-a-request flow). Triggers include "architecture diagram", "threading diagram", "dataflow chart", "life of a request", "diagram the system". Symptoms include a hand-maintained diagram drifting from the code, a chart that cannot say whether a thread or queue still exists, or structure and runtime claims tangled in one unreadable picture.
 ---
 
-# Architecture Diagrams: a Build/Runtime Duo
+# Architecture Diagrams: Structure, Source Size, and Runtime
 
 ## Purpose
 
-A system's architecture needs two charts, because it makes two kinds of
-claims with different ground truths:
+A system's architecture uses separate views for structure, source footprint,
+and runtime behavior, because their claims have different ground truths:
 
 - The **build-time chart** claims what the code *is*: its units (crates,
   packages, modules), their layering, and what each shipped artifact is
   composed of. Ground truth is the build manifest, queried through the
   build system's own interface.
+- The **weighted source view** shows where the source lives and how much of
+  it each component owns. Ground truth is a counted source inventory mapped
+  to those components, not a dependency closure.
 - The **runtime charts** claim what the program *does*: the threads it
   spawns, the queues connecting them, the path one request travels. Ground
   truth is the source, held to the chart by explicit assertions.
 
-One chart cannot carry both: on a dependency graph with runtime arrows
-overlaid, a reader cannot tell which kind of claim any edge makes. Split
-the claims, then bind the halves visually (see "Chips bridge the halves").
+Keep the views distinct: dependency, source-containment, and runtime arrows
+make different claims. Bind them visually through shared component names
+and colors (see "Chips bridge the halves"). Add the weighted companion when
+source size is part of the request; it does not replace the dependency chart.
 
 ## What this is, and what it is not yet
 
@@ -35,7 +39,9 @@ the charter and bring it back here. Where the two skills deliberately disagree
 (arrows dropped from the build chart, provenance demoted from a channel,
 geometry emitted directly rather than through a layout engine), the reason
 appears in the section that overrides it. For a pipeline or DAG chart of
-one running program, use `dataflow-diagram` directly.
+one running program, use `dataflow-diagram` directly. The weighted source
+companion adds quantitative conventions; its scenario corpus is guidance
+for evaluation, not evidence that a rendered view is readable.
 
 The skill itself is a complete set of working defaults, usable with no
 configuration (including single-use charts, below). The
@@ -43,7 +49,7 @@ configuration (including single-use charts, below). The
 the bindings no default can supply, plus any deviation with its reason. A
 convention absent from the charter means the default applies.
 
-## Shared principles (both halves)
+## Shared principles (all views)
 
 **Derive, never draw.** Nodes, edges, labels, and composition come from the
 program's own structures at generation time. A hand-maintained diagram is a
@@ -69,9 +75,9 @@ the build instead of quietly invalidating a picture.
 
 **One visual language across the set.** A single shared module owns the
 palette, type scale, and drawing primitives for all charts — cross-chart
-consistency is what makes them read as one system. Rigid alignment
-(uniform sizes, computed grids) is itself a message: the design is in
-order.
+consistency is what makes them read as one system. Intentional geometry is
+itself a message: uniform sizes and computed grids show structure;
+proportional areas in the weighted view show source size.
 
 **Chips bridge the halves.** Runtime containers carry small chips naming
 the build-time modules that execute there, in the build chart's layer
@@ -126,6 +132,112 @@ without that record reads afterwards as a gate passed.
 - **Distinctiveness = direct dependencies** minus those all products share.
   Transitive closures drag shared facades' dependencies into everything and
   erase the signature.
+
+## Weighted source at a glance
+
+`weighted-source-at-a-glance` is the source-footprint companion to the
+build-time chart. Use it when the request includes code size, source balance,
+large modules, or size alongside architecture. Do not force it into an
+unrelated runtime-only diagram request.
+
+Draw a **hierarchical treemap**: nesting shows source containment, and a
+leaf's area is proportional to its measured LOC. Reuse component names and
+role colors from the structure chart. Place the views alongside each other
+or link them by those identifiers. Keep dependency arrows and topological
+position in the structure chart; treemap adjacency claims neither dependency
+nor execution order. This view overrides the uniform-box geometry used by
+the other charts, while keeping their palette and typography.
+
+### Derive an auditable source inventory
+
+- Start from the same revision and component inventory as the structure
+  chart. Enumerate repository-owned source through the project's build and
+  source interfaces, including relevant files outside the obvious `src/`
+  directory. Declare whether the scope is all checked-in source or one
+  target/feature configuration. Never imply that an all-source inventory
+  measures the code compiled into a particular binary.
+- Default to **physical LOC**: every line in the selected source files,
+  including comments and blank lines. State that definition in the caption.
+  An existing language-aware counter can supply code-only LOC instead when
+  requested; record its version and options and use the same definition
+  throughout. Do not label a newline count as code-only LOC. Handle a final
+  unterminated line consistently. LOC measures source footprint, not runtime
+  cost, complexity, quality, or the need for a refactor.
+- Default to repository-owned handwritten source, including tests, and
+  measure the verification share of every component: tests, benches,
+  examples, fuzz targets, and proof harnesses. A tile that grows when a
+  proof harness lands misreports the component, and the share grows as
+  verification does. Measure it, never guess it from filenames: files under
+  the target directories classify by directory; a module declared under
+  `#[cfg(test)]` or `#[cfg(kani)]` is verification with everything beneath
+  it; inside any other file, the extent of each item carrying such an
+  attribute, `#[test]`, or `#[kani::proof]` comes from a parser or a brace
+  scanner that honors comments and literals, with `cfg(not(test))` as
+  production. State the method in the caption. Unclassifiable lines count
+  as production, so the error runs toward undercounting. Exclude vendored
+  dependencies, generated output, build artifacts, and assets from the
+  weighted total; report their exclusions. If generated or vendored source
+  is requested, give it a distinct labeled group and subtotal.
+- Assign each counted file to exactly one source owner. Count a library once
+  even if several products depend on it. Validate curated ownership against
+  the inventory: fail on an unmapped file, duplicate ownership, or stale
+  entry. Use logical crate/module containment when source tooling resolves
+  it; otherwise label the hierarchy as directories/files. Filesystem nesting
+  alone does not establish Rust module ownership.
+- Keep a parent's own source as a leaf beside its children. A Rust module's
+  `mod.rs` or facade file counts once; the parent label reports the sum of
+  descendant leaves, not an additional weighted tile. For shared files,
+  feature-gated modules, macros, or `include!`, declare the ownership rule
+  rather than counting dependency reachability or expanded code repeatedly.
+
+### Make area a truthful quantitative channel
+
+For each leaf, `area = k * LOC` using one scale within the view. Assert the
+ratio on the allocated data rectangles before pixel rounding, with an
+explicit rounding tolerance for rendered geometry. Partition the available
+data area by weight; leave headers, borders, gutters, and legend outside
+the quantitative area. Parent totals equal the sum of their children, and
+the root equals the counted inventory total.
+
+Do not enlarge small tiles to fit labels, apply a minimum area, use log
+scaling, or size both width and height directly by LOC (which squares the
+ratio). Place labels outside tiny tiles or group them into an explicit
+`Other` tile with their exact summed weight and a member list. Zero-LOC
+components get a listed zero, not an invented area. An empty inventory gets
+an empty-state explanation rather than a fabricated treemap.
+
+Draw the verification share as texture inside the tile, not as a separate
+tile: a hatched partition by weight, so its area is the same `k` times
+verification LOC and containment is unchanged. Texture is the channel
+color and area have not spent, and it reads for color-blind readers. Every
+component is drawn; significance decides only whether a tile's hatch is
+worth drawing. A strip narrower than a stated pixel threshold is tabled,
+not drawn, and the legend names the threshold and the tiles it applies
+to. A label that must span the hatch sits on a halo in the tile's own
+fill.
+
+Use deterministic ordering and tie-breaking. Every tile identifies its
+component, LOC, and share of the scoped total, either directly or through a
+keyed legend/table; do not rely on color or hover alone. If views compare
+revisions or variants, keep the counting policy and scope comparable and
+state whether area uses a shared absolute scale or each panel's own total.
+Independently normalized panels show proportions, not absolute growth.
+
+### Verify and ship the view with its evidence
+
+Emit a machine-readable inventory and an adjacent textual equivalent with
+component paths, categories, LOC, percentages, exclusions, root total, and
+counting policy. Stamp the source revision and disclose working-tree changes;
+retain a content digest when the chart is derived from uncommitted source.
+Reconcile every parent subtotal, root total, and area ratio. Exercise unequal
+weights (for example, 100 and 400 LOC must allocate areas in a 1:4 ratio),
+tiny and zero weights, and a file shared by two products before trusting the
+generator. Bounds and collision checks still apply, including external labels.
+
+Use the existing regeneration command and CI freshness check for both the
+source inventory and rendered view, so added, removed, renamed, or resized
+files invalidate stale output. Review the rendered view under the chart's
+human-review gate; numerical correctness alone does not prove readability.
 
 ## The runtime charts
 
@@ -280,13 +392,14 @@ generator.
 2. Map the request to a chart in the inventory, or decide it is genuinely
    new.
 3. Write the ground-truth extraction and claims before any geometry:
-   manifest queries for the build half, source assertions for the runtime
-   half.
+   manifest queries for structure, a counted and ownership-checked inventory
+   for source size, source assertions for runtime behavior.
 4. Build or extend the generator in the project's native toolchain — no new
    contributor dependency — sharing the one visual-language module and one
    regeneration command.
-5. Render-verify: bounds and claims pass; refactors byte-compare clean when
-   no visual change was intended.
+5. Render-verify: bounds and claims pass; weighted views reconcile LOC
+   totals and area ratios; refactors byte-compare clean when no visual change
+   was intended.
 6. Confirm the CI freshness check covers the new or changed chart, and keep
    a textual equivalent adjacent to every embedded chart.
 7. Obtain human review; re-review after any subsequent change, however
@@ -336,6 +449,11 @@ The test: **if a box names both a unit and something that outlives it, split
 it.**
 
 ## Red flags
+
+- A weighted tile sized by guesswork, minimum label size, or dependency count.
+- Shared source counted once per product, or parent LOC counted again as a leaf.
+- A LOC caption without a counting policy, scope, exclusions, and source revision.
+- A treemap used to imply dependency order, complexity, or runtime cost.
 
 - A stateful component named inside another node's label rather than drawn.
 - A node or edge list maintained by hand beside the code it describes.
