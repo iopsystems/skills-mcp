@@ -1,21 +1,14 @@
 ---
 name: technical-prose
 description: |
-  State the word-level bar for technical prose: no hedged modality, no
-  vocabulary that carries no fact, one name per thing. Use when asked to
-  "de-slop this", "tighten this wording", "make this plainer", "cut the AI
-  voice", or when another skill defers here for word choice. Symptoms that this
-  skill applies: requirements softened to "should", possibility written as
-  "may" or "could", intensifiers standing in for measurements ("robust",
-  "blazingly fast", "seamlessly"), throat-clearing openers ("it is worth noting
-  that"), a behavior described as "gracefully handled" rather than stated, the
-  same thing called three names across one document, or an action buried in a
-  nominalization ("perform compression of" for "compress"), a sentence
-  chaining three clauses with "and", "but", "so", or a dash, a referent that
-  resolves only for someone who was in the room ("this arc", "the fix"), or a
-  metaphor standing where the fact should be. Also use for a cold read: "would
-  this make sense to someone with no context?" Naming the reader is the
-  prerequisite: inherit it, infer it from the artifact, or ask.
+  Edit technical prose for reader relevance, clear wording, and claims
+  supported by evidence. Use for "de-slop this", "tighten this wording",
+  "make this plainer", "cut the AI voice", a cold read, or when another skill
+  requests a prose pass. Symptoms include irrelevant detail, insider referents,
+  repeated explanations, empty adjectives, inconsistent names, clause chains,
+  softened requirements, or wording more certain than the evidence. Identify
+  the reader from the request or artifact; leave artifact structure to its
+  calling skill or conventions.
 ---
 
 # Technical prose
@@ -38,10 +31,9 @@ So the calling skill decides articles and whether fragments are correct at its
 sites. This skill never overrides those, and a rewrite that converts a fragment
 to a sentence — or the reverse — is out of scope here.
 
-The same test admits a paragraph: one restating the paragraph above it carries
-no fact anywhere, exactly as the empty word does not. So the ladder below is in
-scope and fragment-versus-sentence is not — one asks whether material earns its
-place, the other what shape the survivors take.
+The same test admits a paragraph. A true, nonrepeated fact still needs to help
+this reader understand, decide, or act. This skill owns that relevance test;
+the calling skill owns the artifact's purpose and required content.
 
 ## The reader is not you
 
@@ -61,10 +53,16 @@ review it names; "operator-chosen label" becomes what the label is and where it
 lives. Grammar does not catch these: "this arc" is well formed and carries
 nothing.
 
-**Content before style.** Run the cold read before the word pass. Tightening
-cannot find a missing noun: in the session that produced this rule, two
-rewrites of one commit body each carried an unresolved referent through
-untouched, and each was caught by a reader asking "what's that?"
+**Content before style.** Run the cold read before the word pass. Resolve
+missing referents, then ask what each passage helps the reader understand or
+do. Cut facts that serve neither purpose, even when they are accurate and
+unique. Do not remove content required by the user or the artifact's contract.
+
+Keep the reason for a consequential choice before keeping the history of
+making it. For example, "Count comments because the view measures source a
+reader must navigate" explains a counting policy. "After two review rounds,
+we settled on this policy" supplies no reason to accept it. Keep history when
+the sequence itself explains a constraint, failure, or current state.
 
 **What ships with the text sets the bar.** A commit body ships with its diff. A
 backlog entry, a journal line, or a message found by grep ships alone.
@@ -73,30 +71,29 @@ backlog entry, a journal line, or a message found by grep ships alone.
 word scale. "A wrong answer wearing a right one's clothes" costs every future
 reader a decoding to recover "output that looks correct and is not".
 
-## Modality
+## Preserve obligation and uncertainty
 
-Modality is the load-bearing part of a technical sentence, because it is what
-separates a requirement from an observation. It is also where hedging does its
-damage: a requirement written as a suggestion is not a softer requirement, it is
-a different claim, and a reader who acts on the difference is acting correctly.
+Determine what a modal means before editing it. Use `must` for an established
+requirement softened to `should`; do not promote a recommendation into an
+obligation. A recommendation needs its reason or condition, not stronger wording.
+Permission-sense `may` and `may not` retain their force: "may not hold the lock"
+prohibits an action; "cannot hold the lock" claims it is impossible.
 
-| You wrote | Write instead |
-|---|---|
-| `should` (requirement) | `must` |
-| `should` (recommendation) | Delete it, or state the fact: "X is faster because Y." |
-| `might`, `could`, `may` (possibility) | `can` |
-| `would` (hypothetical) | Restructure: "If X occurs, Y occurs." |
+Use `can` for a known capability or failure mode. Keep `may`, `might`, or a
+conditional when it expresses uncertainty the evidence has not resolved.
+"The scanner might misclassify this syntax; it has not been tested" must not
+become "The scanner misclassifies this syntax." A hypothesis is not an observed
+failure. Remove a hedge only when removing it preserves the claim's strength.
 
-**The one exception: `may not` is a prohibition, and it survives intact.** The
-ladder above maps possibility onto `can`, which is correct for "this may fail"
-but destroys "callers may not hold the lock across an await". Rewriting that to
-`cannot` claims the compiler prevents it, and to `can` inverts the rule. When
-`may` marks permission rather than possibility, leave it alone.
+Distinguish observation, attribution, and inference. "The author reports a
+fix," "the regression tests pass," and "independent review confirmed the fix"
+establish different facts. Do not turn any of them into "all issues resolved"
+without evidence for that broader claim. State the relevant scope or remaining
+gap once; do not add generic caveats to sound careful.
 
 Prohibitions and obligations keep `must`, `may not`, or `never` in every form,
-including shortened ones. Dropping the modal to save a line converts a rule into
-a description of the present, which licenses the very edit the sentence existed
-to prevent.
+including shortened ones. Preserve negations, conditions, and uncertainty just
+as carefully as numbers and identifiers.
 
 ## Words that carry no fact
 
@@ -200,9 +197,9 @@ ladder has an agent stop at the first rung that solves the problem rather than
 writing the fullest thing it can. Walk it before writing, and again when
 cutting. **Stop at the first rung that carries the fact intact.**
 
-1. **Nothing.** The named reader already holds it, or a sentence nearby
-   already says it. Not the writer: this is the rung the curse of knowledge
-   picks.
+1. **Nothing.** The fact does not help this reader's task, the reader already
+   holds it, or another sentence supplies it. Judge against what the reader
+   has available, not what the writer knows.
 2. **A word** added to a sentence that already exists.
 3. **A clause.**
 4. **A sentence.**
@@ -248,7 +245,7 @@ When a rule and a name conflict, the name wins silently.
 
 | Excuse | Reality |
 |---|---|
-| "'Should' is softer and more collegial" | It is not softer, it is different. A requirement written as a suggestion gets treated as optional, and the reader who skips it followed your text correctly. |
+| "'Should' is softer and more collegial" | An established requirement needs must. A recommendation stays a recommendation; explain its reason. |
 | "'May not' is banned modality, so it becomes 'cannot'" | `cannot` claims impossibility. If the thing were impossible you would not be writing a rule about it. Permission-sense `may` survives. |
 | "'Robust' tells the reader it is well built" | It tells them you believe so. If there is a property behind the word it has a number, and the number is what they needed. |
 | "Varying the word avoids repetition" | Repetition is not a defect in technical prose; it is how the reader knows it is the same thing. Save variety for writing that has a plot. |
@@ -261,6 +258,8 @@ When a rule and a name conflict, the name wins silently.
 | "The reviewer knows what 'this arc' means." | Today. The text was written for whoever reads the log, the backlog, or the grep hit in six months, and they were not in the room. |
 | "Asking who the reader is would be overhead; I'll assume an engineer." | An assumed reader is the writer's guess, and the writer is the one person who cannot check it. When the artifact does not settle it and nobody said, one question costs less than the rewrite. |
 | "I tightened it, so it is done." | Tightening finds needless words, not missing ones. A missing referent survives every style pass; only a cold read finds it. |
+| "Every sentence is true and unique." | A fact still needs to help this reader understand, decide, or act. |
+| "The tests passed, so the issue is resolved." | Report what the tests establish. Preserve attribution and any material gap in review or coverage. |
 
 ## Red flags
 
@@ -270,15 +269,21 @@ When a rule and a name conflict, the name wins silently.
   review".
 - A noun phrase that resolves only for someone who was in the room.
 - A tightening pass that finished without a cold read.
+- True details that do not serve the reader's task.
+- Process history replacing the reason for a consequential choice.
+- A rewrite that upgrades a hypothesis, author report, or passing test into a
+  broader claim of correctness.
 - A metaphor or coined compound standing where the fact should be.
 - A sentence joining three or more clauses with "and", "but", "so", or a
   dash.
-- A requirement whose only modal is `should`.
+- An established requirement whose only modal is `should`, or a recommendation
+  rewritten as an obligation.
 - A paragraph that would be equally true with its first sentence deleted.
 - A metaphor restating the rule its own paragraph just stated.
 - An opening that establishes an audience the rule already implies.
 - A document that states a bar its own prose does not meet.
-- `may` rewritten to `can` without checking whether it marked permission.
+- `may` rewritten to `can` without checking whether it marked permission or
+  unresolved uncertainty.
 - An adjective asserting a quality with no measurement anywhere near it.
 - A sentence that survives deletion of its first six words with no loss.
 - The same object under two names in one document, or under a different name at

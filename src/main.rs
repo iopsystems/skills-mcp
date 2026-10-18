@@ -1218,7 +1218,7 @@ mod tests {
             .as_array()
             .expect("technical-prose evals should contain an evals array");
 
-        assert_eq!(evals.len(), 28);
+        assert_eq!(evals.len(), 34);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());
@@ -1257,7 +1257,7 @@ mod tests {
             .as_array()
             .expect("review-guide evals should contain an evals array");
 
-        assert_eq!(evals.len(), 59);
+        assert_eq!(evals.len(), 61);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());

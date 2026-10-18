@@ -234,8 +234,8 @@ The rest of this section is the same map with a line of purpose on each entry.
 
 **Prose that ships with a change**
 
-- `technical-prose` — the word-level bar: no hedged modality, no vocabulary that
-  carries no fact, one name per thing.
+- `technical-prose` — relevant, clear prose that preserves requirements,
+  uncertainty, and the strength of its evidence.
 - `sweep-comments` — comments and docstrings held to that bar, and swept for
   staleness before a pull request.
 - `review-guide` *(beta)* — the pull-request body written as a guide for the

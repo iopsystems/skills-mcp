@@ -11,7 +11,7 @@
     },
     {
       "name": "requirement softened to should",
-      "prompt": "Tighten this line: 'Callers should acquire the lock before reading the buffer.'",
+      "prompt": "The API contract requires the lock before any buffer read. Tighten: 'Callers should acquire the lock before reading the buffer.'",
       "expectations": [
         "Identify that this is a requirement, not a recommendation",
         "Rewrite with must",
@@ -28,12 +28,12 @@
       ]
     },
     {
-      "name": "possibility may becomes can",
-      "prompt": "Clean up: 'The connection may fail if the upstream is saturated.'",
+      "name": "known failure mode can use can",
+      "prompt": "Saturation-induced connection failures have been reproduced. Clean up: 'The connection may fail if the upstream is saturated.'",
       "expectations": [
-        "Recognize may as possibility-sense here",
-        "Rewrite to can",
-        "Distinguish this case from a permission-sense may"
+        "Recognize that the evidence establishes a possible failure mode",
+        "Use can without implying that every saturated connection fails",
+        "Distinguish known failure modes from untested hypotheses and permission"
       ]
     },
     {
@@ -137,18 +137,18 @@
       "name": "no sentence-length ruling",
       "prompt": "Run the prose bar over this architecture section and tell me which sentences are too long.",
       "expectations": [
-        "Report vocabulary and modality findings",
-        "Decline to impose a word-count limit",
-        "Point out that sentence length is the calling skill's decision"
+        "Identify unclear wording, irrelevant detail, or clause chains that burden the reader",
+        "Do not impose a fixed word-count limit",
+        "Preserve necessary context and the document conventions while improving the passage"
       ]
     },
     {
       "name": "invoked for word choice inside a comment sweep",
-      "prompt": "While sweeping comments before a PR, one surviving comment reads: 'Should probably not be mutated here, as it may break downstream consumers.'",
+      "prompt": "The API prohibits mutation here; no downstream compatibility check has run. While sweeping comments, tighten: 'Should probably not be mutated here, as it may break downstream consumers.'",
       "expectations": [
-        "Remove the hedge probably",
-        "Convert the requirement to must not or may not as a prohibition",
-        "Preserve the downstream constraint the comment carries"
+        "Make the established prohibition explicit with must not or may not",
+        "Keep the downstream risk uncertain rather than presenting it as an observed failure",
+        "Preserve both the edit constraint and its reason"
       ]
     },
     {
@@ -248,6 +248,61 @@
         "Split the chain so each unit carries one claim",
         "Keep the units as fragments if the file's doc comments are fragments",
         "Preserve every claim, including the one after the dash"
+      ]
+    },
+    {
+      "name": "recommendation remains a recommendation",
+      "prompt": "Tighten this advice: 'Operators should start with a 30-second timeout because it matches the measured latency of the usual workload. Other timeouts are supported.'",
+      "expectations": [
+        "Preserve the recommendation and its workload condition",
+        "Do not turn should into must",
+        "Retain the reason rather than replacing it with an unsupported assertion that 30 seconds is best"
+      ]
+    },
+    {
+      "name": "untested hypothesis remains uncertain",
+      "prompt": "Make this note more direct: 'Nested cfg expressions might be misclassified; no fixture covers them yet.' We have not observed a failure.",
+      "expectations": [
+        "Keep the distinction between a suspected failure and an observed failure",
+        "Retain the specific validation gap",
+        "Do not assert that the scanner misclassifies nested expressions or add unrelated caveats"
+      ]
+    },
+    {
+      "name": "true details still need relevance",
+      "prompt": "Tighten this release note for operators deciding whether to upgrade: 'The client now stops after three failed attempts instead of retrying indefinitely. We edited four files, discussed the implementation on Tuesday, and used a temporary script to inspect the diff. The retry limit is fixed in this release.'",
+      "expectations": [
+        "Keep the changed behavior and the fixed-limit constraint",
+        "Remove the true process details that do not help the upgrade decision",
+        "Do not invent a benefit or hide a limitation to make the release sound complete"
+      ]
+    },
+    {
+      "name": "reason survives before process history",
+      "prompt": "Shorten this PR paragraph for a reviewer: 'After two review rounds and three versions, we settled on counting comments and blank lines. We count them because the chart measures the source a reader must navigate. This was the final approach we selected.'",
+      "expectations": [
+        "Keep the physical-line counting choice and its navigation rationale",
+        "Remove the review chronology and redundant statement of finality",
+        "Do not shorten it to a bare assertion that physical LOC is used"
+      ]
+    },
+    {
+      "name": "reported fix is not independent confirmation",
+      "prompt": "Rewrite this status for a reviewer. Evidence: the author reports a parser fix, its regression fixture passes, and independent re-review is pending. Draft: 'All parser issues are resolved. Only usability risk remains.'",
+      "expectations": [
+        "Replace the unsupported closure with the attributed fix report and observed fixture result",
+        "Keep independent re-review pending",
+        "Do not infer that all parser issues are fixed or all remaining risk is usability",
+        "State the material evidence boundary once without generic caveats"
+      ]
+    },
+    {
+      "name": "history retained when sequence explains current risk",
+      "prompt": "Shorten this rollback note for the on-call operator: 'Version 2 wrote the new index format. We rolled back to version 1, which cannot read that format. Restore the pre-upgrade snapshot before restarting version 1.'",
+      "expectations": [
+        "Keep the sequence that explains why rollback alone is insufficient",
+        "Preserve the snapshot-restoration requirement and its timing",
+        "Do not remove consequential history under a blanket ban on process narration"
       ]
     }
   ]
