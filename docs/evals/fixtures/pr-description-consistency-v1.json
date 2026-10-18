@@ -1,0 +1,33 @@
+{
+  "reader": "A competent engineer with the diff, without the author's conversation history.",
+  "cases": [
+    {
+      "id": "connection",
+      "request": "Evaluate this PR description and draft a replacement from the supplied evidence. No external actions or source links are needed.",
+      "body": "Each request keeps its selected connection for its entire lifetime. The request initially selects a healthy connection. If a connection fails before the request sends any bytes, the retry loop may select another. After sending begins, the connection stays fixed. Tests exercise both paths.",
+      "evidence": "The implementation selects a connection when the request starts. Before any bytes are sent, a failed connection causes reselection. After sending begins, it never reselects. cargo test --locked passed 18 tests, including both paths."
+    },
+    {
+      "id": "draft",
+      "request": "Refresh this draft PR description using the supplied project records. No external actions are needed.",
+      "body": "Draft: blocked on the unmerged parser PR 41 and routing PR 42. After those merge, this change documents their configuration. The packaged example still needs verification.",
+      "evidence": "Current project records show PR 41 merged on October 2 and PR 42 merged on October 3. The packaged example has not been checked. No other blocker is established."
+    },
+    {
+      "id": "history",
+      "request": "Revise this PR description. House convention requires retaining the concatenated commit messages verbatim. No external actions are needed.",
+      "body": "Commit messages, in order:\n\nfeat(storage): buffer a whole batch\n\nData remains in memory until a batch reaches 8 MiB. A process crash can lose the whole batch.\n\nfix(storage): flush each completed request\n\nThe batch-size trigger is replaced by a flush after each completed request. A process crash can lose the in-flight request. A power failure has no verified durability bound.",
+      "evidence": "The second commit is the final implementation. cargo test --locked passed 24 tests covering request completion and process restart. There is no power-failure test or measured durability bound."
+    },
+    {
+      "id": "questions",
+      "request": "Draft a PR description from these facts. No external actions or source links are needed.",
+      "evidence": "This change declares status reports but adds no publisher. A required audit order already settles the choice of a sorted map. The proposed topology sends reports from edge hosts to the central host. Whether edge hosts also need central-host reports remains undecided; either topology is supported and the reviewer must settle this before merge. Reader records move to format 2. Mixed format-1/format-2 deployment has not been tested; whether deployment permits mixed releases is unknown. cargo test --locked passed 30 tests covering encoding and the declared topology."
+    },
+    {
+      "id": "repetition",
+      "request": "Tighten this PR body while preserving its review value and evidence. No external actions or source links are needed.",
+      "body": "This change splits the configuration module into private modules and preserves every public import path.\n\nWhy: preserving public import paths lets existing callers compile unchanged.\n\nWhere to look: the facade re-exports preserve all public import paths; check the re-export list against the old module.\n\nValidation: cargo test --locked passed 40 tests. A comparison of declarations found all public declarations preserved. This establishes declaration membership, not statement order; the grouping was inspected manually.\n\nTest table: declaration comparison pins that all public import paths remain.\n\nReview status: the grouping was inspected manually. No independent re-review has occurred."
+    }
+  ]
+}

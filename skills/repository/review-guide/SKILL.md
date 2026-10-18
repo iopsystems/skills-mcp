@@ -20,8 +20,9 @@ for the change, the consequences that need judgment, and evidence the diff
 cannot provide.
 
 The default output is the pull-request body. Do not create a checked-in guide
-unless requested. Follow an existing PR template when required; otherwise let
-the review needs determine the structure.
+unless requested. Follow repository conventions for PR descriptions, including
+required templates or retained commit messages; otherwise let the review needs
+determine the structure.
 
 ## Assess broadly; publish selectively
 
@@ -76,6 +77,12 @@ substantial explanation, point to the section that supplies it. Do not require
 a separate routing paragraph, a count of asks, or a statement that no decision
 is needed. A material limitation belongs in the opening when omitting it would
 make the promised result misleading; explain it fully once where it is useful.
+
+If the body retains concatenated commit messages, check whether later commits
+supersede earlier claims. When they do, add a current-state synopsis before the
+history so the reviewer need not reconstruct the final behavior. Keep any
+required verbatim messages intact and identify them as historical. Do not
+rewrite Git history merely to improve the PR body.
 
 ## Supply only the missing context
 
@@ -241,9 +248,20 @@ Editing only the previous prose can preserve a false claim while making it
 sound more certain. If the reader finds a section confusing, check whether
 its premise is wrong before trying smoother wording.
 
+When revising an existing body, verify dependency and draft-blocker claims
+against current PR status or supplied project records. A merged dependency no
+longer blocks on merging, but its integration or validation may remain
+unfinished. Remove obsolete blockers without implying readiness. If current
+status is unavailable, identify the claim as unverified rather than repeating
+it as current or assuming it is resolved.
+
 After drafting, read as the reviewer and check:
 
 - Can they identify the problem and resulting behavior from the opening?
+- Does the opening agree with the detailed behavior and source? Check claims
+  such as "once," "always," "never," and "for its lifetime" against retry,
+  replacement, and failure paths. Put material qualifications in the summary
+  rather than making a later paragraph retract it.
 - Can they find the consequential rationale, open decisions, and places
   needing close inspection without reading the work history?
 - Can they distinguish what was checked from what remains unverified?

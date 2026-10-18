@@ -304,6 +304,27 @@
         "Preserve the snapshot-restoration requirement and its timing",
         "Do not remove consequential history under a blanket ban on process narration"
       ]
+    },
+    {
+      "name": "duplicate explanations across PR sections",
+      "prompt": "Tighten this PR body for a reviewer with the diff. Opening: 'The module is split into private files; public import paths remain unchanged.' Rationale: 'Keeping those paths lets existing callers compile unchanged.' Reading guidance: 'Check the facade re-exports against the old module to verify the public paths.' Validation: 'cargo test --locked passed 40 tests. The declaration comparison found all public declarations preserved; it establishes membership, not statement order. Grouping was inspected manually.' Test table: 'The declaration comparison pins unchanged public paths.' Review status: 'Grouping was inspected manually; independent re-review has not occurred.' No external actions or source links are needed.",
+      "expectations": [
+        "Consolidate repeated compatibility, comparison, and manual-inspection explanations across sections",
+        "Retain why preserving import paths matters and where a reviewer can check them",
+        "Preserve the exact test command, count, and the comparison limitation",
+        "Keep independent re-review distinct from the author's manual inspection",
+        "Do not impose a word count or replace specific evidence with a broad correctness claim"
+      ]
+    },
+    {
+      "name": "useful cross-reference survives repetition pass",
+      "prompt": "Edit this deployment note for an on-call operator. Opening: 'Version 1 cannot read the version-2 index; restore the pre-upgrade snapshot before restarting version 1.' The Rollback section says 'Restore the pre-upgrade snapshot before restarting version 1; version 1 cannot read the version-2 index.' A later checklist says 'Before restarting version 1, follow Rollback.' The operator may enter through the checklist. Preserve the rollback requirement and usable navigation. No external actions are needed.",
+      "expectations": [
+        "Consolidate repeated explanation where it does not aid the operator",
+        "Retain a usable checklist reference to the rollback instructions",
+        "Preserve the snapshot requirement, version identifiers, and restore-before-restart ordering",
+        "Do not treat every repeated mention or navigational reference as redundant"
+      ]
     }
   ]
 }
