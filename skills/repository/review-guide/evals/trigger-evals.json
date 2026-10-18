@@ -568,6 +568,59 @@
         "Omit empty decisions and production-risk sections despite the number of subsystems",
         "Do not invent citations, risk acceptance, or new approval questions"
       ]
+    },
+    {
+      "name": "opening preserves a retry exception",
+      "prompt": "Evaluate and revise this PR body from the supplied evidence. Opening: 'Each request keeps its selected connection for its entire lifetime.' Later: 'Before any bytes are sent, a failed connection causes reselection. After sending begins, the connection stays fixed.' The source implements those two paths. cargo test --locked passed 18 tests covering both. No external actions or source links are needed.",
+      "expectations": [
+        "Identify the conflict between the lifetime claim and pre-send reselection",
+        "Qualify the opening so its behavior agrees with the source and detailed exception",
+        "Preserve the distinction between pre-send retries and the fixed connection after sending begins",
+        "Do not change the implementation or invent a defect in behavior merely because its summary is wrong"
+      ]
+    },
+    {
+      "name": "merged dependencies do not erase remaining draft work",
+      "prompt": "Refresh this draft PR body using the supplied current records. Body: 'Blocked on the unmerged parser PR 41 and routing PR 42. The packaged example still needs verification.' Current records show both dependencies merged. The packaged example has not been checked. No other blocker is established. No external actions are needed.",
+      "expectations": [
+        "Remove the obsolete claim that the dependencies await merge",
+        "Preserve the outstanding packaged-example verification",
+        "Do not infer that the PR is ready for review or merge solely because its dependencies merged",
+        "Do not invent new blockers or claim the example was tested"
+      ]
+    },
+    {
+      "name": "unavailable dependency status stays unverified",
+      "prompt": "Revise a draft description that says 'Blocked on unmerged PR 41.' The only status record is a month old and says open. Current status cannot be retrieved in this task. No implementation or test evidence is supplied. Improve the body without external actions.",
+      "expectations": [
+        "Identify the dependency status as unverified or dated",
+        "Do not present the old open state as a current observation",
+        "Do not assume that the dependency merged or the blocker disappeared",
+        "Do not claim readiness or fabricate validation"
+      ]
+    },
+    {
+      "name": "current synopsis precedes required historical messages",
+      "prompt": "Revise this PR description. Repository convention requires retaining the concatenated commit messages verbatim. The first message is 'feat(storage): buffer a whole batch\n\nData remains in memory until a batch reaches 8 MiB. A process crash can lose the whole batch.' The second is 'fix(storage): flush each completed request\n\nThe batch-size trigger is replaced by a flush after each completed request. A process crash can lose the in-flight request. A power failure has no verified durability bound.' The second commit is the final implementation. cargo test --locked passed 24 tests covering request completion and process restart. No power-failure test ran. No external actions are needed.",
+      "expectations": [
+        "Explain the final per-request flush behavior before the historical messages",
+        "Preserve both required commit messages verbatim and identify their historical role",
+        "Keep process-crash exposure distinct from the unverified power-failure durability bound",
+        "Do not ask to amend commits or rewrite Git history to improve the PR body",
+        "Do not imply that passing restart tests establishes power-failure durability"
+      ]
+    },
+    {
+      "name": "mixed review concerns retain their distinct roles",
+      "prompt": "Draft a PR body from these facts. The change declares status reports but adds no publisher. Required audit ordering already settles the sorted-map choice. Reports go from edge hosts to the central host; whether edge hosts also need the central host's reports remains undecided and must be settled before merge. Reader records move to format 2. Mixed format-1/format-2 deployment has not been tested; whether deployment permits mixed releases is unknown. cargo test --locked passed 30 tests covering encoding and the declared topology. No external actions or source links are needed.",
+      "expectations": [
+        "State that the change declares reports without publishing them",
+        "Keep the topology decision findable and preserve its merge-blocking status",
+        "Explain audit ordering as settled rationale rather than asking the reviewer to choose a map",
+        "Separate the mixed-format test gap from the factual question about deployment policy",
+        "Do not invent an observed incompatibility, an approved rollout policy, or another merge gate",
+        "Do not require a section for each category when concise prose makes the distinctions clear"
+      ]
     }
   ]
 }
