@@ -82,10 +82,8 @@ USAGE
 }
 
 next_round() {
-  # Counts written rounds and in-flight claims alike. A claim that is not yet a
-  # file must still reserve its number, or two writers racing under different
-  # agent names would each believe the number is free — their filenames differ,
-  # so no file-level exclusion would catch it.
+  # Count active claims to reserve their round numbers. Writers use different
+  # filenames, so excluding duplicate files does not prevent duplicate rounds.
   local dir=$1 max=0 f base num
   for f in "$dir"/[0-9][0-9][0-9]-*.md "$dir"/.claim-[0-9][0-9][0-9]; do
     [ -e "$f" ] || continue
@@ -184,14 +182,22 @@ cmd_note() {
   dir="$(store_dir)/threads/$(slug "$branch")"
   mkdir -p "$dir"
   while : ; do
+    attempt=$((attempt + 1))
+    [ "$attempt" -le 100 ] || die 'could not claim a round number after 100 attempts'
     n=$(next_round "$dir")
     claim=$(printf '%s/.claim-%03d' "$dir" "$n")
-    # mkdir is atomic and fails if the name exists, so exactly one racing
-    # writer wins a given round number.
-    if mkdir "$claim" 2>/dev/null; then break; fi
-    attempt=$((attempt + 1))
-    [ "$attempt" -lt 10 ] || die 'could not claim a round number after 10 attempts'
+    # Bash noclobber uses O_EXCL to give one writer the claim.
+    # uutils mkdir 0.8.0 admitted concurrent writers.
+    { set -C; : > "$claim"; } 2>/dev/null || continue
+    # Another writer can publish this round and release its claim before
+    # we acquire it. Retry if the round file already exists.
+    if set -- "$dir"/"$(printf '%03d' "$n")"-*.md && [ -e "$1" ]; then
+      rm -f "$claim"
+      continue
+    fi
+    break
   done
+  set +C
   path=$(printf '%s/%03d-%s-%s.md' "$dir" "$n" "$agent" "$short")
 
   {
@@ -210,7 +216,7 @@ cmd_note() {
     printf -- '---\n\n'
     printf '%s\n' "$body"
   } > "$path"
-  rmdir "$claim" 2>/dev/null || true
+  rm -f "$claim"
 
   set_cursor "$branch" "$agent" "$n"
   printf '%s\n' "$path"

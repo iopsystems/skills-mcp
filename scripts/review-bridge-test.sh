@@ -187,17 +187,18 @@ cd "$ROOT_DIR"
 # --- concurrency --------------------------------------------------------
 
 cd "$REPO"
-git review-note --as a --role reviewer -m 'one' >/dev/null &
-git review-note --as b --role reviewer -m 'two' >/dev/null &
-git review-note --as c --role reviewer -m 'three' >/dev/null &
+# Twelve writers exposed mkdir claim collisions in four of five local runs.
+for w in a b c d e f g h i j k l; do
+  git review-note --as "$w" --role reviewer -m "note $w" >/dev/null &
+done
 wait
 
 dir="$REPO/.git/review-feedback/threads/yao-feature-one"
 round_names() { for f in "$dir"/[0-9][0-9][0-9]-*.md; do [[ -e "$f" ]] && basename "$f"; done; }
 count=$(round_names | wc -l | tr -d ' ')
-[[ "$count" == "6" ]] || fail "expected 6 rounds after concurrent writes, got $count"
+[[ "$count" == "15" ]] || fail "expected 15 rounds after concurrent writes, got $count"
 uniq_nums=$(round_names | cut -d- -f1 | sort -u | wc -l | tr -d ' ')
-[[ "$uniq_nums" == "6" ]] || fail "round numbers collided: $uniq_nums distinct of 6"
+[[ "$uniq_nums" == "15" ]] || fail "round numbers collided: $uniq_nums distinct of 15"
 [[ -z "$(ls -A "$dir"/.claim-* 2>/dev/null || true)" ]] || fail 'a claim directory was left behind'
 pass 'concurrent writers get distinct round numbers'
 cd "$ROOT_DIR"

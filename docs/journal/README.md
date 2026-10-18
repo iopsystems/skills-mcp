@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-10-16 | [The claim was never exclusive](2026-10-16-bridge-claim-race.md) | shipped |
 | 2026-10-14 | [Weighted source alongside architecture](2026-10-14-weighted-source-at-a-glance.md) | open |
 | 2026-10-14 | [Rust source layout follows responsibility](2026-10-14-rust-source-layout.md) | open |
 | 2026-09-04 | [A comment can pass every rule and be false](2026-09-04-sweep-claim-check.md) | shipped |
