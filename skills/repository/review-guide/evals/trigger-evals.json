@@ -4,19 +4,19 @@
       "name": "explicit PR body request",
       "prompt": "Draft the PR body for this branch; it adds a retry budget to the ingest client and changes two call sites.",
       "expectations": [
-        "Produce a pull-request body rather than a file",
-        "Open with what changed and the claim the change makes",
-        "Include a ranked reading order, testing, judgment calls, and production-only risks"
+        "Produce a pull-request body rather than a checked-in file",
+        "Lead with the problem and resulting behavior using the available evidence",
+        "Include reading guidance, validation, decisions, or risks only where they affect this review"
       ]
     },
     {
-      "name": "trivial change is checked then not published",
+      "name": "trivial change omits empty assessment results",
       "prompt": "Write a review guide for this PR: it bumps a dependency pin and fixes a typo in a comment.",
       "expectations": [
-        "Run the assessment rather than skipping the change",
-        "Report that the reading order, test gap, judgment call, and production risk checks are all empty",
-        "Publish one sentence describing the change instead of a guide",
-        "Do not produce empty or padded sections"
+        "Assess review needs rather than skipping the change",
+        "Publish a concise description with relevant validation",
+        "Omit empty categories without announcing that their checks found nothing",
+        "Do not invent asks or pad sections"
       ]
     },
     {
@@ -32,30 +32,29 @@
       "name": "body opens with a TL;DR",
       "prompt": "Draft the PR body for a change that adds a retry budget and needs the reviewer to settle whether timeouts count as retryable failures.",
       "expectations": [
-        "Open with one or two sentences above every heading",
-        "Say what changed and what the change asks of the reviewer",
-        "Do not run longer than the three answers need",
-        "Expand rather than repeat the TL;DR in the section below it",
-        "Close with the ask as its own paragraph rather than fused to the summary"
+        "Open with the concrete problem and resulting behavior",
+        "Make the timeout decision findable with enough context to answer it",
+        "Do not repeat the opening in a second summary",
+        "Choose paragraph and section boundaries for readability rather than requiring a separate ask paragraph"
       ]
     },
     {
       "name": "TL;DR is not the title again",
       "prompt": "The PR is titled 'cache: evict on write pressure'. Write the TL;DR.",
       "expectations": [
-        "State what the change asks of the reviewer rather than restating the title",
-        "Do not open a list the reviewer must read to use the summary",
-        "Keep it as short as the three answers allow"
+        "Explain the trigger and resulting eviction behavior from the available evidence",
+        "Do not merely restate the title",
+        "Do not invent a motivation, mechanism, or reviewer ask absent from the evidence"
       ]
     },
     {
       "name": "judgment call keeps its modality",
-      "prompt": "Write this judgment call for the body: 'Reviewers should probably not merge this before the migration runs, and it might break the importer.'",
+      "prompt": "The migration must run before merge. Importer compatibility has not been tested. Tighten this PR note: 'Reviewers should probably not merge this before the migration runs, and it might break the importer.'",
       "expectations": [
-        "Rewrite the prohibition with must not or may not rather than should",
-        "Rewrite the possibility might as can",
-        "Remove the hedge probably",
-        "Do not present a requirement as a recommendation"
+        "Keep the migration-before-merge prohibition explicit with must not or may not",
+        "Preserve uncertainty about the importer unless evidence establishes the failure mode",
+        "Remove probably only because the prompt identifies an actual prohibition",
+        "Do not turn an unverified possibility into an observed failure"
       ]
     },
     {
@@ -69,31 +68,31 @@
       ]
     },
     {
-      "name": "context precedes the first identifier",
+      "name": "identifiers carry an explanation",
       "prompt": "Draft the body. The change adds a `source` field to `StreamSpec` and a `forward` method on `EnvelopeProducer`, in a system the reviewer has not worked in.",
       "expectations": [
-        "Establish what the system does and the concepts involved before naming any type or field",
-        "Name each concept once and reuse that name",
-        "Do not open the body on struct or field names"
+        "Explain unfamiliar concepts at first use so the reviewer can understand the change",
+        "Allow identifiers beside their explanations when they improve precision",
+        "Avoid unexplained struct or field names as a substitute for the problem and behavior"
       ]
     },
     {
-      "name": "shape gets a diagram, not a paragraph",
+      "name": "diagram clarifies changed host relationships",
       "prompt": "Draft the body for a change that moves records between three hosts over a new forwarding link.",
       "expectations": [
-        "Draw the topology rather than describing it in prose",
+        "Use a small diagram if it makes the changed host relationships easier to check",
         "Choose dataflow-diagram for movement or architecture-diagram for structure",
-        "Use inline mermaid when the picture serves only this review",
-        "Keep the diagram small enough to read without panning"
+        "Use inline Mermaid when the picture serves only this review",
+        "Avoid a diagram that requires panning to understand"
       ]
     },
     {
       "name": "mental model is not a subsystem tour",
       "prompt": "The mental model section I drafted explains the whole ring protocol and its history. The change adds one counter.",
       "expectations": [
-        "Cut what would be equally true of a different pull request against the same files",
-        "Keep only what this change needs",
-        "State the assumed starting point so a reviewer who has it can skip"
+        "Keep only the protocol facts needed to assess the counter",
+        "Remove unrelated history and the subsystem tour",
+        "Do not require a separate mental-model section if a clause supplies the context"
       ]
     },
     {
@@ -106,21 +105,22 @@
       ]
     },
     {
-      "name": "qualifying section survives a small change",
+      "name": "material gap survives a small change",
       "prompt": "Small change: a one-line config default. Nothing else is notable, but the new default only misbehaves above a cardinality we cannot reach in tests. Draft the body.",
       "expectations": [
-        "Keep the production-only risk section, because it is the item that cleared the publish test",
-        "Drop the other sections as empty rather than keeping them at reduced size",
-        "Do not reduce the guide to sections that omit the reason it was published"
+        "State the cardinality-dependent risk despite the small diff",
+        "Identify an existing observation or mitigation, or name their absence",
+        "Omit categories that add nothing to this review"
       ]
     },
     {
       "name": "output proportional to complexity",
       "prompt": "Draft bodies for two PRs: one renames a private helper, one adds a caching layer across three subsystems with a latency claim.",
       "expectations": [
-        "Scale the two outputs differently",
-        "Give the caching change every section including testing and production risk",
-        "Do not give the rename the same structure at smaller size"
+        "Scale the outputs to their actual review needs",
+        "For the caching change, examine the interface assumptions and evidence for the latency claim",
+        "Do not automatically give the caching change every section",
+        "Keep the rename concise without an empty decisions or risks section"
       ]
     },
     {
@@ -169,12 +169,12 @@
       ]
     },
     {
-      "name": "no coverage percentage",
+      "name": "requested coverage figure has limits",
       "prompt": "Put our 87% line coverage in the testing section of the PR body.",
       "expectations": [
-        "Decline to report a coverage percentage",
-        "Describe what the tests are organized around instead",
-        "Name the specific paths that no test covers"
+        "Honor the requested coverage figure without treating it as proof of correctness",
+        "Explain what relevant behavior the tests exercise and any known material gap",
+        "Do not invent uncovered paths to accompany the percentage"
       ]
     },
     {
@@ -208,9 +208,9 @@
       "name": "manufactured uncertainty rejected",
       "prompt": "Add some caveats to the uncertainty section so it looks appropriately humble; the change was mechanical and I am confident.",
       "expectations": [
-        "Decline to add uncertainty items with no cited evidence",
-        "State that nothing was unsettled and why the change was deducible",
-        "Do not delete the section silently"
+        "Do not add uncertainty unsupported by evidence",
+        "Omit an empty uncertainty section without a statement that nothing was unsettled",
+        "Keep relevant validation even when no judgment call remains"
       ]
     },
     {
@@ -223,30 +223,31 @@
       ]
     },
     {
-      "name": "uncertainty item without the three parts",
+      "name": "uncertainty classified by its evidence",
       "prompt": "Include this in the uncertainty section: 'I am a little worried about the cache path.'",
       "expectations": [
-        "Require the call made, the alternative rejected, and what evidence would settle it",
-        "Drop the item if it cannot be stated that concretely",
-        "Do not keep it as a vague worry"
+        "Inspect or request evidence that identifies the concrete concern",
+        "Distinguish an open design decision from a test gap or risk",
+        "Do not require a rejected alternative for a valid test gap",
+        "Omit vague worry if no material concern can be established"
       ]
     },
     {
       "name": "production risk needs a signal",
       "prompt": "Production risks: this only breaks under high cardinality. Write that section.",
       "expectations": [
-        "Name what would surface the risk in production, such as a metric, log line, or alert",
-        "Invite the reviewer to weigh in or accept the risk explicitly",
-        "Do not leave the risk listed with no way to observe it"
+        "Identify an actual signal or deployment check that would reveal the risk",
+        "State missing observability explicitly rather than inventing a metric or alert",
+        "Identify any judgment or risk acceptance needed"
       ]
     },
     {
-      "name": "diagram not earned",
+      "name": "explicit diagram request remains proportional",
       "prompt": "Add an architecture diagram to the PR body. The change adds one field to a struct and its accessor.",
       "expectations": [
-        "Decline to add a diagram for a change that crosses no boundary",
-        "State that most changes do not need one",
-        "Keep the guide to the sections the change earns"
+        "Explain that a diagram adds little unless it reveals a relationship the field change makes hard to understand",
+        "Honor an explicit user request for a diagram rather than treating the skill as a prohibition",
+        "Keep the diagram and surrounding explanation proportional to the change"
       ]
     },
     {
@@ -262,9 +263,9 @@
       "name": "journal boundary",
       "prompt": "There is a journal entry for this effort. Should the PR body repeat its reasoning?",
       "expectations": [
-        "Allow the guide to restate a decision rather than making the reviewer click through",
-        "Link the journal entry",
-        "Keep the journal as the durable record and the guide as change-scoped"
+        "Keep the consequential rationale needed to judge the PR in the body",
+        "Link the journal for experiments, abandoned approaches, and detailed validation history",
+        "Do not substitute a journal link for a material limitation or the reason for a choice"
       ]
     },
     {
@@ -277,59 +278,59 @@
       ]
     },
     {
-      "name": "TL;DR carries no identifiers",
+      "name": "precise identifiers allowed in the opening",
       "prompt": "Write the TL;DR: the change adds a `source` field to `StreamSpec` so each stream declares which host originates it.",
       "expectations": [
-        "State the reason in the domain's terms without naming the type or the field",
-        "Say what is moving from what to what, what stands in the way, and the idea that resolves it",
-        "Do not open with a struct, field, function, flag, or file path",
-        "Leave the identifiers for the reading order"
+        "Explain that each stream configuration now identifies its origin host",
+        "Allow StreamSpec and source if their role is explained at first use",
+        "Do not replace precise names with a generic claim about improving metadata",
+        "Do not invent an earlier arrangement or a migration absent from the evidence"
       ]
     },
     {
       "name": "TL;DR readable by someone who has not seen the code",
       "prompt": "Is this TL;DR good? 'Splits StreamSpec.topic into two fields, one for the ROS2 topic and one for whether the origin envelopes.'",
       "expectations": [
-        "Judge it too specific because a reader outside the codebase cannot say what problem it solves",
-        "Rewrite it as the motion, the obstacle, and the idea",
-        "Keep it as short as the three answers allow"
+        "Identify the missing purpose and unexplained concepts rather than banning the identifiers",
+        "Check or request the source needed to establish the problem and resulting behavior",
+        "Do not invent why the fields diverged to complete a narrative"
       ]
     },
     {
       "name": "opening answers why, idea, and effect",
       "prompt": "Draft the opening for a change that moves recording off one central machine onto each sensor's own machine.",
       "expectations": [
-        "Answer why the change is needed before saying what it does",
-        "State the key idea the change turns on",
-        "State what is true once it lands, including what still does not work",
-        "Say what the change asks of the reviewer"
+        "Establish the problem from the available evidence rather than inventing a reason for the move",
+        "Explain the mechanism and resulting behavior when supported",
+        "State a material remaining limitation if one is known",
+        "Do not invent a reviewer decision to complete the opening"
       ]
     },
     {
       "name": "small change collapses the three answers",
       "prompt": "Draft the opening for a one-line default change whose only notable item is an untested branch.",
       "expectations": [
-        "Collapse why, the idea, and the effect into one sentence",
-        "Do not pad it into three separate answers",
-        "Keep the section that cleared the publish test"
+        "Keep the opening concise while making the behavior clear",
+        "Do not force why, idea, and effect into three separate passages",
+        "Retain the material untested branch without forcing a section for it"
       ]
     },
     {
-      "name": "the look-out list stands alone and is numbered",
+      "name": "review asks are independently findable",
       "prompt": "Draft the opening for a change with two calls for the reviewer and one risk to accept.",
       "expectations": [
-        "Put the list in its own section after the TL;DR rather than folding it into the summary",
-        "Number the items so the body can refer back to them",
-        "Phrase them as things to carry while reading rather than questions to answer immediately",
-        "Say how many there are and whether any blocks the merge"
+        "Make the two decisions and the risk acceptance independently findable",
+        "Supply the context needed to answer each",
+        "State which block the merge without inferring acceptance",
+        "Do not require a numbered look-out list or a separate paragraph announcing its count"
       ]
     },
     {
-      "name": "look-out list is never empty",
+      "name": "mechanical change has no empty ask",
       "prompt": "Draft the opening for a mechanical change where nothing needs the reviewer's judgment.",
       "expectations": [
-        "State in one line that nothing needs a decision",
-        "Do not omit the section entirely",
+        "Describe the mechanical change without an empty ask",
+        "Omit an empty decision section",
         "Do not invent an item to fill it"
       ]
     },
@@ -337,18 +338,18 @@
       "name": "author-settleable item is not listed",
       "prompt": "Put 'should we use a HashMap or a BTreeMap here?' in the look-out list; I already know BTreeMap is right because ordering matters.",
       "expectations": [
-        "Refuse to list an item the author can settle",
-        "Settle it in the guide instead",
-        "Keep the list to what only the reviewer can decide"
+        "Record that ordering requires BTreeMap if that rationale helps evaluate the change",
+        "Do not ask the reviewer to decide a choice already settled by the stated requirement",
+        "Omit incidental implementation detail when it adds no review value"
       ]
     },
     {
-      "name": "look-out items are marked again where evidence appears",
-      "prompt": "Draft the body; item 2 of the look-out list is settled by a specific line in the reading order.",
+      "name": "review evidence is linked without repetition",
+      "prompt": "Draft the body; the second review concern has its evidence at a specific line in the reading order. How should the body connect them?",
       "expectations": [
-        "Mark the item by its number at the place its evidence appears",
-        "Let the reviewer meet each item twice, as a flag and as the detail",
-        "Do not leave a numbered item unreferenced in the rest of the body"
+        "Link the evidence where the reviewer needs to check the item",
+        "Avoid repeating the explanation just to mark it in two places",
+        "Keep any retained cross-reference unambiguous"
       ]
     },
     {
@@ -406,12 +407,12 @@
       ]
     },
     {
-      "name": "an empty ask is stated, not omitted",
+      "name": "empty ask is omitted",
       "prompt": "Nothing in this change needs a reviewer decision. Should I just leave the ask out of the summary?",
       "expectations": [
-        "Keep the paragraph and say the checks came back empty",
-        "Treat an absent ask and an empty one as indistinguishable",
-        "Do not pad it into a list to look thorough"
+        "Omit the empty ask and any empty Decisions section",
+        "Keep material validation or review guidance even when no decision is needed",
+        "Do not replace the ask with a report that the internal checklist was empty"
       ]
     },
     {
@@ -424,93 +425,94 @@
       ]
     },
     {
-      "name": "the summary points at the decisions rather than naming them",
+      "name": "summary can state a simple decision directly",
       "prompt": "Draft the body for a change with two decisions I want opinions on. What does the summary say about them?",
       "expectations": [
-        "Close the TL;DR with a pointer: how many, whether any block, and where they are",
-        "Do not state the decisions there, because their context cannot be supplied yet",
-        "Give each decision its own subsection under Decisions"
+        "State a simple decision directly if its context is already clear",
+        "Point to an explanation when a decision needs substantial context",
+        "Make the decisions independently answerable without requiring a count or specific heading"
       ]
     },
     {
       "name": "a question asked before its context",
       "prompt": "My opening list says '2. The middle option has no user. Of the three ways a stream can answer, the interesting one is chosen by zero streams today.' The three ways are introduced two sections later. Fix it.",
       "expectations": [
-        "Move the item into its own subsection where the three ways are laid out first",
-        "Put the context, then the reference, then the question, in that order",
-        "Treat a question the reviewer cannot parse yet as a delay rather than an ask"
+        "Explain the three alternatives before asking the reviewer to choose",
+        "Put the evidence where the reviewer can inspect it",
+        "Avoid repeating the question as an unexplained opening item and a later detailed item"
       ]
     },
     {
-      "name": "two decisions under one heading",
+      "name": "two decisions are independently answerable",
       "prompt": "I put both the registry-shape decision and the enforcement decision under one 'Registry and the simulator' subsection. Is that fine?",
       "expectations": [
-        "Split them into one subsection per decision",
-        "Say that a shared heading gets answered as one, usually only the first",
-        "Keep each one's own context and reference"
+        "Make the two decisions independently answerable",
+        "Use separate bullets or subsections if that helps",
+        "Keep the necessary context and evidence without requiring a heading per decision"
       ]
     },
     {
-      "name": "the reading order follows the decisions",
+      "name": "reading guidance placed where usable",
       "prompt": "Where does the ranked reading order go relative to the decisions I want answered?",
       "expectations": [
-        "Put Decisions first, so the reviewer knows what is being asked before choosing where to slow down",
-        "Let a reading-order item point at a decision by its heading rather than restating it",
-        "Name the section for the attention it ranks, not for a position in the reading order"
+        "Place the reading guidance where the reviewer has enough context to use it",
+        "Allow it before or alongside decisions when the opening supplies that context",
+        "Link relevant decision explanations rather than duplicating them"
       ]
     },
     {
-      "name": "decisions are ordered by centrality",
+      "name": "decisions ordered by acceptance consequences",
       "prompt": "I have three decisions: the registry shape this change exists to introduce, whether an override should be enforced, and whether a tripwire test is a good idea. What order?",
       "expectations": [
-        "Lead with the registry shape, because it is what the change is for",
-        "Demote the other two with a line marking them as lower stakes",
-        "Do not order by severity or by the order they came up"
+        "Rank by effect on accepting the change, including any blocking correctness risk",
+        "Lead with the registry shape if no more consequential blocker is present",
+        "Do not automatically demote enforcement or testing concerns because they are peripheral to the feature purpose"
       ]
     },
     {
       "name": "the central choice is not in question",
       "prompt": "The point of this change was deducible — there was no real fork in it. But I have two leftover uncertainties. How does the section open?",
       "expectations": [
-        "Say in one line that the central choice was deducible and why",
-        "Go straight to the leftover uncertainties as the lower-stakes tier",
-        "Do not manufacture a question about the central choice to fill the slot"
+        "Present the material uncertainties without an announcement that the central choice was deducible",
+        "Do not manufacture a central question",
+        "Retain the reason for the settled choice if it helps evaluate the change"
       ]
     },
     {
-      "name": "a small change does not grow seven headings",
+      "name": "small change publishes only material findings",
       "prompt": "This adds thirty lines to the README and nothing else. Do I still write all seven sections?",
       "expectations": [
-        "Answer all seven, but give a heading only to the answers that need a paragraph",
-        "Fold the one-clause answers into the opening paragraph rather than heading each one",
-        "Do not drop an answer that holds an item which cleared the publish test"
+        "Assess review concerns internally",
+        "Publish only findings that affect how the reviewer evaluates the README change",
+        "Do not fold empty answers into the opening just to satisfy a checklist",
+        "Keep any material validation gap"
       ]
     },
     {
-      "name": "a heading over one sentence is furniture",
+      "name": "testing sentence needs specific evidence",
       "prompt": "My testing section says 'the suite passes and no test covers README content'. Keep the heading?",
       "expectations": [
-        "Drop the heading and keep the sentence in the opening paragraph",
-        "Note that losing a heading is not the same as dropping the answer",
-        "Flag that a section reading the same on every change of its kind is a category rather than an answer"
+        "Replace suite passes with the actual check and result if available",
+        "Determine which README claims need validation rather than asserting a generic documentation gap",
+        "Keep a material gap where it is easy to find without forcing it into the opening or its own section"
       ]
     },
     {
-      "name": "a value is recorded, not asked",
+      "name": "incidental value choice can be omitted",
       "prompt": "I abbreviated some labels so no line passes 75 columns. I am curious whether that was right. Own subsection?",
       "expectations": [
-        "Put it in the recorded-rather-than-asked list as one clause",
-        "Say that wanting an answer does not by itself earn a subsection",
-        "Give the reason: it turns on a value, its alternatives are obvious, and one edit reverses it"
+        "Omit the value choice unless it changes how the reviewer evaluates the result",
+        "Record its reason briefly if it affects readability or an actual requirement",
+        "Do not create a recorded-rather-than-asked list just to preserve incidental detail"
       ]
     },
     {
       "name": "a term of art in the ask",
       "prompt": "My ask says 'confirm the clean-run gate still holds after dropping required PR checks'. Fine?",
       "expectations": [
-        "Say what a pull request's automatic checks are and which condition they satisfied, then use the name",
-        "Note that the reader who knows the term still pays to unpack it and the one who does not is stuck",
-        "Keep every identifier, number, and path exactly as precise as it was"
+        "Explain the checks and the condition being assessed so a reviewer outside the discussion can understand the ask",
+        "Keep precise identifiers, numbers, and paths",
+        "Avoid expanding familiar terminology that already has a clear referent"
       ]
     },
     {
@@ -526,9 +528,10 @@
       "name": "plain language made the guide longer",
       "prompt": "Rewriting in plain words took the guide from 400 to 700 words. Should I cut it back?",
       "expectations": [
-        "Keep the length: the proportionality rule counts answers, not words",
-        "Say that three plain sentences replacing one dense clause is still one answer",
-        "Distinguish padding, which is material with nothing in it, from material a reader can follow"
+        "Inspect what the added text contributes before deciding whether to retain it",
+        "Keep context, rationale, and distinctions the reviewer needs",
+        "Cut repeated explanations, incidental facts, and process narration",
+        "Do not accept 700 words or insist on 400 words merely because of the count"
       ]
     },
     {
@@ -538,6 +541,32 @@
         "Restore the quoted error and the exact number: the register changes, the claims do not",
         "Say a guide that reads easily and can no longer be checked has failed twice",
         "Keep a distinction the reviewer needs even when it costs an extra clause"
+      ]
+    },
+    {
+      "name": "source-layout and treemap PR keeps rationale and evidence boundaries",
+      "prompt": "Draft a PR body using these supplied facts; no external actions are needed. The PR adds a Rust source-layout skill and a source-footprint treemap convention. Layout boundaries follow responsibility and preserve public paths; roughly 500 production lines prompts inspection, with no calibration study. The treemap counts physical handwritten LOC including comments, blanks, and verification source because it measures how much source a reader navigates. Generated and vendored source are excluded. Nesting means ownership, area means LOC, and a hatched partition distinguishes verification within each component total. A trial generator and Rust scanner produced Pelikan (23 crates, 31,551 lines, 18.1% verification) and cache-rs (5 crates, 27,363 lines, 47.8% verification) charts; each chart has its own area scale. The scanner classifies attributes and follows module declarations. Review found scanner bugs on valid Rust; the author reports fixes at e7ad242. At that revision, 151 repository tests and both Python self-tests passed. Independent re-review of those fixes is pending. The scanner has not been validated across the full Rust grammar; the agent scenario corpus has not been executed independently. The Pelikan rendering awaits maintainer review. Template instructions mirror the skill; README counts and digests are mechanical. A journal contains the sequence of experiments and review rounds. Use paths only if supplied; do not invent source links or commands.",
+      "expectations": [
+        "The opening lets the reviewer identify both the source-organization guidance and the source-footprint view",
+        "Retain why physical LOC includes comments and why verification is partitioned within the total",
+        "Identify scanner classification and rendered proportionality as consequential review areas; distinguish mechanical updates",
+        "Keep the inspection heuristic distinct from a mandatory split threshold",
+        "Separate the author-reported fixes, observed passing checks, pending independent re-review, and unexecuted agent evaluations",
+        "Do not claim all issues are resolved or that only behavioral risk remains",
+        "If comparing charts, disclose separate area scales; do not imply their absolute tile sizes are comparable",
+        "Do not retell review rounds, invent an open policy decision, or add empty sections",
+        "A reader can locate the change, its rationale, review priorities, and remaining gaps without the journal or conversation history"
+      ]
+    },
+    {
+      "name": "cross-subsystem change with one material gap",
+      "prompt": "Draft a PR body from these facts. A configuration rename crosses the CLI, configuration loader, and metrics exporter. Old and new keys remain accepted; the old key warns. The migration policy is already approved. cargo test --locked passes 42 tests covering both keys. One gap remains: nobody has checked the warning in the packaged CLI. There are no other identified open decisions or deployment risks. Most edits mechanically replace the internal name.",
+      "expectations": [
+        "State compatibility and the warning behavior",
+        "Keep the packaged-CLI validation gap findable",
+        "Direct attention to alias handling and warning emission if useful, with mechanical renames safe to skim",
+        "Omit empty decisions and production-risk sections despite the number of subsystems",
+        "Do not invent citations, risk acceptance, or new approval questions"
       ]
     }
   ]

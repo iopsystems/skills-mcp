@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-10-17 | [Relevant prose and selective PR descriptions](2026-10-17-prose-relevance-and-review-guides.md) | open |
 | 2026-10-16 | [The claim was never exclusive](2026-10-16-bridge-claim-race.md) | shipped |
 | 2026-09-04 | [A comment can pass every rule and be false](2026-09-04-sweep-claim-check.md) | shipped |
 | 2026-09-03 | [The reader is not you](2026-09-03-prose-reader.md) | shipped |
