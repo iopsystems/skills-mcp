@@ -13,7 +13,10 @@ import re
 
 ATTR_RE = re.compile(r"#!?\[")
 ITEM_HEAD_RE = re.compile(r"\s*(?:pub(?:\([^)]*\))?\s+)?(?:(?:unsafe|async|const|extern(?:\s+\"[^\"]*\")?)\s+)*"
-                          r"(mod|fn|impl|struct|enum|trait|union|static|const|type|macro_rules!)\b")
+                          r"(mod|fn|impl|struct|enum|trait|union|static|const|type|use|crate|macro_rules!)\b")
+MOD_HEAD_RE = re.compile(r"\s*(?:pub(?:\([^)]*\))?\s+)?mod\s+([A-Za-z_][A-Za-z0-9_]*)\s*$")
+# b"..", c"..", r".." / r#".."#, br".." , cr".." — any literal prefix Rust accepts
+LIT_PREFIX_RE = re.compile(r'(?P<raw>br|cr|r)(?P<hashes>#*)"|(?P<plain>[bc])"')
 
 
 def _skip_block_comment(src, i):
@@ -44,23 +47,21 @@ def _skip_string(src, i):
     return i
 
 
-def _skip_raw_string(src, i):
-    # at 'r' or 'br'; count hashes
-    j = i + (2 if src[i] == "b" else 1)
-    hashes = 0
-    while j < len(src) and src[j] == "#":
-        hashes += 1
-        j += 1
-    if j >= len(src) or src[j] != '"':
-        return i + 1
-    end = src.find('"' + "#" * hashes, j + 1)
+def _skip_raw_string(src, i, m):
+    """`m` is a LIT_PREFIX_RE match at `i` with the raw group set."""
+    hashes = len(m.group("hashes"))
+    j = m.end()  # just past the opening quote
+    end = src.find('"' + "#" * hashes, j)
     return len(src) if end < 0 else end + 1 + hashes
 
 
 def tokens(src):
-    """Yield (index, kind) for structural characters: '{', '}', '#', ';' and
-    newline markers, with comments and literals skipped."""
+    """Yield (index, kind) for structural characters: '{', '}', '#', and ';'.
+    Comments and literals are skipped. A ';' is yielded only outside
+    parentheses and square brackets, so `[u8; 2]` and `for<'a>` bounds never
+    look like the end of an item."""
     i, n = 0, len(src)
+    nest = 0  # () and [] depth
     while i < n:
         c = src[i]
         if src.startswith("//", i):
@@ -70,13 +71,9 @@ def tokens(src):
             i = _skip_block_comment(src, i)
         elif c == '"':
             i = _skip_string(src, i)
-        elif (c == "r" and i + 1 < n and src[i + 1] in '#"') or (src.startswith("br", i) and i + 2 < n and src[i + 2] in '#"'):
-            if i > 0 and (src[i - 1].isalnum() or src[i - 1] == "_"):
-                i += 1
-            else:
-                i = _skip_raw_string(src, i)
-        elif c == "b" and i + 1 < n and src[i + 1] == '"' and not (i > 0 and (src[i - 1].isalnum() or src[i - 1] == "_")):
-            i = _skip_string(src, i + 1)
+        elif c in "rbc" and not (i > 0 and (src[i - 1].isalnum() or src[i - 1] == "_")) and LIT_PREFIX_RE.match(src, i):
+            m = LIT_PREFIX_RE.match(src, i)
+            i = _skip_raw_string(src, i, m) if m.group("raw") is not None else _skip_string(src, m.end() - 1)
         elif c == "'":
             if i + 1 < n and src[i + 1] == "\\":
                 j = src.find("'", i + 2)
@@ -85,7 +82,13 @@ def tokens(src):
                 i += 3
             else:
                 i += 1  # lifetime or label
-        elif c in "{};#":
+        elif c in "([":
+            nest += 1
+            i += 1
+        elif c in ")]":
+            nest = max(0, nest - 1)
+            i += 1
+        elif c in "{}#" or (c == ";" and nest == 0):
             yield i, c
             i += 1
         else:
@@ -103,6 +106,8 @@ def _attr_is_verification(text):
     if not m:
         return None
     expr = m.group(1)
+    # a quoted value such as feature = "test-support" is not a predicate
+    expr = re.sub(r'"(?:[^"\\]|\\.)*"', '""', expr)
     # strip not(...) groups so `cfg(not(test))` does not count
     while True:
         new = re.sub(r"not\((?:[^()]|\([^()]*\))*\)", "", expr)
@@ -118,8 +123,11 @@ def _attr_is_verification(text):
 
 def scan(src):
     """Return (verification_line_ranges, declared_verification_mods).
-    Ranges are (start_line, end_line) inclusive, 1-based; mods are names
-    declared as `mod name;` under a verification attribute."""
+    Ranges are (start_line, end_line, kind) inclusive, 1-based. Mods are
+    (path, kind) for every `mod name;` that is verification, either by its own
+    attribute or by an enclosing verification item; `path` is the module path
+    below the file (`tests/support` for `mod tests { mod support; }`), ready
+    for `child_file`."""
     ranges = []
     mods = []
     n = len(src)
@@ -132,13 +140,23 @@ def scan(src):
     line_of[n] = ln
 
     toks = list(tokens(src))
-    depth = 0
-    pending = None  # (attr_start_index, is_verification) for the item that follows
+    # One frame per open brace: (kind, start_index, inline_mod_name). kind is
+    # set when the brace opens a verification item; inline_mod_name when it
+    # opens `mod name {`, verification or not, so nested declarations resolve.
+    stack = []
+    pending = None  # [attr_start_index, kind, attr_end_index] for the item that follows
+    seg_start = 0   # text since the last structural token or attribute
     k = 0
+
+    def enclosing_kind():
+        for kind, _, _ in reversed(stack):
+            if kind:
+                return kind
+        return None
+
     while k < len(toks):
         i, c = toks[k]
-        if c == "#" and src.startswith("#[", i) or src.startswith("#![", i):
-            # find the matching ']' of the attribute (brackets inside are rare but balanced)
+        if c == "#" and (src.startswith("#[", i) or src.startswith("#![", i)):
             j = i
             bal = 0
             while j < n:
@@ -151,50 +169,43 @@ def scan(src):
                 j += 1
             attr = src[i:j + 1]
             ver = _attr_is_verification(attr)
-            if attr.startswith("#![") and depth == 0 and ver:
+            if attr.startswith("#![") and not stack and ver:
                 return [(1, count_lines(src), ver)], []
             if pending is None:
-                pending = [i, ver]
-            elif ver and (pending[1] is None or ver == "proof"):
-                pending[1] = ver
-            # skip tokens inside the attribute
+                pending = [i, ver, j]
+            else:
+                pending[2] = j
+                if ver and (pending[1] is None or ver == "proof"):
+                    pending[1] = ver
+            seg_start = j + 1
             while k < len(toks) and toks[k][0] <= j:
                 k += 1
             continue
+        tail = src[seg_start:i]
         if c == "{":
-            if pending is not None and pending[1]:
-                head = src[pending[0]:i]
-                # the item this attribute group decorates must start with an item keyword
-                tail = head[head.rfind("]") + 1:]
-                if ITEM_HEAD_RE.match(tail):
-                    # match braces
-                    d = 1
-                    kk = k + 1
-                    while kk < len(toks) and d:
-                        if toks[kk][1] == "{":
-                            d += 1
-                        elif toks[kk][1] == "}":
-                            d -= 1
-                        kk += 1
-                    end_i = toks[kk - 1][0] if d == 0 else n
-                    ranges.append((line_of[pending[0]], line_of[end_i], pending[1]))
-                    k = kk
-                    pending = None
-                    continue
+            kind = None
+            start = i
+            if pending is not None and pending[1] and ITEM_HEAD_RE.match(tail):
+                kind, start = pending[1], pending[0]
+            m = MOD_HEAD_RE.match(tail)
+            stack.append((kind, start, m.group(1) if m else None))
             pending = None
-            depth += 1
         elif c == "}":
-            depth -= 1
+            if stack:
+                kind, start, _ = stack.pop()
+                if kind:
+                    ranges.append((line_of[start], line_of[i], kind))
             pending = None
         elif c == ";":
-            if pending is not None:
-                tail = src[pending[0]:i]
-                tail = tail[tail.rfind("]") + 1:]
-                m = re.match(r"\s*(?:pub(?:\([^)]*\))?\s+)?mod\s+([A-Za-z_][A-Za-z0-9_]*)\s*$", tail)
-                if m and pending[1]:
-                    mods.append((m.group(1), pending[1]))
-                    ranges.append((line_of[pending[0]], line_of[i], pending[1]))
+            m = MOD_HEAD_RE.match(tail)
+            kind = (pending[1] if pending is not None else None) or enclosing_kind()
+            if m and kind:
+                path = "/".join([f[2] for f in stack if f[2]] + [m.group(1)])
+                mods.append((path, kind))
+            if pending is not None and pending[1] and ITEM_HEAD_RE.match(tail):
+                ranges.append((line_of[pending[0]], line_of[i], pending[1]))
             pending = None
+        seg_start = i + 1
         k += 1
     return ranges, mods
 
@@ -258,6 +269,62 @@ fn bare() { }
     assert mods == [("more", "test")], mods
     kinds, _ = verification_lines("#![cfg(test)]\nfn a() {}\nfn b() {}\n")
     assert kinds == {"test": 3}, kinds
+
+    # Finding 1: a feature name that contains "test" or "kani" is a value, not a predicate.
+    src = '''#[cfg(feature = "test-support")]
+pub fn helper() {
+    let _ = 1;
+}
+#[cfg(feature = "kani-shim")]
+pub fn shim() {}
+#[cfg(all(test, feature = "test-support"))]
+fn real_test() {}
+'''
+    kinds, _ = verification_lines(src)
+    assert kinds == {"test": 2}, kinds
+
+    # Finding 2: declarations inside an inline verification module inherit its
+    # kind and resolve below the inline path; an inline production module
+    # still prefixes the path of a test module declared inside it.
+    src = '''#[cfg(test)]
+mod tests {
+    mod support;
+    #[test] fn t() {}
+}
+mod inner {
+    #[cfg(test)]
+    mod tests;
+}
+'''
+    kinds, mods = verification_lines(src)
+    assert kinds == {"test": 7}, kinds  # the inline tests module (5) and the mod decl with attribute (2)
+    assert mods == [("tests/support", "test"), ("inner/tests", "test")], mods
+
+    # Finding 3: a `;` inside brackets does not end the item; a `;`-terminated
+    # attributed item is counted.
+    src = '''#[cfg(test)]
+fn helper() -> [u8; 2] {
+    [1, 2]
+}
+#[cfg(test)]
+const EXPECTED: usize = 2;
+#[cfg(test)]
+use std::collections::HashMap;
+fn prod() -> [u8; 1] { [0] }
+'''
+    kinds, _ = verification_lines(src)
+    assert kinds == {"test": 4 + 2 + 2}, kinds
+
+    # Finding 4: C and raw C string literals are data, as b"" and r"" already were.
+    src = '''pub const A: &core::ffi::CStr = c"hi\\"";
+pub const B: &core::ffi::CStr = cr#"quote " then
+#[test]
+fn not_code() {}"#;
+pub const C: &[u8] = br"x";
+fn prod() {}
+'''
+    kinds, _ = verification_lines(src)
+    assert kinds == {}, kinds
     print("rustscan self-test ok")
 
 

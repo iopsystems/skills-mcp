@@ -198,6 +198,38 @@ emitted rectangles were measured independently of the generator's checks.
 That is the step that found the first defect, and it is the step a
 generator cannot perform on itself.
 
+## Review, round two, 2026-10-17
+
+The same reviewer returned to the Rust scanner with four compiling
+fixtures. None was malformed input; each was ordinary Rust the scanner
+read wrong.
+
+A cfg predicate was searched as text, so `feature = "test-support"`
+counted as test source: the word was inside a value, not a predicate.
+Attributed items had their bodies skipped after counting, so a `mod
+support;` declared inside `#[cfg(test)] mod tests { ... }` was never seen,
+and the support file it names stayed production. Every semicolon ended
+the pending item, so `fn helper() -> [u8; 2]` lost its test attribute at
+the semicolon inside the brackets, and a `#[cfg(test)] const` was dropped
+because only module declarations were kept at a semicolon. Raw C strings
+(`cr"..."`) were not a recognized prefix, so a literal holding the text
+of a test became one.
+
+The scanner now strips string values before looking for `test` or `kani`
+predicates, walks inside attributed bodies with the enclosing kind in
+scope and resolves nested declarations below the inline module path,
+yields a semicolon only outside brackets and parentheses and counts any
+attributed item it ends, and skips `c""` and `cr""` literals the way it
+skipped `b""` and `br""`. The four fixtures are in the self-test.
+
+Regenerating both inventories after the fix changed no count. Both
+repositories happen to avoid every one of these shapes, which says
+something about how a review that reasons from the grammar finds what a
+review that measures the corpus cannot: the corpus had no instance to
+measure. The policy was stated correctly from the first version. Its
+implementation was not, and nothing in the rendered views could have
+shown that.
+
 ## Deferred or Reopen Items
 
 - Independent behavioral evaluation of the scenario corpus remains unrun.
