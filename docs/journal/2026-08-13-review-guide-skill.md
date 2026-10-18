@@ -33,8 +33,8 @@ each of which has a skill already. No template counterpart is created.
 The repository carries twenty-one skills before this change, each a single
 `SKILL.md` served as instruction text, and skills defer to each other by name in
 prose rather than through any import mechanism —
-`skills/repository/architecture-diagram/SKILL.md:27` ("principles carried into a domain")
-and `:38` ("use `dataflow-diagram` directly") are the precedent this follows for
+`skills/repository/architecture-diagram/SKILL.md:31` ("principles carried into a domain")
+and `:42` ("use `dataflow-diagram` directly") are the precedent this follows for
 pictures.
 
 Two adjacent skills bound the design. `engineering-journal` already records

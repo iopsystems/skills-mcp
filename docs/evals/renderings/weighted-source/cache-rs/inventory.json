@@ -1,0 +1,634 @@
+{
+  "repository": "pelikan-io/cache-rs",
+  "revision": "5cf04dd1b47e4bdda1a7a4a5872648b87743d42e",
+  "branch": "feature/ziplist-chain",
+  "tracked_files_modified": [
+    " M crates/data-structure/ziplist/tests/golden.rs",
+    " M crates/data-structure/ziplist/tests/model.rs"
+  ],
+  "untracked_paths": [],
+  "inventory_digest_sha256": "10d707e754568e088f65e3c0421ed43b924cd9810a485f4e2e64fe503b54d23c",
+  "generated": "2026-10-16",
+  "scope": "all tracked *.rs files in Cargo workspace members, one owner each (longest manifest directory); not the code compiled into any one binary",
+  "counting_policy": "physical LOC: every line including comments and blanks; a final unterminated line counts as one line",
+  "breakdown_policy": "verification = files under tests/, benches/, examples/, fuzz/ (kind by directory); files declared by `mod x;` under #[cfg(test)] or #[cfg(kani)] and everything beneath them; and, inside any other file, items carrying #[cfg(test)], #[cfg(kani)], #[test], or #[kani::proof] (an any()/all() predicate containing test or kani counts; a file-level #![cfg(test)] makes the whole file verification), measured by a brace scanner that honors comments and literals (rustscan.py). cfg(not(test)) is production. Unclassifiable lines count as production.",
+  "exclusions": [
+    "tracked non-.rs files (md: 31, toml: 8, yml: 3, lock: 3, svg: 3, gitignore: 2, json: 1, yaml: 1)",
+    "target/ and vendored dependencies (not tracked)"
+  ],
+  "root_total_loc": 27363,
+  "components": [
+    {
+      "name": "cuckoo-cache",
+      "path": "crates/cuckoo",
+      "layer": "Engine",
+      "files": 7,
+      "loc": 1171,
+      "breakdown": {
+        "production": 892,
+        "test": 279,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.042795015166465666,
+      "verification": 279
+    },
+    {
+      "name": "datatier",
+      "path": "crates/datatier",
+      "layer": "Foundation",
+      "files": 1,
+      "loc": 794,
+      "breakdown": {
+        "production": 678,
+        "test": 116,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.02901728611628842,
+      "verification": 116
+    },
+    {
+      "name": "keyvalue",
+      "path": "crates/keyvalue",
+      "layer": "Foundation",
+      "files": 7,
+      "loc": 1309,
+      "breakdown": {
+        "production": 1089,
+        "test": 220,
+        "bench": 0,
+        "example": 0,
+        "fuzz": 0,
+        "proof": 0
+      },
+      "share": 0.047838321821437706,
+      "verification": 220
+    },
+    {
+      "name": "segcache",
+      "path": "crates/segcache",
+      "layer": "Engine",
+      "files": 40,
+      "loc": 15487,
+      "breakdown": {
+        "production": 8010,
+        "test": 6971,
+        "bench": 173,
+        "example": 0,
+        "fuzz": 333,
+        "proof": 0
+      },
+      "share": 0.5659832620692176,
+      "verification": 7477
+    },
+    {
+      "name": "ziplist",
+      "path": "crates/data-structure/ziplist",
+      "layer": "Codec",
+      "files": 20,
+      "loc": 8602,
+      "breakdown": {
+        "production": 3612,
+        "test": 3818,
+        "bench": 180,
+        "example": 250,
+        "fuzz": 479,
+        "proof": 263
+      },
+      "share": 0.31436611482659066,
+      "verification": 4990
+    }
+  ],
+  "files": [
+    {
+      "path": "crates/cuckoo/src/builder.rs",
+      "owner": "cuckoo-cache",
+      "loc": 104,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/cuckoo/src/cuckoo.rs",
+      "owner": "cuckoo-cache",
+      "loc": 569,
+      "classification": "mixed: test 6",
+      "verification": 6
+    },
+    {
+      "path": "crates/cuckoo/src/error.rs",
+      "owner": "cuckoo-cache",
+      "loc": 14,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/cuckoo/src/item.rs",
+      "owner": "cuckoo-cache",
+      "loc": 54,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/cuckoo/src/lib.rs",
+      "owner": "cuckoo-cache",
+      "loc": 54,
+      "classification": "mixed: test 2",
+      "verification": 2
+    },
+    {
+      "path": "crates/cuckoo/src/metrics.rs",
+      "owner": "cuckoo-cache",
+      "loc": 105,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/cuckoo/src/tests.rs",
+      "owner": "cuckoo-cache",
+      "loc": 271,
+      "classification": "whole file: test",
+      "verification": 271
+    },
+    {
+      "path": "crates/data-structure/ziplist/benches/codec.rs",
+      "owner": "ziplist",
+      "loc": 180,
+      "classification": "whole file: bench",
+      "verification": 180
+    },
+    {
+      "path": "crates/data-structure/ziplist/examples/block_anatomy.rs",
+      "owner": "ziplist",
+      "loc": 250,
+      "classification": "whole file: example",
+      "verification": 250
+    },
+    {
+      "path": "crates/data-structure/ziplist/fuzz/fuzz_targets/decode.rs",
+      "owner": "ziplist",
+      "loc": 15,
+      "classification": "whole file: fuzz",
+      "verification": 15
+    },
+    {
+      "path": "crates/data-structure/ziplist/fuzz/fuzz_targets/ops.rs",
+      "owner": "ziplist",
+      "loc": 149,
+      "classification": "whole file: fuzz",
+      "verification": 149
+    },
+    {
+      "path": "crates/data-structure/ziplist/fuzz/fuzz_targets/typed_ops.rs",
+      "owner": "ziplist",
+      "loc": 315,
+      "classification": "whole file: fuzz",
+      "verification": 315
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/block.rs",
+      "owner": "ziplist",
+      "loc": 402,
+      "classification": "mixed: test 124",
+      "verification": 124
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/chain.rs",
+      "owner": "ziplist",
+      "loc": 1487,
+      "classification": "mixed: test 668",
+      "verification": 668
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/cursor.rs",
+      "owner": "ziplist",
+      "loc": 257,
+      "classification": "mixed: test 118",
+      "verification": 118
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/entry.rs",
+      "owner": "ziplist",
+      "loc": 458,
+      "classification": "mixed: test 111",
+      "verification": 111
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/error.rs",
+      "owner": "ziplist",
+      "loc": 52,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/hash.rs",
+      "owner": "ziplist",
+      "loc": 553,
+      "classification": "mixed: test 99",
+      "verification": 99
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/header.rs",
+      "owner": "ziplist",
+      "loc": 151,
+      "classification": "mixed: test 37",
+      "verification": 37
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/kani.rs",
+      "owner": "ziplist",
+      "loc": 261,
+      "classification": "whole file: proof",
+      "verification": 261
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/lib.rs",
+      "owner": "ziplist",
+      "loc": 41,
+      "classification": "mixed: proof 2",
+      "verification": 2
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/list.rs",
+      "owner": "ziplist",
+      "loc": 365,
+      "classification": "mixed: test 82",
+      "verification": 82
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/map.rs",
+      "owner": "ziplist",
+      "loc": 196,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/set.rs",
+      "owner": "ziplist",
+      "loc": 363,
+      "classification": "mixed: test 111",
+      "verification": 111
+    },
+    {
+      "path": "crates/data-structure/ziplist/src/zset.rs",
+      "owner": "ziplist",
+      "loc": 862,
+      "classification": "mixed: test 223",
+      "verification": 223
+    },
+    {
+      "path": "crates/data-structure/ziplist/tests/golden.rs",
+      "owner": "ziplist",
+      "loc": 458,
+      "classification": "whole file: test",
+      "verification": 458
+    },
+    {
+      "path": "crates/data-structure/ziplist/tests/model.rs",
+      "owner": "ziplist",
+      "loc": 1787,
+      "classification": "whole file: test",
+      "verification": 1787
+    },
+    {
+      "path": "crates/datatier/src/lib.rs",
+      "owner": "datatier",
+      "loc": 794,
+      "classification": "mixed: test 116",
+      "verification": 116
+    },
+    {
+      "path": "crates/keyvalue/src/item/header.rs",
+      "owner": "keyvalue",
+      "loc": 232,
+      "classification": "mixed: test 40",
+      "verification": 40
+    },
+    {
+      "path": "crates/keyvalue/src/item/mod.rs",
+      "owner": "keyvalue",
+      "loc": 51,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/keyvalue/src/item/raw.rs",
+      "owner": "keyvalue",
+      "loc": 588,
+      "classification": "mixed: test 145",
+      "verification": 145
+    },
+    {
+      "path": "crates/keyvalue/src/lib.rs",
+      "owner": "keyvalue",
+      "loc": 30,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/keyvalue/src/numeric.rs",
+      "owner": "keyvalue",
+      "loc": 68,
+      "classification": "mixed: test 35",
+      "verification": 35
+    },
+    {
+      "path": "crates/keyvalue/src/tiny.rs",
+      "owner": "keyvalue",
+      "loc": 218,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/keyvalue/src/value.rs",
+      "owner": "keyvalue",
+      "loc": 122,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/benches/benchmark.rs",
+      "owner": "segcache",
+      "loc": 173,
+      "classification": "whole file: bench",
+      "verification": 173
+    },
+    {
+      "path": "crates/segcache/fuzz/fuzz_targets/segcache.rs",
+      "owner": "segcache",
+      "loc": 333,
+      "classification": "whole file: fuzz",
+      "verification": 333
+    },
+    {
+      "path": "crates/segcache/src/builder.rs",
+      "owner": "segcache",
+      "loc": 169,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/cas.rs",
+      "owner": "segcache",
+      "loc": 169,
+      "classification": "mixed: test 67",
+      "verification": 67
+    },
+    {
+      "path": "crates/segcache/src/error.rs",
+      "owner": "segcache",
+      "loc": 28,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/eviction/ghost.rs",
+      "owner": "segcache",
+      "loc": 46,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/eviction/mod.rs",
+      "owner": "segcache",
+      "loc": 210,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/eviction/policy.rs",
+      "owner": "segcache",
+      "loc": 82,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/hashtable/bucket.rs",
+      "owner": "segcache",
+      "loc": 204,
+      "classification": "mixed: test 78",
+      "verification": 78
+    },
+    {
+      "path": "crates/segcache/src/hashtable/location.rs",
+      "owner": "segcache",
+      "loc": 120,
+      "classification": "mixed: test 33",
+      "verification": 33
+    },
+    {
+      "path": "crates/segcache/src/hashtable/mod.rs",
+      "owner": "segcache",
+      "loc": 160,
+      "classification": "mixed: test 38",
+      "verification": 38
+    },
+    {
+      "path": "crates/segcache/src/hashtable/table.rs",
+      "owner": "segcache",
+      "loc": 1819,
+      "classification": "mixed: test 624",
+      "verification": 624
+    },
+    {
+      "path": "crates/segcache/src/hashtable/traits.rs",
+      "owner": "segcache",
+      "loc": 104,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/item/mod.rs",
+      "owner": "segcache",
+      "loc": 71,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/item/reserved.rs",
+      "owner": "segcache",
+      "loc": 51,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/lib.rs",
+      "owner": "segcache",
+      "loc": 72,
+      "classification": "mixed: test 2",
+      "verification": 2
+    },
+    {
+      "path": "crates/segcache/src/metrics.rs",
+      "owner": "segcache",
+      "loc": 213,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/rand.rs",
+      "owner": "segcache",
+      "loc": 18,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/segcache.rs",
+      "owner": "segcache",
+      "loc": 978,
+      "classification": "mixed: test 9",
+      "verification": 9
+    },
+    {
+      "path": "crates/segcache/src/segments/builder.rs",
+      "owner": "segcache",
+      "loc": 75,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/segments/error.rs",
+      "owner": "segcache",
+      "loc": 28,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/segments/eviction_concurrency_tests.rs",
+      "owner": "segcache",
+      "loc": 2066,
+      "classification": "whole file: test",
+      "verification": 2066
+    },
+    {
+      "path": "crates/segcache/src/segments/guard.rs",
+      "owner": "segcache",
+      "loc": 78,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/segments/header.rs",
+      "owner": "segcache",
+      "loc": 1281,
+      "classification": "mixed: test 596",
+      "verification": 596
+    },
+    {
+      "path": "crates/segcache/src/segments/mod.rs",
+      "owner": "segcache",
+      "loc": 53,
+      "classification": "mixed: test 29",
+      "verification": 29
+    },
+    {
+      "path": "crates/segcache/src/segments/remover_pin.rs",
+      "owner": "segcache",
+      "loc": 62,
+      "classification": "mixed: test 26",
+      "verification": 26
+    },
+    {
+      "path": "crates/segcache/src/segments/segment.rs",
+      "owner": "segcache",
+      "loc": 509,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/segments/segments.rs",
+      "owner": "segcache",
+      "loc": 2330,
+      "classification": "mixed: test 327",
+      "verification": 327
+    },
+    {
+      "path": "crates/segcache/src/segments/state.rs",
+      "owner": "segcache",
+      "loc": 285,
+      "classification": "mixed: test 102",
+      "verification": 102
+    },
+    {
+      "path": "crates/segcache/src/segments/writer_pin.rs",
+      "owner": "segcache",
+      "loc": 70,
+      "classification": "mixed: test 26",
+      "verification": 26
+    },
+    {
+      "path": "crates/segcache/src/sync.rs",
+      "owner": "segcache",
+      "loc": 7,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/tests.rs",
+      "owner": "segcache",
+      "loc": 2068,
+      "classification": "whole file: test",
+      "verification": 2068
+    },
+    {
+      "path": "crates/segcache/src/ttl_buckets/concurrency_tests.rs",
+      "owner": "segcache",
+      "loc": 150,
+      "classification": "whole file: test",
+      "verification": 150
+    },
+    {
+      "path": "crates/segcache/src/ttl_buckets/error.rs",
+      "owner": "segcache",
+      "loc": 11,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/src/ttl_buckets/mod.rs",
+      "owner": "segcache",
+      "loc": 20,
+      "classification": "mixed: test 4",
+      "verification": 4
+    },
+    {
+      "path": "crates/segcache/src/ttl_buckets/tests.rs",
+      "owner": "segcache",
+      "loc": 89,
+      "classification": "whole file: test",
+      "verification": 89
+    },
+    {
+      "path": "crates/segcache/src/ttl_buckets/ttl_bucket.rs",
+      "owner": "segcache",
+      "loc": 612,
+      "classification": "mixed: test 99",
+      "verification": 99
+    },
+    {
+      "path": "crates/segcache/src/ttl_buckets/ttl_buckets.rs",
+      "owner": "segcache",
+      "loc": 135,
+      "classification": "production",
+      "verification": 0
+    },
+    {
+      "path": "crates/segcache/tests/integration_basic.rs",
+      "owner": "segcache",
+      "loc": 287,
+      "classification": "whole file: test",
+      "verification": 287
+    },
+    {
+      "path": "crates/segcache/tests/integration_eviction.rs",
+      "owner": "segcache",
+      "loc": 251,
+      "classification": "whole file: test",
+      "verification": 251
+    }
+  ]
+}

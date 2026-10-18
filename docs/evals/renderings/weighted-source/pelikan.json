@@ -1,0 +1,54 @@
+{
+  "title": "Pelikan",
+  "repository": "iopsystems/pelikan",
+  "source": "layer table and palette from xtask/src/arch.rs and xtask/src/svg.rs; Product and Tooling treatments are chart conventions",
+  "layers": {
+    "pelikan-segcache": "Product",
+    "pelikan-rds": "Product",
+    "pelikan-pingserver": "Product",
+    "pelikan-pingproxy": "Product",
+    "server": "Core",
+    "proxy": "Core",
+    "admin": "Core",
+    "session": "Core",
+    "queues": "Core",
+    "protocol-admin": "Protocol",
+    "protocol-common": "Protocol",
+    "protocol-http": "Protocol",
+    "protocol-memcache": "Protocol",
+    "protocol-ping": "Protocol",
+    "protocol-resp": "Protocol",
+    "entrystore": "Storage",
+    "storage-types": "Storage",
+    "bloom": "Storage",
+    "common": "Foundation",
+    "config": "Foundation",
+    "logger": "Foundation",
+    "pelikan-net": "Foundation",
+    "xtask": "Tooling"
+  },
+  "order": [
+    "Product",
+    "Core",
+    "Protocol",
+    "Storage",
+    "Foundation",
+    "Tooling"
+  ],
+  "fill": {
+    "Product": "#F5F5F5",
+    "Core": "#CCEBC5",
+    "Protocol": "#FBB4AE",
+    "Storage": "#B3CDE3",
+    "Foundation": "#F2F2F2",
+    "Tooling": "#FFFFFF"
+  },
+  "stroke": {
+    "Product": "#9E9E9E",
+    "Tooling": "#9E9E9E"
+  },
+  "dashed": [
+    "Tooling"
+  ],
+  "footer": "xtask (tooling) sits outside the architecture chart and is dashed here."
+}

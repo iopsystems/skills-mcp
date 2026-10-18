@@ -33,7 +33,7 @@ that will eventually read these sections.
 
 Three facts constrained the design:
 
-- Beta is prose today, not a field. `skills/repository/architecture-diagram/SKILL.md:31`
+- Beta is prose today, not a field. `skills/repository/architecture-diagram/SKILL.md:35`
   instructs the reader to "treat this skill as **beta**", and
   `templates/architecture-diagram-skill/template.yaml:4` opens its purpose with
   "Beta —". No `maturity:` key exists anywhere in the repository.

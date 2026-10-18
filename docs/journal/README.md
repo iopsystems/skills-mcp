@@ -7,6 +7,8 @@ is authoritative for lifecycle status.
 | --- | --- | --- |
 | 2026-10-17 | [Relevant prose and selective PR descriptions](2026-10-17-prose-relevance-and-review-guides.md) | open |
 | 2026-10-16 | [The claim was never exclusive](2026-10-16-bridge-claim-race.md) | shipped |
+| 2026-10-14 | [Weighted source alongside architecture](2026-10-14-weighted-source-at-a-glance.md) | open |
+| 2026-10-14 | [Rust source layout follows responsibility](2026-10-14-rust-source-layout.md) | open |
 | 2026-09-04 | [A comment can pass every rule and be false](2026-09-04-sweep-claim-check.md) | shipped |
 | 2026-09-03 | [The reader is not you](2026-09-03-prose-reader.md) | shipped |
 | 2026-09-01 | [The automation that never ran in anger](2026-09-01-drop-tap-dispatch.md) | shipped |

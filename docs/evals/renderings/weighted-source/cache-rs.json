@@ -1,0 +1,28 @@
+{
+  "title": "cache-rs",
+  "repository": "pelikan-io/cache-rs",
+  "source": "no structure chart exists; layers follow CLAUDE.md's description (engines depend on keyvalue, optionally datatier; ziplist is a byte-format codec). Engine takes the storage tint segcache has in Pelikan's chart, Foundation the foundation tint, Codec the protocol tint. Engine is validated against the dependency graph.",
+  "layers": {
+    "segcache": "Engine",
+    "cuckoo-cache": "Engine",
+    "ziplist": "Codec",
+    "keyvalue": "Foundation",
+    "datatier": "Foundation"
+  },
+  "order": [
+    "Engine",
+    "Codec",
+    "Foundation"
+  ],
+  "fill": {
+    "Engine": "#B3CDE3",
+    "Codec": "#FBB4AE",
+    "Foundation": "#F2F2F2"
+  },
+  "derived": {
+    "Engine": {
+      "depends_on": "keyvalue"
+    }
+  },
+  "footer": "No structure chart exists here; layers follow the project's own description, and Engine is checked against the dependency graph."
+}
