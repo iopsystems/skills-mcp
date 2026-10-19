@@ -248,6 +248,10 @@ Editing only the previous prose can preserve a false claim while making it
 sound more certain. If the reader finds a section confusing, check whether
 its premise is wrong before trying smoother wording.
 
+When the scope changes, reassess the title, opening, review priorities, and
+validation against the final diff. Rebuild the explanation around the final
+change rather than appending an account of each new commit.
+
 When revising an existing body, verify dependency and draft-blocker claims
 against current PR status or supplied project records. A merged dependency no
 longer blocks on merging, but its integration or validation may remain

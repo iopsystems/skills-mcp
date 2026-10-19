@@ -1,0 +1,30 @@
+{
+  "cases": [
+    {
+      "id": "expanded-scope",
+      "skills": ["review-guide", "technical-prose"],
+      "request": "Revise this PR title and description for a competent engineer reviewing the final diff. Use only the supplied evidence; no external actions or source links are needed.",
+      "title": "refactor(settings): split the settings registry",
+      "body": "The settings registry grew to 2400 lines. This PR splits it into modules and preserves existing import paths.\n\nLater additions: transport header constants now live in wire_layout; scheduler settings now live in settings; output coverage decisions now live beside output policy. These moves follow the same separation of declarations from implementation.\n\nThe wire layout has 12 constants. The scheduler has 9 settings. Output policy has 6 supported types and 2 deliberate exclusions. The first commit was reviewed before the later additions.\n\nTests: cargo test --locked passed 84 tests on the final revision. They cover settings lookup, packet encoding, and output coverage. No end-to-end service launch ran.",
+      "evidence": "The final diff separates declarations from implementation in the settings registry, packet transport, scheduler, and output converter. Existing imports and runtime values remain unchanged. There is no required title format beyond a conventional commit prefix. The supplied test result is an observed check at the final revision. Independent review covered only the first registry move; the later changes have not been independently reviewed."
+    },
+    {
+      "id": "move-with-exceptions",
+      "skills": ["review-guide", "technical-prose"],
+      "request": "Draft a PR description from the final diff evidence. No external actions or source links are needed.",
+      "evidence": "The branch was originally described as 'a verbatim move; everything is mechanical and safe to skim.' Most declarations move unchanged. Later commits replace a runtime-generated endpoint list with a static list containing the same entries; a parity test covers the entries. Four formerly private retry constants become public in a library settings module so both the binary and library can import them. Existing public paths are preserved. Runtime values and behavior are intended to remain unchanged. Whether the expanded public API is acceptable is unresolved and the reviewer must decide before merge. cargo test --locked passed 52 tests, including endpoint parity. No external-client compatibility check has run."
+    },
+    {
+      "id": "repeated-inventories",
+      "skills": ["review-guide", "technical-prose"],
+      "request": "Tighten this PR body for a reviewer with the diff, preserving the information needed to judge the change. No external actions or source links are needed.",
+      "body": "This refactor separates declarations from the code that reads them. Existing import paths remain valid.\n\nModule inventory: limits contains queue limits; layout contains header constants; policy contains accepted output types and exclusions.\n\nWhat changed: queue limits move to limits; header constants move to layout; accepted output types and exclusions move to policy.\n\nWhy: accepted types and exclusions belong together because a reader checking output coverage needs both. Header constants stay beside the byte-layout diagram so reviewers can check field offsets against it.\n\nDecisions: the approved format requires the existing field offsets. The proposed public visibility of four retry constants remains undecided and requires review before merge.\n\nWhere to look: inspect the visibility change and check the header offsets against the diagram. The unchanged constant values can be skimmed.\n\nValidation: cargo test --locked passed 52 tests. A comparison found all declarations preserved; it establishes membership, not statement order. The source grouping was inspected manually. No independent review of the visibility change has occurred.\n\nHistory: the original registry move was written first; layout, limits, and policy were added in three later commits."
+    },
+    {
+      "id": "relocated-comment",
+      "skills": ["sweep-comments", "technical-prose"],
+      "request": "Review the comments in this relocated Rust block against the supplied current implementation and report any correction. The block moved without functional changes, and the comment text was copied unchanged. This is a focused comment review, not an edit request or a full pre-PR sweep. Do not propose a change to the binary format merely to agree with the comment. No external actions are needed.",
+      "source": "//! Header schema for the transport; declarations and encoder were moved together.\n\n/// Encoded header: three u64 words in little-endian order.\npub(crate) const HEADER_BYTES: usize = 4 * 8;\n\nfn encode_header(sequence: u64, cursor: u64, lost: u64, stamp: u64) -> Vec<u8> {\n    let mut bytes = Vec::with_capacity(HEADER_BYTES);\n    for word in [sequence, cursor, lost, stamp] {\n        bytes.extend_from_slice(&word.to_le_bytes());\n    }\n    bytes\n}\n"
+    }
+  ]
+}
