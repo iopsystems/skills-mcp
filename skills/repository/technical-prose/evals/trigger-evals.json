@@ -325,6 +325,18 @@
         "Preserve the snapshot requirement, version identifiers, and restore-before-restart ordering",
         "Do not treat every repeated mention or navigational reference as redundant"
       ]
+    },
+    {
+      "name": "consolidate inventories without cutting consequential rationale",
+      "prompt": "Tighten this PR body for a reviewer with the diff, preserving the information needed to judge the change. No external actions or source links are needed.\n\nBody:\nThis refactor separates declarations from the code that reads them. Existing import paths remain valid.\n\nModule inventory: limits contains queue limits; layout contains header constants; policy contains accepted output types and exclusions.\n\nWhat changed: queue limits move to limits; header constants move to layout; accepted output types and exclusions move to policy.\n\nWhy: accepted types and exclusions belong together because a reader checking output coverage needs both. Header constants stay beside the byte-layout diagram so reviewers can check field offsets against it.\n\nDecisions: the approved format requires the existing field offsets. The proposed public visibility of four retry constants remains undecided and requires review before merge.\n\nWhere to look: inspect the visibility change and check the header offsets against the diagram. The unchanged constant values can be skimmed.\n\nValidation: cargo test --locked passed 52 tests. A comparison found all declarations preserved; it establishes membership, not statement order. The source grouping was inspected manually. No independent review of the visibility change has occurred.\n\nHistory: the original registry move was written first; layout, limits, and policy were added in three later commits.",
+      "expectations": [
+        "Remove the duplicate module inventory and commit chronology where they add no review value; retain a concise map if useful",
+        "Preserve why output exclusions sit with accepted types and why header constants sit beside the layout diagram",
+        "Keep the unresolved visibility decision distinct from the already-approved field offsets",
+        "Retain the exact test command and count, and the membership-versus-order limitation",
+        "Preserve the absence of independent visibility review without inventing a scheduled future review",
+        "Do not replace concrete rationale with a generic claim about better organization or impose a word-count target"
+      ]
     }
   ]
 }

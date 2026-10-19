@@ -298,6 +298,17 @@
         "Write the claim in the future tense when the named reader consumes the data another way today",
         "Do not assert a reader that a grep of the host's code cannot find"
       ]
+    },
+    {
+      "name": "an unchanged relocated comment still needs claim verification",
+      "prompt": "Review the comments in this relocated Rust block against the supplied current implementation and report any correction. The block moved without functional changes, and the comment text was copied unchanged. This is a focused comment review, not an edit request or a full pre-PR sweep. Do not propose a change to the binary format merely to agree with the comment. No external actions are needed.\n\nSource:\n//! Header schema for the transport; declarations and encoder were moved together.\n\n/// Encoded header: three u64 words in little-endian order.\npub(crate) const HEADER_BYTES: usize = 4 * 8;\n\nfn encode_header(sequence: u64, cursor: u64, lost: u64, stamp: u64) -> Vec<u8> {\n    let mut bytes = Vec::with_capacity(HEADER_BYTES);\n    for word in [sequence, cursor, lost, stamp] {\n        bytes.extend_from_slice(&word.to_le_bytes());\n    }\n    bytes\n}\n",
+      "expectations": [
+        "Verify the numeric schema claim against both the size expression and the actual encoder",
+        "Identify that four words are encoded while the inherited comment says three",
+        "Correct or remove the false claim without changing the binary format to match it",
+        "Do not treat unchanged wording or a behavior-preserving relocation as proof of documentation accuracy",
+        "Do not claim to have run tests or completed a full pre-PR sweep, or edit files in this focused review"
+      ]
     }
   ]
 }

@@ -621,6 +621,30 @@
         "Do not invent an observed incompatibility, an approved rollout policy, or another merge gate",
         "Do not require a section for each category when concise prose makes the distinctions clear"
       ]
+    },
+    {
+      "name": "expanded scope rebuilds the title and review explanation",
+      "prompt": "Revise this PR title and description for a competent engineer reviewing the final diff. Use only the supplied evidence; no external actions or source links are needed.\n\nTitle:\nrefactor(settings): split the settings registry\n\nBody:\nThe settings registry grew to 2400 lines. This PR splits it into modules and preserves existing import paths.\n\nLater additions: transport header constants now live in wire_layout; scheduler settings now live in settings; output coverage decisions now live beside output policy. These moves follow the same separation of declarations from implementation.\n\nThe wire layout has 12 constants. The scheduler has 9 settings. Output policy has 6 supported types and 2 deliberate exclusions. The first commit was reviewed before the later additions.\n\nTests: cargo test --locked passed 84 tests on the final revision. They cover settings lookup, packet encoding, and output coverage. No end-to-end service launch ran.\n\nEvidence:\nThe final diff separates declarations from implementation in the settings registry, packet transport, scheduler, and output converter. Existing imports and runtime values remain unchanged. There is no required title format beyond a conventional commit prefix. The supplied test result is an observed check at the final revision. Independent review covered only the first registry move; the later changes have not been independently reviewed.",
+      "expectations": [
+        "Update the title and opening to cover the final separation of declarations from implementation across all four components",
+        "Organize review guidance around the final change instead of retaining the original premise and appending each later commit",
+        "Retain preserved import paths, final-revision test evidence, and the missing end-to-end service launch",
+        "Keep the first move's independent review distinct from the later unreviewed additions",
+        "Do not invent runtime changes, reviewer decisions, validation, or source links",
+        "Do not rewrite Git history or impose a fixed description length"
+      ]
+    },
+    {
+      "name": "unchanged runtime behavior does not make every edit a verbatim move",
+      "prompt": "Draft a PR description from the final diff evidence. No external actions or source links are needed.\n\nEvidence:\nThe branch was originally described as 'a verbatim move; everything is mechanical and safe to skim.' Most declarations move unchanged. Later commits replace a runtime-generated endpoint list with a static list containing the same entries; a parity test covers the entries. Four formerly private retry constants become public in a library settings module so both the binary and library can import them. Existing public paths are preserved. Runtime values and behavior are intended to remain unchanged. Whether the expanded public API is acceptable is unresolved and the reviewer must decide before merge. cargo test --locked passed 52 tests, including endpoint parity. No external-client compatibility check has run.",
+      "expectations": [
+        "Distinguish unchanged declaration moves from static endpoint construction and public API expansion",
+        "Preserve that unchanged runtime behavior is the intent and that existing public paths remain valid",
+        "Keep the public-visibility decision explicit as a before-merge review decision",
+        "Avoid blanket safe-to-skim guidance that includes the unresolved visibility choice",
+        "Report the endpoint parity test and the unperformed external-client compatibility check at their actual strength",
+        "Do not infer that every edit is verbatim, that unchanged values prove all behavior, or that existing paths imply an unchanged public API"
+      ]
     }
   ]
 }

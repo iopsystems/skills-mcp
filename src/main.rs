@@ -1180,7 +1180,7 @@ mod tests {
             .as_array()
             .expect("sweep-comments evals should contain an evals array");
 
-        assert_eq!(evals.len(), 34);
+        assert_eq!(evals.len(), 35);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());
@@ -1218,7 +1218,7 @@ mod tests {
             .as_array()
             .expect("technical-prose evals should contain an evals array");
 
-        assert_eq!(evals.len(), 36);
+        assert_eq!(evals.len(), 37);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());
@@ -1257,7 +1257,7 @@ mod tests {
             .as_array()
             .expect("review-guide evals should contain an evals array");
 
-        assert_eq!(evals.len(), 66);
+        assert_eq!(evals.len(), 68);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());
