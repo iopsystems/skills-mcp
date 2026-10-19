@@ -101,6 +101,17 @@ markup validity, deterministic regeneration compared by hash, bounds and
 collision checks, a reviewer reading the committed artifact. A gate skipped
 without that record reads afterwards as a gate passed.
 
+Keep a compact check record in the existing journal, test output, or beside
+the artifact. Identify the source revision and any dirty inputs, the rendered
+path and content hash, and the regeneration command. Retain a source snapshot
+or diff when the inputs are uncommitted. Record source/claim checks, rendering
+checks, actual visual inspection, and required human approval separately:
+passed, failed, or not run, with the reason for any skipped or inapplicable
+check. Name the renderer or preview inspected and the reviewer for approval.
+Results apply to that source/artifact pair; after an edit, rerun affected checks
+and obtain any required review for the new artifact. In the handoff, link the
+diagram and state remaining gaps; leave the check detail in the record.
+
 ## The build-time chart
 
 - **Blocks, not units.** Unit-level arrows at whole-system scale are
@@ -373,6 +384,25 @@ had the fix been coordinates. Convert the report into a generator assertion —
 the line group is centered, equivalent boxes share a width, endpoints land on
 borders, paired labels face outward, children stay in their lane — so the fix
 survives the edit that would otherwise undo it.
+
+## Diagnose and repair a specific failure
+
+Report a failed check with a stable rule name, affected component/edge IDs,
+observed geometry or claim, expected constraint, and the artifact checked.
+Use the existing generator's diagnostics; no new reporting framework is needed.
+
+Repair the implicated neighborhood in the generator. Preserve containment,
+runtime relationships, conditions, and labels' meaning. In weighted views,
+preserve inventory totals and LOC-to-area ratios; move a label rather than
+inflate its tile. Do not drop components or weaken checks to make a layout pass.
+Check the rendered result and rerun affected source and geometry assertions.
+Fewer diagnostics alone does not establish that the repair worked.
+
+Keep the last passing artifact while testing a candidate separately. If the
+same issue survives two focused repairs, inspect its measurements and source
+contract before one further attempt. If it persists, stop and report the
+unresolved constraint. Retain the previous artifact as a labeled snapshot,
+not evidence that the current source passes. Existing review gates still apply.
 
 ## Single-use charts
 

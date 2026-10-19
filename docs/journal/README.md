@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-10-19 | [Diagram check records and focused repairs](2026-10-19-diagram-checks-and-repairs.md) | open |
 | 2026-10-18 | [PR descriptions agree with current behavior](2026-10-18-pr-description-consistency.md) | open |
 | 2026-10-17 | [Relevant prose and selective PR descriptions](2026-10-17-prose-relevance-and-review-guides.md) | open |
 | 2026-10-16 | [The claim was never exclusive](2026-10-16-bridge-claim-race.md) | shipped |
