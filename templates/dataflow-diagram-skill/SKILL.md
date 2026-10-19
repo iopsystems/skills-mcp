@@ -368,6 +368,25 @@ Keep the output a text format whose source is the artifact — a `.dot` or
 `.d2` that renders to SVG, not a pasted raster. A text source diffs and
 greps; an image is opaque to every tool.
 
+## Diagnose and repair a specific failure
+
+Report a failed check with a stable rule name, affected node/edge IDs, observed
+geometry or claim, expected constraint, and the artifact checked. Reuse these
+fields in existing test output; a new reporting framework is unnecessary.
+
+Repair the implicated neighborhood in the generator. Preserve nodes, edge
+direction, conditions, and labels' meaning; do not remove a retry or error path
+to clear a collision. Check the rendered result, then rerun all affected claim
+and layout checks. Fewer diagnostics alone is not progress if a different
+relationship is now wrong.
+
+Keep the last passing artifact while testing a candidate separately. If the
+same issue survives two focused repairs, inspect its measurements and source
+contract before one further attempt. If it persists, stop and report the
+unresolved constraint. Retain the previous artifact as a labeled snapshot,
+not evidence that the current source passes. These are repair limits, not
+permission to skip the perceptual gate.
+
 ## The perceptual gate
 
 Assertions catch drift, not confusion. A chart whose every claim is derived
@@ -382,6 +401,17 @@ name what stood in for it — markup validity, deterministic regeneration
 compared by hash, bounds and collision checks, a reviewer reading the
 committed artifact. A gate skipped without that record reads afterwards as a
 gate passed.
+
+Keep a compact check record in the existing journal, test output, or beside
+the artifact. Identify the source revision and any dirty inputs, the rendered
+path and content hash, and the regeneration command. Retain a source snapshot
+or diff when the inputs are uncommitted. Record source/claim checks, rendering
+checks, actual visual inspection, and required human approval separately:
+passed, failed, or not run, with the reason for any skipped or inapplicable
+check. Name the renderer or preview inspected and the reviewer for approval.
+Results apply to that source/artifact pair; after an edit, rerun affected checks
+and obtain any required review for the new artifact. In the handoff, link the
+diagram and state remaining gaps; leave the check detail in the record.
 
 Then convert what the reader found into an assertion. A visual defect fixed
 in coordinates comes back at the next layout change; the same defect fixed as

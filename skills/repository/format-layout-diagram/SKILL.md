@@ -128,10 +128,36 @@ stood in for it — markup validity, a deterministic regenerate compared by hash
 bounds and collision checks, a reviewer reading the committed artifact. A check
 skipped without that record reads afterwards as a check passed.
 
+Keep a compact check record in the existing provenance table, journal, or test
+output: source revision and fixture identity, dirty inputs with a retained
+snapshot or diff, rendered path and content hash, and regeneration command.
+Separate codec/span assertions, rendering checks, actual visual inspection,
+and any required human approval. Mark each passed, failed, or not run; give
+the reason for a skipped or inapplicable check. Name the renderer or preview
+inspected and the reviewer for approval. Results apply to the source/artifact
+pair. An edit needs fresh results; a browser pass does not cover an untested
+publishing rasterizer.
+Link the figure and state remaining gaps in the handoff; keep check detail in
+the record.
+
 Also: emit fixed ink over an opaque ground rather than colors inherited from
 the page, because a host that embeds the figure as an image strips that
 context. Give the figure a text alternative twice — an accessible label inside
 it, and prose beside it stating the same claim.
+
+## Diagnose and repair a specific failure
+
+Report a stable rule name, field/span identity, observed offset or geometry,
+expected constraint, and the artifact checked. Repair the implicated generator
+logic or annotation placement. Preserve byte order, field widths, decoded
+values, and offset targets; moving a byte cell to avoid a label changes the
+claim. Rerun codec assertions and rendering checks after the repair.
+
+Test candidates separately from the last passing artifact. If the same issue
+survives two focused repairs, inspect its measurements and codec evidence before
+one further attempt. If it persists, stop and report the unresolved constraint.
+Keep the prior artifact as a labeled snapshot, not a passing result for the
+current codec. A lower failure count does not justify a changed byte layout.
 
 ## A default visual language
 

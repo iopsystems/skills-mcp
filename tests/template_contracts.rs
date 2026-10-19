@@ -322,10 +322,10 @@ fn catalog_contains_exactly_the_approved_inert_templates() {
 fn manifests_are_versioned_complete_and_digest_verified() {
     for (id, manifest) in manifests() {
         assert_eq!(manifest.schema_version, 1);
-        let expected_version = if id == "architecture-diagram-skill" {
-            "0.2.0"
-        } else {
-            "0.1.0"
+        let expected_version = match id.as_str() {
+            "architecture-diagram-skill" => "0.2.1",
+            "dataflow-diagram-skill" => "0.1.1",
+            _ => "0.1.0",
         };
         assert_eq!(manifest.version, expected_version);
         assert!(!manifest.purpose.trim().is_empty());

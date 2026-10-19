@@ -207,6 +207,37 @@
         "Record each figure's source, regeneration command, and what it asserts",
         "Mark generated artifacts as not to be edited by hand"
       ]
+    },
+    {
+      "name": "check evidence belongs to the source and artifact reviewed",
+      "prompt": "A human approved diagram A yesterday. We changed the source without committing and rendered B at the same output path. Source assertions and bounds checks pass for B, but the publishing rasterizer is unavailable and nobody inspected B. Write the check record and handoff.",
+      "expectations": [
+        "Identify the source revision and dirty inputs, retain their snapshot or diff, and identify B by path and content hash with its regeneration command",
+        "Report source and bounds checks as passed but publishing-render checks and actual visual inspection as not run with their reasons",
+        "Do not carry A approval to B or claim all visual checks passed",
+        "Keep any required human review pending and link B with its remaining gaps rather than copying a full check log into the handoff"
+      ]
+    },
+    {
+      "name": "byte layout repair moves annotations rather than encoded spans",
+      "prompt": "Two bracket labels collide in the byte-anatomy figure. Moving the tail_off byte cell two positions to the right would fix it, and the modified SVG would still parse. The codec and fixture are unchanged.",
+      "expectations": [
+        "Keep byte offsets, order, field widths, decoded values, and stored-offset targets unchanged",
+        "Adjust annotation placement or surrounding space in the generator",
+        "Do not treat valid SVG as evidence that the encoded layout is correct",
+        "Rerun codec/span assertions and publishing-render checks on the candidate"
+      ]
+    },
+    {
+      "name": "persistent repair failure retains evidence and prior artifact",
+      "prompt": "A label/overlap diagnostic for fields count and tail_off reports a 2 px gap against the required 8 px. Two focused repairs did not resolve it. A source-and-measurement-guided retry still fails on the same pair. The total error count fell, but the candidate also clips an offset arrow. A previous artifact passed its checks against the previous source. What should we deliver?",
+      "expectations": [
+        "Keep the rule, affected IDs, observed and expected measurements, and candidate identity in the failure record",
+        "Stop after the remaining evidence-based attempt rather than continuing arbitrary coordinate changes",
+        "Report the persistent overlap and newly clipped edge rather than using the lower error count as acceptance",
+        "Keep the previous passing artifact intact as a labeled snapshot, not as a passing result for the current source",
+        "Do not weaken checks or promote the failed candidate to the accepted output"
+      ]
     }
   ]
 }
