@@ -1,7 +1,8 @@
 ---
-status: open
+status: shipped
 opened: 2026-10-20
 updated: 2026-10-20
+prs: [86]
 beta_skills: [review-guide]
 ---
 
@@ -52,6 +53,10 @@ A held-reader test covers both timeout and success after the reader releases.
 The schema version and vault Markdown are unchanged.
 
 ## Outcome
+
+Shipped in [PR86](https://github.com/iopsystems/skills-mcp/pull/86), merged as
+`7d9b5992a269e94fdf33a9496bdd3b5bde142c0d` on 2026-10-20. The transaction,
+bounded WAL retries, regression tests, and stress evidence landed.
 
 Both schema regressions fail against the original implementation and pass with
 the transaction. All **154 Rust tests**, **Clippy with warnings denied**, and
