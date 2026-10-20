@@ -1,0 +1,46 @@
+--- /dev/null
++++ b/briefs/2026-10-20-export-resume-tokens.md
+@@ -0,0 +1,43 @@
++---
++id: 2026-10-20-export-resume-tokens
++type: design-brief
++status: draft
++author: Arun
++created: '2026-10-20'
++frames: 2026-10-01-export-retries-problem
++scopes: []
++supersedes: 2026-10-02-export-resume
++relates_to: []
++conflicts_with: []
++depends_on: [2026-10-03-proxy-range]
++tags: [exports, resume]
++---
++
++# Export resume with account-bound tokens
++
++Replace signed client offsets with opaque, account-bound resume tokens. Each token maps server-side to an export id, account id and verified offset. Authenticate the request and verify account ownership before resuming. This successor design frames the accepted export-retries problem and leaves the existing accepted design untouched.
++
++## Rationale
++
++The frame requires account isolation, existing downloads and unchanged retention limits. Account-bound lookup and ownership checks protect isolation; old-download fallback preserves compatibility. Resume reuses retained export data within existing retention limits and does not extend those limits. Server-side token revocation avoids the revocation complexity of signed offsets.
++
++## Concrete design
++
++An illustrative token record is `{token: <opaque value>, export_id: E, account_id: A, verified_offset: N}`. The API accepts the token with an authenticated resume request. It looks up the record, rejects revoked or unknown tokens, verifies that the requesting account owns the export and matches A, and resumes from the server-verified N. A client-provided offset cannot override N. Expired export data is unavailable for resume; token state must not extend export retention.
++
++Token creation and advancement must use verified offsets. The prototype will establish the supported proxy's range behavior before the implementation is considered ready. That unresolved question is tracked by the open proxy-range inquiry and is a dependency of this design.
++
++Roll out the API capability behind a disabled flag, then ship a client with old-download fallback, then enable a small cohort. Roll back by disabling the flag, leaving old downloads usable. Plan tests for token revocation, cross-account rejection and old-download fallback. None of these tests has run; proxy support is also unverified.
++
++## Cost and risks
++
++Budget three engineer-weeks for API/token handling, client fallback, the proxy prototype and validation. Arun is the author and API owner; API and client engineering participation plus validation support are required, with individual assignments still to be arranged. The budget is an allowance rather than measured delivery evidence. Main risks are proxy incompatibility, token lifecycle correctness and fallback regressions. Download compatibility and unchanged retention are release requirements.
++
++## Alternatives
++
++- Signed client offsets, the existing design: complicate revocation and are replaced by server-managed opaque tokens.
++- Restart from the beginning, including keeping current behavior: preserves the simple download path but repeats expensive work after a dropped connection and does not address the framed problem.
++
++## Reconsideration
++
++Reconsider or supersede this approach if the prototype shows that range requests cannot pass the supported proxy. Also revisit if account isolation, revocation, fallback or existing retention limits cannot be preserved within the three-engineer-week allowance. The open proxy inquiry and unrun tests are unresolved evidence, not successful validation.

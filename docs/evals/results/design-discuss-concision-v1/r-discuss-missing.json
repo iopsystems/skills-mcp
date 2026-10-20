@@ -1,0 +1,39 @@
+{
+  "case": "discuss-missing",
+  "request": "Use discuss at /tmp/design-discuss-trial/r/skills/discuss.md.\nLocal dependency instructions are in /tmp/design-discuss-trial/r/skills.\n\nUser request:\nDraft notes from today's meeting about export retention. I am Morgan, the note author. Date: 2026-10-20. We disagreed about whether longer retention is needed and did not decide. I have not supplied who attended. Draft mode only.\n\nVault: /tmp/design-discuss-trial/r/discuss-missing/vault\nSave your user-facing response to /tmp/design-discuss-trial/r/discuss-missing/handoff.md.\nSave proposed diffs or temporary notes beside the vault, not inside it.\n\nThis is a local execution trial. Perform authorized file writes and Git commits\nin this disposable vault. There is no remote. No network, live vault or GitHub\naccess is allowed. Git config identifies the fixture owner, not the note author.\nFor vault reads/checks, use this fixture stand-in instead of live MCP calls:\npython /tmp/skills-mcp-reconcile-execution/docs/evals/design-discuss-eval.py tool /tmp/design-discuss-trial/r/discuss-missing TOOL 'JSON'\nTOOL is vault_search, vault_edges or vault_check_transition. Arguments follow\nthe schemas in the supplied vault-search skill. Search uses simple token overlap;\nedges cover frames, supersedes, depends_on and relates_to. Transition checks\nonly enforce the fixture's unresolved frame/dependency blockers. These are\nsimulated tool results, not production-validator evidence. Read returned files\nfor their full content. The tool writes its own event log outside the vault.\n\nRead only this case, assigned skill/dependencies and tool results. Do not read\nthe harness source, protocol, initial.json, other cases, variants or history\noutside this vault. Do not modify instructions, harness, initial state or logs.\nIf user input is needed, save the question in handoff.md and stop the case.\nDo not wait for a simulated answer or infer approval from the test environment.\n",
+  "initial": {
+    "head": "a5ebc0760927fc7e307e2b4b958954408f83d13a",
+    "branch": "work",
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n",
+    "files": {
+      "README.md": "# Disposable knowledge vault\n"
+    },
+    "status": ""
+  },
+  "final": {
+    "head": "a5ebc0760927fc7e307e2b4b958954408f83d13a",
+    "branch": "work",
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n",
+    "files": {
+      "README.md": "# Disposable knowledge vault\n"
+    },
+    "status": ""
+  },
+  "new_files": [],
+  "commits": {},
+  "events": [],
+  "handoff": "Who attended the export-retention meeting?\n\nI have Morgan as the note author and 2026-10-20 as the date. The supplied summary establishes that participants disagreed about whether longer retention is needed and reached no decision. Once the attendees are supplied, I can draft this as a discussion and check related artifacts for follow-up options.\n\nNo note, attendee list or decision was invented, and no vault files or statuses changed. [discuss](../skills/discuss.md) starts with \u201cAsk who the attendees were (for a discussion)\u201d and says \u201cDo not invent attendees or claim decisions that weren't actually reached.\u201d I am stopping for the missing attendee information as your case instructions require. Instructions used: discuss; vault-search dependency was already read, but no vault query was needed before this initial question. No execution failures.\n",
+  "checks": {
+    "existing_artifacts_preserved": true,
+    "config_and_branch_preserved": true,
+    "clean_worktree": true,
+    "expected_new_file_count": true,
+    "new_files_in_authorized_folder": true,
+    "expected_commit_presence": true,
+    "history_only_adds_authorized_files": true
+  },
+  "summary": {
+    "passed": 7,
+    "failed": 0
+  }
+}

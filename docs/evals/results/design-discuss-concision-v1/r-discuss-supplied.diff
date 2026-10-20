@@ -1,0 +1,23 @@
+--- /dev/null
++++ discussions/2026-10-20-export-resume-review-session.md
+@@ -0,0 +1,20 @@
++---
++id: 2026-10-20-export-resume-review-session
++type: session-note
++author: Arun
++created: '2026-10-20'
++relates_to:
++- 2026-10-01-export-retries-problem
++- 2026-10-02-export-resume
++- 2026-10-03-proxy-range
++---
++
++# Export resume review
++
++Arun reviewed the accepted [Export resume](../briefs/2026-10-02-export-resume.md) design in a solo working session. He found that signed client offsets make revocation difficult and favors investigating opaque, account-bound tokens. No replacement design or decision has been approved.
++
++The existing design says to revisit if revocation cannot be enforced. This session raises that concern for investigation; difficulty does not yet establish that revocation is impossible. The accepted design remains the current recorded design. Any successor must continue to frame [Export retries](../briefs/2026-10-01-export-retries-problem.md), preserving account isolation, existing downloads and retention limits.
++
++Proxy handling of range requests remains unresolved in [Proxy range support](../inquiries/2026-10-03-proxy-range.md); no prototype result is available. Arun wants to revisit the design after that inquiry. Open questions are whether supported proxies preserve range requests and whether opaque tokens provide an effective revocation mechanism under the existing constraints.
++
++Potential follow-ups for Arun to choose are continuing the existing proxy inquiry, then using `propose-design` to evaluate an opaque-token successor with `supersedes: 2026-10-02-export-resume`. If the revocation question needs separate bounded exploration, an inquiry could be proposed. No follow-up owner beyond Arun's selection role or implementation commitment was established. `record-decision` becomes appropriate only if a decision is actually reached. This note does not obsolete the accepted design, resolve the inquiry or approve a new approach.

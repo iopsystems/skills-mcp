@@ -1,0 +1,163 @@
+{
+  "review_version": 1,
+  "review_type": "unblinded static contract review, separate from frozen behavioral grading",
+  "mapping": {
+    "r": "baseline",
+    "s": "candidate"
+  },
+  "frozen_blind_review": {
+    "path": "/tmp/design-discuss-blind-review.json",
+    "sha256": "db6d377e71660487f33f9405d361c6ffafca01989cd554411a2d5f866f1ffac9",
+    "verified_unchanged": true
+  },
+  "scope": "Read complete baseline and candidate propose-design/discuss instructions and the complete unchanged frame-problem/vault-search dependencies. Compared top-level frontmatter, fenced blocks and final candidate copies by exact content. No repository, fixture or candidate mutation.",
+  "verdict": "No concrete unintended lost requirement found. The candidate preserves the reviewed contract while making the stated intentional clarification and authorization changes.",
+  "unintended_lost_requirements": [],
+  "mechanical_identity_checks": {
+    "propose-design": {
+      "baseline_path": "/tmp/design-discuss-trial/r/skills/propose-design.md",
+      "candidate_path": "/tmp/design-discuss-trial/s/skills/propose-design.md",
+      "baseline_sha256": "bc56adf61a9a11a7e51583724b3030667e42b4133a14d9bf08dccb51f00790bc",
+      "candidate_sha256": "04986ea4d9c1d8dc0482c2319112f71d315d98dbe3c73ca6ee237702639a3d5a",
+      "frontmatter_including_activation_description_byte_identical": true,
+      "fenced_blocks_byte_identical": true,
+      "fenced_block_counts": [
+        1,
+        1
+      ],
+      "whole_file_byte_identical": false,
+      "final_candidate_path": "/tmp/skills-mcp-reconcile-execution/skills/vault/propose-design/SKILL.md",
+      "candidate_matches_final_file": true
+    },
+    "discuss": {
+      "baseline_path": "/tmp/design-discuss-trial/r/skills/discuss.md",
+      "candidate_path": "/tmp/design-discuss-trial/s/skills/discuss.md",
+      "baseline_sha256": "a6595860586011d86ce7640a56afca98a726bf514ddb5c920cd2af9c3c05dcf2",
+      "candidate_sha256": "bbaf0f804da94a0a3a0969718fc4f096078f18d05a3866d3d635553d7dfce503",
+      "frontmatter_including_activation_description_byte_identical": true,
+      "fenced_blocks_byte_identical": true,
+      "fenced_block_counts": [
+        2,
+        2
+      ],
+      "whole_file_byte_identical": false,
+      "final_candidate_path": "/tmp/skills-mcp-reconcile-execution/skills/vault/discuss/SKILL.md",
+      "candidate_matches_final_file": true
+    },
+    "frame-problem": {
+      "baseline_path": "/tmp/design-discuss-trial/r/skills/frame-problem.md",
+      "candidate_path": "/tmp/design-discuss-trial/s/skills/frame-problem.md",
+      "baseline_sha256": "66fa28c0f72e8f5785ea0a66b04ee5883ff48fd0eb9bdb485ef3d2b544735c54",
+      "candidate_sha256": "66fa28c0f72e8f5785ea0a66b04ee5883ff48fd0eb9bdb485ef3d2b544735c54",
+      "frontmatter_including_activation_description_byte_identical": true,
+      "fenced_blocks_byte_identical": true,
+      "fenced_block_counts": [
+        1,
+        1
+      ],
+      "whole_file_byte_identical": true
+    },
+    "vault-search": {
+      "baseline_path": "/tmp/design-discuss-trial/r/skills/vault-search.md",
+      "candidate_path": "/tmp/design-discuss-trial/s/skills/vault-search.md",
+      "baseline_sha256": "412fd7755df56c32b46395d62629438be0d2a1206af084dd5adb2a3c96c2b883",
+      "candidate_sha256": "412fd7755df56c32b46395d62629438be0d2a1206af084dd5adb2a3c96c2b883",
+      "frontmatter_including_activation_description_byte_identical": true,
+      "fenced_blocks_byte_identical": true,
+      "fenced_block_counts": [
+        4,
+        4
+      ],
+      "whole_file_byte_identical": true
+    }
+  },
+  "contract_assessments": [
+    {
+      "requirement": "Activation and artifact schemas",
+      "result": "preserved",
+      "evidence": "Both edited skills have byte-identical top-level frontmatter, including their names and activation descriptions. propose-design retains its one YAML block; discuss retains both YAML blocks byte-for-byte. Candidate copies match the final repository skill files.",
+      "limits": "This verifies textual identity, not activation quality or a live schema validator."
+    },
+    {
+      "requirement": "Search and frame selection branches",
+      "result": "preserved",
+      "evidence": "Candidate propose-design lines 14–20 retain topic search before drafting; no match chains to frame-problem; one draft or accepted match becomes the frame; obsolete framing requires explaining it was set aside and asking about a successor or another frame; multiple matches require user selection with ids, statuses and titles. Lines 25–28 retain incoming frames edge lookup and distinction between alternatives, successors and different work.",
+      "limits": "Multiple matches were not dynamically exercised."
+    },
+    {
+      "requirement": "Required frame and explicit no-frame exception",
+      "result": "preserved",
+      "evidence": "Candidate propose-design lines 22–23 require frames and retain explicit user request, free-text reason and one pushback before frames: none. The unchanged activation text also states the exception. Consolidation removes the repeated prohibition without weakening its explicit exception.",
+      "limits": "The no-frame exception was statically reviewed only."
+    },
+    {
+      "requirement": "Obsolete problem supersession",
+      "result": "preserved through dependency",
+      "evidence": "Candidate propose-design lines 18–19 explicitly direct superseding through frame-problem. That unchanged dependency includes obsolete-frame warning/supersession, a supersedes field, and accepted problem immutability. The abbreviated parent clause does not introduce an edit-in-place route."
+    },
+    {
+      "requirement": "Accepted design immutability",
+      "result": "preserved",
+      "evidence": "Candidate propose-design lines 27–28 expressly forbid editing accepted designs and require a new brief with supersedes: <old-id>. Both supplied execution cases left prior artifacts byte-identical."
+    },
+    {
+      "requirement": "Six design-body questions",
+      "result": "preserved",
+      "evidence": "Candidate propose-design lines 55–67 retain the opening approach paragraph before subsections; rationale tied to named constraints; concrete APIs/schemas/workflows/layouts/sequences with examples preferred; effort, risks, compatibility effects and participants plus how to enable unknown estimates; two or three rejected alternatives including doing nothing where viable; and conditions for abandonment or supersession. The instruction to reference rather than repeat the problem remains.",
+      "limits": "Compression changes wording such as what it breaks to compatibility effects; risks remain explicit, so this is not a concrete omission of cost/risk analysis."
+    },
+    {
+      "requirement": "Diff presentation, filenames and commit paths",
+      "result": "preserved",
+      "evidence": "Candidate propose-design lines 50–51 retain briefs/<id>.md, creation date, no -design suffix; lines 76 and 80–81 retain filename/frontmatter/body diff and scoped Design commit command. discuss lines 52, 92 and 97–98 retain discussions/<id>.md, diff and Note commit command. Discussion/session-note suffixes and metadata remain in unchanged schema blocks."
+    },
+    {
+      "requirement": "Transition checks and decision followup",
+      "result": "preserved and clarified",
+      "evidence": "Candidate propose-design lines 82–87 require the checker before requested proposed/accepted promotion, resolving blockers before promotion, separate promotion authorization, accurate state/blocker reporting, and record-decision with derived_from. The unchanged vault-search dependency still requires checks before proposing status changes. Consolidating duplicate reminders did not remove the gate.",
+      "limits": "Only a blocked fixture acceptance was executed. Successful promotion and real validator behavior remain untested."
+    },
+    {
+      "requirement": "Discussion types, body, no invented participants/decisions",
+      "result": "preserved",
+      "evidence": "Candidate discuss retains the two note flavors, no attendees for solo session notes, both schemas, loose context/attributed-summary/open-question/followup body guidance, and the explicit no-invented-attendees-or-decisions rule at lines 124–125."
+    },
+    {
+      "requirement": "Discussion triage and user choice",
+      "result": "preserved",
+      "evidence": "Candidate discuss lines 69–83 retain search for each implication and the six-row routing table: problem, design, decision, inquiry, supersession and arc closure. The instruction to present choices and not chain automatically is unchanged; workflow lines 99–100 also retain triage."
+    },
+    {
+      "requirement": "Discussion status boundary",
+      "result": "preserved",
+      "evidence": "Candidate discuss lines 104–125 retain no direct transitions from discuss, documenting implications, proposing followups, obtaining go-ahead, checking transitions and presenting blockers before phase-skill/manual handling. No status field may be assigned to either note type."
+    },
+    {
+      "requirement": "Known and missing context handling",
+      "result": "intentional change",
+      "evidence": "Candidate propose-design lines 71–75 explicitly reuse supplied answers, ask only consequential missing information including authorship and mark user-requested draft gaps. Candidate discuss lines 87–89 use supplied author/participant/solo context and ask only missing details. These replace generic questioning or reconfirmation with the instructed behavior."
+    },
+    {
+      "requirement": "Prior and calling-skill authorization",
+      "result": "intentional change",
+      "evidence": "Candidate propose-design lines 76–79 and discuss lines 93–96 proceed with an already authorized write/commit, otherwise obtain approval, and carry applicable authorization from calling skills such as plan-feature. The language remains scoped to the brief/note and does not authorize unrelated work."
+    },
+    {
+      "requirement": "Note authorization distinct from followups",
+      "result": "intentional clarification",
+      "evidence": "Candidate discuss line 96 explicitly says note authorization does not authorize followups, reinforcing the unchanged user-choice and status-transition gates."
+    }
+  ],
+  "observed_execution_schema_followup": {
+    "candidate_design": "The produced candidate design contains id/type/draft status/author/created/frames/scopes/supersedes/relates_to/conflicts_with/depends_on/tags; arc is legitimately omitted by the unchanged template. Its date-based filename and substantive body match the contract.",
+    "candidate_session_note": "The produced candidate note contains the session-suffixed id/type/author/created/scopes/relates_to, with optional arc omitted and no status/attendees.",
+    "baseline_difference": "Baseline outputs omit scopes while candidate outputs use scopes: []. The schema text itself is unchanged; this execution variation is not a candidate contract regression. The frozen blind grading is unchanged."
+  },
+  "limits": [
+    "Static review establishes instruction preservation, not broad behavioral reliability.",
+    "Calling-skill authorization, multiple frame selection, explicit frames: none, missing design authorship, and successful promotion are not all exercised by the six cases.",
+    "Dependency content identity does not prove workers read those files; worker-reported reads remain uninstrumented.",
+    "No claim that unchanged activation or schemas improve activation/schema-validation quality is supported.",
+    "Existing discuss ordering language (draft then triage, alongside a search-first dependency) is unchanged; the review does not claim to resolve all pre-existing instruction tensions."
+  ]
+}
