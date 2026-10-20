@@ -17,252 +17,193 @@ description: |
 
 # Sharable artifact
 
-A page that ships alone is read without its author in the room. Every claim on
-it must say where it came from, every element must be citable by a name that
-survives editing, and the page must still be right the day after it is
-published, when the work it describes has moved. Those three demands shape
-everything below.
+Build a page that can be read without its author: claims carry their evidence,
+elements have stable citations, and revisions keep the page current.
 
-## What this is, and what it is not yet
+## Scope and companion skills
 
-The conventions come from a few design and reference pages written for one
-team: a design preview with a progress board, and a reference page on a
-recording format with nine generated figures. They held across those pages
-and were revised each time a reader said what they could not find. They have
-not been tried on a page for a different audience, and the reading-time and
-word-count defaults are that team's. Treat this skill as **beta**: adopt the
-shape wholesale, and when a convention fights the page, record the override
-and its reason through `engineering-journal`.
+These conventions held across a few design and reference pages for one team.
+They have not been tried with other audiences; reading-time and word-count
+defaults are that team's. Treat the skill as **beta**: adopt its shape, recording
+overrides and their reasons through `engineering-journal` when a convention
+conflicts with the page.
 
-Two neighbors own parts of the work. `technical-prose` owns the words: every
-page gets its pass before publishing, with the reader named. The diagram
-skills own the figures' claims: a chart of a running program follows
-`dataflow-diagram`, a byte layout follows `format-layout-diagram`, and both
-state the rule this page depends on, that an inlined figure takes the page's
-color tokens.
+Run `technical-prose` before publishing, with the reader named. Use
+`dataflow-diagram` for figures of running programs and `format-layout-diagram`
+for byte layouts. Those skills govern figure claims; inline figures use the
+page's color tokens.
 
 ## One file, one URL, one source
 
-The page is one HTML file with inline CSS and inline SVG. Nothing depends on a
-build step, so the file is the source, and the source is what gets republished.
-Keep it in one place, republish to the same URL on every change with a short
-label per version, and let the URL be the thing people bookmark. A second copy
-in a repository, a doc tool, or a chat message is a second source of truth and
-drifts the first time the page changes.
+Keep one HTML file with inline CSS and SVG, requiring no build step. Republish
+that source to the same stable URL with a short label per version. Do not
+maintain a second copy in a repository, doc tool, or chat message; it becomes a
+second source of truth that drifts on the first change.
 
-Name the page like a product: two to four words that identify it among many,
-with the explainer in the publish description, never in the title.
+Give the page a distinctive two-to-four-word name. Put the explainer in the
+publish description, never in the title.
 
 ## Shape: a short paper
 
-The page reads like a short systems paper: a header, parts, numbered sections,
-numbered figures and tables, and a footer of evidence and revision notes.
+Use a header, parts by audience, numbered sections, numbered figures and tables,
+and a footer of evidence and revision notes.
 
-**Header.** An eyebrow line with the scope and the assumptions the page rests
-on (the repository, the packages touched, the plan it serves). The name. The
-problem in two sentences. A status sentence that links to the progress board
-when the page has one.
+**Header.** Include an eyebrow with scope and assumptions (repository, packages,
+plan), the name, a two-sentence problem statement, and a status sentence linking
+the progress board when present.
 
-**Reading guide.** A navigation panel after the intro, one column per part: the
-part's title linked, a reading time ("~12 min"), one sentence on who reads it
-and why, and its numbered sections as links. Then a quick path for the reader
-with five minutes: the summary, the key figures and table, the decision. No
-total time and no advisory sentence; the reader decides from the summary.
+**Reading guide.** After the introduction, give each part a navigation column:
+linked title, reading time ("~12 min"), one sentence on its audience and purpose,
+and numbered section links. Add a five-minute quick path through the summary,
+key figures and table, and decision. Omit a total time and advisory sentence;
+the reader decides from the summary.
 
-**Parts, one per audience.** Order them by how little time each reader has.
-For a design page the default is three: *Design* for the reader assessing the
-architecture (summary, options, the high-level design of each structure,
-layering, the main consumer's use, the public contract and its guarantees,
-signals and health, invariants); *Migration* for the reader planning the work
-(where the existing solution falls short, what the change enables, the plan,
-implementation considerations, the decision summary); *Implementation details*
-for the reader writing or reviewing code. The first two parts carry figures,
-tables, and short prose, and together stay under about 2,500 words; a section
-there whose mechanism lives in the third part ends with a pointer line naming
-the section by number and title. A reference page with no work to plan drops
-the progress board and the migration part; it keeps the rest.
+**Parts, one per audience.** Order parts by how little time each reader has.
+A design page defaults to:
 
-**Numbered sections, by CSS.** One section element per numbered section, with
-the number drawn by a CSS counter rather than typed, so an inserted section
-renumbers the rest. Part dividers are not sections and consume no number.
+- *Design*, for assessing the architecture: summary, options, each structure's
+  high-level design, layering, the main consumer's use, public contract and
+  guarantees, signals and health, and invariants.
+- *Migration*, for planning the work: existing limitations, what the change
+  enables, plan, implementation considerations, and decision summary.
+- *Implementation details*, for writing or reviewing code.
 
-**Footer, in this order.** The evidence baseline: which commits the surveys
-ran on, which branches, which external pull requests. Then one dated paragraph
-per revision saying what changed on the page and why. Last, who wrote what.
+The first two parts use figures, tables, and short prose, totaling under about
+2,500 words. Where a mechanism is detailed in the third part, end the earlier
+section with a pointer naming the destination's number and title. A reference
+page with no work to plan drops the progress board and migration part; keep the
+rest.
+
+**Section numbering.** Use one section element per numbered section and draw
+its number with a CSS counter. Part dividers are not sections and consume no
+number.
+
+**Footer, in order.** Evidence baseline (survey commits, branches, external
+pull requests); one dated paragraph per revision explaining what changed and
+why; authorship (who wrote what).
 
 ## Every element is citable
 
-Every section, figure, table, and listing carries a stable id and shows its own
-anchor beside its title, as `[#id]` in small monospace. Readers paste that into
-chat and review comments, and the citation survives renumbering, which is the
-point.
+Give every section, figure, table, and listing a stable id. Show its anchor
+beside the title as `[#id]` in small monospace, so citations survive renumbering.
 
-- Id prefixes carry the kind: `fig-`, `table-`, `listing-`, a part-specific
-  prefix for deep-dive sections, plain words for the rest.
-- Figures, tables, and listings are numbered by hand in their captions, in
-  order of appearance across the whole page, never per section. The figure
-  caption sits below; the table caption sits above.
-- Prose refers to them by number, linked: "Figure 4", "Table 3", "Section 6".
-  Never "above", "below", or "the following".
-- The target of a shared link is highlighted when the page opens on it, and
-  sits clear of the top edge.
+- Use `fig-`, `table-`, and `listing-` prefixes; a part-specific prefix for
+  deep-dive sections; plain words for other sections.
+- Number figures, tables, and listings by hand in their captions, in order
+  across the whole page. Figure captions go below; table captions above.
+- Refer by linked number: "Figure 4", "Table 3", "Section 6". Never use "above",
+  "below", or "the following" as references.
+- Highlight a shared link's target when opened and keep it clear of the top edge.
 
 ## Every number names its baseline
 
-A number with no revision is a number the reader cannot re-derive.
+A number without a revision cannot be re-derived.
 
-- A pull request is a link on its number. In a status row the link is followed
-  by the commit the row's claims were checked at, or the merge date.
-- A line of source is cited as `path:line` in code font, and the paragraph or
-  table carrying it says which commit the line numbers belong to. A durable
-  link uses the commit-pinned blob form with the full hash, never a branch
-  link, which moves.
-- Survey facts and measurements name the branch and commit they were taken on.
-- Identifiers, flags, channel names, and paths are code font everywhere,
-  including table cells and SVG text.
+- Link each pull request on its number. In status rows, follow it with the
+  commit at which the row's claims were checked, or the merge date.
+- Cite source as `path:line` in code font. State which commit the line numbers
+  belong to in the containing paragraph or table. Durable links use
+  commit-pinned blobs with full hashes, never moving branch links.
+- Give survey facts and measurements their branch and commit.
+- Use code font for identifiers, flags, channel names, and paths, including
+  table cells and SVG text.
 
 ## Figures are inline SVG with the page's tokens
 
-Each figure is hand- or generator-authored SVG with a viewBox, inside a
-scrolling wrapper so a narrow screen scrolls the drawing rather than the page.
-It carries an image role and a label that says in words what the picture
-shows, arrows included; the caption says the same thing shorter, as a claim to
-conclude rather than a list of contents. A small uppercase monospace label at
-the top of each panel names what the reader is looking at.
+Use hand- or generator-authored SVG with a viewBox inside a scrolling wrapper,
+so narrow screens scroll the figure rather than the page. Give it an image
+role and an accessible label describing the relationships, including arrows.
+The caption states the same claim more briefly, as a conclusion. Name each
+panel with a small uppercase monospace label at its top.
 
-Colors are the page's CSS tokens, so the figure follows the theme and a hue
-means the same thing in the figure as in the prose beside it. That is the
-inlined half of the rule `format-layout-diagram` states in full; a figure
-shipped as an image bakes its ink instead. Arrowheads are marker definitions
-per figure in the current color or a token. A legend appears under a figure
-only when the same encoding repeats across figures, with each swatch drawn
-from the token it names.
+Use page color tokens consistently across figures and nearby prose. Inline
+figures follow the theme; figures exported as images bake their ink. Define
+arrowhead markers per figure in the current color or a token. Put a legend
+under a figure only when its encoding repeats across figures, with swatches
+using the tokens they name.
 
-SVG text does not wrap. A label that outgrows its box is invisible in the
-source and the first thing a reader sees, so **measure label fit in a real
-renderer after any figure edit**: every text element against the shape that
-contains it, free labels against boxes they do not belong to, text against
-text, everything against the viewBox, with the page's fonts confirmed loaded
-before measuring, since a fallback face measures differently and reports
-phantom overflows. Hand-estimated character widths found none of the seven
-overflows the first such check reported.
+**After every figure edit, measure label fit in a real renderer.** Confirm the
+page's fonts are loaded first; a fallback face has different measurements.
+Check each text element against its containing shape, free labels against
+unrelated boxes, text against text, and everything against the viewBox. SVG
+text does not wrap. Character-count estimates have missed overflows found by
+rendered checks. Fix overflow, crossing, and out-of-bounds findings before
+publishing.
 
 ## Tables, cards, and listings
 
-- A table's caption comes first. Column headers are small uppercase with
-  letter-spacing. A cell colored by the layer it belongs to uses the same
-  tokens as the figures; a yes/no matrix uses a dot, not a word. Wide tables
-  scroll in their own wrapper.
-- A table in the first part keeps the property columns: what the thing is,
-  what a reader must see, which layer owns it. Columns that say how a property
-  is derived, carried, built in, or verified move to a twin table in the
-  implementation part that repeats the row labels, and the first table's
-  caption points at it. Three or four columns is the target.
-- Summary cards come in threes, each with an eyebrow naming its role
-  (Problem, Proposal, Enforcement), a heading, and one paragraph. The card's
-  top border color says its role in the page's palette.
-- A listing is a figure with a preformatted block and three hand-applied
-  spans: comments, the names being introduced, and what is hidden or elided.
-  No syntax highlighter; the highlighting carries the argument, not the
-  grammar.
+- Put table captions first. Use small uppercase column headers with
+  letter-spacing. Layer-colored cells use figure tokens; yes/no matrices use
+  dots rather than words. Wide tables scroll within their own wrappers.
+- First-part tables keep property columns: what the thing is, what the reader
+  sees, and the owning layer. Target three or four columns. Move derivation,
+  carriage, construction, and verification columns to a twin table in the
+  implementation part, repeating row labels. Link that twin from the first
+  table's caption.
+- Use three summary cards, each with a role eyebrow (Problem, Proposal,
+  Enforcement), heading, and one paragraph. Its top-border color identifies
+  the role in the page's palette.
+- Treat a listing as a figure containing a preformatted block. Apply three
+  spans by hand: comments, introduced names, and hidden or elided material.
+  Do not use a syntax highlighter; highlighting conveys the argument.
 
 ## The progress board
 
-A page that tracks work carries a board in its header, so the page doubles as
-the status teammates read. One table: goal, what it delivers, the pull request
-with its checked-at commit, and the state.
+For pages tracking work, put a board in the header with columns for goal,
+what it delivers, pull request with checked-at commit, and state.
 
-The state word comes first in its cell, bold, from a fixed vocabulary the
-board's note spells out: *merged*, *approved*, *awaiting re-review*, *ready*,
-*draft*, *not started*. Keep *awaiting re-review* distinct from *approved*: the
-author saying the findings are addressed is not the reviewer confirming it,
-and a board that collapses the two misleads the person deciding what to review
-next. Color the state word by row class, and stamp the board with the date and
-the main-branch commit it was checked against.
+Start each state cell with a bold word from the board's stated vocabulary:
+*merged*, *approved*, *awaiting re-review*, *ready*, *draft*, *not started*.
+Keep author-addressed findings (*awaiting re-review*) distinct from reviewer
+confirmation (*approved*). Color the state word by row class. Stamp the board
+with the date and main-branch commit it was checked against.
 
-A status edit is four touches made together: replace the row's pull-request
-cell and state cell, set the row class, bump the stamp, and append a dated
-footer paragraph. The board shows the present; the footer shows how it got
-there; the four touches are what keep them consistent. Re-read every row
-against the live pull-request state before publishing, not from memory.
+For each status edit:
+
+1. Update the row's pull-request and state cells.
+2. Set its row class.
+3. Update the board's stamp.
+4. Append a dated footer paragraph explaining the change.
+
+Make all four changes together. Re-read every row against live pull-request
+state before publishing.
 
 ## Theme and type
 
-- Color tokens live on the root element, with the complete light palette
-  there, redefined for dark under both the system-preference query (guarded so
-  an explicit light choice wins) and the explicit dark attribute, so the
-  viewer's choice wins in both directions and the unstamped state still gets
-  dark. The body sets its own background from a token. Nothing is colored
-  only inside a theme block.
-- The palette is semantic, not decorative: one hue per kind of thing the page
-  argues about (the public contract, hidden implementation, a leak or a
-  problem, signals and health, not built yet), each with a fill twin for
-  boxes, and the same hue means the same thing in every figure, cell, and
-  card. Neutrals carry a slight bias toward the accent rather than pure gray.
-- Fonts come from a host the publishing platform allows, each with a system
-  fallback; a condensed display face, a text face around 17px at 1.5 line
-  height, and a monospace for code, anchors, and eyebrows.
-- One column at a readable maximum width; sections as grids with a fixed gap;
-  a side gutter on phones; cards and guide columns collapse to one column on
-  narrow screens; no horizontal page scroll.
+- Define the complete light palette on the root element. Redefine tokens for
+  dark mode under both the system-preference query and the explicit dark
+  attribute. Guard the system query so explicit light wins; explicit dark
+  must also override system light. The unstamped state follows the system.
+  Set the body's background from a token. Never define a color only inside a
+  theme block.
+- Use one semantic hue per kind of thing: public contract, hidden
+  implementation, problem, signals and health, or not built yet. Give each
+  hue a fill twin for boxes. Use it consistently in figures, cells, and cards.
+  Bias neutrals slightly toward the accent rather than pure gray.
+- Use fonts from a host allowed by the publishing platform, each with a
+  system fallback: condensed display face, text around 17px at 1.5 line
+  height, and monospace for code, anchors, and eyebrows.
+- Use one column at a readable maximum width, sections in grids with a fixed
+  gap, and phone side gutters. Collapse cards and guide columns to one column
+  on narrow screens. Prevent horizontal page scrolling.
 
 ## Before publishing
 
-1. Run `technical-prose` over the page text with the reader named: an
-   engineer on the team who has not read the plan, since the page ships alone.
-   The pass has caught factual errors, not only wording.
-2. Run the label-fit check after any figure edit and fix every overflow,
-   crossing, and out-of-bounds finding.
+Check the page against the structure, citation, figure, and theme requirements
+above. Then:
+
+1. Run `technical-prose` with the reader named: an engineer on the team who has
+   not read the plan. The page ships alone.
+2. After any figure edit, complete the rendered fit check and repair findings.
 3. Re-read progress rows against live pull-request state.
-4. Confirm both theme states render: the light palette on the root, both dark
-   blocks, an explicit body background.
-5. Re-read the live published version and merge onto it, so an edit a
-   teammate made since the last publish is not overwritten.
+4. Verify both theme states render with the root light palette, both dark
+   blocks, and an explicit body background.
+5. Re-read the live published version and merge onto it to preserve teammates'
+   intervening edits.
 6. Publish to the same URL with a version label.
 
-A review of the page by another agent goes through `review-exchange` with a
-local Markdown render, since reviewers comment on text, not on markup. When
-another agent returns a prose pass, compare before adopting: preformatted
-blocks and table rows byte-identical, decision-critical terms still present,
-per-section word counts to see where cuts fell, the fit check on the result,
-and the attribution line still in place.
-
-## Checklist for a new page
-
-1. The title is a name; the description carries the explainer.
-2. Header: eyebrow with scope and assumptions, name, problem in two sentences,
-   status sentence linking the board.
-3. Reading guide: parts with reading times, numbered section links, a quick
-   path.
-4. Progress board with the state vocabulary written out and an as-of stamp,
-   if the page tracks work.
-5. Sections with ids and shown anchors; figures, tables, and listings
-   numbered in order, each with an id and a caption anchor.
-6. Every figure: viewBox, image role, label, token colors, scroll wrapper, a
-   legend only when an encoding repeats.
-7. Citations pinned to a commit; pull-request links on numbers; checked-at
-   commits and dates beside them.
-8. Footer: evidence baseline, dated revision notes, authorship.
-9. Tokens on the root, both dark blocks, explicit body background, phone
-   gutter.
-10. Prose pass, fit check, then publish to the same URL with a label.
-
-## Red flags
-
-- A section number typed by hand.
-- A figure cited as "below" or "the following figure".
-- An element with no id, or an anchor hidden at the end of a caption where a
-  reader cannot find it.
-- A number, a line citation, or a survey fact with no revision it was taken on.
-- A branch link where a commit-pinned link was wanted.
-- A status row that says fixed because the author said so.
-- A board updated without its footer paragraph, or a footer paragraph with no
-  board change.
-- A figure with its colors baked while the page around it switches theme.
-- A figure published after a figure edit with no fit check, or a fit check
-  that measured the fallback face.
-- A color defined only inside a theme block.
-- A reading guide with a total time or an advisory sentence.
-- A first-part table carrying derivation columns.
-- A second copy of the page kept anywhere.
-- A page published without the prose pass.
+Use `review-exchange` for another agent's review, supplying a local Markdown
+render so the review addresses text rather than markup. Before adopting another
+agent's prose pass, compare the versions: preformatted blocks and table rows
+must be byte-identical, decision-critical terms retained, per-section word
+counts checked, the resulting figures checked for fit, and attribution retained.
