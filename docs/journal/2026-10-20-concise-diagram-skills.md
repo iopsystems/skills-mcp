@@ -3,6 +3,7 @@ status: open
 opened: 2026-10-20
 updated: 2026-10-20
 beta_skills: [architecture-diagram, format-layout-diagram, review-guide]
+prs: [79]
 ---
 
 # Shorter diagram introductions and rationale
@@ -10,8 +11,9 @@ beta_skills: [architecture-diagram, format-layout-diagram, review-guide]
 ## Goal and Scope
 
 Shorten the architecture, dataflow, and format-layout skill prose while keeping
-their domain rules and validation requirements. This single-PR effort is a draft
-pending behavioral follow-up. It is independent of the writing-skill revision.
+their domain rules and validation requirements. The edits shipped in
+[PR79](https://github.com/iopsystems/skills-mcp/pull/79); evaluation continues in
+this entry. The diagram edits were evaluated separately from the writing edits.
 
 ## Evidence and Design
 
@@ -45,7 +47,7 @@ layout. A previously approved artifact cannot confer approval on a changed one.
 Any response that omits a required step is a follow-up finding, even when the
 instruction still appears in the shortened skill.
 
-## Evaluation
+## Initial Evaluation
 
 The [frozen fixture](../evals/fixtures/skill-concision-diagrams-v1.json) selects
 12 existing cases before editing, four per skill. Separate agents answered the
@@ -77,7 +79,49 @@ Author observations, not an independent evaluation pass:
 These responses do not establish layout quality, correct generation, or human
 readability. No renderer ran during this evaluation.
 
+## Follow-up Evaluation
+
+An independent grader assessed the 12 saved response pairs against the frozen
+expectations, with A/B labels randomized per case and variant identities hidden.
+The [grades](../evals/results/skill-concision-diagrams-v1-blind-grades.json)
+retain the label mapping and a reason for each expectation. Both versions
+received six passes and six partials, with no case-level grade changes.
+
+The shared partials concern explicit fail-loud behavior, decorative-area
+accounting, and concrete provenance or artifact links. Some prompts provide no
+source or artifact from which to obtain that provenance; an honest incomplete
+record is preferable to invented evidence. Equal grades do not establish
+equivalent behavior.
+
+The [execution fixture](../evals/fixtures/skill-concision-execution-v1.json)
+uses tracked Pelikan source at
+`46b98c9dc6fb70848808b903ba1d60a9655150be`. Before either worker ran, the author
+executed its generator offline on a clean archive: all three SVGs reproduced
+byte-for-byte. This establishes a working generator, not a skill comparison.
+
+Separate agents then received the baseline or merged skill and identical
+disposable source copies containing a new, unclassified `metrics-probe`
+workspace library. Both ran the generator; both observed:
+
+```text
+ERROR: workspace crate 'metrics-probe' is not classified in LAYER
+```
+
+Both workers stopped with workspace credit errors before writing a diagram
+handoff. Author inspection found no generator or classification changes and no
+changes to the existing SVGs. Only the controlled workspace edit and the
+Cargo-generated lock entry changed. The
+[execution results](../evals/results/skill-concision-execution-v1.json) retain
+the command outputs, source diff, hashes, and interruption status.
+
+This exercises a real generator's failure path. It does not establish that the
+agents would implement that guard, preserve provenance in the final handoff,
+or withhold a stale chart after continuing. No independent execution grader or
+visual comparison completed.
+
 ## Validation and Outcome
+
+Before PR79 merged:
 
 - `cargo test --locked --quiet`: 151 tests passed, including template parity,
   manifest hashes, and citations.
@@ -87,15 +131,18 @@ readability. No renderer ran during this evaluation.
 - Fixture/result JSON, case coverage, source hashes, and unchanged existing
   corpora were checked.
 
-The PR stays in draft. Response evidence and static consistency are insufficient
-to clear the behavioral guardrail.
+The evidence-only follow-up passed all 23 citation and repository-documentation
+tests, JSON/hash/coverage checks, and `git diff --check`.
+
+PR79 is merged. Independent response grading is complete; the interrupted
+execution trials leave the final handoff and diagram-quality checks open.
 
 ## Deferred Work
 
-Independently grade the saved responses and repeat the classification cases on
-a real generator with an unclassified element. Run before/after generation and
-check artifacts, review status, and regeneration behavior in a downstream repo.
-The user was asked for a representative repository; none has been supplied yet.
+Complete and independently grade the Pelikan handoffs. Compare successful
+before/after diagram generation, rendering, and review status on a grounded
+change. The local Pelikan checkout provides a downstream test target without
+modifying the user's working tree.
 
 ## Skill Feedback
 
@@ -104,7 +151,9 @@ The user was asked for a representative repository; none has been supplied yet.
 - **Confirmation:** both responses retained quantitative area and stale-approval
   boundaries in the selected cases.
 - **Friction:** the candidate's single-use answer omitted explicit classification;
-  this needs an execution test before concluding that the instruction was lost.
+  the grader found both answers insufficiently explicit about failure behavior.
+  Both execution workers reached the real classification guard; their final
+  handoffs remain unobserved.
 
 ### format-layout-diagram (beta)
 
@@ -113,14 +162,15 @@ The user was asked for a representative repository; none has been supplied yet.
 
 ### review-guide (beta)
 
-- **Confirmation:** the draft description separates repository checks from the
+- **Confirmation:** the initial draft description separated repository checks from the
   ungraded response run and the missing real-diagram evaluation.
 
 ## Appendix: Skills Invoked
 
 - `skill-creator` — scoped edits and independent response runs.
-- `technical-prose` — prose editing; unchanged baseline guidance in this branch.
-- `architecture-diagram` (beta) — response evaluation.
+- `technical-prose` — prose editing; baseline guidance for the initial diagram
+  revision and assigned variants for the execution follow-up.
+- `architecture-diagram` (beta) — response evaluation and isolated Pelikan execution.
 - `dataflow-diagram` — response evaluation.
 - `format-layout-diagram` (beta) — response evaluation.
 - `review-guide` (beta) — this PR's description.

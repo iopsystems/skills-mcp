@@ -3,6 +3,7 @@ status: open
 opened: 2026-10-20
 updated: 2026-10-20
 beta_skills: [review-guide]
+prs: [78]
 ---
 
 # Shorter writing instructions with behavioral checks
@@ -11,8 +12,9 @@ beta_skills: [review-guide]
 
 Shorten `technical-prose`, `sweep-comments`, and `review-guide` without losing
 requirements, exceptions, examples that distinguish failures, or evidence limits.
-This is a single-PR effort, prepared as a draft while evaluation remains open.
-Descriptions and existing scenario corpora are unchanged.
+The edits shipped in [PR78](https://github.com/iopsystems/skills-mcp/pull/78);
+evaluation continues in this entry. Descriptions and existing scenario corpora
+are unchanged.
 
 ## Evidence and Design
 
@@ -43,7 +45,7 @@ and open review decisions. Treat any lost requirement or worse evaluated
 response as a finding to investigate. Do not accept an aggregate score as a
 reason to ignore an individual regression.
 
-## Evaluation
+## Initial Evaluation
 
 The [frozen fixture](../evals/fixtures/skill-concision-writing-v1.json) selects
 18 existing cases before editing: six per skill. It records the original
@@ -82,7 +84,36 @@ files were saved. Their JSON and exact case coverage were checked. Further
 independent trials could not run. This is limited response evidence, not proof
 of equivalence or improved reader comprehension.
 
+## Execution Follow-up
+
+The [execution fixture](../evals/fixtures/skill-concision-execution-v1.json)
+supplies concrete Python source, two tests, and a PR description. Its criteria
+were frozen before separate agents received the baseline and merged skills.
+Neither agent received the criteria or earlier findings. Each performed the
+whole sweep in its own context.
+
+Both agents saved edits before stopping with workspace credit errors. The
+[result record](../evals/results/skill-concision-execution-v1.json) preserves
+their files, selected command logs, and author checks. Both edited Python files
+are byte-identical across variants:
+
+- Test property labels and the capacity-two eviction rationale remain.
+- Append and assertion narration is removed.
+- The bucket contract and persisted-level constraint remain in code.
+- The algebra derivation moves from the function docstring into the PR body.
+
+Author reruns passed both tests for each variant. Comparing syntax trees after
+removing docstrings found no executable-code changes. The candidate saved a
+two-pass sweep report; the baseline did not save its report before interruption.
+No independent execution grader ran.
+
+This concrete case did not reproduce the earlier cleanup omission and exercised
+the restored derivation instruction. It does not erase the original response
+warning or establish equivalence on other inputs.
+
 ## Validation and Outcome
+
+Before PR78 merged:
 
 - `cargo test --locked --quiet`: 151 tests passed.
 - `cargo fmt --all -- --check` and `git diff --check`: passed.
@@ -90,15 +121,18 @@ of equivalence or improved reader comprehension.
 - Fixture/result JSON, case coverage, source hashes, and unchanged existing
   corpora were checked.
 
-The draft remains open. A real comment sweep and PR rewrite have not been
-evaluated with these revisions.
+The evidence-only follow-up passed all 23 citation and repository-documentation
+tests, JSON/hash/coverage checks, and `git diff --check`.
+
+PR78 is merged. Evaluation remains open: the follow-up used a synthetic fixture,
+and the interrupted trials did not complete all reporting.
 
 ## Deferred Work
 
-Rerun the test-comment case with concrete source and fixtures, exercise the
-restored derivation rule, and compare both variants on a downstream repository.
-The user was asked for a representative repository; none has been supplied yet.
-Descriptions were left unchanged, so this pass makes no activation claim.
+Independently grade a completed execution trial and compare both variants on a
+downstream comment sweep and PR rewrite. The user has not supplied a preferred
+repository. Descriptions were left unchanged, so this pass makes no activation
+claim.
 
 ## Skill Feedback
 
@@ -114,6 +148,6 @@ Descriptions were left unchanged, so this pass makes no activation claim.
 
 - `skill-creator` — scoped edits and independent forward-testing.
 - `technical-prose` — editing and response evaluation.
-- `sweep-comments` — response evaluation, not a repository comment sweep.
+- `sweep-comments` — response evaluation and an isolated executable fixture sweep.
 - `review-guide` (beta) — response evaluation and this PR's description.
 - `engineering-journal` — method, findings, and unresolved evaluation.

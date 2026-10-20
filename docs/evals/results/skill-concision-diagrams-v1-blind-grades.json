@@ -1,0 +1,717 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "source_result": "skill-concision-diagrams-v1.json",
+  "source_result_sha256": "c71d6303634271b75cd5b8bae138347e7c8d32c9c970bdb59f5cbd11bc33dc18",
+  "method": "Independent blind assessment using only diagram-blind.json. Each frozen expectation is evaluated against response text, with statuses explicit_support, reasonable_implication, omission, or contradiction. A compound expectation is marked omission when a material clause is not established, even if other clauses are supported. Pass requires every material expectation to be supported explicitly or by reasonable implication; partial means material incompleteness without a central contradiction; fail requires a central contradiction. For normative design requests, clearly stated requirements can support expectations without claiming execution. For the requested check records/handoffs, placeholders and future capture/retention instructions do not establish actual provenance, retained evidence, or links; honest reporting of missing data is credited but remains incomplete. No actions are inferred to have actually executed. No sibling files, source variants, journals, or other agents' outputs were read.",
+  "randomization_seed": 79103,
+  "cases": [
+    {
+      "id": "architecture-diagram-03",
+      "grades": {
+        "A": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Still derive from the program's real structures and fail loudly",
+              "status": "omission",
+              "reason": "Explicitly derives structure from build metadata and validates component classifications, but never says invalid, unknown, or missing classifications must fail loudly; validation alone does not establish that behavior."
+            },
+            {
+              "expectation": "Keep the generator script with the talk materials",
+              "status": "explicit_support",
+              "reason": "Directs keeping the generator and diagram beside the talk materials outside the project repository."
+            },
+            {
+              "expectation": "Stamp the chart with the commit it was derived from and present it as a dated snapshot",
+              "status": "explicit_support",
+              "reason": "Requires the source commit and date on the diagram and describes it as a snapshot."
+            },
+            {
+              "expectation": "Skip the charter and CI freshness apparatus without skipping derivation",
+              "status": "explicit_support",
+              "reason": "Explicitly omits charter and review gate, states there are no automatic freshness checks, and retains derivation."
+            }
+          ],
+          "summary": "The snapshot workflow is well specified, but failure behavior for derivation/classification is missing."
+        },
+        "B": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Still derive from the program's real structures and fail loudly",
+              "status": "omission",
+              "reason": "Says to derive from a readable checkout, but does not identify extraction from real program structures or any fail-loud validation behavior."
+            },
+            {
+              "expectation": "Keep the generator script with the talk materials",
+              "status": "explicit_support",
+              "reason": "Explicitly keeps the generator beside the artifact in the talk materials."
+            },
+            {
+              "expectation": "Stamp the chart with the commit it was derived from and present it as a dated snapshot",
+              "status": "explicit_support",
+              "reason": "Explicitly stamps the chart with its source commit and date and calls it a single-use snapshot."
+            },
+            {
+              "expectation": "Skip the charter and CI freshness apparatus without skipping derivation",
+              "status": "explicit_support",
+              "reason": "Explicitly dispenses with charter and formal review gate, explains the absence of freshness checking, and still calls for derivation."
+            }
+          ],
+          "summary": "Covers the external snapshot workflow but leaves structural derivation and fail-loud safeguards underspecified."
+        }
+      },
+      "label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      }
+    },
+    {
+      "id": "architecture-diagram-05",
+      "grades": {
+        "A": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Extend the convention rather than force the domain",
+              "status": "explicit_support",
+              "reason": "Preserves all four meaningful layers, treats three bands as a default, and permits four bands or another layout."
+            },
+            {
+              "expectation": "Record the override and its reason",
+              "status": "explicit_support",
+              "reason": "Requires a charter entry explaining that merging semantically distinct layers would misrepresent the system."
+            }
+          ],
+          "summary": "Satisfies both expectations directly."
+        },
+        "B": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Extend the convention rather than force the domain",
+              "status": "explicit_support",
+              "reason": "Retains the four real layers and allows four bands or another layout instead of collapsing a meaningful distinction."
+            },
+            {
+              "expectation": "Record the override and its reason",
+              "status": "explicit_support",
+              "reason": "Requires recording the override and its domain-specific reason in the charter."
+            }
+          ],
+          "summary": "Satisfies both expectations directly."
+        }
+      },
+      "label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      }
+    },
+    {
+      "id": "architecture-diagram-09",
+      "grades": {
+        "A": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Keep the 100:400 data-area ratio at 1:4 before documented pixel rounding",
+              "status": "explicit_support",
+              "reason": "States the 1:4 area ratio and requires checks before rounding and on serialized rectangles with a stated rounding tolerance."
+            },
+            {
+              "expectation": "Use external labels or an exact-sum Other group with a member list for tiny tiles",
+              "status": "explicit_support",
+              "reason": "Offers external tiny-file labels or an Other tile with exact summed LOC and a member list."
+            },
+            {
+              "expectation": "List the zero component without giving it a fake positive area",
+              "status": "explicit_support",
+              "reason": "Explicitly lists the zero-LOC component as zero without assigning area."
+            },
+            {
+              "expectation": "Exclude decorative headers and gutters from the weighted data-area accounting",
+              "status": "omission",
+              "reason": "Explicitly excludes gutters from quantitative area, but does not address decorative headers; external labels do not establish header accounting."
+            },
+            {
+              "expectation": "Do not: Apply a minimum tile area, logarithmic weighting, or both dimensions proportional to LOC",
+              "status": "reasonable_implication",
+              "reason": "Requiring LOC-proportional area and rejecting enlarged tiny tiles rules out minimum areas, logarithmic weights, and scaling both dimensions by LOC, although those three techniques are not individually named."
+            },
+            {
+              "expectation": "Do not: Rely on hover or color alone to disclose a component and its count",
+              "status": "reasonable_implication",
+              "reason": "External labels or a member list, together with accessible names, counts, and shares for every component, provide disclosure beyond hover or color alone."
+            }
+          ],
+          "summary": "Preserves quantitative area and readable disclosure, but decorative-header exclusion is missing."
+        },
+        "B": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Keep the 100:400 data-area ratio at 1:4 before documented pixel rounding",
+              "status": "explicit_support",
+              "reason": "Requires the 1:4 ratio and proportionality checks before pixel rounding and on serialized rectangles with a stated tolerance."
+            },
+            {
+              "expectation": "Use external labels or an exact-sum Other group with a member list for tiny tiles",
+              "status": "explicit_support",
+              "reason": "Specifies external labels or an Other tile with the exact summed LOC and member list."
+            },
+            {
+              "expectation": "List the zero component without giving it a fake positive area",
+              "status": "explicit_support",
+              "reason": "Lists the zero-LOC component as zero and expressly allocates it no area."
+            },
+            {
+              "expectation": "Exclude decorative headers and gutters from the weighted data-area accounting",
+              "status": "omission",
+              "reason": "Excludes gutters and labels from measured data area, but does not explicitly or unambiguously exclude the area of decorative header regions."
+            },
+            {
+              "expectation": "Do not: Apply a minimum tile area, logarithmic weighting, or both dimensions proportional to LOC",
+              "status": "reasonable_implication",
+              "reason": "LOC-proportional area and rejection of tiny-tile enlargement exclude the listed distortions by implication."
+            },
+            {
+              "expectation": "Do not: Rely on hover or color alone to disclose a component and its count",
+              "status": "reasonable_implication",
+              "reason": "External labels, explicit membership, and a keyed table of every component's name, LOC, and share provide readable disclosure beyond hover or color alone."
+            }
+          ],
+          "summary": "Covers ratios, tiny and zero components, and readable counts; decorative-header area remains unspecified."
+        }
+      },
+      "label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      }
+    },
+    {
+      "id": "architecture-diagram-13",
+      "grades": {
+        "A": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Identify the source revision and dirty inputs, retain their snapshot or diff, and identify B by path and content hash with its regeneration command",
+              "status": "omission",
+              "reason": "Names all required provenance fields and requests snapshot/diff retention and hash capture, but the revision, exact dirty inputs, retained evidence, artifact path/hash, and regeneration command remain unavailable. Proposed capture is not completed identification or retention."
+            },
+            {
+              "expectation": "Report source and bounds checks as passed but publishing-render checks and actual visual inspection as not run with their reasons",
+              "status": "explicit_support",
+              "reason": "Records source assertions and bounds as passed as reported for B; publishing rasterization is not run because the rasterizer is unavailable, and actual inspection is not run because nobody inspected B."
+            },
+            {
+              "expectation": "Do not carry A approval to B or claim all visual checks passed",
+              "status": "explicit_support",
+              "reason": "Explicitly confines yesterday's approval to A and states that B needs visual inspection and approval."
+            },
+            {
+              "expectation": "Keep any required human review pending and link B with its remaining gaps rather than copying a full check log into the handoff",
+              "status": "omission",
+              "reason": "Keeps review pending and provides a concise handoff with the remaining gaps, but cannot link B because its path is missing."
+            }
+          ],
+          "summary": "An honest, useful incomplete record: check status and approval scope are correct, but provenance and the artifact link remain outstanding."
+        },
+        "B": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Identify the source revision and dirty inputs, retain their snapshot or diff, and identify B by path and content hash with its regeneration command",
+              "status": "omission",
+              "reason": "Lists every provenance field as missing and calls for retaining dirty inputs and recording the hash, but provides neither actual identifiers nor evidence that the snapshot/diff was retained."
+            },
+            {
+              "expectation": "Report source and bounds checks as passed but publishing-render checks and actual visual inspection as not run with their reasons",
+              "status": "explicit_support",
+              "reason": "Reports source and bounds passes specifically for B and marks publishing rasterization and actual visual inspection not run with the supplied reasons."
+            },
+            {
+              "expectation": "Do not carry A approval to B or claim all visual checks passed",
+              "status": "explicit_support",
+              "reason": "Explicitly says A's approval does not transfer and that source/bounds checks do not establish readability or publishing compatibility."
+            },
+            {
+              "expectation": "Keep any required human review pending and link B with its remaining gaps rather than copying a full check log into the handoff",
+              "status": "omission",
+              "reason": "The compact handoff preserves pending review and lists remaining gaps, but B is not linked because no path was supplied."
+            }
+          ],
+          "summary": "Correctly separates passed checks from pending review, while leaving actual provenance and the diagram link incomplete."
+        }
+      },
+      "label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      }
+    },
+    {
+      "id": "dataflow-diagram-18",
+      "grades": {
+        "A": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Name the conventions being adopted rather than applying them silently",
+              "status": "explicit_support",
+              "reason": "Names left-to-right flow, rounded compute nodes, square data nodes, and separate persistent-state nodes as initial conventions."
+            },
+            {
+              "expectation": "Ask where the defaults fight this domain",
+              "status": "explicit_support",
+              "reason": "Invites the user to identify domain conventions that conflict with the defaults."
+            },
+            {
+              "expectation": "Do not present the palette or shape grammar as settled findings",
+              "status": "explicit_support",
+              "reason": "Calls the visual grammar a default and makes no claim that a palette or shape grammar is a settled domain finding."
+            }
+          ],
+          "summary": "Names provisional conventions and explicitly invites domain corrections."
+        },
+        "B": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Name the conventions being adopted rather than applying them silently",
+              "status": "explicit_support",
+              "reason": "Explicitly names rounded compute nodes, square data nodes, left-to-right flow, and conditional use of the document's semantic palette."
+            },
+            {
+              "expectation": "Ask where the defaults fight this domain",
+              "status": "explicit_support",
+              "reason": "Asks whether any pipeline node or relationship would be misrepresented by those defaults."
+            },
+            {
+              "expectation": "Do not present the palette or shape grammar as settled findings",
+              "status": "explicit_support",
+              "reason": "Frames these as initial conventions and makes palette adoption conditional on the document already having one."
+            }
+          ],
+          "summary": "Directly satisfies all three expectations."
+        }
+      },
+      "label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      }
+    },
+    {
+      "id": "dataflow-diagram-23",
+      "grades": {
+        "A": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Identify the source revision and dirty inputs, retain their snapshot or diff, and identify B by path and content hash with its regeneration command",
+              "status": "omission",
+              "reason": "Lists the source revision, dirty inputs, artifact path/hash, and command as not supplied and requests capture, but does not actually identify the source/artifact pair or demonstrate retention of a snapshot/diff."
+            },
+            {
+              "expectation": "Report source and bounds checks as passed but publishing-render checks and actual visual inspection as not run with their reasons",
+              "status": "explicit_support",
+              "reason": "Records reported passes for B's source and bounds checks and explicit not-run statuses for rasterization and inspection with their reasons."
+            },
+            {
+              "expectation": "Do not carry A approval to B or claim all visual checks passed",
+              "status": "explicit_support",
+              "reason": "Explicitly denies approval transfer despite path reuse and says the source/bounds checks do not establish readability."
+            },
+            {
+              "expectation": "Keep any required human review pending and link B with its remaining gaps rather than copying a full check log into the handoff",
+              "status": "omission",
+              "reason": "Keeps fresh review pending and summarizes gaps in a concise handoff, but the diagram link remains pending rather than supplied."
+            }
+          ],
+          "summary": "Appropriately reports incomplete evidence and fresh review requirements; actual provenance and the link are still missing."
+        },
+        "B": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Identify the source revision and dirty inputs, retain their snapshot or diff, and identify B by path and content hash with its regeneration command",
+              "status": "omission",
+              "reason": "Includes all required provenance fields but leaves their values and retained snapshot/diff missing; the instruction to record a hash and retain inputs is only a future action."
+            },
+            {
+              "expectation": "Report source and bounds checks as passed but publishing-render checks and actual visual inspection as not run with their reasons",
+              "status": "explicit_support",
+              "reason": "Source and bounds checks are passed as reported for B, while publishing rasterization and actual inspection are explicitly not run for the stated reasons."
+            },
+            {
+              "expectation": "Do not carry A approval to B or claim all visual checks passed",
+              "status": "explicit_support",
+              "reason": "Explicitly rejects A-to-B approval transfer and says the available checks do not satisfy the perceptual gate."
+            },
+            {
+              "expectation": "Keep any required human review pending and link B with its remaining gaps rather than copying a full check log into the handoff",
+              "status": "omission",
+              "reason": "Provides a short handoff with pending approval and evidence gaps, but expressly lacks B's artifact link."
+            }
+          ],
+          "summary": "Accurate check-status and approval handling, with provenance and the handoff link still incomplete."
+        }
+      },
+      "label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      }
+    },
+    {
+      "id": "dataflow-diagram-26",
+      "grades": {
+        "A": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Recognize that derivation is unavailable and name the model as derived by reading",
+              "status": "reasonable_implication",
+              "reason": "Selects a model derived by reading, requests excerpts and revision, and states that the filename alone cannot establish stages; this reasonably recognizes that direct derivation is unavailable with the supplied evidence."
+            },
+            {
+              "expectation": "Give every node and edge the source path and symbol it was read from",
+              "status": "explicit_support",
+              "reason": "Requires a source path and symbol for each node and each edge in the transcription."
+            },
+            {
+              "expectation": "Render a provenance table beside the charts, one row per node",
+              "status": "reasonable_implication",
+              "reason": "Requires a visible table beside the figure identifying each node's evidence; this reasonably implies per-node provenance entries, though it does not explicitly say one row per node."
+            },
+            {
+              "expectation": "State an evidence baseline: the revision read, pinned or not, and that freshness is not enforced",
+              "status": "explicit_support",
+              "reason": "Requests revision or version range, requires an evidence baseline, says to label an unpinned reading, and requires stating that freshness is not enforced."
+            },
+            {
+              "expectation": "Keep fail-loud classification and geometry checks; caption the chart as derived by reading, not generated",
+              "status": "omission",
+              "reason": "Explicitly captions the chart as derived by reading and mentions classification and geometry checks, but does not require classification failures or omissions to fail loudly."
+            }
+          ],
+          "summary": "Defines reading provenance and baseline well, but the required fail-loud classification behavior is absent."
+        },
+        "B": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Recognize that derivation is unavailable and name the model as derived by reading",
+              "status": "explicit_support",
+              "reason": "Explicitly attributes the reading-based model to the JDK source being unavailable here and refuses to invent stages from the filename."
+            },
+            {
+              "expectation": "Give every node and edge the source path and symbol it was read from",
+              "status": "explicit_support",
+              "reason": "Requires a source path and symbol for every node and edge."
+            },
+            {
+              "expectation": "Render a provenance table beside the charts, one row per node",
+              "status": "explicit_support",
+              "reason": "Requires a visible provenance table beside the figure with one row per node."
+            },
+            {
+              "expectation": "State an evidence baseline: the revision read, pinned or not, and that freshness is not enforced",
+              "status": "explicit_support",
+              "reason": "Requests the revision or an explicitly unpinned version range and requires an evidence baseline and caption stating freshness is not enforced."
+            },
+            {
+              "expectation": "Keep fail-loud classification and geometry checks; caption the chart as derived by reading, not generated",
+              "status": "omission",
+              "reason": "Labels the model derived by reading and preserves classification and geometry checks, but does not specify fail-loud classification behavior. The reading label is required globally rather than expressly repeated in the caption."
+            }
+          ],
+          "summary": "Provides clear external-source provenance requirements but omits fail-loud classification."
+        }
+      },
+      "label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      }
+    },
+    {
+      "id": "dataflow-diagram-28",
+      "grades": {
+        "A": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Decide from how the figure is embedded, not from caution",
+              "status": "explicit_support",
+              "reason": "Chooses semantic tokens for inline SVG and fixed colors for a separately embedded image, making embedding the decision criterion."
+            },
+            {
+              "expectation": "Keep the page's tokens for an inlined figure; baking breaks dark mode and splits the hue from the prose",
+              "status": "reasonable_implication",
+              "reason": "Explicitly preserves semantic tokens and explains shared meaning and theme changes; freezing that relationship reasonably includes breaking dark-mode synchronization and separating figure colors from prose."
+            },
+            {
+              "expectation": "Bake fixed ink over an opaque ground only for a figure shipped as an image",
+              "status": "explicit_support",
+              "reason": "Specifies fixed colors over an opaque background for a separately embedded image."
+            },
+            {
+              "expectation": "Generate both from one source when the figure ships both ways",
+              "status": "explicit_support",
+              "reason": "Explicitly generates both forms from the same source if both are needed."
+            }
+          ],
+          "summary": "Covers embedding-specific token behavior and both-output generation."
+        },
+        "B": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Decide from how the figure is embedded, not from caution",
+              "status": "explicit_support",
+              "reason": "Bases token retention on inline SVG sharing the HTML styling context and distinguishes separately exported images."
+            },
+            {
+              "expectation": "Keep the page's tokens for an inlined figure; baking breaks dark mode and splits the hue from the prose",
+              "status": "explicit_support",
+              "reason": "Explicitly keeps semantic tokens and warns that fixed hex values break theme changes or shared color meanings."
+            },
+            {
+              "expectation": "Bake fixed ink over an opaque ground only for a figure shipped as an image",
+              "status": "explicit_support",
+              "reason": "Requires fixed colors over an opaque background for the separately exported image."
+            },
+            {
+              "expectation": "Generate both from one source when the figure ships both ways",
+              "status": "explicit_support",
+              "reason": "Explicitly generates both forms from the same source if both ship."
+            }
+          ],
+          "summary": "Directly satisfies all embedding and palette expectations."
+        }
+      },
+      "label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      }
+    },
+    {
+      "id": "format-layout-diagram-01",
+      "grades": {
+        "A": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Allow a hand-authored schematic to draw the reserved shape",
+              "status": "explicit_support",
+              "reason": "Allows the reserved structure as a relationship schematic and explicitly accommodates a hand-authored design snapshot."
+            },
+            {
+              "expectation": "Require the reserved half to be visually distinct, dashed rather than solid",
+              "status": "explicit_support",
+              "reason": "Requires dashed connections for reserved chaining and solid connections for shipped behavior."
+            },
+            {
+              "expectation": "Require the caption to say which half ships",
+              "status": "reasonable_implication",
+              "reason": "Requires the caption to say that chaining is reserved and unimplemented; together with the explicitly solid shipped behavior, this reasonably distinguishes the unshipped and shipped halves, though it does not separately require naming the shipped half in the caption."
+            }
+          ],
+          "summary": "Allows the schematic, distinguishes the reserved structure, and reasonably conveys shipping status through the required caption distinction."
+        },
+        "B": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Allow a hand-authored schematic to draw the reserved shape",
+              "status": "explicit_support",
+              "reason": "Allows a relationship schematic and explicitly includes a hand-authored design snapshot workflow."
+            },
+            {
+              "expectation": "Require the reserved half to be visually distinct, dashed rather than solid",
+              "status": "explicit_support",
+              "reason": "Specifies a dashed reserved chain and solid shipped structures."
+            },
+            {
+              "expectation": "Require the caption to say which half ships",
+              "status": "reasonable_implication",
+              "reason": "Requires the caption to state that chaining is reserved and unimplemented, which reasonably distinguishes shipping status alongside the solid-shipped/dashed-reserved convention; the shipped half is not separately named in the caption instruction."
+            }
+          ],
+          "summary": "Meets the schematic and visual distinction requirements, with the caption's shipping distinction reasonably implied."
+        }
+      },
+      "label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      }
+    },
+    {
+      "id": "format-layout-diagram-18",
+      "grades": {
+        "A": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Also re-encode each decoded value and compare bytes",
+              "status": "explicit_support",
+              "reason": "Requires decoding a frozen fixture with the shipping codec, re-encoding each entry, and comparing its bytes to the fixture."
+            },
+            {
+              "expectation": "Name the defect it catches: a tier table drifted from the encoder",
+              "status": "explicit_support",
+              "reason": "Explicitly names a label tier table drifting from the encoder as a defect decoding can miss."
+            },
+            {
+              "expectation": "Say decoding alone proves only the reading",
+              "status": "reasonable_implication",
+              "reason": "Says decoding alone is insufficient and may miss encoder/table drift; contrasting that with the re-encode comparison reasonably implies that decoding only validates the reading, though that limit is not stated verbatim."
+            }
+          ],
+          "summary": "Satisfies the round-trip and drift requirements, with the reading-only limitation conveyed by implication."
+        },
+        "B": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Also re-encode each decoded value and compare bytes",
+              "status": "explicit_support",
+              "reason": "Explicitly requires re-encoding every decoded value and comparing bytes against the frozen fixture."
+            },
+            {
+              "expectation": "Name the defect it catches: a tier table drifted from the encoder",
+              "status": "explicit_support",
+              "reason": "Names a width-tier table that has drifted from the encoder."
+            },
+            {
+              "expectation": "Say decoding alone proves only the reading",
+              "status": "explicit_support",
+              "reason": "Explicitly says decoding checks the reading, while byte comparison verifies encoder-produced values."
+            }
+          ],
+          "summary": "Directly satisfies all three expectations."
+        }
+      },
+      "label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      }
+    },
+    {
+      "id": "format-layout-diagram-23",
+      "grades": {
+        "A": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Identify the source revision and dirty inputs, retain their snapshot or diff, and identify B by path and content hash with its regeneration command",
+              "status": "omission",
+              "reason": "Provides fields for revision/fixture, dirty inputs, path/hash, and regeneration command, but all actual identifiers and evidence retention are absent; instructions to capture them do not fulfill execution."
+            },
+            {
+              "expectation": "Report source and bounds checks as passed but publishing-render checks and actual visual inspection as not run with their reasons",
+              "status": "explicit_support",
+              "reason": "Reports B's source assertions and bounds as passed as reported and marks publishing rasterization and visual inspection not run with the stated reasons."
+            },
+            {
+              "expectation": "Do not carry A approval to B or claim all visual checks passed",
+              "status": "explicit_support",
+              "reason": "Explicitly states that A's approval does not cover B and keeps publication verification pending."
+            },
+            {
+              "expectation": "Keep any required human review pending and link B with its remaining gaps rather than copying a full check log into the handoff",
+              "status": "omission",
+              "reason": "Keeps any required fresh approval pending and gives a gap-focused handoff, but cannot supply the figure link because the path is missing."
+            }
+          ],
+          "summary": "The record accurately marks pending work and avoids inherited approval, but provenance and the artifact link remain incomplete."
+        },
+        "B": {
+          "grade": "partial",
+          "expectations": [
+            {
+              "expectation": "Identify the source revision and dirty inputs, retain their snapshot or diff, and identify B by path and content hash with its regeneration command",
+              "status": "omission",
+              "reason": "Lists the required provenance fields but supplies no source revision, exact dirty inputs, retained snapshot/diff, artifact path/hash, or regeneration command. Future retention/hash instructions are not evidence of completion."
+            },
+            {
+              "expectation": "Report source and bounds checks as passed but publishing-render checks and actual visual inspection as not run with their reasons",
+              "status": "explicit_support",
+              "reason": "Marks source assertions and bounds passed as reported for B, and marks rasterization and inspection not run with the unavailable-rasterizer and no-inspection reasons."
+            },
+            {
+              "expectation": "Do not carry A approval to B or claim all visual checks passed",
+              "status": "explicit_support",
+              "reason": "Explicitly denies transfer of A's approval and says the supplied checks do not establish compatibility or readability."
+            },
+            {
+              "expectation": "Keep any required human review pending and link B with its remaining gaps rather than copying a full check log into the handoff",
+              "status": "omission",
+              "reason": "The compact handoff keeps B unreviewed and requires any necessary human approval, but expressly lacks a figure link."
+            }
+          ],
+          "summary": "Check statuses and approval scope are correct; actual provenance and a linked artifact are still outstanding."
+        }
+      },
+      "label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      }
+    },
+    {
+      "id": "format-layout-diagram-26",
+      "grades": {
+        "A": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Use the page's tokens for a figure inlined in that page so the hue means the same thing in figure and prose and the theme switches together",
+              "status": "explicit_support",
+              "reason": "Uses the page's semantic tokens, maps field roles to prose/table/card meanings, and keeps theme changes synchronized."
+            },
+            {
+              "expectation": "Reserve fixed ink over an opaque ground for a figure shipped as an image",
+              "status": "explicit_support",
+              "reason": "Assigns fixed colors over an opaque background to the standalone-image export."
+            },
+            {
+              "expectation": "Decide from the embedding; generate both from one source if it ships both ways",
+              "status": "explicit_support",
+              "reason": "Distinguishes inline SVG from the standalone export and requires the latter to come from the same source."
+            }
+          ],
+          "summary": "Satisfies all token, embedding, and shared-source requirements."
+        },
+        "B": {
+          "grade": "pass",
+          "expectations": [
+            {
+              "expectation": "Use the page's tokens for a figure inlined in that page so the hue means the same thing in figure and prose and the theme switches together",
+              "status": "explicit_support",
+              "reason": "Explicitly uses shared semantic tokens for matching roles and explains consistent meanings during theme changes."
+            },
+            {
+              "expectation": "Reserve fixed ink over an opaque ground for a figure shipped as an image",
+              "status": "explicit_support",
+              "reason": "Specifies fixed colors over an opaque background for standalone image export."
+            },
+            {
+              "expectation": "Decide from the embedding; generate both from one source if it ships both ways",
+              "status": "explicit_support",
+              "reason": "Bases the distinction on the inline styling context versus standalone export and requires one source for both forms."
+            }
+          ],
+          "summary": "Directly satisfies all three expectations."
+        }
+      },
+      "label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      }
+    }
+  ],
+  "limits": [
+    "Grades apply to the previously saved one-trial responses, not a new generation run.",
+    "Some prompts omit the source or artifacts required to fulfill their expectations. Missing provenance is not evidence an agent should invent it.",
+    "Identical aggregate grades do not establish behavioral equivalence or renderer quality."
+  ]
+}
