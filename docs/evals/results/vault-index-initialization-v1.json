@@ -1,0 +1,1641 @@
+{
+  "version": 1,
+  "date": "2026-10-20",
+  "base_commit": "f0c1267fb31e0b8a1733f53dd5a8d1d1afbc8015",
+  "source_sha256": "e438e7057f50225bcc3681aab34da8fb1e8c9c2eb83792daff4a5e5b936af2b4",
+  "runner_sha256": "80fd647599cc2d448ab7523c790456bdb8dbefa79ec7a278d6088b0d4df04b64",
+  "regression_method": "Apply the two new schema tests to the original implementation before introducing the transaction. Both failed; retain logs. Final tests additionally cover bounded WAL setup retry.",
+  "commands": {
+    "focused": "cargo test --locked --bin skills-mcp vault::index::tests -- --nocapture",
+    "full": "cargo test --locked --quiet",
+    "clippy": "cargo clippy --locked --all-targets -- -D warnings",
+    "format": "cargo fmt --all -- --check",
+    "mcp": "python docs/evals/check-index-concurrency.py BINARY skills/vault/reconcile-vault/SKILL.md"
+  },
+  "environment": {
+    "CARGO_TARGET_DIR": "/tmp/skills-mcp-concise-sharable/target",
+    "CARGO_INCREMENTAL": "0 after quota failure"
+  },
+  "logs": {
+    "baseline_regressions": "   Compiling skills-mcp v0.6.2 (/tmp/skills-mcp-index-init)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 2.13s\n     Running unittests src/main.rs (/tmp/skills-mcp-concise-sharable/target/debug/deps/skills_mcp-c2fb5f54489a2014)\n\nrunning 6 tests\ntest vault::index::tests::locate_vault_finds_schema_md ... ok\ntest vault::parse::tests::read_schema_version_happy_path ... ok\ntest vault::index::tests::open_refuses_on_schema_version_mismatch ... ok\ntest vault::parse::tests::read_schema_version_missing_field ... ok\n\nthread 'vault::index::tests::failed_schema_upgrade_preserves_previous_index' (407) panicked at src/vault/index.rs:445:14:\ncalled `Result::unwrap()` on an `Err` value: QueryReturnedNoRows\nnote: run with `RUST_BACKTRACE=1` environment variable to display a backtrace\ntest vault::index::tests::failed_schema_upgrade_preserves_previous_index ... FAILED\n\nthread 'vault::index::tests::concurrent_schema_initialization_and_upgrade' (406) panicked at src/vault/index.rs:393:17:\nupgrade=false: [\"index edge_to_idx already exists: Error code 1: SQL logic error\", \"table artifact_fts already exists in \\n\\n            CREATE VIRTUAL TABLE artifact_fts USING fts5(\\n                id UNINDEXED,\\n                title,\\n                body\\n            ); at offset 35: Error code 1: SQL logic error\", \"table artifact_fts already exists in \\n\\n            CREATE VIRTUAL TABLE artifact_fts USING fts5(\\n                id UNINDEXED,\\n                title,\\n                body\\n            ); at offset 35: Error code 1: SQL logic error\", \"table artifact already exists: Error code 17: database schema has changed\", \"table artifact already exists: Error code 17: database schema has changed\", \"table artifact already exists: Error code 1: SQL logic error\", \"table artifact already exists: Error code 1: SQL logic error\"]\ntest vault::index::tests::concurrent_schema_initialization_and_upgrade ... FAILED\n\nfailures:\n\nfailures:\n    vault::index::tests::concurrent_schema_initialization_and_upgrade\n    vault::index::tests::failed_schema_upgrade_preserves_previous_index\n\ntest result: FAILED. 4 passed; 2 failed; 0 ignored; 0 measured; 79 filtered out; finished in 0.01s\n\nerror: test failed, to rerun pass `--bin skills-mcp`\n",
+    "transaction_regressions": "   Compiling skills-mcp v0.6.2 (/tmp/skills-mcp-index-init)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 0.59s\n     Running unittests src/main.rs (/tmp/skills-mcp-concise-sharable/target/debug/deps/skills_mcp-c2fb5f54489a2014)\n\nrunning 6 tests\ntest vault::parse::tests::read_schema_version_missing_field ... ok\ntest vault::parse::tests::read_schema_version_happy_path ... ok\ntest vault::index::tests::open_refuses_on_schema_version_mismatch ... ok\ntest vault::index::tests::locate_vault_finds_schema_md ... ok\ntest vault::index::tests::failed_schema_upgrade_preserves_previous_index ... ok\ntest vault::index::tests::concurrent_schema_initialization_and_upgrade ... ok\n\ntest result: ok. 6 passed; 0 failed; 0 ignored; 0 measured; 79 filtered out; finished in 1.10s\n\n",
+    "initial_clippy_quota_failure": "    Checking pin-project-lite v0.2.17\n    Checking cfg-if v1.0.4\n    Checking futures-sink v0.3.33\n    Checking futures-core v0.3.33\n    Checking memchr v2.8.3\n    Checking once_cell v1.21.4\n    Checking libc v0.2.189\n    Checking serde_core v1.0.229\n    Checking typenum v1.20.1\n    Checking foldhash v0.2.0\n    Checking futures-task v0.3.33\n    Checking itoa v1.0.18\n    Checking slab v0.4.12\n    Checking futures-io v0.3.33\n    Checking num-traits v0.2.19\n   Compiling zmij v1.0.23\n    Checking bytes v1.12.1\n    Checking regex-syntax v0.8.11\n    Checking bitflags v2.13.1\n    Checking hashbrown v0.17.1\n    Checking futures-channel v0.3.33\n    Checking tracing-core v0.1.36\n    Checking ref-cast v1.0.26\n    Checking log v0.4.33\n    Checking lazy_static v1.5.0\n    Checking dyn-clone v1.0.20\n    Checking equivalent v1.0.2\n    Checking smallvec v1.15.2\n    Checking sharded-slab v0.1.7\n    Checking thiserror v2.0.20\n   Compiling serde_json v1.0.151\n    Checking libsqlite3-sys v0.38.2\n    Checking thread_local v1.1.10\n    Checking fallible-iterator v0.3.0\n   Compiling skills-mcp v0.6.2 (/tmp/skills-mcp-index-init)\n    Checking tracing v0.1.44\n    Checking tracing-log v0.2.0\n    Checking nu-ansi-term v0.50.3\n    Checking cpufeatures v0.2.17\n    Checking futures-util v0.3.33\n    Checking same-file v1.0.6\n    Checking unsafe-libyaml v0.2.11\n    Checking ryu v1.0.23\n    Checking fallible-streaming-iterator v0.1.9\n    Checking linux-raw-sys v0.12.1\n    Checking base64 v0.23.1\n    Checking walkdir v2.5.0\n    Checking generic-array v0.14.7\n    Checking include_dir v0.7.4\n    Checking anyhow v1.0.104\n    Checking fastrand v2.5.0\n    Checking indexmap v2.14.0\n    Checking hashlink v0.12.1\n    Checking semver v1.0.28\n    Checking rustix v1.1.4\n    Checking rusqlite v0.40.2\n    Checking regex-automata v0.4.18\n    Checking errno v0.3.14\n    Checking getrandom v0.4.3\n    Checking mio v1.2.2\n   Compiling rmcp-macros v3.1.2\n    Checking signal-hook-registry v1.4.8\n    Checking uuid v1.24.0\n    Checking crypto-common v0.1.7\n    Checking block-buffer v0.10.4\n    Checking digest v0.10.7\n    Checking tokio v1.53.1\n    Checking sha2 v0.10.9\n    Checking tempfile v3.27.0\n    Checking serde v1.0.229\n    Checking matchers v0.2.0\n    Checking tracing-subscriber v0.3.23\n    Checking chrono v0.4.45\n    Checking serde_yaml v0.9.34+deprecated\n    Checking futures-executor v0.3.33\n    Checking futures v0.3.33\n    Checking schemars v1.2.2\n    Checking tokio-util v0.7.19\n    Checking rmcp v3.1.2\nerror: failed to write query cache to `/tmp/skills-mcp-concise-sharable/target/debug/incremental/skills_mcp-0i78e1zzlobp0/s-hnduenfip6-0io2uqw-working/query-cache.bin`: Disk quota exceeded (os error 122)\n\nerror: could not compile `skills-mcp` (bin \"skills-mcp\") due to 1 previous error\nwarning: build failed, waiting for other jobs to finish...\nerror: failed to write query cache to `/tmp/skills-mcp-concise-sharable/target/debug/incremental/skills_mcp-38tcil5jij46b/s-hnduenfhrg-14b1tli-working/query-cache.bin`: Disk quota exceeded (os error 122)\n\nerror: could not compile `skills-mcp` (bin \"skills-mcp\" test) due to 1 previous error\n",
+    "final_focused_tests": "   Compiling skills-mcp v0.6.2 (/tmp/skills-mcp-index-init)\n    Finished `test` profile [unoptimized + debuginfo] target(s) in 1.51s\n     Running unittests src/main.rs (/tmp/skills-mcp-concise-sharable/target/debug/deps/skills_mcp-2f9c565cfbd94a90)\n\nrunning 9 tests\ntest vault::index::tests::open_refuses_on_schema_version_mismatch ... ok\ntest vault::index::tests::locate_vault_finds_schema_md ... ok\ntest vault::index::tests::refresh_is_idempotent_when_nothing_changed ... ok\ntest vault::index::tests::open_creates_index_file_and_tables ... ok\ntest vault::index::tests::rebuild_populates_artifacts_and_edges ... ok\ntest vault::index::tests::failed_schema_upgrade_preserves_previous_index ... ok\ntest vault::index::tests::wal_setup_retries_contention_and_stops_at_deadline ... ok\ntest vault::index::tests::refresh_rebuilds_when_a_file_changes ... ok\ntest vault::index::tests::concurrent_schema_initialization_and_upgrade ... ok\n\ntest result: ok. 9 passed; 0 failed; 0 ignored; 0 measured; 77 filtered out; finished in 1.13s\n\n",
+    "final_clippy": "    Checking skills-mcp v0.6.2 (/tmp/skills-mcp-index-init)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 0.80s\n",
+    "final_tests": "\nrunning 86 tests\n......................................................................................\ntest result: ok. 86 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 1.14s\n\n\nrunning 4 tests\n....\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 11 tests\n...........\ntest result: ok. 11 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.03s\n\n\nrunning 4 tests\n....\ntest result: ok. 4 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 5 tests\n.....\ntest result: ok. 5 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.00s\n\n\nrunning 12 tests\n............\ntest result: ok. 12 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.09s\n\n\nrunning 15 tests\n...............\ntest result: ok. 15 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.02s\n\n\nrunning 17 tests\n.................\ntest result: ok. 17 passed; 0 failed; 0 ignored; 0 measured; 0 filtered out; finished in 0.01s\n\n"
+  },
+  "mcp_runs": {
+    "baseline": {
+      "binary_sha256": "29b7bb41a7bf1efdbfb60133155657144036d12f59d63deabc1190680783c31c",
+      "method": "Eight separate MCP processes start vault_reflect together; five fresh vaults.",
+      "rounds": [
+        {
+          "case": "interactive",
+          "successful_calls": 7,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": [
+            {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "table artifact_fts already exists in \n\n            CREATE VIRTUAL TABLE artifact_fts USING fts5(\n                id UNINDEXED,\n                title,\n                body\n            ); at offset 35: Error code 1: SQL logic error"
+                }
+              ],
+              "isError": true
+            }
+          ]
+        },
+        {
+          "case": "dream",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        },
+        {
+          "case": "rollback",
+          "successful_calls": 7,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": [
+            {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "table artifact_fts already exists in \n\n            CREATE VIRTUAL TABLE artifact_fts USING fts5(\n                id UNINDEXED,\n                title,\n                body\n            ); at offset 35: Error code 1: SQL logic error"
+                }
+              ],
+              "isError": true
+            }
+          ]
+        },
+        {
+          "case": "note-invalid",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        },
+        {
+          "case": "host-refusal",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        }
+      ]
+    },
+    "fixed": {
+      "binary_sha256": "2f003c297824f8bd7071601f2adaaee312a4631ccce0e239fe42ae906a4a24f8",
+      "method": "Eight separate MCP processes start vault_reflect together; five fresh vaults.",
+      "rounds": [
+        {
+          "case": "interactive",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        },
+        {
+          "case": "dream",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        },
+        {
+          "case": "rollback",
+          "successful_calls": 7,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": [
+            {
+              "content": [
+                {
+                  "type": "text",
+                  "text": "set journal_mode=WAL: database is locked: Error code 5: database is locked"
+                }
+              ],
+              "isError": true
+            }
+          ]
+        },
+        {
+          "case": "note-invalid",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        },
+        {
+          "case": "host-refusal",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        }
+      ]
+    },
+    "final": {
+      "binary_sha256": "f35ff0912595026463bfd33d3457b9ca1915822a4dd9e93f27104a0d2372f2b6",
+      "method": "Eight separate MCP processes start vault_reflect together; five fresh vaults.",
+      "rounds": [
+        {
+          "case": "interactive",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        },
+        {
+          "case": "dream",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        },
+        {
+          "case": "rollback",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        },
+        {
+          "case": "note-invalid",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        },
+        {
+          "case": "host-refusal",
+          "successful_calls": 8,
+          "consistent_reports": true,
+          "sample_report": {
+            "arc_momentum": [
+              {
+                "arc_id": "rollout-arc",
+                "last_activity": "2026-10-20",
+                "n_recent": 2,
+                "n_total": 2,
+                "status": "open"
+              },
+              {
+                "arc_id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              },
+              {
+                "arc_id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "n_recent": 0,
+                "n_total": 1,
+                "status": "open"
+              }
+            ],
+            "min_days_stale_arc": 60,
+            "min_days_stale_design": 14,
+            "orphan_problem_briefs": [
+              {
+                "created": "2026-10-20",
+                "id": "secondary-problem",
+                "path": "briefs/secondary-problem.md",
+                "status": "accepted",
+                "title": "Secondary problem"
+              },
+              {
+                "created": "2026-10-20",
+                "id": "unpaired-problem",
+                "path": "briefs/unpaired-problem.md",
+                "status": "accepted",
+                "title": "Unpaired problem"
+              }
+            ],
+            "pending_syntheses": [
+              {
+                "created": "2026-10-20",
+                "id": "ready-inquiry",
+                "path": "inquiries/ready-inquiry.md",
+                "status": "ready_for_synthesis",
+                "title": "Ready inquiry"
+              }
+            ],
+            "scope_activity": [
+              {
+                "last_activity": "2026-10-20",
+                "n_recent": 6,
+                "n_total": 9,
+                "scope_id": "performance"
+              },
+              {
+                "last_activity": "2026-10-19",
+                "n_recent": 2,
+                "n_total": 8,
+                "scope_id": "legacy"
+              }
+            ],
+            "stale_arcs": [
+              {
+                "created": "2026-07-12",
+                "days_since_activity": 100,
+                "id": "cache-arc",
+                "last_activity": "2026-07-12",
+                "path": "arcs/cache-arc.md",
+                "status": "open",
+                "title": "Cache arc"
+              },
+              {
+                "created": "2026-07-22",
+                "days_since_activity": 90,
+                "id": "latency-arc",
+                "last_activity": "2026-07-22",
+                "path": "arcs/latency-arc.md",
+                "status": "open",
+                "title": "Latency arc"
+              }
+            ],
+            "stale_design_briefs": [
+              {
+                "created": "2026-08-01",
+                "days_old": 80,
+                "id": "paused-design",
+                "path": "briefs/paused-design.md",
+                "status": "proposed",
+                "title": "Paused design"
+              }
+            ],
+            "window_days": 30
+          },
+          "errors": []
+        }
+      ]
+    }
+  },
+  "run_labels": {
+    "baseline": "Original PR84 binary",
+    "fixed": "Intermediate transaction-only implementation",
+    "final": "Transaction plus bounded WAL setup retry"
+  },
+  "outcome": {
+    "rust_tests_passed": 154,
+    "clippy": "passed",
+    "format": "passed",
+    "mcp_calls": 40,
+    "mcp_errors": 0
+  },
+  "limits": [
+    "Five rounds of eight processes; not a reliability estimate.",
+    "Sustained lock contention still returns an error after the WAL deadline or normal SQLite busy timeout.",
+    "Schema concurrency regression preconfigures WAL to isolate DDL; the held-reader test and MCP smoke exercise WAL setup.",
+    "The initial build was interrupted by disk quota exhaustion; final validation completed after disposable incremental cache cleanup.",
+    "No live vault or production load test."
+  ]
+}
