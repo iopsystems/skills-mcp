@@ -1,0 +1,478 @@
+{
+  "version": 1,
+  "review_type": "separate_post_freeze_contract_review",
+  "mapping": {
+    "p": "candidate",
+    "q": "baseline"
+  },
+  "blind_review": {
+    "path": "/tmp/plan-feature-blind-review.json",
+    "sha256": "d09056ef872c227184ce739a3da630934ae2aca606a4448c2163dbfcccb0f15d",
+    "unchanged": true
+  },
+  "skill_files": {
+    "candidate": {
+      "path": "/tmp/plan-feature-trial/p/SKILL.md",
+      "sha256": "3737782e9321c71299f86ca5f2295be9c0911ef61c3d076a38e47cf79fbf781c"
+    },
+    "baseline": {
+      "path": "/tmp/plan-feature-trial/q/SKILL.md",
+      "sha256": "a4c031668872a63bff4ca089ceaa6b977db429f541fa315e49276e3d3a11ecf7"
+    }
+  },
+  "conclusion": "No substantive unintended lost constraint identified. The shortened candidate preserves the planning/artifact/authorization contract while making the intended interaction, single-repo issue and truthful-handoff changes. Behavioral response grades remain frozen; this contract review neither proves tool execution nor reliability.",
+  "frontmatter": {
+    "byte_identical": true,
+    "sha256": "0679756de71e98a22219ddf028bad033b972cb69439df1a8c713d5d79b462918",
+    "implication": "Name and activation description are unchanged. This is a static equality check, not an activation evaluation."
+  },
+  "fenced_templates": {
+    "baseline_count": 2,
+    "candidate_count": 2,
+    "byte_identical": true,
+    "sha256": [
+      "a6e3452a91b866eb8d608234e64ec73c5997155d301339dc5861b5a6872b5b59",
+      "517c68adbd8884f319711068c406df58ee013488cf126fff1c9c637836c7669b"
+    ]
+  },
+  "dependencies": [
+    {
+      "name": "frame-problem.md",
+      "byte_identical": true,
+      "sha256": "66fa28c0f72e8f5785ea0a66b04ee5883ff48fd0eb9bdb485ef3d2b544735c54"
+    },
+    {
+      "name": "propose-design.md",
+      "byte_identical": true,
+      "sha256": "bc56adf61a9a11a7e51583724b3030667e42b4133a14d9bf08dccb51f00790bc"
+    },
+    {
+      "name": "discuss.md",
+      "byte_identical": true,
+      "sha256": "a6595860586011d86ce7640a56afca98a726bf514ddb5c920cd2af9c3c05dcf2"
+    },
+    {
+      "name": "vault-search.md",
+      "byte_identical": true,
+      "sha256": "412fd7755df56c32b46395d62629438be0d2a1206af084dd5adb2a3c96c2b883"
+    }
+  ],
+  "contract_checks": [
+    {
+      "id": "authorization-default",
+      "classification": "intended-change",
+      "conclusion": "Draft remains default absent external authorization. Candidate explicitly scopes authorization per target and action and avoids repeating already supplied permission. This is the intended behavior change.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 28,
+          "quote": "Default to **draft mode** unless the user pre-authorizes."
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 15,
+          "quote": "Use **draft mode** unless the user has authorized external actions."
+        }
+      ]
+    },
+    {
+      "id": "authorization-per-write",
+      "classification": "preserved",
+      "conclusion": "Draft external writes still require approval; autonomous execution covers only authorized vault commits, feature-branch writes/pushes and issue creation. Partial authorization is supported without expanding scope.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 31,
+          "quote": "the user approves each before anything lands."
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 19,
+          "quote": "Obtain approval before each\n  external write; hand off issue drafts for the user to open."
+        }
+      ]
+    },
+    {
+      "id": "authorization-uncertainty",
+      "classification": "preserved",
+      "conclusion": "Both downgrade unavailable/unclear target steps to drafts. Candidate adds continuation of independent authorized work, preserving the limit.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 44,
+          "quote": "fall back to draft mode for that step and say\nso."
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 26,
+          "quote": "If a target, access, or tool is unavailable or unclear, draft that step and\nexplain the limit."
+        }
+      ]
+    },
+    {
+      "id": "permission-inheritance",
+      "classification": "intended-change",
+      "conclusion": "Candidate explicitly carries already granted action permissions into dependency workflows. This changes redundant approval behavior while preserving draft approval and action/target boundaries.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 173,
+          "quote": "Each step\npauses for user approval in draft mode; in autonomous mode, proceed"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 28,
+          "quote": "Carry these permissions into dependent skills; their approval steps do not\nrequire reconfirming an already authorized action."
+        }
+      ]
+    },
+    {
+      "id": "question-policy",
+      "classification": "intended-change",
+      "conclusion": "One focused question at a time and ordered assessment remain; mandatory recap/announcements, reconfirmation of known facts, and one-time write-up pushback are replaced by fact reuse and conditional consequential clarification. Explicit unknowns remain mandatory.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 52,
+          "quote": "Ask **one** focused question at a time. Never dump a numbered list."
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 34,
+          "quote": "six areas below in order, skipping questions already answered. Ask one focused\nquestion at a time when the answer affects the plan."
+        }
+      ]
+    },
+    {
+      "id": "problem-area",
+      "classification": "preserved",
+      "conclusion": "Preserves task/failure, people/frequency/context, why now, success, workaround, exclusions, reconsideration and separation of user problem from proposed solution.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 67,
+          "quote": "Goal: the **real** problem, separate from any proposed solution."
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 45,
+          "quote": "Capture the user's task, failure, affected people, frequency and context;"
+        }
+      ]
+    },
+    {
+      "id": "value-area",
+      "classification": "preserved",
+      "conclusion": "Preserves beneficiary, benefit, affected population, severity, cost of delay, thin slice and measurable outcome. The removed 1–5 scale and next-quarter example are elicitation examples, not lost requirements.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 86,
+          "quote": "Goal: **why solving it matters** and to whom."
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 55,
+          "quote": "Identify the beneficiary and concrete benefit, affected population and severity,\ncost of delay, smallest useful slice, and a measurable post-ship outcome."
+        }
+      ]
+    },
+    {
+      "id": "constraints-area",
+      "classification": "preserved",
+      "conclusion": "Preserves delivery/staffing/on-call, technical/performance, compliance/privacy/security/licensing, compatibility, ownership/approval, fragile assumptions and excluded approaches. Shortened enumerations remove examples such as residency/audit trail and vendor contracts but retain their broader requirement classes; no mandatory supplied constraint is discarded. Mandatory checklist confirmation becomes material-uncertainty resolution as intended.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 102,
+          "quote": "Goal: the **boundary of what is possible**."
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 61,
+          "quote": "Capture delivery budget, deadlines, staffing and on-call load; technical and\nperformance limits; compliance, privacy, security and licensing requirements;"
+        }
+      ]
+    },
+    {
+      "id": "surface-area",
+      "classification": "preserved",
+      "conclusion": "Preserves affected interfaces/data/infra/docs/SDKs, named primary/incidental repos/services, changed public contracts and consumers, migrations/backfills and exclusions; repo summary still drives issue scope.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 136,
+          "quote": "Read back the repo list at the end; this list drives the coordination"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 73,
+          "quote": "Summarize the repo list because it\ndetermines coordination and issue scope."
+        }
+      ]
+    },
+    {
+      "id": "decisions-area",
+      "classification": "preserved",
+      "conclusion": "Preserves two or three hard choices, options, constraints eliminating options, reversibility/consequences, chosen direction or unresolved question, deciding factor and cheap evidence gathering.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 151,
+          "quote": "For each decision, capture: options considered, chosen direction (or"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 78,
+          "quote": "Surface the two or three hard choices. For each, record realistic options,"
+        }
+      ]
+    },
+    {
+      "id": "coordination-area",
+      "classification": "preserved",
+      "conclusion": "Preserves explicit single-repo skip, per-repo work and owners, one overall accountable owner, landing order, compatibility, rollout/rollback and communication/signoff.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 157,
+          "quote": "**Skip this area if the change is truly single-repo.** Say so"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 86,
+          "quote": "For a single-repo change, state that cross-repo coordination is skipped."
+        }
+      ]
+    },
+    {
+      "id": "ordered-artifacts",
+      "classification": "preserved",
+      "conclusion": "Problem, design, optional repo doc, tracking issues, session note remain in the same order. Candidate states draft proposals must not be described as landed.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 173,
+          "quote": "Once Q&A is complete, land the outputs in this order."
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 93,
+          "quote": "Follow this order within the authorization established above."
+        }
+      ]
+    },
+    {
+      "id": "brief-delegation",
+      "classification": "preserved",
+      "conclusion": "Both require frame-problem and propose-design rather than direct brief drafting. Search, frontmatter, filenames, supersession and transition checks remain delegated to unchanged dependencies.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 281,
+          "quote": "Do not write the problem or design brief directly. Chain to"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 108,
+          "quote": "Do not bypass either brief skill."
+        }
+      ]
+    },
+    {
+      "id": "accepted-frame-reuse",
+      "classification": "preserved",
+      "conclusion": "Existing accepted frame reuse is retained and strengthened with an explicit do-not-duplicate-or-edit rule. This is preservation of inherited reuse, not a new requirement to create duplicate problem briefs.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 185,
+          "quote": "use that id instead of writing a new one. Note"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 101,
+          "quote": "id and report the reuse. Do not duplicate or edit the accepted brief."
+        }
+      ]
+    },
+    {
+      "id": "design-frame-and-body",
+      "classification": "preserved",
+      "conclusion": "frames: relation, design ownership of alternatives/coordination, and summarized repo doc remain explicit.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 192,
+          "quote": "`briefs/<id>.md` with `frames: <problem-brief-id>`"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 106,
+          "quote": "It handles `briefs/<id>.md` with `frames: <problem-brief-id>`, transition checks"
+        }
+      ]
+    },
+    {
+      "id": "repo-doc-optionality",
+      "classification": "preserved",
+      "conclusion": "Primary repo path, user/repo-convention skip, vault authority and skip reporting all remain.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 201,
+          "quote": "skip it if the user says so, or if the"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 112,
+          "quote": "Skip it when the user\nasks or the repo does not keep design docs, and report why."
+        }
+      ]
+    },
+    {
+      "id": "branch-protection",
+      "classification": "preserved",
+      "conclusion": "Feature-branch commit and draft-PR offer are retained. No main writes and no force push remain explicit. Baseline also says use a draft PR in its final prohibitions; both versions offer one in the action instructions, so candidate does not remove an unambiguous mandatory PR action.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 229,
+          "quote": "Commit on a feature branch (not main) and offer to open a draft PR."
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 137,
+          "quote": "Commit on a feature branch and offer a draft PR. Do not write to the feature\nrepo's `main` branch or force-push."
+        }
+      ]
+    },
+    {
+      "id": "single-repo-issue",
+      "classification": "intended-change",
+      "conclusion": "Candidate explicitly drafts an issue for single-repo plans, resolving the baseline wording that iterated only the coordination plan after skipping that area for single-repo work. The issue template is unchanged.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 234,
+          "quote": "For each repo in the coordination plan, draft an issue:"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 142,
+          "quote": "Draft a tracking issue for each repo's work, including a single-repo plan:"
+        }
+      ]
+    },
+    {
+      "id": "issue-execution",
+      "classification": "preserved",
+      "conclusion": "GitHub MCP issue creation remains confined to explicitly authorized repos, with URLs reported and unauthorized targets handed off as drafts. Candidate additionally forbids invented links.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 252,
+          "quote": "open them via the GitHub MCP tools (only for repos"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 159,
+          "quote": "use GitHub MCP tools to open issues only in explicitly\nauthorized repos and report their URLs."
+        }
+      ]
+    },
+    {
+      "id": "session-note",
+      "classification": "intended-change",
+      "conclusion": "discuss/session-note delegation and non-omission remain. Candidate correctly conditions draft versus commit on existing authorization rather than presenting commitment as universal. Unchanged discuss instructions retain solo-note conventions and artifact triage.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 259,
+          "quote": "via the `discuss` skill\n(session-note flavor)"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 165,
+          "quote": "Invoke `discuss` in session-note mode"
+        }
+      ]
+    },
+    {
+      "id": "honest-handoff",
+      "classification": "intended-change",
+      "conclusion": "All six handoff items remain: problem id/status, design/frame, repo doc state/skip, issue drafts/URLs, note, open questions. Candidate reports reused/drafted/committed states and unfinished actions explicitly instead of treating all artifacts as landed.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 266,
+          "quote": "Before declaring the plan complete, confirm aloud (or in output):"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 171,
+          "quote": "Account for every output, using its actual state:"
+        }
+      ]
+    },
+    {
+      "id": "no-fabrication-and-no-silent-omission",
+      "classification": "preserved",
+      "conclusion": "Unknown answers remain in briefs/open questions; missing required artifacts/actions preclude claiming completion. Candidate explicitly adds owners/decisions to non-invention wording.",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 291,
+          "quote": "Do not invent answers to unanswered discovery questions to fill"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 180,
+          "quote": "Do not declare work\ncomplete while a required artifact or action is missing; name what remains."
+        }
+      ]
+    }
+  ],
+  "unintended_lost_constraints": [],
+  "inherited_ambiguities": [
+    {
+      "id": "vault-links",
+      "classification": "shared inherited contract/template ambiguity; not candidate regression",
+      "evidence": [
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 210,
+          "quote": "**Vault:** `<problem-brief-id>` (problem) · `<design-brief-id>` (design)"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 118,
+          "quote": "**Vault:** `<problem-brief-id>` (problem) · `<design-brief-id>` (design)"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/q/SKILL.md",
+          "line": 220,
+          "quote": "<Short — the design brief has the detail. Summarize and link.>"
+        },
+        {
+          "file": "/tmp/plan-feature-trial/p/SKILL.md",
+          "line": 128,
+          "quote": "<Short — the design brief has the detail. Summarize and link.>"
+        }
+      ],
+      "analysis": "Both unchanged repo-doc templates render vault IDs as inline code, while surrounding instructions and the Design placeholder request links. The dependency says the id is the stable handle but does not define a renderer or cross-repo resolver making inline code navigable. Both trial outputs follow the ID convention; p also supplies vault-relative locators. This supports treating the blind partial as an inherited usability/specification ambiguity, not evidence that candidate compression removed linking behavior. No canonical browser URL was supplied, and neither worker fabricated one. The literal fixture expectation of links is still only partially met; frozen grades are unchanged.",
+      "possible_followup": "If navigable links are required, specify a canonical URL/relative-link convention and an explicit unresolved-link fallback in a separate change. Do not silently change the unchanged template merely to erase this evaluation partial."
+    },
+    {
+      "id": "dependency-interaction",
+      "classification": "shared dependency wording remains; unexercised live behavior",
+      "analysis": "propose-design still unconditionally says to ask clarifying questions and discuss still says to confirm solo authorship; frame-problem conditions its six questions on missing answers. Candidate plan-feature now controls redundant question behavior and expressly carries permissions into dependencies. There is no observed trial violation, but the saved responses alone cannot prove which files were read or how a live integration resolves every dependency wording tension. This is not a lost guardrail or a demonstrated regression."
+    }
+  ],
+  "limits": [
+    "Static full skill/dependency comparison and frozen synthetic responses only; no live vault/GitHub execution or authorization enforcement was tested.",
+    "No variant mapping or skill text was read before freezing the blind artifact. This file is intentionally separate and does not replace the blind record.",
+    "Examples removed during compression were evaluated for semantic coverage; absence of exact words was not treated as a lost constraint.",
+    "No candidate, repository file or frozen blind grade was edited during this review."
+  ]
+}

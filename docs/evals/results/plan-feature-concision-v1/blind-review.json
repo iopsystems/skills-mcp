@@ -1,0 +1,581 @@
+{
+  "version": 1,
+  "status": "frozen_blind_grades_before_variant_mapping_or_skill_contract",
+  "protocol": "/tmp/skills-mcp-reconcile-execution/docs/evals/fixtures/plan-feature-concision-v1.json",
+  "protocol_sha256": "5439addc02dcc51f5033a4ac2abc6e5aea196d2401c308d75288cad2157edf00",
+  "review_scope": "All 20 fixture expectations for each of two neutral variants, against eight saved responses including both turns of the underspecified case.",
+  "blindness": "Read only the frozen fixture, the eight neutral response files, and their case/followup request files. Did not read skill files, dependencies, variant mapping, manifest, repo history/diffs, or other evaluations.",
+  "rating_rule": "Pass means the observable response meets the expectation. Partial means required coverage is present with a concrete shortfall. Fail means substantive expected behavior is absent or contradicted. Claims of dependency invocation are not proof of tool/file execution.",
+  "source_sha256": {
+    "/tmp/plan-feature-trial/p/complete.md": "c17bec048f5f2084fb78c2165015f74342cc30e492e2bb9ef6f8c1373e16714c",
+    "/tmp/plan-feature-trial/p/underspecified-initial.md": "8e245fe03ff82db0a1f15de7da5c28f1d0fd1944b8bb8a55445380261ead9ab3",
+    "/tmp/plan-feature-trial/p/underspecified-followup.md": "5d87c33c9374acf9e245d8e2376c63b0b5168fb487e6e54ff914a25e3302d114",
+    "/tmp/plan-feature-trial/p/limited-authorization.md": "7658d9588ebc564e333a4627a5e8f19d428fd1d20b934d7130b5b421f9b98f6f",
+    "/tmp/plan-feature-trial/q/complete.md": "6a59d169bd99006b44d0ddb4f729f3b20b5e079a757aea7b22399da43099d3de",
+    "/tmp/plan-feature-trial/q/underspecified-initial.md": "954130e9bb1dcaa9fa941c87e4c3a7891ff57224e218c43733b6d9c65f3dffe2",
+    "/tmp/plan-feature-trial/q/underspecified-followup.md": "9a435651bc4754622c2527b462dde917bb0b6caffb2478e29886469ee6b2b5a5",
+    "/tmp/plan-feature-trial/q/limited-authorization.md": "efb958a676e602b5e73dd395c9b8b9acd5073de207f5b2cef794a28fb63987de"
+  },
+  "variants": {
+    "p": {
+      "counts": {
+        "pass": 19,
+        "partial": 1,
+        "fail": 0
+      },
+      "grades": [
+        {
+          "id": "complete.1",
+          "expectation": "Proceed to concrete drafts without a redundant mode question, restatement confirmation, or discovery question already answered in context.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/complete.md",
+              "line": 1,
+              "quote": "Draft mode. Below are proposed vault additions"
+            }
+          ],
+          "rationale": "Both begin with concrete drafts and ask no mode, confirmation, or discovery question."
+        },
+        {
+          "id": "complete.2",
+          "expectation": "Produce a problem brief and a design brief with proposed filenames, appropriate frontmatter, and frames linking the two; keep the problem separate from the solution.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/complete.md",
+              "line": 69,
+              "quote": "frames: 2026-10-20-lantern-csv-export-problem"
+            }
+          ],
+          "rationale": "Both supply separate problem and design additions, matching date-based filenames, typed draft frontmatter, and frames: 2026-10-20-lantern-csv-export-problem. The problem narrative concerns manual transfer and value loss; design details principally occupy the design brief. Prior-consideration and scope mentions in the problem do not settle a new solution."
+        },
+        {
+          "id": "complete.3",
+          "expectation": "Preserve the user problem, measurable goal, constraints, alternatives, scope exclusions, and conditions that would change the analysis.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/complete.md",
+              "line": 54,
+              "quote": "Revisit the scope or approach if the supported spreadsheet cannot round-trip the values or if streaming cannot meet the time target."
+            }
+          ],
+          "rationale": "Both preserve the supplied users/workaround, under-30-seconds-for-10,000-rows goal, budget, dependency/compatibility/auth constraints, alternatives, exclusions, and explicit spreadsheet/streaming reconsideration conditions."
+        },
+        {
+          "id": "complete.4",
+          "expectation": "Use the frame-problem, propose-design and discuss dependency instructions; honor the supplied no-match vault snapshot without pretending a live search occurred.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/complete.md",
+              "line": 3,
+              "quote": "I used `plan-feature` with `frame-problem`, `propose-design`, `discuss`"
+            }
+          ],
+          "rationale": "Both name frame-problem, propose-design and discuss, visibly produce their brief/note conventions, and expressly restrict search evidence to the supplied no-match snapshot.",
+          "limit": "This passes observable response compliance only. A saved answer cannot establish that dependency files were actually opened or that their full instructions were executed; no tool log or dependency text was available to this blind review."
+        },
+        {
+          "id": "complete.5",
+          "expectation": "Explicitly skip the optional repo doc and cross-repository coordination, while supplying the requested single-repo tracking issue.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/complete.md",
+              "line": 1,
+              "quote": "The optional repo design doc is skipped as requested"
+            }
+          ],
+          "rationale": "Both explicitly skip the optional repo document and cross-repository coordination, and provide a concrete lantern-cli issue body."
+        },
+        {
+          "id": "complete.6",
+          "expectation": "Include a solo session-note draft and distinguish drafts from committed artifacts or opened issues.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/complete.md",
+              "line": 156,
+              "quote": "This solo session note captures"
+            }
+          ],
+          "rationale": "Both supply a proposed discussions/...-session.md solo note and expressly distinguish drafts from committed artifacts and opened issues."
+        },
+        {
+          "id": "complete.7",
+          "expectation": "Do not invent measurements, approvals, people, completed verification, or external writes.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/complete.md",
+              "line": 46,
+              "quote": "Neither the spreadsheet round-trip check nor the timing probe has run"
+            }
+          ],
+          "rationale": "Both distinguish supplied facts, derived rough workload arithmetic, proposed contracts, and unrun validation. No invented issue/branch URL, approval, person, completed measurement, or claimed external write is present.",
+          "limit": "This assesses claims in the saved answer, not external side effects. Additional header/error behaviors and work allocations are labeled proposals; rough workload totals are calculations from supplied figures, not measurements."
+        },
+        {
+          "id": "underspecified.1",
+          "expectation": "On the first turn, ask one focused question about the user-visible problem or desired outcome before committing to a caching solution.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/underspecified-initial.md",
+              "line": 5,
+              "quote": "What user-visible problem in Reader is prompting the caching proposal"
+            }
+          ],
+          "rationale": "The initial response asks one problem-focused question before choosing caching. Its subclauses seek the user workflow/affected people or breakdown, rather than initiating an unrelated requirements questionnaire."
+        },
+        {
+          "id": "underspecified.2",
+          "expectation": "Do not invent requirements or produce a settled design from the initial request.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/underspecified-initial.md",
+              "line": 1,
+              "quote": "The intended outputs are paired problem/design briefs"
+            }
+          ],
+          "rationale": "The initial response contains only workflow/artifact intentions and the problem question; it does not choose a cache backend or present a settled technical design."
+        },
+        {
+          "id": "underspecified.3",
+          "expectation": "After the followup, draft the paired briefs, a tracking issue, and a solo session note without further questions or pushback.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/underspecified-followup.md",
+              "line": 1,
+              "quote": "I’ve prepared the paired briefs, Reader tracking issue, and solo session note below"
+            }
+          ],
+          "rationale": "The followup response supplies both briefs, the Reader tracking issue body, and a solo session note without further user questions or refusal to draft."
+        },
+        {
+          "id": "underspecified.4",
+          "expectation": "Retain unknown request volume, staleness tolerance and delivery budget as gaps; do not select a backend or invent numerical targets.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/underspecified-followup.md",
+              "line": 31,
+              "quote": "Request volume, an acceptable staleness bound, and the delivery budget are unknown."
+            }
+          ],
+          "rationale": "The followup retains unknown request volume, acceptable staleness and budget, explicitly declines to choose backend/TTL, and leaves performance targets to subsequent measurement and agreement."
+        },
+        {
+          "id": "underspecified.5",
+          "expectation": "Preserve account isolation as a constraint and keep proposed approaches distinct from decided choices.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/underspecified-followup.md",
+              "line": 71,
+              "quote": "Authorization must still apply on every hit."
+            }
+          ],
+          "rationale": "The drafts make account isolation mandatory, preserve authorization on hits, and mark reuse/cache flow, rollout and alternatives as conditional proposals."
+        },
+        {
+          "id": "underspecified.6",
+          "expectation": "Report the optional repo doc as skipped and all outputs as drafts; do not claim external execution or planning completeness beyond the supplied facts.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/underspecified-followup.md",
+              "line": 156,
+              "quote": "Implementation planning remains provisional until the stated gaps are resolved."
+            }
+          ],
+          "rationale": "The repo document is explicitly skipped; artifacts and issue are drafts; no live search, writes, measurements or completed implementation are asserted. Completion wording is scoped to requested drafts while feasibility remains unresolved."
+        },
+        {
+          "id": "limited-authorization.1",
+          "expectation": "Reuse the accepted problem brief unchanged and frame the new design from its exact id; do not propose a duplicate problem brief.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/limited-authorization.md",
+              "line": 24,
+              "quote": "frames: 2026-10-01-export-retries-problem"
+            }
+          ],
+          "rationale": "The accepted problem is reused unchanged and the new design has frames: 2026-10-01-export-retries-problem; no duplicate problem artifact is supplied.",
+          "limit": "The accepted brief itself was not available in full. This verifies preservation of its supplied id and described constraints, not an actual file comparison."
+        },
+        {
+          "id": "limited-authorization.2",
+          "expectation": "Carry forward the explicit authorization by target without asking for blanket reconfirmation.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/limited-authorization.md",
+              "line": 1,
+              "quote": "No repeat approval is needed."
+            }
+          ],
+          "rationale": "Authorization is carried forward explicitly by vault/API/web target, with no blanket reconfirmation question."
+        },
+        {
+          "id": "limited-authorization.3",
+          "expectation": "Restrict proposed vault, branch, push and issue actions to authorized targets; keep export-web changes and its issue as drafts.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/limited-authorization.md",
+              "line": 144,
+              "quote": "Export-web tracking issue — draft for Bea, with no authorized write or creation:"
+            }
+          ],
+          "rationale": "Proposed vault commits cover only the new design and note; feature-branch write/push and issue creation target export-api; export-web receives only a draft for Bea. No actual external execution is asserted.",
+          "limit": "The sandbox simulation does not exercise real permission enforcement, git behavior or issue creation."
+        },
+        {
+          "id": "limited-authorization.4",
+          "expectation": "Use dependency skills for briefs and the session note; include the optional API repo doc with links to the vault briefs.",
+          "grade": "partial",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/limited-authorization.md",
+              "line": 94,
+              "quote": "See the authoritative vault design at `knowledge-iop/briefs/2026-10-20-resumable-exports.md`, framing `knowledge-iop/briefs/2026-10-01-export-retries-problem.md`."
+            }
+          ],
+          "rationale": "The response supplies a convention-shaped design brief and solo session note plus the API repo document. The repo doc references both exact vault IDs, but supplies no navigable Markdown/wiki/URL links to those briefs. This is a narrow literal shortfall against the expectation of links, not missing artifact coverage.",
+          "limit": "Dependency invocation is claimed/inferred from output conventions, not verified by tool logs. Full dependency contracts were withheld. Stable IDs/locators may be the intended repository linking convention; that belongs to the separate post-freeze contract review and must not retroactively alter these blind grades."
+        },
+        {
+          "id": "limited-authorization.5",
+          "expectation": "Preserve ownership, API-before-web ordering, backward compatibility, account isolation, staged rollout and rollback.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/limited-authorization.md",
+              "line": 61,
+              "quote": "Arun deploys backward-compatible API support behind a disabled capability flag first. Bea then deploys capability detection and resume support with old-download fallback."
+            }
+          ],
+          "rationale": "Arun/API and overall ownership, Bea/web ownership, API-before-web issue dependency, disabled API then web fallback then cohort rollout, account isolation, compatibility and flag-disable rollback are all explicit."
+        },
+        {
+          "id": "limited-authorization.6",
+          "expectation": "Keep proxy support unverified and issue URLs unresolved rather than inventing evidence or identifiers.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/limited-authorization.md",
+              "line": 186,
+              "quote": "Proxy range handling is unresolved and must be prototyped before rollout."
+            }
+          ],
+          "rationale": "Proxy/range behavior is unverified and assigned a prototype before rollout; eventual API issue/branch URLs are unresolved. Proposed branch names are labeled unverified proposals, not existing branches."
+        },
+        {
+          "id": "limited-authorization.7",
+          "expectation": "Give an honest handoff covering the reused problem, planned design, repo doc, both issue states, session note and remaining question; simulation is not completed external execution.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/p/limited-authorization.md",
+              "line": 210,
+              "quote": "The simulation is the only reason those authorized actions remain unperformed; it does not require reconfirming permission."
+            }
+          ],
+          "rationale": "The handoff explicitly accounts for the reused problem, new design, API repo doc, API authorized issue versus web draft, session note, and remaining technical question. It says the simulation executed no external writes, commits, pushes or issue creation."
+        }
+      ]
+    },
+    "q": {
+      "counts": {
+        "pass": 19,
+        "partial": 1,
+        "fail": 0
+      },
+      "grades": [
+        {
+          "id": "complete.1",
+          "expectation": "Proceed to concrete drafts without a redundant mode question, restatement confirmation, or discovery question already answered in context.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/complete.md",
+              "line": 1,
+              "quote": "Draft mode: below are the proposed paired briefs, tracking issue, and solo session note."
+            }
+          ],
+          "rationale": "Both begin with concrete drafts and ask no mode, confirmation, or discovery question."
+        },
+        {
+          "id": "complete.2",
+          "expectation": "Produce a problem brief and a design brief with proposed filenames, appropriate frontmatter, and frames linking the two; keep the problem separate from the solution.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/complete.md",
+              "line": 69,
+              "quote": "frames: 2026-10-20-lantern-csv-export-problem"
+            }
+          ],
+          "rationale": "Both supply separate problem and design additions, matching date-based filenames, typed draft frontmatter, and frames: 2026-10-20-lantern-csv-export-problem. The problem narrative concerns manual transfer and value loss; design details principally occupy the design brief. Prior-consideration and scope mentions in the problem do not settle a new solution."
+        },
+        {
+          "id": "complete.3",
+          "expectation": "Preserve the user problem, measurable goal, constraints, alternatives, scope exclusions, and conditions that would change the analysis.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/complete.md",
+              "line": 54,
+              "quote": "Revisit the proposal if the supported spreadsheet cannot round-trip values or streaming cannot meet the time target."
+            }
+          ],
+          "rationale": "Both preserve the supplied users/workaround, under-30-seconds-for-10,000-rows goal, budget, dependency/compatibility/auth constraints, alternatives, exclusions, and explicit spreadsheet/streaming reconsideration conditions."
+        },
+        {
+          "id": "complete.4",
+          "expectation": "Use the frame-problem, propose-design and discuss dependency instructions; honor the supplied no-match vault snapshot without pretending a live search occurred.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/complete.md",
+              "line": 1,
+              "quote": "I used plan-feature with frame-problem, propose-design, vault-search, and discuss"
+            }
+          ],
+          "rationale": "Both name frame-problem, propose-design and discuss, visibly produce their brief/note conventions, and expressly restrict search evidence to the supplied no-match snapshot.",
+          "limit": "This passes observable response compliance only. A saved answer cannot establish that dependency files were actually opened or that their full instructions were executed; no tool log or dependency text was available to this blind review."
+        },
+        {
+          "id": "complete.5",
+          "expectation": "Explicitly skip the optional repo doc and cross-repository coordination, while supplying the requested single-repo tracking issue.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/complete.md",
+              "line": 113,
+              "quote": "The optional repository design document is explicitly skipped as requested;"
+            }
+          ],
+          "rationale": "Both explicitly skip the optional repo document and cross-repository coordination, and provide a concrete lantern-cli issue body."
+        },
+        {
+          "id": "complete.6",
+          "expectation": "Include a solo session-note draft and distinguish drafts from committed artifacts or opened issues.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/complete.md",
+              "line": 165,
+              "quote": "This is a solo session note."
+            }
+          ],
+          "rationale": "Both supply a proposed discussions/...-session.md solo note and expressly distinguish drafts from committed artifacts and opened issues."
+        },
+        {
+          "id": "complete.7",
+          "expectation": "Do not invent measurements, approvals, people, completed verification, or external writes.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/complete.md",
+              "line": 104,
+              "quote": "These are planned checks; none has run."
+            }
+          ],
+          "rationale": "Both distinguish supplied facts, derived rough workload arithmetic, proposed contracts, and unrun validation. No invented issue/branch URL, approval, person, completed measurement, or claimed external write is present.",
+          "limit": "This assesses claims in the saved answer, not external side effects. Additional header/error behaviors and work allocations are labeled proposals; rough workload totals are calculations from supplied figures, not measurements."
+        },
+        {
+          "id": "underspecified.1",
+          "expectation": "On the first turn, ask one focused question about the user-visible problem or desired outcome before committing to a caching solution.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/underspecified-initial.md",
+              "line": 3,
+              "quote": "What are Reader’s users trying to do today, and where does their experience break down"
+            }
+          ],
+          "rationale": "The initial response asks one problem-focused question before choosing caching. Its subclauses seek the user workflow/affected people or breakdown, rather than initiating an unrelated requirements questionnaire."
+        },
+        {
+          "id": "underspecified.2",
+          "expectation": "Do not invent requirements or produce a settled design from the initial request.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/underspecified-initial.md",
+              "line": 1,
+              "quote": "I’ll prepare paired problem/design briefs, a Reader tracking issue, and a session note once the problem and constraints are clear;"
+            }
+          ],
+          "rationale": "The initial response contains only workflow/artifact intentions and the problem question; it does not choose a cache backend or present a settled technical design."
+        },
+        {
+          "id": "underspecified.3",
+          "expectation": "After the followup, draft the paired briefs, a tracking issue, and a solo session note without further questions or pushback.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/underspecified-followup.md",
+              "line": 1,
+              "quote": "I’ll write up the draft now with the gaps explicit, without further questions or a repository design document."
+            }
+          ],
+          "rationale": "The followup response supplies both briefs, the Reader tracking issue body, and a solo session note without further user questions or refusal to draft."
+        },
+        {
+          "id": "underspecified.4",
+          "expectation": "Retain unknown request volume, staleness tolerance and delivery budget as gaps; do not select a backend or invent numerical targets.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/underspecified-followup.md",
+              "line": 122,
+              "quote": "No backend, TTL, budget, schedule, or numeric performance improvement is currently committed."
+            }
+          ],
+          "rationale": "The followup retains unknown request volume, acceptable staleness and budget, explicitly declines to choose backend/TTL, and leaves performance targets to subsequent measurement and agreement."
+        },
+        {
+          "id": "underspecified.5",
+          "expectation": "Preserve account isolation as a constraint and keep proposed approaches distinct from decided choices.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/underspecified-followup.md",
+              "line": 73,
+              "quote": "A cache key alone is not an authorization check."
+            }
+          ],
+          "rationale": "The drafts make account isolation mandatory, preserve authorization on hits, and mark reuse/cache flow, rollout and alternatives as conditional proposals."
+        },
+        {
+          "id": "underspecified.6",
+          "expectation": "Report the optional repo doc as skipped and all outputs as drafts; do not claim external execution or planning completeness beyond the supplied facts.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/underspecified-followup.md",
+              "line": 163,
+              "quote": "implementation feasibility and success criteria remain unresolved."
+            }
+          ],
+          "rationale": "The repo document is explicitly skipped; artifacts and issue are drafts; no live search, writes, measurements or completed implementation are asserted. Completion wording is scoped to requested drafts while feasibility remains unresolved."
+        },
+        {
+          "id": "limited-authorization.1",
+          "expectation": "Reuse the accepted problem brief unchanged and frame the new design from its exact id; do not propose a duplicate problem brief.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/limited-authorization.md",
+              "line": 29,
+              "quote": "frames: 2026-10-01-export-retries-problem"
+            }
+          ],
+          "rationale": "The accepted problem is reused unchanged and the new design has frames: 2026-10-01-export-retries-problem; no duplicate problem artifact is supplied.",
+          "limit": "The accepted brief itself was not available in full. This verifies preservation of its supplied id and described constraints, not an actual file comparison."
+        },
+        {
+          "id": "limited-authorization.2",
+          "expectation": "Carry forward the explicit authorization by target without asking for blanket reconfirmation.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/limited-authorization.md",
+              "line": 3,
+              "quote": "No repeat permission request is needed."
+            }
+          ],
+          "rationale": "Authorization is carried forward explicitly by vault/API/web target, with no blanket reconfirmation question."
+        },
+        {
+          "id": "limited-authorization.3",
+          "expectation": "Restrict proposed vault, branch, push and issue actions to authorized targets; keep export-web changes and its issue as drafts.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/limited-authorization.md",
+              "line": 3,
+              "quote": "The `export-web` issue is a draft for Bea; there will be no web writes or issue creation."
+            }
+          ],
+          "rationale": "Proposed vault commits cover only the new design and note; feature-branch write/push and issue creation target export-api; export-web receives only a draft for Bea. No actual external execution is asserted.",
+          "limit": "The sandbox simulation does not exercise real permission enforcement, git behavior or issue creation."
+        },
+        {
+          "id": "limited-authorization.4",
+          "expectation": "Use dependency skills for briefs and the session note; include the optional API repo doc with links to the vault briefs.",
+          "grade": "partial",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/limited-authorization.md",
+              "line": 86,
+              "quote": "The paired vault briefs are authoritative; these stable IDs identify them until repository URLs are available."
+            }
+          ],
+          "rationale": "The response supplies a convention-shaped design brief and solo session note plus the API repo document. The repo doc references both exact vault IDs, but supplies no navigable Markdown/wiki/URL links to those briefs. This is a narrow literal shortfall against the expectation of links, not missing artifact coverage.",
+          "limit": "Dependency invocation is claimed/inferred from output conventions, not verified by tool logs. Full dependency contracts were withheld. Stable IDs/locators may be the intended repository linking convention; that belongs to the separate post-freeze contract review and must not retroactively alter these blind grades."
+        },
+        {
+          "id": "limited-authorization.5",
+          "expectation": "Preserve ownership, API-before-web ordering, backward compatibility, account isolation, staged rollout and rollback.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/limited-authorization.md",
+              "line": 64,
+              "quote": "Deploy backward-compatible API support with the capability flag disabled. Then land web capability detection, resume behavior, and old-download fallback."
+            }
+          ],
+          "rationale": "Arun/API and overall ownership, Bea/web ownership, API-before-web issue dependency, disabled API then web fallback then cohort rollout, account isolation, compatibility and flag-disable rollback are all explicit."
+        },
+        {
+          "id": "limited-authorization.6",
+          "expectation": "Keep proxy support unverified and issue URLs unresolved rather than inventing evidence or identifiers.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/limited-authorization.md",
+              "line": 46,
+              "quote": "Range-request behavior through client proxies is unknown and must be tested before rollout."
+            }
+          ],
+          "rationale": "Proxy/range behavior is unverified and assigned a prototype before rollout; eventual API issue/branch URLs are unresolved. Proposed branch names are labeled unverified proposals, not existing branches."
+        },
+        {
+          "id": "limited-authorization.7",
+          "expectation": "Give an honest handoff covering the reused problem, planned design, repo doc, both issue states, session note and remaining question; simulation is not completed external execution.",
+          "grade": "pass",
+          "evidence": [
+            {
+              "file": "/tmp/plan-feature-trial/q/limited-authorization.md",
+              "line": 189,
+              "quote": "This simulation executed none of those external actions: no brief or note landed, no document branch was created/pushed, and no issue was opened."
+            }
+          ],
+          "rationale": "The handoff explicitly accounts for the reused problem, new design, API repo doc, API authorized issue versus web draft, session note, and remaining technical question. It says the simulation executed no external writes, commits, pushes or issue creation."
+        }
+      ]
+    }
+  },
+  "comparison": "No observed separation in the expectation grades. Each variant passes 19 and partially satisfies one narrow link-format requirement; no failures. Both proceed immediately with complete context, ask one focused question initially when underspecified, then draft without further questions. Both preserve target-specific authorization in the simulation.",
+  "limits": [
+    "Planning and handoff evaluation only. No real vault writes, commits, pushes, GitHub calls or permission enforcement are exercised.",
+    "The test wrapper asks for drafts or planned actions in place of external execution and supplies a local search snapshot.",
+    "Three cases share worker context; one run per variant does not establish reliability or human comprehension.",
+    "Dependent skills are identical across variants. Their live discovery and tool behavior are outside this comparison.",
+    "The activation description remains unchanged; this evaluation makes no activation claim.",
+    "Saved answers do not prove dependency reads, tool execution, or absence of hidden external side effects.",
+    "The supplied accepted-brief summary permits checking described framing, not unchanged bytes of an existing artifact.",
+    "The narrow link partial is literal: exact stable IDs/locators are present but navigable links are absent. Whether that is compliant with the skill contract is deliberately deferred until after this artifact is frozen.",
+    "No model, runtime or reliability comparison is inferred; one context-sharing sequence per neutral variant is insufficient for that."
+  ]
+}
