@@ -1,9 +1,9 @@
 ---
-status: open
+status: shipped
 opened: 2026-10-20
 updated: 2026-10-20
 beta_skills: [architecture-diagram, format-layout-diagram, review-guide]
-prs: [79]
+prs: [79, 80]
 ---
 
 # Shorter diagram introductions and rationale
@@ -12,8 +12,9 @@ prs: [79]
 
 Shorten the architecture, dataflow, and format-layout skill prose while keeping
 their domain rules and validation requirements. The edits shipped in
-[PR79](https://github.com/iopsystems/skills-mcp/pull/79); evaluation continues in
-this entry. The diagram edits were evaluated separately from the writing edits.
+[PR79](https://github.com/iopsystems/skills-mcp/pull/79); the completed follow-up
+evaluation is recorded below. The diagram edits were evaluated separately from
+the writing edits.
 
 ## Evidence and Design
 
@@ -119,6 +120,43 @@ agents would implement that guard, preserve provenance in the final handoff,
 or withhold a stale chart after continuing. No independent execution grader or
 visual comparison completed.
 
+## Completed Downstream Evaluation
+
+Both interrupted workers resumed and completed their failure handoffs. Each
+reported the unresolved classification, labeled the retained SVG as stale for
+the modified source, preserved provenance and dirty inputs, and withheld
+unperformed visual and approval claims. An independent grader passed both
+handoffs against all four frozen criteria. The baseline handoff requires
+reconstructing source from the upstream commit and retained changes; the
+candidate additionally supplied a full source archive.
+
+The [task fixture](../evals/fixtures/skill-concision-tasks-v1.json) then asked
+each variant to mark workspace library crates with no workspace dependents on
+the same Pelikan architecture chart. Both derived `bloom` and `protocol-http`
+from dependency declarations and added visible markers with a scoped legend.
+Both preserved grouping, classification and topology checks, and byte-identical
+runtime companion SVGs. Regeneration reproduced each changed SVG exactly.
+
+The [results](../evals/results/skill-concision-tasks-v1.json) preserve patches,
+handoffs, command logs, source revisions, artifact hashes, and independent
+grades. The inspected previews are retained for
+[baseline](../evals/renderings/skill-concision-tasks-v1/baseline.png) and
+[candidate](../evals/renderings/skill-concision-tasks-v1/candidate.png).
+Font measurements and visual inspection found no marker or legend clipping.
+An author mutation check added a real dependency on `bloom`: both generators
+removed its marker while retaining the `http` marker.
+
+The independent grader passed both successful changes against all seven
+criteria, checked source and artifact evidence, and reproduced the PNGs
+byte-for-byte. Charter-required maintainer review remains explicitly pending
+on these disposable evaluation artifacts. Agent inspection does not supply
+that approval.
+
+There was one trial per variant; workers retained context across tasks and
+resumed after interruptions. These cases found no concision regression. They
+exercise an existing generator and charter, not new-generator design or
+activation, and do not establish general equivalence.
+
 ## Validation and Outcome
 
 Before PR79 merged:
@@ -131,18 +169,19 @@ Before PR79 merged:
 - Fixture/result JSON, case coverage, source hashes, and unchanged existing
   corpora were checked.
 
-The evidence-only follow-up passed all 23 citation and repository-documentation
-tests, JSON/hash/coverage checks, and `git diff --check`.
+Both evidence-only follow-ups passed all 23 citation and repository-documentation
+tests, JSON/hash/coverage checks, and `git diff --check`. The completed task record
+also verifies saved patches, handoff manifests, and checked-in rendering hashes.
 
-PR79 is merged. Independent response grading is complete; the interrupted
-execution trials leave the final handoff and diagram-quality checks open.
+PR79 is merged. The completed handoffs, grounded diagram changes, rendering
+checks, and independent assessment close the scoped evaluation. No further
+instruction change is supported by these findings.
 
 ## Deferred Work
 
-Complete and independently grade the Pelikan handoffs. Compare successful
-before/after diagram generation, rendering, and review status on a grounded
-change. The local Pelikan checkout provides a downstream test target without
-modifying the user's working tree.
+New-generator construction, artifact-level dataflow and format-layout changes,
+and repeated trials remain unmeasured. A concrete failure in those domains
+would justify another investigation. The live Pelikan working tree was untouched.
 
 ## Skill Feedback
 
@@ -152,8 +191,11 @@ modifying the user's working tree.
   boundaries in the selected cases.
 - **Friction:** the candidate's single-use answer omitted explicit classification;
   the grader found both answers insufficiently explicit about failure behavior.
-  Both execution workers reached the real classification guard; their final
-  handoffs remain unobserved.
+  Both execution workers reached the real classification guard, and their
+  completed handoffs preserved its failure and withheld freshness claims.
+- **Confirmation:** both successful changes derived markers from source,
+  responded to a dependency mutation, preserved runtime charts, and kept
+  maintainer review pending.
 
 ### format-layout-diagram (beta)
 
@@ -167,11 +209,11 @@ modifying the user's working tree.
 
 ## Appendix: Skills Invoked
 
-- `skill-creator` — scoped edits and independent response runs.
+- `skill-creator` — scoped edits, independent response runs, and downstream trials.
 - `technical-prose` — prose editing; baseline guidance for the initial diagram
   revision and assigned variants for the execution follow-up.
 - `architecture-diagram` (beta) — response evaluation and isolated Pelikan execution.
 - `dataflow-diagram` — response evaluation.
 - `format-layout-diagram` (beta) — response evaluation.
 - `review-guide` (beta) — this PR's description.
-- `engineering-journal` — evidence and open validation work.
+- `engineering-journal` — evidence and closure of the scoped evaluation.

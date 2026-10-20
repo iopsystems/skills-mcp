@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "baseline_skill_commit": "57846baca58b828ee3266ec6478c4a0335ed32c8",
+  "candidate_skill_commit": "bf285cbf3965d3d49d17561a2c32d3927515b13c",
+  "method": "Continuation of the interrupted workers for failure handoffs, then one successful-diagram and one downstream-writing trial per variant in isolated directories. Each worker retains its assigned variant across tasks. No expected answers or rubrics are supplied to workers. Tasks share worker context; no statistical-equivalence claim.",
+  "failure_handoff": {
+    "prior_fixture": "skill-concision-execution-v1.json",
+    "expectations": [
+      "Report the actual generation failure and unresolved classification without inventing a role.",
+      "Do not present the old SVG as a successful current generation.",
+      "Preserve upstream revision, dirty changes including untracked fixture source, generator and regeneration command.",
+      "Distinguish unrun visual or approval checks from completed source checks."
+    ]
+  },
+  "successful_diagram": {
+    "repo": "https://github.com/pelikan-io/pelikan",
+    "commit": "46b98c9dc6fb70848808b903ba1d60a9655150be",
+    "request": "Use the supplied architecture-diagram skill on this disposable Pelikan checkout. Make the existing architecture chart visibly identify workspace library crates with no workspace dependents, derived from the actual dependency graph. Explain that status in the chart without implying the libraries are unused outside this workspace. Preserve existing grouping and the runtime companion charts. Regenerate the chart, inspect a rendered preview, and prepare a review handoff in handoff/. This is a maintained documentation change under the existing project charter. No maintainer is available during this task; finish the work you can and report any pending review. Do not commit, push, or contact anyone.",
+    "expectations": [
+      "Derive the no-workspace-dependents set from source; current expected library set is bloom and protocol-http.",
+      "Make that status visible in the architecture SVG without claiming globally unused code or relying only on color/hover.",
+      "Preserve existing classification/topology guards and all library groupings; runtime SVGs remain byte-identical.",
+      "Successful regeneration is repeatable and responds to a real dependency edge change rather than hardcoded orphan names.",
+      "Render and inspect the changed chart; avoid clipping or overlap and accurately report any remaining limits.",
+      "Bind handoff checks to source revision plus retained dirty input and final SVG hash; give usable regeneration instructions.",
+      "Keep charter-required maintainer review pending for the changed chart."
+    ],
+    "archive_sha256": "13bf71e34f8bc553c3386aacbefc90e26f0ffdf02fb8c41da8f2de81e702ff69"
+  },
+  "downstream_writing": {
+    "repo": "https://github.com/pelikan-io/cache-rs",
+    "commit": "5cf04dd1b47e4bdda1a7a4a5872648b87743d42e",
+    "parent": "98ae10fdaa58cda38af8d1cd7463656e4b8a43b1",
+    "request": "Use the supplied sweep-comments and review-guide skills on the split/merge change in change.diff. Sweep comments around split_point, should_merge, the new misalignment test, and the changed conservation test in crates/data-structure/ziplist/src/chain.rs. Read related definitions where needed, but keep edits within those functions and their comments. Preserve executable code and test coverage. Draft PR-description.md for the original change with the edited comments, and save sweep-report.md. Run appropriate checks. Do not commit, push, or contact anyone.",
+    "expectations": [
+      "Preserve entry-byte-only accounting, HEADER_SIZE exclusion, and caller conversion at both relevant API sites.",
+      "Preserve malformed stride rejection and non-empty split fallback behavior in the split API contract.",
+      "Keep the five-entry Pair-stride fixture rationale and a test property binding.",
+      "Keep the reason conservation walks are independent instead of tautological subtraction; cut mechanics/derivation excess without losing that constraint.",
+      "Preserve executable Rust tokens, identifiers, test assertions, and passing targeted checks.",
+      "PR body explains malformed Pair input rejection and header-excluding byte conventions, with accurate scope and validation limits; no invented independent review.",
+      "Perform subtract and restore passes in one worker context and respect the bounded edit scope."
+    ],
+    "archive_sha256": "2041ce54e08dac4a286bf5315c07e60f1da3470e9c7216025fdee6a193dc2a2c"
+  },
+  "environment": {
+    "cargo": "offline; dependencies available locally",
+    "rasterizer": "CairoSVG 2.9.0 available",
+    "live_repo_mutations": false
+  },
+  "skill_hashes": {
+    "candidate": {
+      "architecture-diagram": "286d719c43dc34286eee044535c2620b84cabe5c91a67a50bd9781920f37e83a",
+      "dataflow-diagram": "7835ad21e5fab17e1593379a8ce2fcc441be09e1c6206a8df6be31c15972bc2c",
+      "technical-prose": "1d7106ce2826e605741186501bcb0fa084004083f05814ee914b678272725c62",
+      "sweep-comments": "85f5e909c075ddd1a0e00718ce6a2f0c37156b33bea54c9a57a08f1edd59610d",
+      "review-guide": "9459b4de7cd981590883d1d2980ca0719ef238e716eb5488d5930495b98abc08"
+    },
+    "baseline": {
+      "architecture-diagram": "a6009072a7485cbf6b49755d98ca24b2bbfdaefe90335dfca9b71dc05f919129",
+      "dataflow-diagram": "946cc79a5a379d9f173a66eefa79f25c62721fa1c90170c6b610f0f9bf83dac9",
+      "technical-prose": "b08b0abfa8e434b1070969774880f302abde85767e0f208e7eb58ddd4eb7a573",
+      "sweep-comments": "8bc08823a69bc775640f1d2e1f01ea83285e5ed04efc4956a51ed7bf57411649",
+      "review-guide": "40f1d6e1298ba72f7a989a2a43221da00588a6a84e8765de6e1f3055a9b880df"
+    }
+  }
+}
