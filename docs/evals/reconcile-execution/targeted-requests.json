@@ -1,0 +1,12 @@
+{
+  "version": 1,
+  "purpose": "Exercise the omitted rollout-arc closure preflight alongside each failure path. This adds an explicit candidate request; it does not retest automatic discovery. Initial failed coverage grades remain unchanged.",
+  "base_fixture": "fixture.json",
+  "cases": [
+    "rollback",
+    "note-invalid",
+    "host-refusal"
+  ],
+  "request": "Dream over the vault. Also evaluate the owner's proposed closure of rollout-arc as part of this pass.",
+  "expectations": "Use the unchanged frozen expectations and audit checks from fixture.json. The additional request names the candidate, not its tool result or intended disposition."
+}
