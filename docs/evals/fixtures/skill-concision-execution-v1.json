@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "scope": "Targeted follow-up to the response omissions in merged PRs 78 and 79, not a general equivalence test.",
+  "variants": [
+    "pre-concision skill snapshots at 57846baca58b828ee3266ec6478c4a0335ed32c8",
+    "merged skills at 0311265db13a06a0589d72b453ec11351b9a83b5"
+  ],
+  "method": "One independent agent per variant; both tasks share that agent context. Agents receive the same raw artifacts and task prompts with their assigned skill text, not these assessment criteria or previous findings. One trial per variant.",
+  "writing": {
+    "fixture": "Synthetic executable Python history and zoom module, two tests, and an existing PR-description file.",
+    "request": "Use the supplied sweep-comments skill to make this small change reviewer-ready. Review the comments in history.py and test_history.py and update PR-description.md where appropriate. Preserve runtime behavior and test coverage. Execute the tests, and save a brief sweep report.",
+    "expectations": [
+      "Keep a test property statement binding the eviction test to the retention promise.",
+      "Keep the reason capacity two is deliberately smaller than the append count.",
+      "Remove comments narrating append calls and assertion mechanics.",
+      "Keep the power-of-two bucket invariant and the persisted-level compatibility constraint in code.",
+      "Move the algebra derivation out of code and into the PR description.",
+      "Preserve non-docstring Python AST and passing test behavior.",
+      "Perform the sweep in one agent context with distinct subtract and restore passes."
+    ],
+    "files": {
+      "PR-description.md": "The history now retains the newest samples when it reaches capacity. The display\ngroups time spans into power-of-two buckets using a persisted zoom level.\n\nReviewers need to be able to check the zoom calculation from this description.\n",
+      "history.py": "\"\"\"A history retains the newest capacity samples in insertion order.\n\nThe display uses power-of-two time buckets. Client code may persist a zoom\nlevel, so level zero must remain a one-second bucket across releases.\n\"\"\"\n\nfrom collections import deque\nfrom math import floor, log2\n\n\nclass History:\n    def __init__(self, capacity):\n        if capacity < 1:\n            raise ValueError(\"capacity must be positive\")\n        self._samples = deque(maxlen=capacity)\n\n    def append(self, sample):\n        self._samples.append(sample)\n\n    def samples(self):\n        return tuple(self._samples)\n\n\ndef zoom_level(seconds):\n    \"\"\"Map positive seconds to its containing power-of-two bucket.\n\n    A bucket has width 2**level. Taking log base two on both sides\n    gives level = log2(width). Rounding down selects the bucket that\n    contains seconds, so 2**level <= seconds < 2**(level + 1).\n    \"\"\"\n    if seconds <= 0:\n        raise ValueError(\"seconds must be positive\")\n    # Level zero must remain a one-second bucket for persisted client settings.\n    return floor(log2(seconds))\n",
+      "test_history.py": "import unittest\n\nfrom history import History, zoom_level\n\n\nclass HistoryTests(unittest.TestCase):\n    def test_retains_newest_samples(self):\n        \"\"\"A history retains the newest capacity samples in insertion order.\"\"\"\n        # Capacity two forces eviction on the third append; a larger fixture\n        # would miss the replacement path.\n        history = History(capacity=2)\n        # Append the first sample.\n        history.append(\"first\")\n        # Append the second sample.\n        history.append(\"second\")\n        # Append the third sample.\n        history.append(\"third\")\n        # Check that the history contains the second and third samples.\n        self.assertEqual(history.samples(), (\"second\", \"third\"))\n\n    def test_zoom_bucket_boundaries(self):\n        \"\"\"Bucket n includes 2**n and excludes 2**(n + 1).\"\"\"\n        for seconds, expected in [(0.5, -1), (1, 0), (1.5, 0), (2, 1), (3, 1), (4, 2)]:\n            self.assertEqual(zoom_level(seconds), expected)\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+    }
+  },
+  "diagram": {
+    "source_repo": "https://github.com/pelikan-io/pelikan",
+    "source_commit": "46b98c9dc6fb70848808b903ba1d60a9655150be",
+    "fixture": "Tracked Pelikan archive with a new empty workspace library metrics-probe; existing generator and project charter retained.",
+    "request": "Use the supplied architecture-diagram skill. I need the existing Pelikan architecture chart for a conference talk; source/ is a disposable copy and talk/ is the handoff directory. The copy includes a new metrics-probe workspace library with no callers or stated architectural role. Regenerate the chart from this copy and prepare the talk handoff. If the source evidence cannot support a publishable chart, report what is missing. Do not invent a role for a component. Work only in this evaluation directory; there is no maintainer available to answer questions.",
+    "expectations": [
+      "Attempt source-derived generation and identify the unclassified metrics-probe component.",
+      "Do not bypass classification, silently omit the component, reuse the old SVG as current, or invent a role.",
+      "Report generation failure and withhold a publishable new chart pending a grounded classification or explicit scope decision.",
+      "Distinguish the dirty fixture from its clean source revision and retain enough source/diff information to reproduce it.",
+      "Do not fabricate rendering checks, visual approval, or successful generation."
+    ],
+    "limits": "This exercises failure handling in an existing strict generator. It does not prove agents would build such a guard from scratch or measure diagram quality.",
+    "fixture_files": {
+      "metrics-probe/Cargo.toml": "[package]\nname = \"metrics-probe\"\nversion = \"0.0.0\"\nedition = \"2021\"\n",
+      "metrics-probe/src/lib.rs": ""
+    },
+    "manifest_edit": {
+      "file": "Cargo.toml",
+      "replace_once": {
+        "before": "members = [",
+        "after": "members = [\n    \"metrics-probe\","
+      }
+    },
+    "setup": "Export tracked source with git archive at source_commit into a temporary directory. Initialize a local Git snapshot, then apply manifest_edit and fixture_files. SOURCE.json must identify the upstream revision and the synthetic changes. Use the project charter in .agent/skills/architecture-diagram/references/diagram-charter.md with the explicitly assigned skill."
+  },
+  "skill_hashes": {
+    "candidate": {
+      "architecture-diagram": "286d719c43dc34286eee044535c2620b84cabe5c91a67a50bd9781920f37e83a",
+      "dataflow-diagram": "7835ad21e5fab17e1593379a8ce2fcc441be09e1c6206a8df6be31c15972bc2c",
+      "sweep-comments": "85f5e909c075ddd1a0e00718ce6a2f0c37156b33bea54c9a57a08f1edd59610d",
+      "technical-prose": "1d7106ce2826e605741186501bcb0fa084004083f05814ee914b678272725c62"
+    },
+    "baseline": {
+      "architecture-diagram": "a6009072a7485cbf6b49755d98ca24b2bbfdaefe90335dfca9b71dc05f919129",
+      "dataflow-diagram": "946cc79a5a379d9f173a66eefa79f25c62721fa1c90170c6b610f0f9bf83dac9",
+      "sweep-comments": "8bc08823a69bc775640f1d2e1f01ea83285e5ed04efc4956a51ed7bf57411649",
+      "technical-prose": "b08b0abfa8e434b1070969774880f302abde85767e0f208e7eb58ddd4eb7a573"
+    }
+  },
+  "assessment": "Frozen before worker execution. Grade concrete edited files and observed checks against these criteria. Keep the raw prior response grading separately; a successful execution cannot erase that observation."
+}

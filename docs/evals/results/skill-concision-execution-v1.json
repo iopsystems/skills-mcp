@@ -1,0 +1,202 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "fixture": "../fixtures/skill-concision-execution-v1.json",
+  "fixture_sha256": "f5decf38a619a45487e379d7199a00e7144fd226ec4444a35b626c15b1061818",
+  "status": "interrupted",
+  "method": "One independent agent per variant; both tasks share that agent context. Agents receive the same raw artifacts and task prompts with their assigned skill text, not these assessment criteria or previous findings. One trial per variant.",
+  "interruption": "Both execution agents stopped with: Your workspace is out of credits. Add credits to continue. Saved artifacts were inspected; neither completed a diagram handoff. No independent execution grader ran.",
+  "assessment": "Primary-author inspection of saved artifacts and command logs, plus author test reruns and AST comparison. No overall agent pass/fail grade assigned to interrupted tasks.",
+  "clean_generator_preflight": {
+    "command": "cargo run --offline --locked --manifest-path /tmp/concision-followup-eval/pelikan-source/Cargo.toml -p xtask -- diagrams",
+    "exit_code": 0,
+    "diagrams": {
+      "threading.svg": {
+        "tracked_sha256": "916a79d01d05d6ab519af613a4322bfe6421ad523c1ad022906ed79e2172f7c4",
+        "regenerated_sha256": "916a79d01d05d6ab519af613a4322bfe6421ad523c1ad022906ed79e2172f7c4",
+        "byte_identical": true
+      },
+      "dataflow.svg": {
+        "tracked_sha256": "779b888386bf7dbed0a54dd60ed62382c6209457f89afc1894817f47f0ff4b04",
+        "regenerated_sha256": "779b888386bf7dbed0a54dd60ed62382c6209457f89afc1894817f47f0ff4b04",
+        "byte_identical": true
+      },
+      "architecture.svg": {
+        "tracked_sha256": "d475e009694edf43ef186ba545985f528dc1452373152f00390b4c35e77623f3",
+        "regenerated_sha256": "d475e009694edf43ef186ba545985f528dc1452373152f00390b4c35e77623f3",
+        "byte_identical": true
+      }
+    },
+    "scope": "Author-run clean-source preflight; no skill variants applied."
+  },
+  "variants": {
+    "candidate": {
+      "worker_label": "x",
+      "skill_sha256": {
+        "architecture-diagram": "286d719c43dc34286eee044535c2620b84cabe5c91a67a50bd9781920f37e83a",
+        "dataflow-diagram": "7835ad21e5fab17e1593379a8ce2fcc441be09e1c6206a8df6be31c15972bc2c",
+        "sweep-comments": "85f5e909c075ddd1a0e00718ce6a2f0c37156b33bea54c9a57a08f1edd59610d",
+        "technical-prose": "1d7106ce2826e605741186501bcb0fa084004083f05814ee914b678272725c62"
+      },
+      "writing": {
+        "files": {
+          "PR-description.md": "The history now retains the newest samples when it reaches capacity. The display\ngroups time spans into power-of-two buckets using a persisted zoom level.\n\nFor positive `seconds`, the bucket satisfies\n`2**level <= seconds < 2**(level + 1)`. Taking base-two logarithms gives\n`level <= log2(seconds) < level + 1`, so `level = floor(log2(seconds))`.\nFor example, 1.5 seconds maps to level 0; 2 seconds maps to level 1.\nLevel zero must remain a one-second bucket for persisted client settings.\n\nValidation: `python3 -m unittest -v` passes both tests, covering eviction,\ninsertion order, and zoom bucket boundaries.\n",
+          "history.py": "\"\"\"A history retains the newest capacity samples in insertion order.\n\nThe display uses power-of-two time buckets. Client code may persist a zoom\nlevel, so level zero must remain a one-second bucket across releases.\n\"\"\"\n\nfrom collections import deque\nfrom math import floor, log2\n\n\nclass History:\n    def __init__(self, capacity):\n        if capacity < 1:\n            raise ValueError(\"capacity must be positive\")\n        self._samples = deque(maxlen=capacity)\n\n    def append(self, sample):\n        self._samples.append(sample)\n\n    def samples(self):\n        return tuple(self._samples)\n\n\ndef zoom_level(seconds):\n    \"\"\"Map positive seconds to its containing power-of-two bucket.\"\"\"\n    if seconds <= 0:\n        raise ValueError(\"seconds must be positive\")\n    # Level zero must remain a one-second bucket for persisted client settings.\n    return floor(log2(seconds))\n",
+          "test_history.py": "import unittest\n\nfrom history import History, zoom_level\n\n\nclass HistoryTests(unittest.TestCase):\n    def test_retains_newest_samples(self):\n        \"\"\"A history retains the newest capacity samples in insertion order.\"\"\"\n        # Capacity two forces eviction on the third append.\n        history = History(capacity=2)\n        history.append(\"first\")\n        history.append(\"second\")\n        history.append(\"third\")\n        self.assertEqual(history.samples(), (\"second\", \"third\"))\n\n    def test_zoom_bucket_boundaries(self):\n        \"\"\"Bucket n includes 2**n and excludes 2**(n + 1).\"\"\"\n        for seconds, expected in [(0.5, -1), (1, 0), (1.5, 0), (2, 1), (3, 1), (4, 2)]:\n            self.assertEqual(zoom_level(seconds), expected)\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+        },
+        "worker_report": "Scope: `writing/history.py` is production; `writing/test_history.py` is a test; `PR-description.md` serves reviewers. No demos.\n\nModel inventory:\n- Bounded, insertion-ordered history: module docstring; one sentence.\n- Power-of-two display buckets and persisted level zero: module docstring; short prose.\n- Bucket input/output contract: `zoom_level` docstring; one sentence.\n- Bucket derivation: PR description; equation and example.\nNo topology requires a diagram.\n\nPass 1 (original line numbers):\n- history.py:1: keep History contract and persisted zoom model remain at the module home.\n- history.py:25: shrink Removed the logarithm derivation from the function docstring; the one-line contract remains. Moved the derivation to PR-description.md with boundary examples.\n- history.py:34: keep Level zero must remain a one-second bucket for persisted client settings.\n- test_history.py:8: keep Retention/order claim binding remains; both properties are checked by test_retains_newest_samples.\n- test_history.py:9: shrink Eviction fixture explanation reduced to one sentence; capacity two and three appends verify it.\n- test_history.py:12: drop First-append narration removed.\n- test_history.py:14: drop Second-append narration removed.\n- test_history.py:16: drop Third-append narration removed.\n- test_history.py:18: drop Assertion narration removed.\n- test_history.py:22: keep Bucket-boundary claim binding remains; test_zoom_bucket_boundaries checks representative boundaries and interior values.\nnet: -10 comment/docstring lines.\n\nPass 2: inspected constructor, append, samples, zoom mapping, and test edit sites. Retained at zoom_level's return: \u201cLevel zero must remain a one-second bucket for persisted client settings.\u201d A different bucket base could preserve the tested cases yet violate compatibility outside them; the local requirement keeps the persisted scale explicit. Retained the capacity-two fixture explanation and both test claim bindings.\n\nVerification: both unittest tests pass. AST comparison confirms only the specified function docstring changed; all executable statements and assertions are identical. The supplied persistence requirement is external context, not something the tests establish across releases. No generated output, code diagrams, or commit message exists in this writing fixture. PR description and module documentation were reviewed. No commits made.\n",
+        "non_docstring_ast_unchanged": {
+          "history.py": true,
+          "test_history.py": true
+        },
+        "author_test_rerun": {
+          "command": "python3 -m unittest -v",
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": "test_retains_newest_samples (test_history.HistoryTests.test_retains_newest_samples)\nA history retains the newest capacity samples in insertion order. ... ok\ntest_zoom_bucket_boundaries (test_history.HistoryTests.test_zoom_bucket_boundaries)\nBucket n includes 2**n and excludes 2**(n + 1). ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n"
+        },
+        "author_observations": [
+          "The retention-property test docstring and the capacity-two eviction rationale remain.",
+          "All append and assertion mechanics comments were removed.",
+          "The bucket contract remains in the function docstring and test; the persisted-level requirement remains beside the return.",
+          "The algebra derivation was removed from the function docstring and included in PR-description.md.",
+          "Candidate has a saved two-pass sweep report; baseline report was not saved before interruption."
+        ]
+      },
+      "diagram": {
+        "source_provenance": {
+          "upstream": "https://github.com/pelikan-io/pelikan",
+          "upstream_commit": "46b98c9dc6fb70848808b903ba1d60a9655150be",
+          "archive_sha256": "13bf71e34f8bc553c3386aacbefc90e26f0ffdf02fb8c41da8f2de81e702ff69",
+          "local_snapshot_commit": "610a4aa95fb25b5e64a09f3ac596759b9bf7851d",
+          "fixture_changes": [
+            "New empty metrics-probe workspace library; no callers or stated architectural role."
+          ]
+        },
+        "worker_command_log_selected_blocks": [
+          "$ (cd /tmp/concision-followup-eval/variant-x/writing && python3 -m unittest -v)\ntest_retains_newest_samples (test_history.HistoryTests.test_retains_newest_samples)\nA history retains the newest capacity samples in insertion order. ... ok\ntest_zoom_bucket_boundaries (test_history.HistoryTests.test_zoom_bucket_boundaries)\nBucket n includes 2**n and excludes 2**(n + 1). ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n[exit 0]\n",
+          "$ (cd /tmp/concision-followup-eval/variant-x/source && env CARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/tmp/concision-followup-eval/variant-x/source/target cargo xtask diagrams)\n   Compiling proc-macro2 v1.0.106\n   Compiling quote v1.0.45\n   Compiling unicode-ident v1.0.24\n   Compiling serde_core v1.0.228\n   Compiling memchr v2.8.2\n   Compiling zmij v1.0.21\n   Compiling serde v1.0.228\n   Compiling camino v1.2.5\n   Compiling serde_json v1.0.150\n   Compiling thiserror v1.0.69\n   Compiling regex-syntax v0.8.11\n   Compiling itoa v1.0.18\n   Compiling aho-corasick v1.1.4\n   Compiling syn v2.0.117\n   Compiling regex-automata v0.4.14\n   Compiling semver v1.0.28\n   Compiling serde_derive v1.0.228\n   Compiling thiserror-impl v1.0.69\n   Compiling regex v1.12.4\n   Compiling cargo-platform v0.1.9\n   Compiling cargo_metadata v0.18.1\n   Compiling xtask v0.3.2 (/tmp/concision-followup-eval/variant-x/source/xtask)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.20s\n     Running `target/debug/xtask diagrams`\nERROR: workspace crate 'metrics-probe' is not classified in LAYER\n[exit 1]\n",
+          "$ (cd /tmp/concision-followup-eval/variant-x && python3 verify-writing.py)\nhistory.py: AST unchanged apart from the specified zoom_level docstring edit\ntest_history.py: AST unchanged apart from the specified zoom_level docstring edit\n[exit 0]\n"
+        ],
+        "command_log_selection": "Exact complete command blocks for tests, AST checks, and diagram generation; read-only source inspection and metadata dumps omitted.",
+        "complete_worker_log_sha256": "892cac67b32f1422e909d246494a4c33cc9f0658d5f71860a5cc5adaf9209749",
+        "source_diff_after_worker": "diff --git a/Cargo.lock b/Cargo.lock\nindex 04fbe33..5582bb4 100644\n--- a/Cargo.lock\n+++ b/Cargo.lock\n@@ -953,6 +953,10 @@ dependencies = [\n  \"libc\",\n ]\n \n+[[package]]\n+name = \"metrics-probe\"\n+version = \"0.0.0\"\n+\n [[package]]\n name = \"metriken\"\n version = \"0.7.0\"\ndiff --git a/Cargo.toml b/Cargo.toml\nindex 304e9f9..5329c07 100644\n--- a/Cargo.toml\n+++ b/Cargo.toml\n@@ -8,6 +8,7 @@ license = \"Apache-2.0\"\n [workspace]\n resolver = \"2\"\n members = [\n+    \"metrics-probe\",\n     \"src/common\",\n     \"src/config\",\n     \"src/core/admin\",\n",
+        "untracked_fixture_files": {
+          "metrics-probe/Cargo.toml": "[package]\nname = \"metrics-probe\"\nversion = \"0.0.0\"\nedition = \"2021\"\n",
+          "metrics-probe/src/lib.rs": ""
+        },
+        "tracked_diagram_files": {
+          "architecture.svg": {
+            "sha256": "d475e009694edf43ef186ba545985f528dc1452373152f00390b4c35e77623f3",
+            "unchanged_from_snapshot": true
+          },
+          "dataflow.svg": {
+            "sha256": "779b888386bf7dbed0a54dd60ed62382c6209457f89afc1894817f47f0ff4b04",
+            "unchanged_from_snapshot": true
+          },
+          "threading.svg": {
+            "sha256": "916a79d01d05d6ab519af613a4322bfe6421ad523c1ad022906ed79e2172f7c4",
+            "unchanged_from_snapshot": true
+          }
+        },
+        "handoff_report": null,
+        "author_observations": [
+          "The worker ran the source-derived generator, which rejected metrics-probe with exit code 1.",
+          "No generator implementation or classification table was changed.",
+          "Only the fixture manifest edit and Cargo-generated lock entry differ from the tracked snapshot.",
+          "Checked-in SVGs remain byte-identical and no talk handoff exists.",
+          "The interruption prevents assessing what the worker would have reported or published next."
+        ]
+      }
+    },
+    "baseline": {
+      "worker_label": "y",
+      "skill_sha256": {
+        "architecture-diagram": "a6009072a7485cbf6b49755d98ca24b2bbfdaefe90335dfca9b71dc05f919129",
+        "dataflow-diagram": "946cc79a5a379d9f173a66eefa79f25c62721fa1c90170c6b610f0f9bf83dac9",
+        "sweep-comments": "8bc08823a69bc775640f1d2e1f01ea83285e5ed04efc4956a51ed7bf57411649",
+        "technical-prose": "b08b0abfa8e434b1070969774880f302abde85767e0f208e7eb58ddd4eb7a573"
+      },
+      "writing": {
+        "files": {
+          "PR-description.md": "The history now retains the newest samples when it reaches capacity. The display\ngroups time spans into power-of-two buckets using a persisted zoom level.\n\nFor a positive span `seconds`, bucket `level` satisfies\n`2**level <= seconds < 2**(level + 1)`. Taking log base two gives\n`level <= log2(seconds) < level + 1`, so `level = floor(log2(seconds))`.\nFor example, 1.5 seconds maps to level 0; 2 seconds maps to level 1.\nLevel zero must remain a one-second bucket because clients may persist it.\n\nValidation: `python3 -m unittest -v` passes both tests, covering eviction order\nand zoom bucket boundaries. The comment sweep preserves executable code and\ntest assertions.\n",
+          "history.py": "\"\"\"A history retains the newest capacity samples in insertion order.\n\nThe display uses power-of-two time buckets. Client code may persist a zoom\nlevel, so level zero must remain a one-second bucket across releases.\n\"\"\"\n\nfrom collections import deque\nfrom math import floor, log2\n\n\nclass History:\n    def __init__(self, capacity):\n        if capacity < 1:\n            raise ValueError(\"capacity must be positive\")\n        self._samples = deque(maxlen=capacity)\n\n    def append(self, sample):\n        self._samples.append(sample)\n\n    def samples(self):\n        return tuple(self._samples)\n\n\ndef zoom_level(seconds):\n    \"\"\"Map positive seconds to its containing power-of-two bucket.\"\"\"\n    if seconds <= 0:\n        raise ValueError(\"seconds must be positive\")\n    # Level zero must remain a one-second bucket for persisted client settings.\n    return floor(log2(seconds))\n",
+          "test_history.py": "import unittest\n\nfrom history import History, zoom_level\n\n\nclass HistoryTests(unittest.TestCase):\n    def test_retains_newest_samples(self):\n        \"\"\"A history retains the newest capacity samples in insertion order.\"\"\"\n        # Capacity two forces eviction on the third append.\n        history = History(capacity=2)\n        history.append(\"first\")\n        history.append(\"second\")\n        history.append(\"third\")\n        self.assertEqual(history.samples(), (\"second\", \"third\"))\n\n    def test_zoom_bucket_boundaries(self):\n        \"\"\"Bucket n includes 2**n and excludes 2**(n + 1).\"\"\"\n        for seconds, expected in [(0.5, -1), (1, 0), (1.5, 0), (2, 1), (3, 1), (4, 2)]:\n            self.assertEqual(zoom_level(seconds), expected)\n\n\nif __name__ == \"__main__\":\n    unittest.main()\n"
+        },
+        "worker_report": null,
+        "non_docstring_ast_unchanged": {
+          "history.py": true,
+          "test_history.py": true
+        },
+        "author_test_rerun": {
+          "command": "python3 -m unittest -v",
+          "exit_code": 0,
+          "stdout": "",
+          "stderr": "test_retains_newest_samples (test_history.HistoryTests.test_retains_newest_samples)\nA history retains the newest capacity samples in insertion order. ... ok\ntest_zoom_bucket_boundaries (test_history.HistoryTests.test_zoom_bucket_boundaries)\nBucket n includes 2**n and excludes 2**(n + 1). ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n"
+        },
+        "author_observations": [
+          "The retention-property test docstring and the capacity-two eviction rationale remain.",
+          "All append and assertion mechanics comments were removed.",
+          "The bucket contract remains in the function docstring and test; the persisted-level requirement remains beside the return.",
+          "The algebra derivation was removed from the function docstring and included in PR-description.md.",
+          "Candidate has a saved two-pass sweep report; baseline report was not saved before interruption."
+        ]
+      },
+      "diagram": {
+        "source_provenance": {
+          "upstream": "https://github.com/pelikan-io/pelikan",
+          "upstream_commit": "46b98c9dc6fb70848808b903ba1d60a9655150be",
+          "archive_sha256": "13bf71e34f8bc553c3386aacbefc90e26f0ffdf02fb8c41da8f2de81e702ff69",
+          "local_snapshot_commit": "610a4aa95fb25b5e64a09f3ac596759b9bf7851d",
+          "fixture_changes": [
+            "New empty metrics-probe workspace library; no callers or stated architectural role."
+          ]
+        },
+        "worker_command_log_selected_blocks": [
+          "$ (cd /tmp/concision-followup-eval/variant-y/writing; python3 -m unittest -v)\nCARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/tmp/concision-followup-eval/variant-y/source/target\ntest_retains_newest_samples (test_history.HistoryTests.test_retains_newest_samples)\nA history retains the newest capacity samples in insertion order. ... ok\ntest_zoom_bucket_boundaries (test_history.HistoryTests.test_zoom_bucket_boundaries)\nBucket n includes 2**n and excludes 2**(n + 1). ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n\n[exit 0]\n",
+          "$ (cd /tmp/concision-followup-eval/variant-y/source; cargo xtask diagrams)\nCARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/tmp/concision-followup-eval/variant-y/source/target\n   Compiling proc-macro2 v1.0.106\n   Compiling unicode-ident v1.0.24\n   Compiling quote v1.0.45\n   Compiling serde_core v1.0.228\n   Compiling memchr v2.8.2\n   Compiling zmij v1.0.21\n   Compiling serde v1.0.228\n   Compiling thiserror v1.0.69\n   Compiling camino v1.2.5\n   Compiling serde_json v1.0.150\n   Compiling regex-syntax v0.8.11\n   Compiling itoa v1.0.18\n   Compiling aho-corasick v1.1.4\n   Compiling syn v2.0.117\n   Compiling regex-automata v0.4.14\n   Compiling semver v1.0.28\n   Compiling serde_derive v1.0.228\n   Compiling thiserror-impl v1.0.69\n   Compiling regex v1.12.4\n   Compiling cargo-platform v0.1.9\n   Compiling cargo_metadata v0.18.1\n   Compiling xtask v0.3.2 (/tmp/concision-followup-eval/variant-y/source/xtask)\n    Finished `dev` profile [unoptimized + debuginfo] target(s) in 4.16s\n     Running `target/debug/xtask diagrams`\nERROR: workspace crate 'metrics-probe' is not classified in LAYER\n\n[exit 1]\n",
+          "$ (cd /tmp/concision-followup-eval/variant-y; python3 verify_writing.py)\nCARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/tmp/concision-followup-eval/variant-y/source/target\nhistory.py: executable AST unchanged; comment/docstring lines -5\ntest_history.py: executable AST unchanged; comment/docstring lines -5\nnet: -10 comment/docstring lines\n\n[exit 0]\n",
+          "$ (cd /tmp/concision-followup-eval/variant-y/writing; python3 -m unittest -v)\nCARGO_NET_OFFLINE=true CARGO_TARGET_DIR=/tmp/concision-followup-eval/variant-y/source/target\ntest_retains_newest_samples (test_history.HistoryTests.test_retains_newest_samples)\nA history retains the newest capacity samples in insertion order. ... ok\ntest_zoom_bucket_boundaries (test_history.HistoryTests.test_zoom_bucket_boundaries)\nBucket n includes 2**n and excludes 2**(n + 1). ... ok\n\n----------------------------------------------------------------------\nRan 2 tests in 0.000s\n\nOK\n\n[exit 0]\n"
+        ],
+        "command_log_selection": "Exact complete command blocks for tests, AST checks, and diagram generation; read-only source inspection and metadata dumps omitted.",
+        "complete_worker_log_sha256": "7dce9987c65f82639c59bafe6abfb31505fa43a1f2f062b8f27b1181396ce2eb",
+        "source_diff_after_worker": "diff --git a/Cargo.lock b/Cargo.lock\nindex 04fbe33..5582bb4 100644\n--- a/Cargo.lock\n+++ b/Cargo.lock\n@@ -953,6 +953,10 @@ dependencies = [\n  \"libc\",\n ]\n \n+[[package]]\n+name = \"metrics-probe\"\n+version = \"0.0.0\"\n+\n [[package]]\n name = \"metriken\"\n version = \"0.7.0\"\ndiff --git a/Cargo.toml b/Cargo.toml\nindex 304e9f9..5329c07 100644\n--- a/Cargo.toml\n+++ b/Cargo.toml\n@@ -8,6 +8,7 @@ license = \"Apache-2.0\"\n [workspace]\n resolver = \"2\"\n members = [\n+    \"metrics-probe\",\n     \"src/common\",\n     \"src/config\",\n     \"src/core/admin\",\n",
+        "untracked_fixture_files": {
+          "metrics-probe/Cargo.toml": "[package]\nname = \"metrics-probe\"\nversion = \"0.0.0\"\nedition = \"2021\"\n",
+          "metrics-probe/src/lib.rs": ""
+        },
+        "tracked_diagram_files": {
+          "architecture.svg": {
+            "sha256": "d475e009694edf43ef186ba545985f528dc1452373152f00390b4c35e77623f3",
+            "unchanged_from_snapshot": true
+          },
+          "dataflow.svg": {
+            "sha256": "779b888386bf7dbed0a54dd60ed62382c6209457f89afc1894817f47f0ff4b04",
+            "unchanged_from_snapshot": true
+          },
+          "threading.svg": {
+            "sha256": "916a79d01d05d6ab519af613a4322bfe6421ad523c1ad022906ed79e2172f7c4",
+            "unchanged_from_snapshot": true
+          }
+        },
+        "handoff_report": null,
+        "author_observations": [
+          "The worker ran the source-derived generator, which rejected metrics-probe with exit code 1.",
+          "No generator implementation or classification table was changed.",
+          "Only the fixture manifest edit and Cargo-generated lock entry differ from the tracked snapshot.",
+          "Checked-in SVGs remain byte-identical and no talk handoff exists.",
+          "The interruption prevents assessing what the worker would have reported or published next."
+        ]
+      }
+    }
+  },
+  "limits": [
+    "One interrupted trial per variant; tasks shared worker context.",
+    "The comment fixture is synthetic, not a downstream repository comment sweep.",
+    "The diagram test uses an existing strict generator and does not show whether an agent would implement its classification guard.",
+    "Source preservation and final handoff behavior remain unobserved after the interruption.",
+    "No rendered visual inspection, human approval, or diagram-quality comparison was performed.",
+    "Successful checks of saved artifacts do not erase the earlier response-level warning or establish general equivalence."
+  ],
+  "paired_observation": "Both edited Python files are byte-identical across variants. PR-description wording differs, but both retain the derivation and compatibility condition."
+}
