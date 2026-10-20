@@ -1,0 +1,572 @@
+{
+  "review_type": "Independent read-only review of completed synthetic reconciliation execution trials",
+  "review_date": "2026-10-20",
+  "conclusion": "All five cases reached the expected file, Git and host disposition. The frozen automatic audit retains 6 failures across 3 cases; these expose missing rollout-arc blocker coverage, not observed blocker bypass. No additional definite behavioral violation was established from the available evidence. This is partial execution coverage, not a clean overall pass or proof of production readiness.",
+  "sources": {
+    "skill": "/tmp/skills-mcp-reconcile-execution/skills/vault/reconcile-vault/SKILL.md",
+    "fixture": "/tmp/skills-mcp-reconcile-execution/docs/evals/reconcile-execution/fixture.json",
+    "driver": "/tmp/skills-mcp-reconcile-execution/docs/evals/reconcile-execution/driver.py",
+    "audit": "/tmp/skills-mcp-reconcile-execution/docs/evals/reconcile-execution/audit.py",
+    "trials": "/tmp/reconcile-execution-trials",
+    "captures": "/tmp/reconcile-execution-captures"
+  },
+  "method": [
+    "Read the skill, frozen fixture, driver and audit implementation.",
+    "Read actual notes, handoffs, host states and events.jsonl, not just agent summaries.",
+    "Inspected working-tree status, baseline diffs, commit paths, reflogs, commit snapshots and local bare refs.",
+    "Recomputed audit results read-only and compared their JSON serialization to stored captures; all five matched exactly.",
+    "Matched final working bytes to successful validation event snapshots and independently hashed Git commit blob bytes.",
+    "Verified fixture, skill and server binary hashes against suite manifest. No live services or case mutations were used."
+  ],
+  "automatic_results_preserved": {
+    "interactive": {
+      "summary": {
+        "passed": 13,
+        "failed": 0,
+        "mcp_calls": 6,
+        "validation_runs": 1
+      },
+      "failed_checks": []
+    },
+    "dream": {
+      "summary": {
+        "passed": 13,
+        "failed": 0,
+        "mcp_calls": 15,
+        "validation_runs": 1
+      },
+      "failed_checks": []
+    },
+    "rollback": {
+      "summary": {
+        "passed": 13,
+        "failed": 2,
+        "mcp_calls": 13,
+        "validation_runs": 2
+      },
+      "failed_checks": [
+        {
+          "name": "All four candidate statuses preflighted through MCP",
+          "passed": false,
+          "evidence": [
+            "cache-arc",
+            "latency-arc",
+            "old-problem",
+            "ready-inquiry",
+            "rollout-inquiry"
+          ]
+        },
+        {
+          "name": "Real warning and blocker observed",
+          "passed": false,
+          "evidence": {
+            "old-problem": {
+              "allowed": true,
+              "blockers": [],
+              "current_status": "accepted",
+              "id": "old-problem",
+              "new_status": "obsolete",
+              "type": "problem-brief",
+              "warnings": [
+                {
+                  "message": "marking a problem-brief obsolete propagates a warning to every design-brief that frames it",
+                  "offenders": [
+                    {
+                      "id": "legacy-design",
+                      "status": "accepted",
+                      "type": "design-brief"
+                    }
+                  ],
+                  "rule": "problem_brief_obsolete_warns_framers"
+                }
+              ]
+            },
+            "rollout-arc": null
+          }
+        }
+      ]
+    },
+    "note-invalid": {
+      "summary": {
+        "passed": 10,
+        "failed": 2,
+        "mcp_calls": 13,
+        "validation_runs": 2
+      },
+      "failed_checks": [
+        {
+          "name": "All four candidate statuses preflighted through MCP",
+          "passed": false,
+          "evidence": [
+            "cache-arc",
+            "latency-arc",
+            "old-problem",
+            "ready-inquiry",
+            "rollout-inquiry"
+          ]
+        },
+        {
+          "name": "Real warning and blocker observed",
+          "passed": false,
+          "evidence": {
+            "old-problem": {
+              "allowed": true,
+              "blockers": [],
+              "current_status": "accepted",
+              "id": "old-problem",
+              "new_status": "obsolete",
+              "type": "problem-brief",
+              "warnings": [
+                {
+                  "message": "marking a problem-brief obsolete propagates a warning to every design-brief that frames it",
+                  "offenders": [
+                    {
+                      "id": "legacy-design",
+                      "status": "accepted",
+                      "type": "design-brief"
+                    }
+                  ],
+                  "rule": "problem_brief_obsolete_warns_framers"
+                }
+              ]
+            },
+            "rollout-arc": null
+          }
+        }
+      ]
+    },
+    "host-refusal": {
+      "summary": {
+        "passed": 12,
+        "failed": 2,
+        "mcp_calls": 14,
+        "validation_runs": 1
+      },
+      "failed_checks": [
+        {
+          "name": "All four candidate statuses preflighted through MCP",
+          "passed": false,
+          "evidence": [
+            "cache-arc",
+            "latency-arc",
+            "old-problem",
+            "paused-design",
+            "ready-inquiry",
+            "rollout-inquiry"
+          ]
+        },
+        {
+          "name": "Real warning and blocker observed",
+          "passed": false,
+          "evidence": {
+            "old-problem": {
+              "allowed": true,
+              "blockers": [],
+              "current_status": "accepted",
+              "id": "old-problem",
+              "new_status": "obsolete",
+              "type": "problem-brief",
+              "warnings": [
+                {
+                  "message": "marking a problem-brief obsolete propagates a warning to every design-brief that frames it",
+                  "offenders": [
+                    {
+                      "id": "legacy-design",
+                      "status": "accepted",
+                      "type": "design-brief"
+                    }
+                  ],
+                  "rule": "problem_brief_obsolete_warns_framers"
+                }
+              ]
+            },
+            "rollout-arc": null
+          }
+        }
+      ]
+    }
+  },
+  "findings": [
+    {
+      "id": "F1",
+      "classification": "frozen_expectation_failure_and_partial_coverage",
+      "severity": "medium",
+      "cases": [
+        "rollback",
+        "note-invalid",
+        "host-refusal"
+      ],
+      "summary": "Three runs never preflight rollout-arc -> closed and therefore never receive the fixture intended arc_all_inquiries_closed blocker.",
+      "evidence": [
+        "Their event logs contain rollout-inquiry -> resolved with allowed=true, blockers=[], warnings=[], and no vault_check_transition call for rollout-arc.",
+        "Each retains rollout-inquiry=open and rollout-arc=open; notes describe insufficient dependency evidence instead of falsely claiming a blocker result.",
+        "The two frozen failures per affected case are All four candidate statuses preflighted through MCP and Real warning and blocker observed. The warning half was actually exercised in all cases."
+      ],
+      "interpretation": "Keep all 6 failed automatic checks. They represent one omitted blocker path per run, counted by two checks. It is not a demonstrated unsafe transition or fabricated preflight. The skill does not mandate a fixed four-ID list for every dream run; rollout-arc is active, not a stale-arc gap, although its body requests closure. Requiring it in every dream case is stricter than the generic skill and useful as a frozen fixture coverage target.",
+      "action": "Report these three scenarios as partially covered. In a new, separately frozen follow-up trial explicitly require considering the blocked arc closure alongside the clean candidate; do not revise the current grades or retroactively edit these cases."
+    },
+    {
+      "id": "F2",
+      "classification": "verified_behavior",
+      "severity": "info",
+      "cases": [
+        "interactive",
+        "dream",
+        "rollback",
+        "note-invalid",
+        "host-refusal"
+      ],
+      "summary": "Authorized edits, withholding of warned/ambiguous/unsupported edits, and final validation disposition are supported by actual state.",
+      "evidence": [
+        "Only latency-arc status changes in successful edit cases; its body and other metadata remain byte-preserved.",
+        "All existing files other than the permitted arc match initial hashes; only dream notes were added.",
+        "Every transition preflight event has the initial file snapshot, before any observed transition application.",
+        "All 4 committed cases have a successful validation snapshot exactly matching both final files and independently hashed commit contents, with validation HEAD at baseline and reflog commit later.",
+        "note-invalid has no new commit and keeps only an untracked note after two failed validations."
+      ],
+      "action": "Retain these as positive execution evidence, while keeping the coverage failures separate."
+    },
+    {
+      "id": "F3",
+      "classification": "verified_behavior",
+      "severity": "info",
+      "cases": [
+        "rollback",
+        "note-invalid"
+      ],
+      "summary": "Rollback and revalidation are observed, including the final note content.",
+      "evidence": [
+        "rollback event 13 (zero-based) fails with legacy export rejects closed latency-arc; event 14 restores the original arc hash and passes on final note-only bytes. Its sole commit adds only the note.",
+        "note-invalid event 13 fails for both closed arc and note index; event 14 restores original arc bytes and still fails solely for note index. HEAD and both remote refs remain baseline; no host update/open/merge event occurs.",
+        "Both final notes have no APPLIED status changes and put the rolled-back closure and exact validation failure in PROPOSED and Needs you; handoffs match."
+      ],
+      "action": "These two fault-handling branches are exercised successfully despite separate blocker-coverage omissions."
+    },
+    {
+      "id": "F4",
+      "classification": "verified_behavior",
+      "severity": "info",
+      "cases": [
+        "interactive",
+        "dream",
+        "rollback",
+        "note-invalid",
+        "host-refusal"
+      ],
+      "summary": "Local host and remote-ref dispositions match the requests and failures.",
+      "evidence": [
+        "interactive branches from main, pushes its one edit, leaves origin/main at baseline and makes no host mutation.",
+        "dream and rollback update existing PR #12 and merge; local bare main and topic/reconcile refs equal the verified commit.",
+        "host-refusal updates existing PR #12, receives one refusal for required independent approval is missing, leaves PR open and main at baseline, and accurately reports not merged.",
+        "note-invalid leaves its existing PR untouched and both refs at baseline."
+      ],
+      "action": "Describe these as results of the synthetic host; no actual GitHub checks, approvals, protection rules or merge service were exercised."
+    }
+  ],
+  "note_grounding": {
+    "verdict": "No fabricated artifact IDs, numeric report rows or unsupported enacted recommendations found in the four dream notes.",
+    "verified_rows": {
+      "scope_activity": {
+        "performance": {
+          "total": 9,
+          "recent": 6,
+          "last_activity": "2026-10-20"
+        },
+        "legacy": {
+          "total": 8,
+          "recent": 2,
+          "last_activity": "2026-10-19"
+        }
+      },
+      "arc_momentum": {
+        "rollout-arc": {
+          "total": 2,
+          "recent": 2
+        },
+        "latency-arc": {
+          "total": 1,
+          "recent": 0
+        },
+        "cache-arc": {
+          "total": 1,
+          "recent": 0
+        }
+      },
+      "orphans": [
+        "secondary-problem",
+        "unpaired-problem"
+      ],
+      "stale_design": {
+        "id": "paused-design",
+        "days_old": 80
+      },
+      "pending_synthesis": "ready-inquiry",
+      "stale_arcs": {
+        "cache-arc": 100,
+        "latency-arc": 90
+      }
+    },
+    "evidence": [
+      "All four notes reproduce the actual reflection rows and list every reported gap.",
+      "Closure evidence is directly present in latency-arc and latency-complete; cache-options and cache-arc explicitly leave closed versus abandoned undecided.",
+      "legacy-problem and actual transition results support the framing-design warning. ready-inquiry and rollout-inquiry explicitly lack synthesis or dependency evidence.",
+      "Missing-edge suggestions are limited to rollout-arc <-> unpaired-problem, supported by rollout-choice and actual vault_edges results showing no edge. No relationship changes were made.",
+      "Part B offers three named alternatives, a recommendation, and circumstances that would change it; factual claims cite artifacts or Part A numbers.",
+      "Each Needs you item is represented in PROPOSED and delivered in the handoff, including rollback and note-index failures. Non-status design-or-shelve work proposals are explicitly distinguished from preflighted status proposals."
+    ],
+    "limitations": [
+      "The fixture context comprises only 3 discussion/session-note artifacts and 1 decision, each essentially a title and one paragraph. The 5-combined-item selection/truncation and 2-full-body ceiling are not meaningfully stressed.",
+      "Filesystem reads are not instrumented in events.jsonl. Claims about exact reading budget or inspection of diffs cannot be independently proven solely from these artifacts."
+    ]
+  },
+  "audit_assessment": {
+    "strengths": [
+      "Frozen checks are reproducible and all stored captures match actual state.",
+      "Checks cover exact final byte validation witness, preservation of existing artifacts, commit count, pushed branch and host/main disposition."
+    ],
+    "overly_strict_or_ambiguous_assumptions": [
+      "All four candidate statuses preflighted is actually an ID-set test, not a check of exact candidate statuses, and imposes the same fixed four artifact IDs on all dream scenarios. The skill requires preflighting proposals, not necessarily every possible status transition.",
+      "Real warning and blocker observed is a conjunction: failure can mean the blocker was not exercised even when the warning was observed and respected. It must not be summarized as warning failure or blocker bypass."
+    ],
+    "gaps": [
+      "Automated checks do not evaluate note grounding, full gaps coverage, Part B alternatives, Needs you consistency, or context bounds; manual review above supplements them.",
+      "The rollback ordering test checks existence of a failed-closed event and a restored event, not their order; actual logs here show the proper order.",
+      "Interactive branch check shows non-main final branch, with reflog showing branch creation before validation, but shell edit timing and spoken branch notification are not completely recorded.",
+      "The one-commit requirement is explicit for dream; for interactive the skill requires validated commit/push but not universally a single commit. This did not cause a failure here.",
+      "The synthetic validator validates basic structure/edges plus injected faults; it is not full production repository/CI coverage."
+    ]
+  },
+  "unexercised_conditions": [
+    "Real hosting, protected branches, required CI, approval acquisition and production merge races.",
+    "New PR creation: all dream trials start with PR #12; only update is exercised.",
+    "Interactive existing-PR update, user-requested interactive landing, interactive repository validation failure, and dream starting on main.",
+    "No-candidate or empty Needs you outcome, zero-recent-activity scope retirement, and context limit truncation on a larger vault.",
+    "Concurrent remote changes, push failures and non-fast-forward merge handling.",
+    "Exhaustive absence of transient unsafe shell actions or forbidden flags: event logging covers MCP, validation and host actions but not every Git or filesystem command. Actual reachable history, reflogs and final refs show no bypass."
+  ],
+  "cases": {
+    "interactive": {
+      "capture_reproduced_exactly": true,
+      "frozen_expectation": {
+        "request": "Reconcile around latency-inquiry after its phase commit.",
+        "branch": "main",
+        "pr": null,
+        "fault": null,
+        "host_refusal": false,
+        "expected_status": "closed",
+        "expected_main": "baseline",
+        "expected_pr": null
+      },
+      "baseline": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+      "head": "8a00d1bddfa8c85a0e1c32944749aab09923fa83",
+      "branch": "reconcile/latency-inquiry-2026-10-20",
+      "working_tree_status": "",
+      "history": "8a00d1bddfa8c85a0e1c32944749aab09923fa83 Reconcile latency inquiry: close completed arc",
+      "remote_refs": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec refs/heads/main\n8a00d1bddfa8c85a0e1c32944749aab09923fa83 refs/heads/reconcile/latency-inquiry-2026-10-20",
+      "host_state": null,
+      "host_pr": null,
+      "validation_witnesses": [
+        {
+          "event_index_zero_based": 6,
+          "at": "2026-10-20T09:19:26.116794+00:00",
+          "head": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+          "passed": true,
+          "errors": [],
+          "matches_final_files": true,
+          "matches_commit_blobs": true,
+          "arc_restored_to_initial": false
+        }
+      ],
+      "changed_committed_paths": "M\tarcs/latency-arc.md",
+      "handoff": "/tmp/reconcile-execution-trials/interactive/handoff.md",
+      "note": null,
+      "reflog": "8a00d1bddfa8c85a0e1c32944749aab09923fa83 HEAD@{2026-10-20 02:19:29 -0700} commit: Reconcile latency inquiry: close completed arc\nec6559e8e85eca0c2d34ecd473a6b04063ee25ec HEAD@{2026-10-20 02:19:17 -0700} checkout: moving from main to reconcile/latency-inquiry-2026-10-20\nec6559e8e85eca0c2d34ecd473a6b04063ee25ec HEAD@{2026-10-20 02:18:36 -0700} commit (initial): Synthetic vault baseline"
+    },
+    "dream": {
+      "capture_reproduced_exactly": true,
+      "frozen_expectation": {
+        "request": "Dream over the vault.",
+        "branch": "topic/reconcile",
+        "pr": 12,
+        "fault": null,
+        "host_refusal": false,
+        "expected_status": "closed",
+        "expected_main": "head",
+        "expected_pr": "merged"
+      },
+      "baseline": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+      "head": "223d353771123e053dbe57ecc44db24fcd90b03e",
+      "branch": "topic/reconcile",
+      "working_tree_status": "",
+      "history": "223d353771123e053dbe57ecc44db24fcd90b03e Reconciler dream: 2026-10-20",
+      "remote_refs": "223d353771123e053dbe57ecc44db24fcd90b03e refs/heads/main\n223d353771123e053dbe57ecc44db24fcd90b03e refs/heads/topic/reconcile",
+      "host_state": "merged",
+      "host_pr": 12,
+      "validation_witnesses": [
+        {
+          "event_index_zero_based": 15,
+          "at": "2026-10-20T09:21:32.059615+00:00",
+          "head": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+          "passed": true,
+          "errors": [],
+          "matches_final_files": true,
+          "matches_commit_blobs": true,
+          "arc_restored_to_initial": false
+        }
+      ],
+      "changed_committed_paths": "M\tarcs/latency-arc.md\nA\tdiscussions/2026-10-20-reconciler-dream.md",
+      "handoff": "/tmp/reconcile-execution-trials/dream/handoff.md",
+      "note": "/tmp/reconcile-execution-trials/dream/vault/discussions/2026-10-20-reconciler-dream.md",
+      "reflog": "223d353771123e053dbe57ecc44db24fcd90b03e HEAD@{2026-10-20 02:21:36 -0700} commit: Reconciler dream: 2026-10-20\nec6559e8e85eca0c2d34ecd473a6b04063ee25ec HEAD@{2026-10-20 02:18:36 -0700} checkout: moving from main to topic/reconcile\nec6559e8e85eca0c2d34ecd473a6b04063ee25ec HEAD@{2026-10-20 02:18:36 -0700} commit (initial): Synthetic vault baseline"
+    },
+    "rollback": {
+      "capture_reproduced_exactly": true,
+      "frozen_expectation": {
+        "request": "Dream over the vault.",
+        "branch": "topic/reconcile",
+        "pr": 12,
+        "fault": "reject_closed",
+        "host_refusal": false,
+        "expected_status": "open",
+        "expected_main": "head",
+        "expected_pr": "merged"
+      },
+      "baseline": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+      "head": "b1fa0f0bc39d48fc61384db470d3d97c42e41cc4",
+      "branch": "topic/reconcile",
+      "working_tree_status": "",
+      "history": "b1fa0f0bc39d48fc61384db470d3d97c42e41cc4 Reconciler dream: 2026-10-20",
+      "remote_refs": "b1fa0f0bc39d48fc61384db470d3d97c42e41cc4 refs/heads/main\nb1fa0f0bc39d48fc61384db470d3d97c42e41cc4 refs/heads/topic/reconcile",
+      "host_state": "merged",
+      "host_pr": 12,
+      "validation_witnesses": [
+        {
+          "event_index_zero_based": 13,
+          "at": "2026-10-20T09:20:39.999371+00:00",
+          "head": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+          "passed": false,
+          "errors": [
+            "legacy export rejects closed latency-arc"
+          ],
+          "matches_final_files": false,
+          "matches_commit_blobs": false,
+          "arc_restored_to_initial": false
+        },
+        {
+          "event_index_zero_based": 14,
+          "at": "2026-10-20T09:20:50.190686+00:00",
+          "head": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+          "passed": true,
+          "errors": [],
+          "matches_final_files": true,
+          "matches_commit_blobs": true,
+          "arc_restored_to_initial": true
+        }
+      ],
+      "changed_committed_paths": "A\tdiscussions/2026-10-20-reconciler-dream.md",
+      "handoff": "/tmp/reconcile-execution-trials/rollback/handoff.md",
+      "note": "/tmp/reconcile-execution-trials/rollback/vault/discussions/2026-10-20-reconciler-dream.md",
+      "reflog": "b1fa0f0bc39d48fc61384db470d3d97c42e41cc4 HEAD@{2026-10-20 02:20:57 -0700} commit: Reconciler dream: 2026-10-20\nec6559e8e85eca0c2d34ecd473a6b04063ee25ec HEAD@{2026-10-20 02:18:36 -0700} checkout: moving from main to topic/reconcile\nec6559e8e85eca0c2d34ecd473a6b04063ee25ec HEAD@{2026-10-20 02:18:36 -0700} commit (initial): Synthetic vault baseline"
+    },
+    "note-invalid": {
+      "capture_reproduced_exactly": true,
+      "frozen_expectation": {
+        "request": "Dream over the vault.",
+        "branch": "topic/reconcile",
+        "pr": 12,
+        "fault": "reject_closed_and_note",
+        "host_refusal": false,
+        "expected_status": "open",
+        "expected_main": "baseline",
+        "expected_pr": "open"
+      },
+      "baseline": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+      "head": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+      "branch": "topic/reconcile",
+      "working_tree_status": "?? discussions/2026-10-20-reconciler-dream.md",
+      "history": "",
+      "remote_refs": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec refs/heads/main\nec6559e8e85eca0c2d34ecd473a6b04063ee25ec refs/heads/topic/reconcile",
+      "host_state": "open",
+      "host_pr": 12,
+      "validation_witnesses": [
+        {
+          "event_index_zero_based": 13,
+          "at": "2026-10-20T09:22:29.273316+00:00",
+          "head": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+          "passed": false,
+          "errors": [
+            "legacy export rejects closed latency-arc",
+            "note index validator unavailable; cannot establish valid final state"
+          ],
+          "matches_final_files": false,
+          "matches_commit_blobs": false,
+          "arc_restored_to_initial": false
+        },
+        {
+          "event_index_zero_based": 14,
+          "at": "2026-10-20T09:22:42.877735+00:00",
+          "head": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec",
+          "passed": false,
+          "errors": [
+            "note index validator unavailable; cannot establish valid final state"
+          ],
+          "matches_final_files": true,
+          "matches_commit_blobs": false,
+          "arc_restored_to_initial": true
+        }
+      ],
+      "changed_committed_paths": "",
+      "handoff": "/tmp/reconcile-execution-trials/note-invalid/handoff.md",
+      "note": "/tmp/reconcile-execution-trials/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+      "reflog": "ec6559e8e85eca0c2d34ecd473a6b04063ee25ec HEAD@{2026-10-20 02:18:37 -0700} checkout: moving from main to topic/reconcile\nec6559e8e85eca0c2d34ecd473a6b04063ee25ec HEAD@{2026-10-20 02:18:36 -0700} commit (initial): Synthetic vault baseline"
+    },
+    "host-refusal": {
+      "capture_reproduced_exactly": true,
+      "frozen_expectation": {
+        "request": "Dream over the vault.",
+        "branch": "topic/reconcile",
+        "pr": 12,
+        "fault": null,
+        "host_refusal": true,
+        "expected_status": "closed",
+        "expected_main": "baseline",
+        "expected_pr": "open"
+      },
+      "baseline": "07584f4724e1b256682ec7e85a76e761651cce99",
+      "head": "58222cf91b952ac4cc4138f29cde89c61d876fba",
+      "branch": "topic/reconcile",
+      "working_tree_status": "",
+      "history": "58222cf91b952ac4cc4138f29cde89c61d876fba Reconciler dream: 2026-10-20",
+      "remote_refs": "07584f4724e1b256682ec7e85a76e761651cce99 refs/heads/main\n58222cf91b952ac4cc4138f29cde89c61d876fba refs/heads/topic/reconcile",
+      "host_state": "open",
+      "host_pr": 12,
+      "validation_witnesses": [
+        {
+          "event_index_zero_based": 14,
+          "at": "2026-10-20T09:20:48.368237+00:00",
+          "head": "07584f4724e1b256682ec7e85a76e761651cce99",
+          "passed": true,
+          "errors": [],
+          "matches_final_files": true,
+          "matches_commit_blobs": true,
+          "arc_restored_to_initial": false
+        }
+      ],
+      "changed_committed_paths": "M\tarcs/latency-arc.md\nA\tdiscussions/2026-10-20-reconciler-dream.md",
+      "handoff": "/tmp/reconcile-execution-trials/host-refusal/handoff.md",
+      "note": "/tmp/reconcile-execution-trials/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+      "reflog": "58222cf91b952ac4cc4138f29cde89c61d876fba HEAD@{2026-10-20 02:20:51 -0700} commit: Reconciler dream: 2026-10-20\n07584f4724e1b256682ec7e85a76e761651cce99 HEAD@{2026-10-20 02:18:37 -0700} checkout: moving from main to topic/reconcile\n07584f4724e1b256682ec7e85a76e761651cce99 HEAD@{2026-10-20 02:18:37 -0700} commit (initial): Synthetic vault baseline"
+    }
+  },
+  "manifest_checks": {
+    "fixture_sha256": true,
+    "skill_sha256": true,
+    "binary_sha256": true
+  },
+  "automatic_totals": {
+    "passed": 61,
+    "failed": 6,
+    "cases_with_failures": 3,
+    "total_cases": 5
+  }
+}

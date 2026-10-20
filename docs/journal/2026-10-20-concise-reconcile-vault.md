@@ -1,7 +1,8 @@
 ---
-status: open
+status: shipped
 opened: 2026-10-20
 updated: 2026-10-20
+prs: [83]
 beta_skills: [review-guide]
 ---
 
@@ -12,8 +13,8 @@ beta_skills: [review-guide]
 Shorten `reconcile-vault` while preserving its transition rules and resolving
 conflicting instructions about PR creation and merging.
 
-Single-PR lifecycle; this entry remains open until the change lands. It follows
-the writing-concision work and PR82's `sharable-artifact` rewrite.
+Single-PR lifecycle; landed in PR83. It follows the writing-concision work
+and PR82's `sharable-artifact` rewrite.
 
 ## Decision Criteria
 
@@ -66,6 +67,11 @@ context cap. The final wording restores “at most five” before the candidate
 trial. Step 5 also retains the explicit requirement to cite evidence.
 
 ## Outcome
+
+Shipped in [PR83](https://github.com/iopsystems/skills-mcp/pull/83), merged as
+`fede51773f21375211ca705128de8d3b7c344087` on 2026-10-20. The
+[execution follow-up](2026-10-20-reconcile-execution.md) tracks the remaining
+operational validation separately.
 
 The final skill is 2,046 words, down from 2,773 (26%), counting whitespace-
 delimited words including frontmatter and templates. Independent static review

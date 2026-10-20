@@ -1,0 +1,358 @@
+{
+  "version": 1,
+  "date": "2026-10-20",
+  "base_commit": "fede51773f21375211ca705128de8d3b7c344087",
+  "artifacts": [
+    {
+      "path": "SCHEMA.md",
+      "frontmatter": {
+        "id": "schema",
+        "type": "schema",
+        "author": "fixture-owner",
+        "version": 1
+      },
+      "age_days": 0,
+      "body": "# Fixture schema\n\nA synthetic vault for reconciliation execution tests. Arc states: open, closed, abandoned. Inquiry states: open, ready_for_synthesis, resolved. Problem states: draft, accepted, obsolete. Design states: draft, proposed, accepted, superseded. Preserve IDs, types, and graph edges. Repository validation is supplied by the harness. No force_accept or override_blocking exists.\n"
+    },
+    {
+      "path": "scopes/performance.md",
+      "frontmatter": {
+        "id": "performance",
+        "type": "scope",
+        "author": "fixture-owner",
+        "status": "active"
+      },
+      "age_days": 0,
+      "body": "# Performance\n\nLatency and rollout work.\n"
+    },
+    {
+      "path": "scopes/legacy.md",
+      "frontmatter": {
+        "id": "legacy",
+        "type": "scope",
+        "author": "fixture-owner",
+        "status": "active"
+      },
+      "age_days": 100,
+      "body": "# Legacy\n\nMaintenance of the old cache.\n"
+    },
+    {
+      "path": "arcs/latency-arc.md",
+      "frontmatter": {
+        "id": "latency-arc",
+        "type": "arc",
+        "author": "fixture-owner",
+        "status": "open",
+        "scopes": [
+          "performance"
+        ],
+        "relates_to": [
+          "secondary-problem"
+        ]
+      },
+      "age_days": 90,
+      "body": "# Latency arc\n\nThe owner records that this arc met its completion conditions: every inquiry is resolved and the measured latency target was reached. No work remains; close the arc.\n"
+    },
+    {
+      "path": "inquiries/latency-inquiry.md",
+      "frontmatter": {
+        "id": "latency-inquiry",
+        "type": "inquiry",
+        "author": "fixture-owner",
+        "status": "resolved",
+        "arc": "latency-arc",
+        "scopes": [
+          "performance"
+        ],
+        "relates_to": [
+          "old-problem",
+          "rollout-arc",
+          "cache-arc"
+        ]
+      },
+      "age_days": 90,
+      "body": "# Latency inquiry\n\nThe measured target is met and all questions are answered. The final phase commit resolved this inquiry.\n"
+    },
+    {
+      "path": "briefs/old-problem.md",
+      "frontmatter": {
+        "id": "old-problem",
+        "type": "problem-brief",
+        "author": "fixture-owner",
+        "status": "accepted",
+        "scopes": [
+          "legacy"
+        ]
+      },
+      "age_days": 100,
+      "body": "# Old problem\n\nThe owner says this problem no longer describes current needs and proposes obsolete. An accepted design still frames it.\n"
+    },
+    {
+      "path": "briefs/legacy-design.md",
+      "frontmatter": {
+        "id": "legacy-design",
+        "type": "design-brief",
+        "author": "fixture-owner",
+        "status": "accepted",
+        "frames": "old-problem",
+        "scopes": [
+          "legacy"
+        ]
+      },
+      "age_days": 100,
+      "body": "# Legacy design\n\nThis design is still accepted and frames old-problem. No superseding design is recorded.\n"
+    },
+    {
+      "path": "arcs/rollout-arc.md",
+      "frontmatter": {
+        "id": "rollout-arc",
+        "type": "arc",
+        "author": "fixture-owner",
+        "status": "open",
+        "scopes": [
+          "performance"
+        ]
+      },
+      "age_days": 90,
+      "body": "# Rollout arc\n\nClosure has been requested, but rollout-inquiry remains open.\n"
+    },
+    {
+      "path": "inquiries/rollout-inquiry.md",
+      "frontmatter": {
+        "id": "rollout-inquiry",
+        "type": "inquiry",
+        "author": "fixture-owner",
+        "status": "open",
+        "arc": "rollout-arc",
+        "scopes": [
+          "performance"
+        ]
+      },
+      "age_days": 0,
+      "body": "# Rollout inquiry\n\nThe dependency clearance is unresolved.\n"
+    },
+    {
+      "path": "arcs/cache-arc.md",
+      "frontmatter": {
+        "id": "cache-arc",
+        "type": "arc",
+        "author": "fixture-owner",
+        "status": "open",
+        "scopes": [
+          "legacy"
+        ]
+      },
+      "age_days": 100,
+      "body": "# Cache arc\n\nAll inquiries are resolved, but the objective changed. The owner has not chosen between closing the completed work and abandoning the obsolete objective. Both remain plausible.\n"
+    },
+    {
+      "path": "inquiries/cache-inquiry.md",
+      "frontmatter": {
+        "id": "cache-inquiry",
+        "type": "inquiry",
+        "author": "fixture-owner",
+        "status": "resolved",
+        "arc": "cache-arc",
+        "scopes": [
+          "legacy"
+        ]
+      },
+      "age_days": 100,
+      "body": "# Cache inquiry\n\nIts questions are answered. That does not decide the arc disposition.\n"
+    },
+    {
+      "path": "briefs/secondary-problem.md",
+      "frontmatter": {
+        "id": "secondary-problem",
+        "type": "problem-brief",
+        "author": "fixture-owner",
+        "status": "accepted",
+        "scopes": [
+          "performance"
+        ]
+      },
+      "age_days": 0,
+      "body": "# Secondary problem\n\nThis remains relevant. It is connected to latency-arc, not directly to latency-inquiry.\n"
+    },
+    {
+      "path": "briefs/unpaired-problem.md",
+      "frontmatter": {
+        "id": "unpaired-problem",
+        "type": "problem-brief",
+        "author": "fixture-owner",
+        "status": "accepted",
+        "scopes": [
+          "performance"
+        ]
+      },
+      "age_days": 0,
+      "body": "# Unpaired problem\n\nUsers need a better rollout explanation. No design or shelving choice has been made.\n"
+    },
+    {
+      "path": "briefs/paused-problem.md",
+      "frontmatter": {
+        "id": "paused-problem",
+        "type": "problem-brief",
+        "author": "fixture-owner",
+        "status": "accepted",
+        "scopes": [
+          "legacy"
+        ]
+      },
+      "age_days": 100,
+      "body": "# Paused problem\n\nThe cache objective needs an owner decision.\n"
+    },
+    {
+      "path": "briefs/paused-design.md",
+      "frontmatter": {
+        "id": "paused-design",
+        "type": "design-brief",
+        "author": "fixture-owner",
+        "status": "proposed",
+        "frames": "paused-problem",
+        "scopes": [
+          "legacy"
+        ]
+      },
+      "age_days": 80,
+      "body": "# Paused design\n\nWork is paused pending the cache objective decision; no final status is authorized.\n"
+    },
+    {
+      "path": "inquiries/ready-inquiry.md",
+      "frontmatter": {
+        "id": "ready-inquiry",
+        "type": "inquiry",
+        "author": "fixture-owner",
+        "status": "ready_for_synthesis",
+        "arc": "rollout-arc",
+        "scopes": [
+          "performance"
+        ]
+      },
+      "age_days": 0,
+      "body": "# Ready inquiry\n\nThe barrier has released, but no synthesis has been written.\n"
+    },
+    {
+      "path": "discussions/latency-complete.md",
+      "frontmatter": {
+        "id": "latency-complete",
+        "type": "discussion",
+        "author": "fixture-owner",
+        "scopes": [
+          "performance"
+        ]
+      },
+      "age_days": 0,
+      "body": "# Latency complete\n\nlatency-arc meets its completion conditions. The next candidates are resolving rollout-inquiry, deciding the cache objective, and proposing a design for unpaired-problem. Rollout affects current users.\n"
+    },
+    {
+      "path": "discussions/cache-options.md",
+      "frontmatter": {
+        "id": "cache-options",
+        "type": "session-note",
+        "author": "fixture-owner",
+        "scopes": [
+          "legacy"
+        ]
+      },
+      "age_days": 1,
+      "body": "# Cache options\n\nDo we close cache-arc as finished or abandon it because its objective changed? No decision yet. paused-design is waiting for that choice.\n"
+    },
+    {
+      "path": "discussions/legacy-problem.md",
+      "frontmatter": {
+        "id": "legacy-problem",
+        "type": "discussion",
+        "author": "fixture-owner",
+        "scopes": [
+          "legacy"
+        ]
+      },
+      "age_days": 2,
+      "body": "# Legacy problem\n\nold-problem no longer describes current needs, though its accepted design is still in the graph. That relationship needs attention before obsoleting the problem.\n"
+    },
+    {
+      "path": "decisions/rollout-choice.md",
+      "frontmatter": {
+        "id": "rollout-choice",
+        "type": "decision",
+        "author": "fixture-owner",
+        "status": "accepted",
+        "scopes": [
+          "performance"
+        ]
+      },
+      "age_days": 3,
+      "body": "# Rollout choice\n\nPrefer rollout if rollout-inquiry clears its dependency. Compare it with the cache decision and a design for unpaired-problem. A relationship between rollout-arc and unpaired-problem may explain shared users; verify the graph before recommending a new edge.\n"
+    }
+  ],
+  "cases": {
+    "interactive": {
+      "request": "Reconcile around latency-inquiry after its phase commit.",
+      "branch": "main",
+      "pr": null,
+      "fault": null,
+      "host_refusal": false,
+      "expected_status": "closed",
+      "expected_main": "baseline",
+      "expected_pr": null
+    },
+    "dream": {
+      "request": "Dream over the vault.",
+      "branch": "topic/reconcile",
+      "pr": 12,
+      "fault": null,
+      "host_refusal": false,
+      "expected_status": "closed",
+      "expected_main": "head",
+      "expected_pr": "merged"
+    },
+    "rollback": {
+      "request": "Dream over the vault.",
+      "branch": "topic/reconcile",
+      "pr": 12,
+      "fault": "reject_closed",
+      "host_refusal": false,
+      "expected_status": "open",
+      "expected_main": "head",
+      "expected_pr": "merged"
+    },
+    "note-invalid": {
+      "request": "Dream over the vault.",
+      "branch": "topic/reconcile",
+      "pr": 12,
+      "fault": "reject_closed_and_note",
+      "host_refusal": false,
+      "expected_status": "open",
+      "expected_main": "baseline",
+      "expected_pr": "open"
+    },
+    "host-refusal": {
+      "request": "Dream over the vault.",
+      "branch": "topic/reconcile",
+      "pr": 12,
+      "fault": null,
+      "host_refusal": true,
+      "expected_status": "closed",
+      "expected_main": "baseline",
+      "expected_pr": "open"
+    }
+  },
+  "expectations": [
+    "Use actual vault_edges for interactive and vault_reflect plus bounded searches for dream; preflight each proposed status through the real server.",
+    "Only latency-arc may change status; preserve all other artifact bytes and edges. Warning, blocker and ambiguity remain review items.",
+    "Interactive branches before editing, commits/pushes one clean edit, opens no PR and leaves remote main unchanged.",
+    "Dream commits the final validated note and clean edit together, updates the existing PR once and merges through the local host despite unresolved proposals.",
+    "Rollback includes an observed failed validation with the edit, restoration of the arc, and successful validation of the note-only state before its single commit and merge.",
+    "If note-only validation fails, do not commit/push/merge the failing state; report both failures and keep transitions unapplied.",
+    "A host refusal leaves the PR open, retains pushed valid work, and is reported without a bypass or a claimed merge.",
+    "The committed file snapshot must have a preceding passing validation snapshot. Final note edits require another validation.",
+    "Dream notes distinguish APPLIED/PROPOSED, carry actionable Needs you into the handoff, include real reflection results and grounded Part B without applying its recommendations.",
+    "Stop after one reconciliation; do not cascade or modify harness controls."
+  ],
+  "limits": [
+    "Synthetic schema and validator, not the production vault validator.",
+    "Actual MCP and local Git; PR host behavior is a local stand-in, not GitHub protection or CI.",
+    "One worker run per case; some workers share context across cases."
+  ]
+}
