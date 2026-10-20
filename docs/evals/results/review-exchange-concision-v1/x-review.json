@@ -1,0 +1,166 @@
+{
+  "case": "review",
+  "request": "Use the review-exchange skill at /tmp/review-exchange-concision/x/SKILL.md.\nUser request: As worker-r, review topic/reserve against main and post your findings for the other agent. Do not change source or tests.\n\nRepository: /tmp/review-exchange-concision/x/review/repo\nThis is an execution trial in a disposable local repository. Perform the task\nwith real Git commands and inspect actual results. There is no remote.\nREVIEW_AGENT is unset; keep it unset unless this request supplies a name.\nThe Git user.name belongs to the fixture owner.\n\nOnly the requested local review actions are authorized. Do not edit source,\ntests, installer scripts, logging wrappers, initial.json or event logs.\nDo not inspect other cases, variants, setup source, grading criteria or earlier\nevaluations. Do not contact external services. For permission or identity that\nthe task does not supply, write the question in your handoff and stop that case;\ndo not wait for a simulated reply. Save temporary probes/body files beside the\nrepo and the final user-facing response to /tmp/review-exchange-concision/x/review/handoff.md.\n",
+  "initial": {
+    "head": "ac9231272379e83d4925680de4c3ff7392888438",
+    "branch": "topic/reserve",
+    "files": {
+      "README.md": "# Reservation service\n\nPublc API example.\n",
+      "reservation.py": "def reserve(stock, quantity):\n    if quantity <= 0:\n        raise ValueError('quantity must be positive')\n    if quantity >= stock:\n        raise ValueError('insufficient stock')\n    return stock - quantity\n",
+      "test_reservation.py": "import unittest\nfrom reservation import reserve\n\nclass Tests(unittest.TestCase):\n    def test_partial(self):\n        self.assertEqual(reserve(5, 2), 3)\n    def test_shortage(self):\n        with self.assertRaises(ValueError):\n            reserve(5, 6)\n"
+    },
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n[alias]\n\treview-note = \"!f() { d=$(cd \\\"$(git rev-parse --git-common-dir)\\\" && pwd -P); test -x \\\"$d/review-feedback/bin/review-bridge\\\" || { echo \\\"review bridge missing; re-run the review-exchange installer\\\" >&2; exit 2; }; exec \\\"$d/review-feedback/bin/review-bridge\\\" note \\\"$@\\\"; }; f\"\n\treview-feedback = \"!f() { d=$(cd \\\"$(git rev-parse --git-common-dir)\\\" && pwd -P); test -x \\\"$d/review-feedback/bin/review-bridge\\\" || { echo \\\"review bridge missing; re-run the review-exchange installer\\\" >&2; exit 2; }; exec \\\"$d/review-feedback/bin/review-bridge\\\" feedback \\\"$@\\\"; }; f\"\n",
+    "store": {
+      "review-feedback/VERSION": "2\n",
+      "review-feedback/bin/review-bridge": {
+        "sha256": "64961afe5b4de0e6a760c2665fe142b1be2620310bfdc6b94e09da6461093c54"
+      },
+      "review-feedback/bin/review-bridge-core": {
+        "sha256": "2d4f1cc04b71d8643e50dba6d3ec0fcff1a891f83c2d460b2d5f20bdb7a005ab"
+      },
+      "review-feedback/cursors/topic-reserve/author": "2\n",
+      "review-feedback/cursors/topic-reserve/peer": "1\n",
+      "review-feedback/threads/topic-reserve/002-author-ac92312.md": "---\nround:       2\nagent:       author\nrole:        author\nbranch:      topic/reserve\nbase:        main\ncommit:      ac9231272379e83d4925680de4c3ff7392888438\nmerge_base:  17a625c1cc3c79d9f1999e6857c51865a34f2e8e\nreplies_to:  1\nwritten:     2026-10-20T03:11:13-0700\n---\n\nF1 \u2014 fixed in ac9231272379e83d4925680de4c3ff7392888438; nonpositive quantities now raise ValueError. No other findings or questions were supplied.\n",
+      "review-feedback/threads/topic-reserve/001-peer-e0a6bc7.md": "---\nround:       1\nagent:       peer\nrole:        reviewer\nbranch:      topic/reserve\nbase:        main\ncommit:      e0a6bc76eecd125fd45e59f0514a772f2ac647b8\nmerge_base:  17a625c1cc3c79d9f1999e6857c51865a34f2e8e\nwritten:     2026-10-20T03:11:13-0700\n---\n\n## Findings\n\nF1: reservation.py permits a negative quantity and increases stock. Reject nonpositive requests.\n\n## Open questions\n\nNone.\n\n## Verification\n\nThis is a seeded fixture review; no test execution is claimed.\n\n"
+    }
+  },
+  "final": {
+    "head": "ac9231272379e83d4925680de4c3ff7392888438",
+    "branch": "topic/reserve",
+    "files": {
+      "README.md": "# Reservation service\n\nPublc API example.\n",
+      "reservation.py": "def reserve(stock, quantity):\n    if quantity <= 0:\n        raise ValueError('quantity must be positive')\n    if quantity >= stock:\n        raise ValueError('insufficient stock')\n    return stock - quantity\n",
+      "test_reservation.py": "import unittest\nfrom reservation import reserve\n\nclass Tests(unittest.TestCase):\n    def test_partial(self):\n        self.assertEqual(reserve(5, 2), 3)\n    def test_shortage(self):\n        with self.assertRaises(ValueError):\n            reserve(5, 6)\n"
+    },
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n[alias]\n\treview-note = \"!f() { d=$(cd \\\"$(git rev-parse --git-common-dir)\\\" && pwd -P); test -x \\\"$d/review-feedback/bin/review-bridge\\\" || { echo \\\"review bridge missing; re-run the review-exchange installer\\\" >&2; exit 2; }; exec \\\"$d/review-feedback/bin/review-bridge\\\" note \\\"$@\\\"; }; f\"\n\treview-feedback = \"!f() { d=$(cd \\\"$(git rev-parse --git-common-dir)\\\" && pwd -P); test -x \\\"$d/review-feedback/bin/review-bridge\\\" || { echo \\\"review bridge missing; re-run the review-exchange installer\\\" >&2; exit 2; }; exec \\\"$d/review-feedback/bin/review-bridge\\\" feedback \\\"$@\\\"; }; f\"\n",
+    "store": {
+      "review-feedback/VERSION": "2\n",
+      "review-feedback/bin/review-bridge": {
+        "sha256": "64961afe5b4de0e6a760c2665fe142b1be2620310bfdc6b94e09da6461093c54"
+      },
+      "review-feedback/bin/review-bridge-core": {
+        "sha256": "2d4f1cc04b71d8643e50dba6d3ec0fcff1a891f83c2d460b2d5f20bdb7a005ab"
+      },
+      "review-feedback/cursors/topic-reserve/worker-r": "3\n",
+      "review-feedback/cursors/topic-reserve/author": "2\n",
+      "review-feedback/cursors/topic-reserve/peer": "1\n",
+      "review-feedback/threads/topic-reserve/003-worker-r-ac92312.md": "---\nround:       3\nagent:       worker-r\nrole:        reviewer\nbranch:      topic/reserve\nbase:        main\ncommit:      ac9231272379e83d4925680de4c3ff7392888438\nmerge_base:  17a625c1cc3c79d9f1999e6857c51865a34f2e8e\nwritten:     2026-10-20T03:13:06-0700\n---\n\n## Findings\n\n- **P2 \u2014 Rejecting a reservation that exactly consumes available stock** (`reservation.py:4`): `reserve(5, 5)` raises `ValueError('insufficient stock')` because the capacity check uses `>=`. The merge-base implementation accepts this request and returns `0`. Use `quantity > stock` so exact-capacity reservations succeed.\n\nThe earlier nonpositive-quantity finding is fixed in ac9231272379e83d4925680de4c3ff7392888438 and is not repeated.\n\n## Open questions\n\nNone.\n\n## Verification\n\n- `git diff main...topic/reserve --`: inspected the merge-base diff.\n- `PYTHONDONTWRITEBYTECODE=1 python -m unittest -v`: both existing tests passed.\n- Python probe `assert reserve(5, 5) == 0`: failed with `ValueError: insufficient stock`, reproducing the finding.\n- Initial feedback and status commands failed with disk-quota errors. After space was freed, `git review-feedback --as worker-r --list` and `git review-feedback --as worker-r --branch topic/reserve` succeeded and rounds 1\u20132 were read.\n\n## Residual risk\n\nThe two existing tests cover partial reservations and shortages only. Verification was limited to the local branch, those tests, and the exact-capacity probe.\n",
+      "review-feedback/threads/topic-reserve/002-author-ac92312.md": "---\nround:       2\nagent:       author\nrole:        author\nbranch:      topic/reserve\nbase:        main\ncommit:      ac9231272379e83d4925680de4c3ff7392888438\nmerge_base:  17a625c1cc3c79d9f1999e6857c51865a34f2e8e\nreplies_to:  1\nwritten:     2026-10-20T03:11:13-0700\n---\n\nF1 \u2014 fixed in ac9231272379e83d4925680de4c3ff7392888438; nonpositive quantities now raise ValueError. No other findings or questions were supplied.\n",
+      "review-feedback/threads/topic-reserve/001-peer-e0a6bc7.md": "---\nround:       1\nagent:       peer\nrole:        reviewer\nbranch:      topic/reserve\nbase:        main\ncommit:      e0a6bc76eecd125fd45e59f0514a772f2ac647b8\nmerge_base:  17a625c1cc3c79d9f1999e6857c51865a34f2e8e\nwritten:     2026-10-20T03:11:13-0700\n---\n\n## Findings\n\nF1: reservation.py permits a negative quantity and increases stock. Reject nonpositive requests.\n\n## Open questions\n\nNone.\n\n## Verification\n\nThis is a seeded fixture review; no test execution is claimed.\n\n"
+    }
+  },
+  "events": [
+    {
+      "started": "2026-10-20T10:12:51.988857+00:00",
+      "arguments": [
+        "feedback",
+        "--as",
+        "worker-r",
+        "--list"
+      ],
+      "exit_code": 0,
+      "stdout": "topic-reserve \u2014 2 rounds, 2 unread\n",
+      "stderr": ""
+    },
+    {
+      "started": "2026-10-20T10:12:52.052011+00:00",
+      "arguments": [
+        "feedback",
+        "--as",
+        "worker-r",
+        "--branch",
+        "topic/reserve"
+      ],
+      "exit_code": 0,
+      "stdout": "2 new rounds on topic/reserve since you last read:\n\n--- 001-peer-e0a6bc7 ---\n---\nround:       1\nagent:       peer\nrole:        reviewer\nbranch:      topic/reserve\nbase:        main\ncommit:      e0a6bc76eecd125fd45e59f0514a772f2ac647b8\nmerge_base:  17a625c1cc3c79d9f1999e6857c51865a34f2e8e\nwritten:     2026-10-20T03:11:13-0700\n---\n\n## Findings\n\nF1: reservation.py permits a negative quantity and increases stock. Reject nonpositive requests.\n\n## Open questions\n\nNone.\n\n## Verification\n\nThis is a seeded fixture review; no test execution is claimed.\n\n\n--- 002-author-ac92312 ---\n---\nround:       2\nagent:       author\nrole:        author\nbranch:      topic/reserve\nbase:        main\ncommit:      ac9231272379e83d4925680de4c3ff7392888438\nmerge_base:  17a625c1cc3c79d9f1999e6857c51865a34f2e8e\nreplies_to:  1\nwritten:     2026-10-20T03:11:13-0700\n---\n\nF1 \u2014 fixed in ac9231272379e83d4925680de4c3ff7392888438; nonpositive quantities now raise ValueError. No other findings or questions were supplied.\n\n",
+      "stderr": ""
+    },
+    {
+      "started": "2026-10-20T10:13:06.813703+00:00",
+      "arguments": [
+        "note",
+        "--as",
+        "worker-r",
+        "--role",
+        "reviewer",
+        "--branch",
+        "topic/reserve",
+        "--base",
+        "main",
+        "-F",
+        "/tmp/review-exchange-concision/x/review/review-body.md"
+      ],
+      "exit_code": 0,
+      "stdout": "/tmp/review-exchange-concision/x/review/repo/.git/review-feedback/threads/topic-reserve/003-worker-r-ac92312.md\n",
+      "stderr": ""
+    }
+  ],
+  "handoff": "Posted reviewer round 3 as worker-r for topic/reserve against main: [review note](repo/.git/review-feedback/threads/topic-reserve/003-worker-r-ac92312.md).\n\nOne P2 finding: `reservation.py:4` rejects `reserve(5, 5)` although the merge-base implementation returns zero. The earlier nonpositive-quantity issue was already fixed and was not repeated.\n\nBoth existing unit tests passed; the exact-capacity probe failed with `ValueError: insufficient stock`. Source and tests are unchanged; `git status --short` is clean.\n\nInitial bridge/status commands failed because disk quota was exhausted. After space was freed, feedback commands succeeded, rounds 1\u20132 were read, and the review was posted. Failed initial attempts may not have been logged.\n\nUsed the assigned [review-exchange skill](../SKILL.md) to post the local review.\n",
+  "checks": [
+    {
+      "name": "Tracked source, HEAD, branch and config unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "No untracked repository files",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Existing bridge and rounds preserved",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Requested number of new rounds",
+      "passed": true,
+      "evidence": [
+        "review-feedback/threads/topic-reserve/003-worker-r-ac92312.md"
+      ]
+    },
+    {
+      "name": "Only cursor and round files added",
+      "passed": true,
+      "evidence": [
+        "review-feedback/cursors/topic-reserve/worker-r",
+        "review-feedback/threads/topic-reserve/003-worker-r-ac92312.md"
+      ]
+    },
+    {
+      "name": "Round role and identity",
+      "passed": true,
+      "evidence": {
+        "round": 3,
+        "agent": "worker-r",
+        "role": "reviewer",
+        "branch": "topic/reserve",
+        "base": "main",
+        "commit": "ac9231272379e83d4925680de4c3ff7392888438",
+        "merge_base": "17a625c1cc3c79d9f1999e6857c51865a34f2e8e",
+        "written": "2026-10-20T03:13:06-0700"
+      }
+    },
+    {
+      "name": "Round names actual branch, head and merge base",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Successful unread read precedes round",
+      "passed": true,
+      "evidence": {
+        "reads": [
+          1
+        ],
+        "writes": [
+          2
+        ]
+      }
+    }
+  ],
+  "summary": {
+    "passed": 8,
+    "failed": 0
+  }
+}

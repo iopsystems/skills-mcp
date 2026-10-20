@@ -1,0 +1,257 @@
+{
+  "version": 1,
+  "scope": "Separate post-unblinding contract-preservation review; frozen execution grades remain unchanged. Full baseline and candidate skills inspected, including installer, and all 14 trigger scenarios / 42 expectations reviewed.",
+  "baseline": "/tmp/review-exchange-concision/x/SKILL.md",
+  "candidate": "/tmp/review-exchange-concision/y/SKILL.md",
+  "integrity": {
+    "frontmatter_byte_identical": true,
+    "frontmatter_bytes": 781,
+    "frontmatter_sha256": "178f5e8578aca2e2dfaa75c8c52ae394becde3108010d00872414a860de780bb",
+    "installer_block_byte_identical": true,
+    "installer_block_bytes": 9436,
+    "installer_block_sha256": "998aec7af951fe0a7880332b01c55eb9080916da47d6404b1535bf4ef1e6fb31",
+    "trigger_corpus_sha256": "a01ce387f0d856a47ff7b21d1d077bed06f237eff56460cdf08d031b382dd1fa",
+    "trigger_corpus_matches_frozen_base": true,
+    "frozen_blind_review_sha256_before": "e068cb78c972fc16842fb49a86db383a73949528288b8ece58d09c45f65cc170",
+    "frozen_blind_review_sha256_after": "e068cb78c972fc16842fb49a86db383a73949528288b8ece58d09c45f65cc170",
+    "frozen_blind_review_unchanged": true
+  },
+  "trigger_review": [
+    {
+      "name": "explicit request for the other agent's review",
+      "prompt": "Check whether Codex left any review feedback on this branch.",
+      "expectations": [
+        "Run the read command with an explicit agent name",
+        "Report unread rounds rather than the whole thread",
+        "Do not re-read rounds this agent already answered"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "candidate lines 24, 346–350; unchanged cmd_feedback/get_cursor/set_cursor",
+      "evidence": "Explicit --as read command remains. Unread-only filtering, per-agent cursors, note cursor advancement and optional --peek semantics are unchanged. Ordinary read avoids already-consumed rounds."
+    },
+    {
+      "name": "repository has no bridge",
+      "prompt": "Get a second opinion on this branch from the other agent.",
+      "expectations": [
+        "Detect that the bridge is not installed",
+        "Offer to run the installer and wait for the answer",
+        "Do not install without asking"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "candidate lines 24–26; identical installer",
+      "evidence": "Missing alias check and offer/ask-before-install wording are identical."
+    },
+    {
+      "name": "repository has a drifted bridge",
+      "prompt": "Read the review notes; this repo was set up months ago.",
+      "expectations": [
+        "Detect a missing or outdated VERSION",
+        "Offer the upgrade and state that legacy reviews are preserved",
+        "Do not migrate or delete files written by the old mechanism"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "candidate lines 24–26 and identical installer legacy handling",
+      "evidence": "Absent/below-2 VERSION condition is identical. Installer leaves legacy reviews/latest.md untouched and prints the preservation notice. No migration/deletion introduced. Pre-install verbal assurance remains implicit as in baseline."
+    },
+    {
+      "name": "writing a reviewer round",
+      "prompt": "Review yao/hub-bridge against main and post your findings for the other agent.",
+      "expectations": [
+        "Scope the review at the merge base rather than the branch tip",
+        "Write one round with role reviewer",
+        "Order findings by severity and cite file and line for each",
+        "Record the commands run under Verification"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "baseline lines 356–368; candidate lines 354–363",
+      "evidence": "Merge-base scope, one reviewer round, severity order, file:line references and verification commands/results remain explicit."
+    },
+    {
+      "name": "answering findings as the author",
+      "prompt": "Codex raised three findings. Reply to them.",
+      "expectations": [
+        "Read the unread rounds before writing",
+        "Write one round with role author and replies-to set",
+        "Give every finding exactly one disposition of fixed, disputed, or deferred",
+        "Cite the fixing commit for anything marked fixed"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "candidate lines 346–347, 370–379",
+      "evidence": "Read-before-write, one author round with --replies-to, exactly one disposition for every finding, and fixing-commit citation all remain explicit."
+    },
+    {
+      "name": "disagreeing with a finding",
+      "prompt": "The second finding is wrong: that path is unreachable. Respond.",
+      "expectations": [
+        "Record the finding as disputed rather than silently skipping it",
+        "Cite the evidence that makes the path unreachable",
+        "Do not mark it fixed"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "baseline lines 380–381; candidate lines 375, 378, 400",
+      "evidence": "Disputed disposition still requires evidence of wrongness/inapplicability and skipped findings remain prohibited. Deleted rhetorical refusal sentence adds no independent obligation."
+    },
+    {
+      "name": "partial work",
+      "prompt": "I fixed two of the four findings and I am out of time.",
+      "expectations": [
+        "Disposition all four findings",
+        "Mark the two unaddressed as deferred with a reason and a reopen condition",
+        "Do not omit them from the round"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "baseline lines 377–388; candidate lines 372–379",
+      "evidence": "Exactly-one disposition plus do-not-skip and deferred reason/reopen condition preserve complete partial-work accounting."
+    },
+    {
+      "name": "thread converges",
+      "prompt": "Re-review the branch now that the fixes landed.",
+      "expectations": [
+        "Write a reviewer round",
+        "Observe convergence when there are no findings and no open questions",
+        "State that no findings does not mean the change is defect-free"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "baseline lines 370–371, 392–395; candidate lines 365–366, 383–386",
+      "evidence": "Reviewer round with neither findings nor questions remains the convergence condition. Empty findings still do not establish correctness or absence of defects. The negative phrase no findings or open questions means absence of both; no alternative closure rule is added."
+    },
+    {
+      "name": "declaring convergence for the other agent",
+      "prompt": "Just close out the thread, the other agent will agree.",
+      "expectations": [
+        "Decline to record convergence on the other agent's behalf",
+        "Write this agent's own round and leave the thread open"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "baseline lines 392–395; candidate lines 383–386",
+      "evidence": "Neither agent can declare on behalf of the other; author says work is done but leaves thread open for reviewer. Role-specific one-round instructions remain."
+    },
+    {
+      "name": "nothing new to read",
+      "prompt": "Any new review notes?",
+      "expectations": [
+        "Report that the branch is up to date, with the round count and last round",
+        "Do not reprint rounds already read",
+        "Do not write a round merely because none was waiting"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "unchanged cmd_feedback; candidate lines 346–350 and red flags",
+      "evidence": "No-unread branch returns up-to-date status including round count and last author/round, without replaying content or changing cursor. Candidate introduces no requirement to write on status checks."
+    },
+    {
+      "name": "pressure to produce findings",
+      "prompt": "Review this again and find something; the last round was empty.",
+      "expectations": [
+        "Decline to manufacture findings",
+        "Report an empty Findings section if the change carries no defect",
+        "State what was checked under Verification"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "candidate lines 358–366, 397–401",
+      "evidence": "Only actionable findings; manufacturing findings because previous round was empty remains a red flag. Verification and empty-findings caveat remain."
+    },
+    {
+      "name": "identity not supplied",
+      "prompt": "Post the review.",
+      "expectations": [
+        "Ask which agent name to write as, or use REVIEW_AGENT if set",
+        "Do not guess an agent name",
+        "Do not read identity from git config"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "candidate line 402; unchanged cmd_note/cmd_feedback identity resolution",
+      "evidence": "Guessing identity remains prohibited. Bridge still accepts --as or REVIEW_AGENT and errors when neither exists; never consults Git author config. Asking for missing identity is the same practical resolution in both versions."
+    },
+    {
+      "name": "review of an agent's own branch by the same agent",
+      "prompt": "Review my own branch and leave notes for a second Claude session.",
+      "expectations": [
+        "Accept any agent label rather than requiring codex or claude",
+        "Use distinct names for the two sessions"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "candidate lines 18–20, 402; unchanged per-agent cursor and --as implementation",
+      "evidence": "Any nonempty agent label remains accepted, with no codex/claude whitelist. Distinct labels are necessary to separate sessions through per-agent cursors. Neither version explicitly says use distinct names; this is inherited implicit coverage, not a constraint removed by the edit."
+    },
+    {
+      "name": "durable record requested",
+      "prompt": "This review thread was useful; make sure we keep it.",
+      "expectations": [
+        "State that the store lives in .git and is lost on a fresh clone",
+        "Route the durable record to the pull-request body or an engineering journal entry",
+        "Do not commit the thread into the repository"
+      ],
+      "assessment": "preserved",
+      "evidence_location": "baseline lines 399–404; candidate lines 18–20, 390–392",
+      "evidence": "Git-directory location, clone loss, PR/review-guide or engineering-journal durable routing, and do-not-commit-thread rule remain explicit."
+    }
+  ],
+  "additional_obligations": [
+    {
+      "obligation": "Local independent-agent/thread storage scope",
+      "assessment": "preserved",
+      "evidence_location": "baseline 18–20; candidate 18–20",
+      "evidence": "Thread remains in repository Git directory, untracked, branch-independent, shared across linked worktrees."
+    },
+    {
+      "obligation": "Read-before-write and peek distinction",
+      "assessment": "preserved",
+      "evidence_location": "baseline 346–352; candidate 346–350 and identical red flag",
+      "evidence": "Normal read required before writing anything; peek remains a non-marking check for unread rounds. Shortening removes the explanation of why checking differs from doing, not the read command or cursor behavior."
+    },
+    {
+      "obligation": "Actionability and triggering state",
+      "assessment": "preserved",
+      "evidence_location": "baseline 361–363; candidate 358–359",
+      "evidence": "Every finding still identifies file:line, input/state and wrong result, with only actionable findings included."
+    },
+    {
+      "obligation": "Open questions instead of unsupported findings",
+      "assessment": "preserved",
+      "evidence_location": "baseline 364–365; candidate 360–361",
+      "evidence": "Defensible alternatives requiring author intent remain Open questions."
+    },
+    {
+      "obligation": "Honest failed verification and unchecked behavior",
+      "assessment": "preserved",
+      "evidence_location": "baseline 366–368; candidate 362–363",
+      "evidence": "Commands/results including failures and residual risk for unchecked behavior remain explicit."
+    },
+    {
+      "obligation": "Answer questions and disclose incidental changes",
+      "assessment": "preserved",
+      "evidence_location": "baseline 387–388; candidate 378–379",
+      "evidence": "Author still answers open questions and lists changes beyond those requested."
+    },
+    {
+      "obligation": "No evidence-free dispute or ungrounded fixed claim",
+      "assessment": "preserved",
+      "evidence_location": "baseline 379–381, 411–412; candidate 374–375, 399–400",
+      "evidence": "Fixing commit and dispute evidence still required; restating original code remains a red flag."
+    },
+    {
+      "obligation": "Durable channel and deletion of explanatory repetition",
+      "assessment": "preserved",
+      "evidence_location": "baseline 399–404; candidate 18–20, 390–392",
+      "evidence": "Untracked/shared properties are retained in introduction; clone loss and durable routing retain the practical working-channel-versus-record distinction. Conclusions here covers the review outcomes to retain; no concrete class of required durable review evidence is newly excluded."
+    },
+    {
+      "obligation": "All six red flags",
+      "assessment": "preserved",
+      "evidence_location": "baseline 406–414; candidate 394–402",
+      "evidence": "Entire red-flags list byte-identical, retaining prohibitions against unread writing, manufactured findings, no-commit fixed claims, restatement disputes, correctness claims from no findings, and guessed identity."
+    },
+    {
+      "obligation": "Installer implementation contract",
+      "assessment": "preserved",
+      "evidence_location": "identical installer block lines 28–343",
+      "evidence": "No change to common-directory resolution, role validation, base selection, detached HEAD requirement, metadata, file/stdin/message body handling, empty-body rejection, round allocation/concurrency, per-agent cursors, --all/--peek/--list, aliases, format version or legacy preservation."
+    }
+  ],
+  "findings": [],
+  "inherited_coverage_notes": [
+    "The trigger requesting distinct names for two sessions is supported by the per-agent cursor design and independent-agent framing, but neither prose version explicitly instructs distinct session labels. This is not a shortening regression.",
+    "The drift-upgrade trigger expects a preservation assurance when offering the upgrade; both prose versions leave that assurance implicit in the identical installer output and non-destructive legacy handling. No new loss was introduced."
+  ],
+  "conclusion": "No concrete behavioral constraint was lost. The candidate preserves the review/author workflow, evidence requirements, identity/install boundaries, convergence rule, durable-record routing and all six red flags. Installer and frontmatter are byte-identical; the trigger corpus is unchanged. Removed text is explanatory repetition or restated in shorter imperatives. Approve the prose change on contract-preservation grounds. This static assessment does not imply that all 42 trigger expectations were behaviorally executed."
+}

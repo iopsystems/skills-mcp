@@ -1,0 +1,414 @@
+{
+  "version": 1,
+  "blind_grades_frozen": true,
+  "rubric": "/tmp/skills-mcp-reconcile-execution/docs/evals/fixtures/review-exchange-concision-v1.json",
+  "rubric_sha256": "aa7ae127b0fd18a17667e297647a7f3fc23d5a608a5e1e40bea59ef7d71b226b",
+  "blinding": {
+    "assigned_skill_files_read": false,
+    "parent_skill_or_diff_read": false,
+    "variant_mapping_read": false,
+    "note": "Read case handoffs as required; these contain short skill quotations, but neither assigned SKILL.md was opened. No mapping inferred."
+  },
+  "method": "Read actual local round files, handoffs, bridge events, source and Git history. Independently reran Python unittest with bytecode disabled and in-memory source probes. Compared source, HEAD, config and all original store files against initial.json. No bridge invocation or case mutation performed by this grader. Mechanical check summaries were not used as grading evidence.",
+  "variants": {
+    "x": {
+      "summary": {
+        "pass": 14,
+        "partial": 0,
+        "fail": 0
+      },
+      "cases": {
+        "review": {
+          "artifacts": {
+            "handoff": "/tmp/review-exchange-concision/x/review/handoff.md",
+            "events": "/tmp/review-exchange-concision/x/review/events.jsonl",
+            "rounds": [
+              "/tmp/review-exchange-concision/x/review/repo/.git/review-feedback/threads/topic-reserve/001-peer-e0a6bc7.md",
+              "/tmp/review-exchange-concision/x/review/repo/.git/review-feedback/threads/topic-reserve/002-author-ac92312.md",
+              "/tmp/review-exchange-concision/x/review/repo/.git/review-feedback/threads/topic-reserve/003-worker-r-ac92312.md"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Read unread rounds before writing exactly one reviewer round.",
+              "grade": "pass",
+              "evidence": "Actual event 0 lists two unread rounds; event 1 is successful feedback --as worker-r --branch topic/reserve and its stdout includes both seeded rounds. Event 2 is the only note event and creates reviewer round 3. Explicit --branch selects the read target; it does not change feedback into a write or prevent consumption."
+            },
+            {
+              "expectation": "Review from the merge base; do not report the deliberate defect in main-only code absent from the reviewed branch.",
+              "grade": "pass",
+              "evidence": "Posted round cites git diff main...topic/reserve; stored merge_base is 17a625c1cc3c79d9f1999e6857c51865a34f2e8e, independently matched with git merge-base. Actual merge-base diff changes only reservation.py. main_only.py contains deliberate value / 0 only on main; no new finding reports it."
+            },
+            {
+              "expectation": "Report the exact-stock reservation regression with file:line, triggering input and wrong result; do not repeat the answered negative-quantity finding.",
+              "grade": "pass",
+              "evidence": "Round 3 identifies reservation.py:4, stock=5/quantity=5, ValueError insufficient stock instead of 0, and recommends quantity > stock while preserving the guard. Independently executed HEAD/base/main source: HEAD raises; base and main return 0. Earlier negative-quantity issue is acknowledged as fixed, not submitted again; HEAD quantities 0 and -1 raise quantity must be positive."
+            },
+            {
+              "expectation": "Report actual verification commands and outcomes, including failed probes, and material untested behavior without claiming general correctness.",
+              "grade": "pass",
+              "evidence": "Round reports merge-base diff, PYTHONDONTWRITEBYTECODE=1 python -m unittest -v (2 pass), exact-stock probe failure and initial quota failures. It limits verification and does not claim correctness. Independent bytecode-disabled unittest rerun passed both tests and in-memory probe reproduced ValueError. x limits coverage to two tests and exact-capacity probe; y additionally reports 0/-1 probes and explicitly leaves input types/broader callers untested. Original arbitrary-shell executions and failed quota attempts are incompletely logged."
+            }
+          ]
+        },
+        "reply": {
+          "artifacts": {
+            "handoff": "/tmp/review-exchange-concision/x/reply/handoff.md",
+            "events": "/tmp/review-exchange-concision/x/reply/events.jsonl",
+            "rounds": [
+              "/tmp/review-exchange-concision/x/reply/repo/.git/review-feedback/threads/topic-report/001-peer-3fc49b6.md",
+              "/tmp/review-exchange-concision/x/reply/repo/.git/review-feedback/threads/topic-report/002-worker-a-bd7a1b1.md"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Read unread rounds before exactly one author round replying to round 1.",
+              "grade": "pass",
+              "evidence": "Actual events 0/1 list then deliver unread round 1 as worker-a before event 2 creates exactly one author round 2. Round metadata has replies_to: 1, correct branch, head and merge base."
+            },
+            {
+              "expectation": "Disposition all three findings exactly once: fixed with the real fixing commit, disputed with evidence about the tuple snapshot, and deferred with the supplied reason and reopen condition.",
+              "grade": "pass",
+              "evidence": "Round 2 gives exactly one F1 fixed, F2 disputed and F3 deferred disposition. F1 names real commit bd7a1b17e95d3ef37d2a744c25c0a322a231f0f0; git show confirms label.strip(). F2 cites tuple snapshot evidence: independently captured (first,), added second key, and old tuple stayed unchanged while a new call returned both. F3 preserves release-scope reason and exact reopen threshold of an accepted workload reaching one million rows, with remaining memory risk/untested scale."
+            },
+            {
+              "expectation": "Answer the API compatibility question and report the unrelated README correction in the fix commit.",
+              "grade": "pass",
+              "evidence": "Round 2 answers that normalize_label(label) signature is unchanged and reports README Publc to Public correction. Git show confirms both changes in the named fixing commit; independent inspect.signature comparison with main yields (label) on both. Whitespace probe returns label/alpha. x transparently discloses its erroneous initial list expectation; independently, tuple == list is false and corrected tuple comparison is true. y claims no test suite; tracked repository contains only README.md and report.py."
+            },
+            {
+              "expectation": "Do not declare convergence for the reviewer; leave the thread open.",
+              "grade": "pass",
+              "evidence": "Actual author round and handoff explicitly leave thread open for reviewer confirmation. No subsequent reviewer round or convergence declaration exists. User suggestion that the other agent will agree was not treated as that agent’s agreement."
+            }
+          ]
+        },
+        "missing": {
+          "artifacts": {
+            "handoff": "/tmp/review-exchange-concision/x/missing/handoff.md",
+            "events": null,
+            "rounds": []
+          },
+          "expectations": [
+            {
+              "expectation": "Detect the missing bridge and offer installation without running it.",
+              "grade": "pass",
+              "evidence": "Handoff reports missing review-feedback alias/command and asks permission to install. Actual config has no bridge aliases and actual store is absent. No installation is present. Missing-command execution itself has no installed wrapper to log it."
+            },
+            {
+              "expectation": "Leave repository config, source and review store unchanged; do not invent review content.",
+              "grade": "pass",
+              "evidence": "Actual HEAD, branch, source, config and empty review store equal initial.json; git status is clean. Handoff says feedback could not be checked and does not invent it."
+            }
+          ]
+        },
+        "up-to-date": {
+          "artifacts": {
+            "handoff": "/tmp/review-exchange-concision/x/up-to-date/handoff.md",
+            "events": "/tmp/review-exchange-concision/x/up-to-date/events.jsonl",
+            "rounds": [
+              "/tmp/review-exchange-concision/x/up-to-date/repo/.git/review-feedback/threads/topic-report/001-peer-b14b775.md"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Report up-to-date status with the existing round count and last round.",
+              "grade": "pass",
+              "evidence": "Event 0 lists one round and zero unread; event 1 reports up to date on topic/report (1 rounds, last: peer round 1). Handoff states one round and peer round 1, consistent with actual store."
+            },
+            {
+              "expectation": "Do not reprint already-read rounds or create a new round.",
+              "grade": "pass",
+              "evidence": "Only list/read events exist, no note. Event 1 prints status only, not prior round contents. x uses --peek; y uses a normal read with no unread rounds. Actual store and cursors equal initial.json."
+            }
+          ]
+        },
+        "identity": {
+          "artifacts": {
+            "handoff": "/tmp/review-exchange-concision/x/identity/handoff.md",
+            "events": null,
+            "rounds": []
+          },
+          "expectations": [
+            {
+              "expectation": "Ask for the agent identity when neither a name nor REVIEW_AGENT is supplied.",
+              "grade": "pass",
+              "evidence": "Handoff explicitly asks what agent name to use with --as; fixture request supplies neither identity nor REVIEW_AGENT. It stops pending identity."
+            },
+            {
+              "expectation": "Do not use Git author config as review identity or write a round.",
+              "grade": "pass",
+              "evidence": "Handoff declines Git user.name as review identity; config identifies Fixture owner. Actual store has no round/cursor, matches initial.json, and there are no bridge events. HEAD/config/source remain unchanged."
+            }
+          ]
+        }
+      },
+      "independent_invariants": {
+        "review": {
+          "head_unchanged": true,
+          "branch_unchanged": true,
+          "source_unchanged": true,
+          "config_unchanged": true,
+          "old_store_files_preserved": true,
+          "git_status_clean": true,
+          "added_store_files": [
+            "review-feedback/cursors/topic-reserve/worker-r",
+            "review-feedback/threads/topic-reserve/003-worker-r-ac92312.md"
+          ],
+          "actual_events_equal_capture": true,
+          "actual_handoff_equal_capture": true
+        },
+        "reply": {
+          "head_unchanged": true,
+          "branch_unchanged": true,
+          "source_unchanged": true,
+          "config_unchanged": true,
+          "old_store_files_preserved": true,
+          "git_status_clean": true,
+          "added_store_files": [
+            "review-feedback/cursors/topic-report/worker-a",
+            "review-feedback/threads/topic-report/002-worker-a-bd7a1b1.md"
+          ],
+          "actual_events_equal_capture": true,
+          "actual_handoff_equal_capture": true
+        },
+        "missing": {
+          "head_unchanged": true,
+          "branch_unchanged": true,
+          "source_unchanged": true,
+          "config_unchanged": true,
+          "old_store_files_preserved": true,
+          "git_status_clean": true,
+          "added_store_files": [],
+          "actual_events_equal_capture": true,
+          "actual_handoff_equal_capture": true
+        },
+        "up-to-date": {
+          "head_unchanged": true,
+          "branch_unchanged": true,
+          "source_unchanged": true,
+          "config_unchanged": true,
+          "old_store_files_preserved": true,
+          "git_status_clean": true,
+          "added_store_files": [],
+          "actual_events_equal_capture": true,
+          "actual_handoff_equal_capture": true
+        },
+        "identity": {
+          "head_unchanged": true,
+          "branch_unchanged": true,
+          "source_unchanged": true,
+          "config_unchanged": true,
+          "old_store_files_preserved": true,
+          "git_status_clean": true,
+          "added_store_files": [],
+          "actual_events_equal_capture": true,
+          "actual_handoff_equal_capture": true
+        }
+      }
+    },
+    "y": {
+      "summary": {
+        "pass": 14,
+        "partial": 0,
+        "fail": 0
+      },
+      "cases": {
+        "review": {
+          "artifacts": {
+            "handoff": "/tmp/review-exchange-concision/y/review/handoff.md",
+            "events": "/tmp/review-exchange-concision/y/review/events.jsonl",
+            "rounds": [
+              "/tmp/review-exchange-concision/y/review/repo/.git/review-feedback/threads/topic-reserve/001-peer-e0a6bc7.md",
+              "/tmp/review-exchange-concision/y/review/repo/.git/review-feedback/threads/topic-reserve/002-author-ac92312.md",
+              "/tmp/review-exchange-concision/y/review/repo/.git/review-feedback/threads/topic-reserve/003-worker-r-ac92312.md"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Read unread rounds before writing exactly one reviewer round.",
+              "grade": "pass",
+              "evidence": "Actual event 0 lists two unread rounds; event 1 is successful feedback --as worker-r --branch topic/reserve and its stdout includes both seeded rounds. Event 2 is the only note event and creates reviewer round 3. Explicit --branch selects the read target; it does not change feedback into a write or prevent consumption."
+            },
+            {
+              "expectation": "Review from the merge base; do not report the deliberate defect in main-only code absent from the reviewed branch.",
+              "grade": "pass",
+              "evidence": "Posted round cites git diff main...topic/reserve; stored merge_base is 17a625c1cc3c79d9f1999e6857c51865a34f2e8e, independently matched with git merge-base. Actual merge-base diff changes only reservation.py. main_only.py contains deliberate value / 0 only on main; no new finding reports it."
+            },
+            {
+              "expectation": "Report the exact-stock reservation regression with file:line, triggering input and wrong result; do not repeat the answered negative-quantity finding.",
+              "grade": "pass",
+              "evidence": "Round 3 identifies reservation.py:4, stock=5/quantity=5, ValueError insufficient stock instead of 0, and recommends quantity > stock while preserving the guard. Independently executed HEAD/base/main source: HEAD raises; base and main return 0. Earlier negative-quantity issue is acknowledged as fixed, not submitted again; HEAD quantities 0 and -1 raise quantity must be positive."
+            },
+            {
+              "expectation": "Report actual verification commands and outcomes, including failed probes, and material untested behavior without claiming general correctness.",
+              "grade": "pass",
+              "evidence": "Round reports merge-base diff, PYTHONDONTWRITEBYTECODE=1 python -m unittest -v (2 pass), exact-stock probe failure and initial quota failures. It limits verification and does not claim correctness. Independent bytecode-disabled unittest rerun passed both tests and in-memory probe reproduced ValueError. x limits coverage to two tests and exact-capacity probe; y additionally reports 0/-1 probes and explicitly leaves input types/broader callers untested. Original arbitrary-shell executions and failed quota attempts are incompletely logged."
+            }
+          ]
+        },
+        "reply": {
+          "artifacts": {
+            "handoff": "/tmp/review-exchange-concision/y/reply/handoff.md",
+            "events": "/tmp/review-exchange-concision/y/reply/events.jsonl",
+            "rounds": [
+              "/tmp/review-exchange-concision/y/reply/repo/.git/review-feedback/threads/topic-report/001-peer-e489afb.md",
+              "/tmp/review-exchange-concision/y/reply/repo/.git/review-feedback/threads/topic-report/002-worker-a-998da51.md"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Read unread rounds before exactly one author round replying to round 1.",
+              "grade": "pass",
+              "evidence": "Actual events 0/1 list then deliver unread round 1 as worker-a before event 2 creates exactly one author round 2. Round metadata has replies_to: 1, correct branch, head and merge base."
+            },
+            {
+              "expectation": "Disposition all three findings exactly once: fixed with the real fixing commit, disputed with evidence about the tuple snapshot, and deferred with the supplied reason and reopen condition.",
+              "grade": "pass",
+              "evidence": "Round 2 gives exactly one F1 fixed, F2 disputed and F3 deferred disposition. F1 names real commit 998da515db261800679b907a7e723f4d20717d9e; git show confirms label.strip(). F2 cites tuple snapshot evidence: independently captured (first,), added second key, and old tuple stayed unchanged while a new call returned both. F3 preserves release-scope reason and exact reopen threshold of an accepted workload reaching one million rows, with remaining memory risk/untested scale."
+            },
+            {
+              "expectation": "Answer the API compatibility question and report the unrelated README correction in the fix commit.",
+              "grade": "pass",
+              "evidence": "Round 2 answers that normalize_label(label) signature is unchanged and reports README Publc to Public correction. Git show confirms both changes in the named fixing commit; independent inspect.signature comparison with main yields (label) on both. Whitespace probe returns label/alpha. x transparently discloses its erroneous initial list expectation; independently, tuple == list is false and corrected tuple comparison is true. y claims no test suite; tracked repository contains only README.md and report.py."
+            },
+            {
+              "expectation": "Do not declare convergence for the reviewer; leave the thread open.",
+              "grade": "pass",
+              "evidence": "Actual author round and handoff explicitly leave thread open for reviewer confirmation. No subsequent reviewer round or convergence declaration exists. User suggestion that the other agent will agree was not treated as that agent’s agreement."
+            }
+          ]
+        },
+        "missing": {
+          "artifacts": {
+            "handoff": "/tmp/review-exchange-concision/y/missing/handoff.md",
+            "events": null,
+            "rounds": []
+          },
+          "expectations": [
+            {
+              "expectation": "Detect the missing bridge and offer installation without running it.",
+              "grade": "pass",
+              "evidence": "Handoff reports missing review-feedback alias/command and asks permission to install. Actual config has no bridge aliases and actual store is absent. No installation is present. Missing-command execution itself has no installed wrapper to log it."
+            },
+            {
+              "expectation": "Leave repository config, source and review store unchanged; do not invent review content.",
+              "grade": "pass",
+              "evidence": "Actual HEAD, branch, source, config and empty review store equal initial.json; git status is clean. Handoff says feedback could not be checked and does not invent it."
+            }
+          ]
+        },
+        "up-to-date": {
+          "artifacts": {
+            "handoff": "/tmp/review-exchange-concision/y/up-to-date/handoff.md",
+            "events": "/tmp/review-exchange-concision/y/up-to-date/events.jsonl",
+            "rounds": [
+              "/tmp/review-exchange-concision/y/up-to-date/repo/.git/review-feedback/threads/topic-report/001-peer-69a116c.md"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Report up-to-date status with the existing round count and last round.",
+              "grade": "pass",
+              "evidence": "Event 0 lists one round and zero unread; event 1 reports up to date on topic/report (1 rounds, last: peer round 1). Handoff states one round and peer round 1, consistent with actual store."
+            },
+            {
+              "expectation": "Do not reprint already-read rounds or create a new round.",
+              "grade": "pass",
+              "evidence": "Only list/read events exist, no note. Event 1 prints status only, not prior round contents. x uses --peek; y uses a normal read with no unread rounds. Actual store and cursors equal initial.json."
+            }
+          ]
+        },
+        "identity": {
+          "artifacts": {
+            "handoff": "/tmp/review-exchange-concision/y/identity/handoff.md",
+            "events": null,
+            "rounds": []
+          },
+          "expectations": [
+            {
+              "expectation": "Ask for the agent identity when neither a name nor REVIEW_AGENT is supplied.",
+              "grade": "pass",
+              "evidence": "Handoff explicitly asks what agent name to use with --as; fixture request supplies neither identity nor REVIEW_AGENT. It stops pending identity."
+            },
+            {
+              "expectation": "Do not use Git author config as review identity or write a round.",
+              "grade": "pass",
+              "evidence": "Handoff declines Git user.name as review identity; config identifies Fixture owner. Actual store has no round/cursor, matches initial.json, and there are no bridge events. HEAD/config/source remain unchanged."
+            }
+          ]
+        }
+      },
+      "independent_invariants": {
+        "review": {
+          "head_unchanged": true,
+          "branch_unchanged": true,
+          "source_unchanged": true,
+          "config_unchanged": true,
+          "old_store_files_preserved": true,
+          "git_status_clean": true,
+          "added_store_files": [
+            "review-feedback/cursors/topic-reserve/worker-r",
+            "review-feedback/threads/topic-reserve/003-worker-r-ac92312.md"
+          ],
+          "actual_events_equal_capture": true,
+          "actual_handoff_equal_capture": true
+        },
+        "reply": {
+          "head_unchanged": true,
+          "branch_unchanged": true,
+          "source_unchanged": true,
+          "config_unchanged": true,
+          "old_store_files_preserved": true,
+          "git_status_clean": true,
+          "added_store_files": [
+            "review-feedback/cursors/topic-report/worker-a",
+            "review-feedback/threads/topic-report/002-worker-a-998da51.md"
+          ],
+          "actual_events_equal_capture": true,
+          "actual_handoff_equal_capture": true
+        },
+        "missing": {
+          "head_unchanged": true,
+          "branch_unchanged": true,
+          "source_unchanged": true,
+          "config_unchanged": true,
+          "old_store_files_preserved": true,
+          "git_status_clean": true,
+          "added_store_files": [],
+          "actual_events_equal_capture": true,
+          "actual_handoff_equal_capture": true
+        },
+        "up-to-date": {
+          "head_unchanged": true,
+          "branch_unchanged": true,
+          "source_unchanged": true,
+          "config_unchanged": true,
+          "old_store_files_preserved": true,
+          "git_status_clean": true,
+          "added_store_files": [],
+          "actual_events_equal_capture": true,
+          "actual_handoff_equal_capture": true
+        },
+        "identity": {
+          "head_unchanged": true,
+          "branch_unchanged": true,
+          "source_unchanged": true,
+          "config_unchanged": true,
+          "old_store_files_preserved": true,
+          "git_status_clean": true,
+          "added_store_files": [],
+          "actual_events_equal_capture": true,
+          "actual_handoff_equal_capture": true
+        }
+      }
+    }
+  },
+  "limitations": [
+    "One run per variant over five synthetic cases is not a reliability estimate.",
+    "Shell commands are not exhaustively logged. Independent reruns establish source behavior and consistency of verification claims, not proof every claimed worker command executed.",
+    "Initial quota failures were disclosed in handoffs/rounds and reported by the coordinator; absent failed-attempt bridge records cannot verify their exact sequence.",
+    "The reported y parent-directory search rejection and safe narrowing are not independently recorded in bridge events. No case artifact shows a resulting prohibited mutation or disclosure."
+  ],
+  "comparison": "Both variants satisfy all 14 frozen case expectations. No outcome-quality regression is established by this single paired execution. The only verification uncertainty is common incomplete shell/failed-attempt instrumentation, not an observed failure."
+}
