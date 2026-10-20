@@ -323,8 +323,8 @@ fn manifests_are_versioned_complete_and_digest_verified() {
     for (id, manifest) in manifests() {
         assert_eq!(manifest.schema_version, 1);
         let expected_version = match id.as_str() {
-            "architecture-diagram-skill" => "0.2.2",
-            "dataflow-diagram-skill" => "0.1.2",
+            "architecture-diagram-skill" => "0.2.3",
+            "dataflow-diagram-skill" => "0.1.3",
             _ => "0.1.0",
         };
         assert_eq!(manifest.version, expected_version);

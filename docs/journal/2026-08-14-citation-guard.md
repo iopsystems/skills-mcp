@@ -34,10 +34,10 @@ does not. All five line citations in tracked markdown resolved correctly when
 checked by hand before any code was written:
 
 - `src/main.rs:38` embeds `skills/` through `include_dir!`.
-- `skills/repository/architecture-diagram/SKILL.md:35` reads "treat this skill as
+- [architecture-diagram at the pre-edit revision](https://github.com/iopsystems/skills-mcp/blob/57846baca58b828ee3266ec6478c4a0335ed32c8/skills/repository/architecture-diagram/SKILL.md#L35) reads "treat this skill as
   **beta**".
-- `skills/repository/architecture-diagram/SKILL.md:31` ("principles carried into a domain")
-  and `:42` ("use `dataflow-diagram` directly") are the two deferral precedents.
+- [architecture-diagram at the pre-edit revision](https://github.com/iopsystems/skills-mcp/blob/57846baca58b828ee3266ec6478c4a0335ed32c8/skills/repository/architecture-diagram/SKILL.md#L31) ("principles carried into a domain")
+  and [its dataflow routing rule](https://github.com/iopsystems/skills-mcp/blob/57846baca58b828ee3266ec6478c4a0335ed32c8/skills/repository/architecture-diagram/SKILL.md#L42) ("use `dataflow-diagram` directly") are the two deferral precedents.
 - `Cargo.toml:6` declares "MIT OR Apache-2.0".
 
 That finding reframed the work. **A repository linter would have caught none of

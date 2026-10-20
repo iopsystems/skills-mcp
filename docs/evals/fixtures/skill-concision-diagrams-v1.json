@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "baseline_commit": "57846baca58b828ee3266ec6478c4a0335ed32c8",
+  "selection": "Targeted existing cases, selected before editing; not exhaustive or a live-repository task suite.",
+  "cases": [
+    {
+      "id": "architecture-diagram-03",
+      "skill": "architecture-diagram",
+      "request": "I need an architecture diagram of this open-source project for a conference talk next week. I can't add files to their repo.",
+      "name": "single-use chart in an alien repo",
+      "expectations": [
+        "Still derive from the program's real structures and fail loudly",
+        "Keep the generator script with the talk materials",
+        "Stamp the chart with the commit it was derived from and present it as a dated snapshot",
+        "Skip the charter and CI freshness apparatus without skipping derivation"
+      ]
+    },
+    {
+      "id": "architecture-diagram-05",
+      "skill": "architecture-diagram",
+      "request": "Our system has four meaningful layers but the band design only reads well with three. Force it?",
+      "name": "beta conventions invite overrides",
+      "expectations": [
+        "Extend the convention rather than force the domain",
+        "Record the override and its reason"
+      ]
+    },
+    {
+      "id": "architecture-diagram-09",
+      "skill": "architecture-diagram",
+      "request": "The source treemap has leaves of 100 and 400 LOC, tiny one-line files, and a zero-line component. Make every label legible by enlarging the tiny tiles.",
+      "name": "area remains proportional under label pressure",
+      "expectations": [
+        "Keep the 100:400 data-area ratio at 1:4 before documented pixel rounding",
+        "Use external labels or an exact-sum Other group with a member list for tiny tiles",
+        "List the zero component without giving it a fake positive area",
+        "Exclude decorative headers and gutters from the weighted data-area accounting",
+        "Do not: Apply a minimum tile area, logarithmic weighting, or both dimensions proportional to LOC",
+        "Do not: Rely on hover or color alone to disclose a component and its count"
+      ]
+    },
+    {
+      "id": "architecture-diagram-13",
+      "skill": "architecture-diagram",
+      "request": "A human approved diagram A yesterday. We changed the source without committing and rendered B at the same output path. Source assertions and bounds checks pass for B, but the publishing rasterizer is unavailable and nobody inspected B. Write the check record and handoff.",
+      "name": "check evidence belongs to the source and artifact reviewed",
+      "expectations": [
+        "Identify the source revision and dirty inputs, retain their snapshot or diff, and identify B by path and content hash with its regeneration command",
+        "Report source and bounds checks as passed but publishing-render checks and actual visual inspection as not run with their reasons",
+        "Do not carry A approval to B or claim all visual checks passed",
+        "Keep any required human review pending and link B with its remaining gaps rather than copying a full check log into the handoff"
+      ]
+    },
+    {
+      "id": "dataflow-diagram-18",
+      "skill": "dataflow-diagram",
+      "request": "Chart this pipeline for the design doc.",
+      "name": "conventions are offered as defaults, not asserted as settled",
+      "expectations": [
+        "Name the conventions being adopted rather than applying them silently",
+        "Ask where the defaults fight this domain",
+        "Do not present the palette or shape grammar as settled findings"
+      ]
+    },
+    {
+      "id": "dataflow-diagram-23",
+      "skill": "dataflow-diagram",
+      "request": "A human approved diagram A yesterday. We changed the source without committing and rendered B at the same output path. Source assertions and bounds checks pass for B, but the publishing rasterizer is unavailable and nobody inspected B. Write the check record and handoff.",
+      "name": "check evidence belongs to the source and artifact reviewed",
+      "expectations": [
+        "Identify the source revision and dirty inputs, retain their snapshot or diff, and identify B by path and content hash with its regeneration command",
+        "Report source and bounds checks as passed but publishing-render checks and actual visual inspection as not run with their reasons",
+        "Do not carry A approval to B or claim all visual checks passed",
+        "Keep any required human review pending and link B with its remaining gaps rather than copying a full check log into the handoff"
+      ]
+    },
+    {
+      "id": "dataflow-diagram-26",
+      "skill": "dataflow-diagram",
+      "request": "Add a figure of how OpenJDK's JFR writer moves an event from the thread-local buffer to the chunk file. The JDK source isn't in this repo; I've been reading jfrStorage.cpp on another machine.",
+      "name": "program outside the repository is derived by reading",
+      "expectations": [
+        "Recognize that derivation is unavailable and name the model as derived by reading",
+        "Give every node and edge the source path and symbol it was read from",
+        "Render a provenance table beside the charts, one row per node",
+        "State an evidence baseline: the revision read, pinned or not, and that freshness is not enforced",
+        "Keep fail-loud classification and geometry checks; caption the chart as derived by reading, not generated"
+      ]
+    },
+    {
+      "id": "dataflow-diagram-28",
+      "skill": "dataflow-diagram",
+      "request": "To be safe I'm resolving every CSS token to its hex at generation time so the SVG never depends on the page. It's inlined in the HTML.",
+      "name": "an inlined figure keeps the page tokens; an image bakes ink",
+      "expectations": [
+        "Decide from how the figure is embedded, not from caution",
+        "Keep the page's tokens for an inlined figure; baking breaks dark mode and splits the hue from the prose",
+        "Bake fixed ink over an opaque ground only for a figure shipped as an image",
+        "Generate both from one source when the figure ships both ways"
+      ]
+    },
+    {
+      "id": "format-layout-diagram-01",
+      "skill": "format-layout-diagram",
+      "request": "We reserved a chained format but have not built it. Can the diagram show it?",
+      "name": "schematic may draw what does not exist",
+      "expectations": [
+        "Allow a hand-authored schematic to draw the reserved shape",
+        "Require the reserved half to be visually distinct, dashed rather than solid",
+        "Require the caption to say which half ships"
+      ]
+    },
+    {
+      "id": "format-layout-diagram-18",
+      "skill": "format-layout-diagram",
+      "request": "The generator decodes each entry and labels it. Is decoding enough to trust the labels?",
+      "name": "re-encode as well as decode",
+      "expectations": [
+        "Also re-encode each decoded value and compare bytes",
+        "Name the defect it catches: a tier table drifted from the encoder",
+        "Say decoding alone proves only the reading"
+      ]
+    },
+    {
+      "id": "format-layout-diagram-23",
+      "skill": "format-layout-diagram",
+      "request": "A human approved diagram A yesterday. We changed the source without committing and rendered B at the same output path. Source assertions and bounds checks pass for B, but the publishing rasterizer is unavailable and nobody inspected B. Write the check record and handoff.",
+      "name": "check evidence belongs to the source and artifact reviewed",
+      "expectations": [
+        "Identify the source revision and dirty inputs, retain their snapshot or diff, and identify B by path and content hash with its regeneration command",
+        "Report source and bounds checks as passed but publishing-render checks and actual visual inspection as not run with their reasons",
+        "Do not carry A approval to B or claim all visual checks passed",
+        "Keep any required human review pending and link B with its remaining gaps rather than copying a full check log into the handoff"
+      ]
+    },
+    {
+      "id": "format-layout-diagram-26",
+      "skill": "format-layout-diagram",
+      "request": "The anatomy figure is inlined in an HTML page whose prose, tables and cards use a semantic token palette. Should the SVG use those tokens or fixed hex?",
+      "name": "inlined figure uses the page's tokens",
+      "expectations": [
+        "Use the page's tokens for a figure inlined in that page so the hue means the same thing in figure and prose and the theme switches together",
+        "Reserve fixed ink over an opaque ground for a figure shipped as an image",
+        "Decide from the embedding; generate both from one source if it ships both ways"
+      ]
+    }
+  ]
+}

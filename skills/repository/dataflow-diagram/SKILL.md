@@ -11,55 +11,24 @@ makes must be one the code can be held to, and every claim the code makes
 must appear. Both halves fail quietly, which is why this is a generator
 problem before it is a drawing problem.
 
-## What this is, and what it is not yet
+## Defaults and scope
 
-The **principles** — derive rather than draw, fail loudly on the
-unclassified, treat every channel as a claim, check placement rather than
-eyeball it — come from failures that were observed, diagnosed, and fixed.
-They should survive contact with a different domain.
+Derivation, complete classification, truthful visual encodings, and measured
+placement come from observed failures. The palette, shapes, edge styles, and
+frames are defaults with limited domain experience. State which conventions you
+adopt and ask where they conflict with the domain: missing node kinds, an
+unsuitable palette, or a distinction with no visual encoding. Record overrides
+and their reasons so they can inform the skill.
 
-The **conventions** — the specific palette, rounded-versus-square, the edge
-styles, the frame grammar — are defaults distilled from one project's
-diagrams. They are internally consistent and worth adopting wholesale
-rather than assembling from scratch, but they have not been tried against a
-dataflow shaped differently.
+Use `architecture-diagram` for build-time structure and runtime thread/request
+charts. This skill covers dataflow and pipelines of a running program. Its
+placement, external-source, palette, and address-arrow rules incorporate lessons
+from architecture charts, an io_uring runtime, and profiler-format references.
 
-So **say which conventions you are adopting and ask where they fight the
-domain**:
-
-- Does compute-versus-data actually partition this system's nodes, or is
-  there a third kind that fits neither?
-- Does the palette survive the medium it will be read in?
-- Is there a distinction the reader needs that no channel here carries?
-
-When a default does not fit, **that override is the finding this skill is
-missing.** Capture it with its reason and bring it back here: a convention
-rejected for a stated reason is worth more than one nobody has tested, and
-this skill has more of the second kind than it should.
-
-Three such contacts have now happened. The `architecture-diagram` skill
-carries these principles into system-architecture charts — a build-time
-structure chart plus runtime thread/request charts — and records where the
-defaults fought (arrows dropped from the structure chart, provenance
-demoted from a channel, geometry emitted directly). Use it for that duo;
-this skill remains the home for dataflow and pipeline charts of a single
-running program. The second contact was a request-lifecycle chart of an
-io_uring runtime library, whose reader found the defects the sections on
-placement and on the perceptual gate below now name. The third was a
-reference page on a profiler's recording format, with write-path and
-read-path charts of two writers whose source lives in other repositories.
-Its charter supplied the sections below on a program that is not in the
-repository, on a palette the page already owns, on address arrows, and on
-emitting geometry directly.
-
-This skill ships in two forms with one structure: the skill itself is
-complete working defaults — enough for a single-use chart in a repository
-you cannot modify, or a figure for a talk, where the generator script
-travels with the artifact and the chart is stamped with the commit it
-describes, a dated snapshot. The `dataflow-diagram-skill` template adds a
-charter: a *delta* recording the bindings no default can supply, plus any
-deviation with its reason. A convention absent from the charter means the
-default applies.
+The skill supplies complete defaults, including single-use charts: keep the
+generator with the artifact and stamp the source commit as a dated snapshot.
+The `dataflow-diagram-skill` template adds a charter containing project bindings
+and justified deviations. Defaults apply wherever the charter is silent.
 
 ## Derive, never draw
 
@@ -67,13 +36,8 @@ The nodes and edges come from the program's own structures — its topic
 registry, its step declarations, its wiring function — read at generation
 time. Not from a list beside them.
 
-A hand-maintained diagram is a second source of truth. It is correct on the
-day it is drawn and wrong on the first refactor, and nothing reports the
-divergence: the picture keeps rendering. Deriving it means a renamed topic
-either appears renamed or breaks the generator, and both are better than a
-drawing that quietly describes last quarter's design. It is also what makes
-the chart cheap to keep: a generated chart is regenerated, a drawn one
-renegotiated.
+A hand-maintained list can drift while the picture still renders. Derivation
+makes a renamed topic appear renamed or fail generation.
 
 ## When the program is not in the repository
 
@@ -107,9 +71,7 @@ A generator maps program elements onto visual properties through tables:
 this operation is that role, this topic is that category. **An element no
 table covers must stop the run, not be skipped.**
 
-Silent omission is the worst failure available here, because the output
-still looks complete: a reader cannot tell a pipeline with four stages from
-a five-stage pipeline whose fifth stage nobody classified.
+A skipped stage leaves an incomplete chart that still looks complete.
 
 The same applies in reverse: a table entry naming an element the program no
 longer has is a stale classification, and should fail just as loudly.
@@ -428,12 +390,9 @@ permission to skip the perceptual gate.
 
 ## The perceptual gate
 
-Assertions catch drift, not confusion. A chart whose every claim is derived
-and whose every element is in bounds can still label the wrong thing, name
-one concept twice, or lay a group out so that the eye reads a difference the
-program does not have. Nothing in the generator will report that, so a human
-reads every new chart and every visual change, and approval of one revision
-does not carry to the next.
+Passing assertions and bounds checks does not establish that a chart is clear.
+A human reads every new chart and visual change; approval of one revision does
+not cover the next.
 
 When the raster preview that review depends on is unavailable, say so and
 name what stood in for it — markup validity, deterministic regeneration
@@ -452,10 +411,8 @@ Results apply to that source/artifact pair; after an edit, rerun affected checks
 and obtain any required review for the new artifact. In the handoff, link the
 diagram and state remaining gaps; leave the check detail in the record.
 
-Then convert what the reader found into an assertion. A visual defect fixed
-in coordinates comes back at the next layout change; the same defect fixed as
-a check on the generator's output does not. This is the only mechanism that
-turns one reader's afternoon into a property of the chart.
+Convert each reported visual defect into an assertion on the generator's output
+so later layout changes cannot silently reintroduce it.
 
 One thing readers catch that no check will: a label that spends one word on
 two meanings. A stage named for `poll` in a chart comparing readiness polling
@@ -468,9 +425,8 @@ label, with no sentence around it to recover in, is where it hides best.
 ## Prose in the chart
 
 Prose in and around a chart — node labels, the key, the caption, the charter —
-follows `technical-prose`, including its default of American spelling. A
-convention the user or the project states overrides that default; a mixture of
-both overrides nothing and reads as several authors.
+follows `technical-prose`. Use American spelling unless the user or project
+specifies another convention; apply the chosen convention consistently.
 
 ## Red flags
 
