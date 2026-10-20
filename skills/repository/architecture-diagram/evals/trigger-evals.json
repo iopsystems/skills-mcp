@@ -159,6 +159,15 @@
         "Keep the previous passing artifact intact as a labeled snapshot, not as a passing result for the current source",
         "Do not weaken checks or promote the failed candidate to the accepted output"
       ]
+    },
+    {
+      "name": "label fit is measured against rendered text",
+      "prompt": "The generator checks that each label fits by multiplying the character count by 7 pixels. Bounds pass. One label still spills out of its box in the render.",
+      "expectations": [
+        "Measure label fit against the rendered text's width from font metrics or the renderer, not a character average",
+        "Explain that the bounds check sees the box and not the text, so it passes an overflowing label",
+        "Convert the fix into a generator assertion rather than widening the one box"
+      ]
     }
   ]
 }

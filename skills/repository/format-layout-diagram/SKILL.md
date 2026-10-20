@@ -140,10 +140,15 @@ publishing rasterizer.
 Link the figure and state remaining gaps in the handoff; keep check detail in
 the record.
 
-Also: emit fixed ink over an opaque ground rather than colors inherited from
-the page, because a host that embeds the figure as an image strips that
-context. Give the figure a text alternative twice — an accessible label inside
-it, and prose beside it stating the same claim.
+How the figure is embedded decides its colors. A figure shipped as an image
+emits fixed ink over an opaque ground, because a host that embeds an image
+strips the page's context and half the readers get dark ink on a dark
+ground. A figure inlined in a page that defines a semantic palette uses the
+page's tokens, so a hue means the same thing in the figure as in the prose
+beside it and the theme switches together. Decide from the embedding, and
+when the same figure ships both ways, generate both from one source. Give
+the figure a text alternative twice — an accessible label inside it, and
+prose beside it stating the same claim.
 
 ## Diagnose and repair a specific failure
 
@@ -175,7 +180,11 @@ Adopt wholesale; override with a reason.
   reader check the figure against the bytes.
 - **An arrow for every stored offset**, from the field to the element it
   addresses. This is the part readers remember, because it turns a number in a
-  header into a place in the picture.
+  header into a place in the picture. An offset arrow is a claim about a
+  field's value, not about bytes moving: when the anatomy shares a page or a
+  key with the flow charts of the writer that produces it, draw offset arrows
+  in a style the flow edges never use — curved, open head — and give them
+  their own key entry, so a reader cannot take a pointer for a path.
 - **A caption that states the claim**, not the contents. "The tail offset
   points at the last entry's first byte, so tail access is constant time" earns
   its space; "diagram of a block" does not.
@@ -225,7 +234,10 @@ is. The figure carries the shape; the entry carries the argument.
 - A rasterization check skipped for unavailable tooling, with no record of
   what stood in for it.
 - An artifact committed without being rasterized the way the host will.
-- A figure that inherits its colors from the reader's theme.
+- A figure shipped as an image with its colors left to the host, or inlined
+  in a themed page with its colors baked.
+- An offset arrow drawn in the style of a flow edge on a page that has flow
+  charts.
 - A schematic that omits which half is reserved.
 - A caption that names the contents instead of stating the claim.
 - A field name rewritten in a label so the figure reads better.

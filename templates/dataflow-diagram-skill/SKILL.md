@@ -36,7 +36,7 @@ missing.** Capture it with its reason and bring it back here: a convention
 rejected for a stated reason is worth more than one nobody has tested, and
 this skill has more of the second kind than it should.
 
-Two such contacts have now happened. The `architecture-diagram` skill
+Three such contacts have now happened. The `architecture-diagram` skill
 carries these principles into system-architecture charts — a build-time
 structure chart plus runtime thread/request charts — and records where the
 defaults fought (arrows dropped from the structure chart, provenance
@@ -44,7 +44,12 @@ demoted from a channel, geometry emitted directly). Use it for that duo;
 this skill remains the home for dataflow and pipeline charts of a single
 running program. The second contact was a request-lifecycle chart of an
 io_uring runtime library, whose reader found the defects the sections on
-placement and on the perceptual gate below now name.
+placement and on the perceptual gate below now name. The third was a
+reference page on a profiler's recording format, with write-path and
+read-path charts of two writers whose source lives in other repositories.
+Its charter supplied the sections below on a program that is not in the
+repository, on a palette the page already owns, on address arrows, and on
+emitting geometry directly.
 
 This skill ships in two forms with one structure: the skill itself is
 complete working defaults — enough for a single-use chart in a repository
@@ -99,6 +104,32 @@ either appears renamed or breaks the generator, and both are better than a
 drawing that quietly describes last quarter's design. It is also what makes
 the chart cheap to keep: a generated chart is regenerated, a drawn one
 renegotiated.
+
+## When the program is not in the repository
+
+A reference page about a third-party system, a chart of a dependency's
+internals, a comparison of two writers of one format: the program exists,
+but not where the generator runs, and nothing at generation time can read
+its structures. Derivation is unavailable. What replaces it is a model
+**derived by reading**, and the chart's honesty then rests on three parts:
+
+- **A model file that says it is a transcription.** Each node and edge
+  carries the source path and symbol it was read from. The generator still
+  classifies every element through fail-loud tables and still checks the
+  geometry; what it cannot check is whether the model matches the program.
+- **A provenance table the reader can see.** One row per node — figure,
+  node, read from — rendered beside the charts, not kept in the generator.
+  It is the claim surface a reader audits, and the only place a wrong
+  reading can be caught.
+- **An evidence baseline.** The revision the reading was made at, pinned if
+  the reading was pinned; the version range and a statement that it is not
+  pinned if it was not. Say that freshness is not enforced and that a reader
+  who depends on a row should re-derive it against the exact version in use.
+
+Caption the charts as derived by reading, and keep every other rule: state
+drawn as nodes, unknowns left as gaps, the key generated from the same
+tables. A read-derived model is a second source of truth by construction;
+the provenance table is what keeps it an honest one.
 
 ## Fail loudly on anything unclassified
 
@@ -262,6 +293,21 @@ back on.
 
 **Panel** — `#F2F2F2` fill with a `#9E9E9E` border, for the key.
 
+The operation roles above are a sensing-and-control pipeline's, and a
+storage or I/O path does not partition into them. When the roles do not
+fit, replace the operation fills with families the chart's own claim
+needs — in one writer chart: the implementation that runs, the tools that
+read then write, the buffers where pressure becomes loss, the files that are
+the shared contract, the values fixed before the run — and keep shape for
+compute-versus-data underneath.
+
+A chart inlined in a page that already defines a semantic palette uses that
+page's tokens, so a hue means the same thing in the figure as in the prose
+beside it and the theme switches together. A chart shipped as an image
+bakes its ink over an opaque ground, because an image embed strips the
+page's context; `format-layout-diagram` states that rule for the figure it
+applies to most. How the figure is embedded decides, not preference.
+
 ## An edge vocabulary
 
 | Style | Means |
@@ -270,10 +316,18 @@ back on.
 | dashed, `constraint=false` | a value crossing a cycle boundary — real flow, no ordering claim, free to point against the layout |
 | dotted | a dependency that is not dataflow, such as a parameter reaching an operation |
 | `penwidth=2` | the product: what the pipeline exists to emit |
+| curved, open head | an address: a stored offset or reference naming a place, never movement |
 
 Drawing deferred reads dashed *and* unconstrained is what keeps a cyclic
 program legible as a DAG: the cycle is visible as data without the layout
 engine trying to satisfy it.
+
+An address arrow is a claim about a field's value, not about bytes moving.
+When a format figure shares a page or a key with flow charts — a chunk
+anatomy beside the writer that produces it — give its offset arrows a
+style the flow edges never use, so a reader cannot take a pointer for a
+path. The curve is the reserved channel here; keep it out of the flow
+charts.
 
 Decoration layers onto a glyph without changing its kind, so give it the
 same solid/dashed grammar the edges use: a solid frame for a property that
@@ -281,6 +335,13 @@ always holds, a dashed frame for one that holds conditionally, no frame for
 absent — three states from one channel. Scale the frame with the
 glyph — a padding that is a hairline at chart size is a slab on a key's
 smaller copy.
+
+When a chart must show *where* many things can go wrong — every point a
+writer can fall behind, reallocate, drop, or block — label none of them in
+place. Put a numbered tag on the node or edge and carry the what in a table
+keyed by the same numbers, one row per tag. The chart answers where, the
+table answers what and how badly, and the tags are bounds- and
+collision-checked like any other label.
 
 ## Position carries meaning too
 
@@ -351,6 +412,14 @@ their parent. `architecture-diagram` carries that set, because emitting
 geometry directly is its default. Bounds are the weakest check of the group and
 the only one most generators run: every one of those defects sits comfortably
 inside the viewport.
+
+Emit geometry directly for a dataflow chart when panels must column-align
+across variants, or when tags and overlays sit on the chart and need
+checking against it; explicit columns and routes are what make those
+checks possible. Then run the whole set, and measure label fit against the
+rendered text's width, not a character count times an average: a label
+that overflows its box by the width of one wide glyph passes every estimate
+and fails every reader.
 
 ## Verify the rendering, not the source
 
@@ -443,6 +512,15 @@ both overrides nothing and reads as several authors.
 - An inset element positioned by adjusting a number until it looked right.
 - A collision check that inspects nodes but not edges, or that silently
   matched fewer elements than the graph contains.
+- Label fit estimated from a character count rather than measured text.
+- A read-derived model with no provenance table the reader can see, or no
+  statement of the revision it was read at.
+- A chart of a program outside the repository presented as generated from
+  it.
+- An offset or reference arrow drawn in the style of a flow edge.
+- A figure inlined in a themed page with its colors baked, or shipped as an
+  image with colors left to the host.
+- Hazards labeled in place on the chart instead of tagged and tabled.
 - A multiline label centered by its first baseline rather than by its line
   group.
 - Connectors attached to one shape at points chosen one at a time.

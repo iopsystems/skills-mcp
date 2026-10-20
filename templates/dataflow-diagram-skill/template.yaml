@@ -1,6 +1,6 @@
 schema_version: 1
 id: dataflow-diagram-skill
-version: 0.1.1
+version: 0.1.2
 purpose: Adapt a derived, claim-checked dataflow/pipeline diagram workflow to a project's generator, palette, and conventions.
 entrypoint: SKILL.md
 compatibility:
@@ -9,11 +9,11 @@ compatibility:
   - claude-code
 files:
   - path: SKILL.md
-    sha256: 577ba16d20a25904b5dfdf6186868b1265d3ff3ac57c4749bc3d2b38afb396b0
+    sha256: 8dfe20e8cd0afb41abe1e3452c767de582fe87210d3dfb04c2abb3d12c1d302c
     merge_strategy: three-way
   - path: references/dataflow-charter.md
     sha256: 53e51904a355beca7221a43e8507393c1f9c48fe7b3fe426f6ea1f1ec3852feb
     merge_strategy: three-way
   - path: evals/trigger-evals.json
-    sha256: 25e069579c2ac501cbcef641ed5d4c792ffcad3949d20147613d2e44d09b4049
+    sha256: 9c1d8ecb8e2af19863054c383c842ec7bba94d49d98816b037f254c613a24ef1
     merge_strategy: preserve-local
