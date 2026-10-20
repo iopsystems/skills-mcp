@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-10-19 | [Sharable artifact: a page a team reads alone](2026-10-19-sharable-artifact-skill.md) | open |
 | 2026-10-19 | [A third contact: the JFR reference page's charter](2026-10-19-diagram-charter-jfr-lessons.md) | open |
 | 2026-10-19 | [PR writing follows the final scope](2026-10-19-pr-scope-writing.md) | open |
 | 2026-10-19 | [Diagram check records and focused repairs](2026-10-19-diagram-checks-and-repairs.md) | open |

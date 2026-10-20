@@ -380,7 +380,7 @@ fn readme_library_overview_matches_the_skills_and_templates_on_disk() {
     expected.extend(directory_names("templates", "template.yaml"));
     assert_eq!(
         expected.len(),
-        29,
+        30,
         "inventory size changed; update the README"
     );
 
