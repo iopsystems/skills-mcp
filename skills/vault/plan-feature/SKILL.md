@@ -6,203 +6,111 @@ description: |
 
 # Plan feature
 
-You are running a planning pass for a feature. Your output is not one
-artifact — it's a **coordinated fan-out** across two places:
+Coordinate paired problem/design briefs in the separate `knowledge-iop` vault,
+an optional feature-repo design doc, per-repo tracking issues, and a vault
+session note. The vault briefs are authoritative.
 
-- **The vault** (`knowledge-iop`, always a separate repo) gets the
-  paired problem-brief and design-brief. This is the centralized
-  knowledge the reconciler reads.
-- **The feature repo** (where the code change lands) optionally gets
-  a `docs/design/<slug>.md` that links back to the vault briefs.
-- **Per-repo issues** are drafted from the coordination plan, and
-  either handed to the user to open or opened directly — depending on
-  the operating mode you agreed on up front.
+## 1. Establish authorization
 
-The coordination is the point. A plan that lands the vault briefs but
-misses the repo doc, or opens issues without a paired brief, is a
-failure mode this skill exists to prevent.
+Use **draft mode** unless the user has authorized external actions. State the
+mode and targets; ask only about missing authorization needed for the next
+write. Do not ask the user to repeat permissions already supplied.
 
-## Step 1 — Agree on operating mode and privileges
+- **Draft mode:** prepare diffs and issue bodies. Obtain approval before each
+  external write; hand off issue drafts for the user to open.
+- **Autonomous mode:** perform the authorized vault commits, feature-branch
+  writes and pushes, and issue creation without per-step approval. Authorization
+  must cover each target and action; a repo named in the plan is not permission
+  to write to it or open its issue.
 
-Before any Q&A, tell the user what this skill will need and ask which
-mode to run in. Default to **draft mode** unless the user pre-authorizes.
+If a target, access, or tool is unavailable or unclear, draft that step and
+explain the limit. Continue independent work within the established scope.
+Carry these permissions into dependent skills; their approval steps do not
+require reconfirming an already authorized action.
 
-**Draft mode (default).** You propose every external write as a diff or
-a draft issue body; the user approves each before anything lands. Needs
-no permissions beyond what the user already granted the session.
+## 2. Resolve planning gaps
 
-**Autonomous mode.** You commit vault briefs, write the repo doc, and
-open per-repo issues without pausing for approval at each step. Ask the
-user explicitly at the start:
+Use supplied facts and repository evidence before asking questions. Assess the
+six areas below in order, skipping questions already answered. Ask one focused
+question at a time when the answer affects the plan. Confirm an interpretation
+when it is uncertain or consequential; do not require a recap after every
+answer or an announcement for every area.
 
-> Autonomous mode will commit to the vault, push a branch to the
-> feature repo, and open issues in repos A, B, C. Confirm you want
-> me to proceed without per-step approval, and that I have write
-> access to each of those targets.
+Separate user problems from proposed solutions and engineering preferences.
+If the user asks for a draft before gaps are resolved, write it with explicit
+unknowns. Do not invent answers, constraints, owners, or decisions.
 
-If anything is ambiguous — unknown repo, missing vault, missing GitHub
-MCP tool for a target — fall back to draft mode for that step and say
-so.
+### Problem
 
-## Step 2 — Discovery Q&A
+Capture the user's task, failure, affected people, frequency and context;
+why it matters now; success from the user's perspective; the workaround and
+its limits; scope exclusions; and what would change the analysis.
+`frame-problem` turns this into the problem brief's six questions.
 
-Act as a combined user researcher and product manager. Work through the
-areas below in order. Rules:
+“We need a caching layer” names a solution. Establish the user-visible problem
+before treating that solution as decided.
 
-- Ask **one** focused question at a time. Never dump a numbered list.
-- After each substantive answer, reflect back in one sentence ("So the
-  core problem is X — is that right?"). Cheap correction.
-- If an answer is vague, engineering-flavored, or a solution in
-  disguise, drill in before moving on.
-- Announce each new area ("Moving to area 2 of 6: user value.") so the
-  user knows where they are.
-- If the user clearly knows an area cold, confirm the key facts and
-  move on — don't pad.
-- If the user says "just write it up", push back once: the briefs are
-  only useful if the inputs are real. If they insist, proceed and flag
-  gaps in the output.
+### User value
 
-### Area 1 — Problem
+Identify the beneficiary and concrete benefit, affected population and severity,
+cost of delay, smallest useful slice, and a measurable post-ship outcome.
+“Cleaner architecture” alone does not explain user value.
 
-Goal: the **real** problem, separate from any proposed solution. This
-feeds directly into the problem-brief's 6 questions (see `frame-problem`).
+### Constraints
 
-- What is the user trying to do today, and where does it break down?
-- Who hits this? How often? In what situation?
-- Why now — what changed or is newly blocking?
-- What would "problem solved" look like from the user's seat?
-- Existing workaround? Why isn't it good enough?
-- What are we explicitly **not** trying to solve? (Adjacent problems
-  we acknowledge and are setting aside.)
-- What would change this analysis? (If the answer is "nothing", the
-  framing is over-claimed.)
+Capture delivery budget, deadlines, staffing and on-call load; technical and
+performance limits; compliance, privacy, security and licensing requirements;
+compatibility contracts; ownership and approval boundaries; fragile assumptions;
+and excluded approaches with reasons.
 
-Watch for solutioning disguised as problems ("we need a caching layer"
-is a solution). And for problems stated only in engineering terms ("the
-job is slow") without the user-visible consequence.
+Summarize the constraints and resolve material uncertainty. Distinguish hard
+limits from preferences: preferring Postgres does not rule out alternatives.
 
-### Area 2 — User value
+### Surface area
 
-Goal: **why solving it matters** and to whom.
+Identify affected interfaces, data, infrastructure, docs and SDKs; primary and
+incidental repos or services; changing public contracts and their consumers;
+migrations or backfills; and exclusions. Summarize the repo list because it
+determines coordination and issue scope.
 
-- If this works, what does the user get? (time saved, error avoided,
-  new capability, compliance, trust, revenue)
-- How many users are affected? How painful today on a 1–5 scale?
-- Cost of **not** doing this in the next quarter?
-- If we shipped only a thin slice, which slice delivers the most
-  value?
-- Is there a measurable post-ship outcome we could check?
+### Key design decisions
 
-Watch for value stated in engineering terms ("cleaner architecture")
-instead of user outcomes, and vague "strategic" value with no
-concrete beneficiary.
+Surface the two or three hard choices. For each, record realistic options,
+constraints that eliminate options, reversibility and consequences, the chosen
+direction or unresolved question, and the deciding factor. Identify a cheap
+way to resolve unknowns, such as a prototype, load test or user interview.
+These choices and alternatives belong in the design brief.
 
-### Area 3 — Constraints
+### Coordination
 
-Goal: the **boundary of what is possible**. Anything named here
-shrinks the solution space for the next three areas — pin it down.
+For a single-repo change, state that cross-repo coordination is skipped.
+Otherwise capture each repo's work and owner, one overall accountable person,
+landing order, compatibility measures, staged rollout, rollback, and required
+communication or sign-off.
 
-- Delivery: deadlines, budget, headcount, on-call load.
-- Technical: stack/runtime, platform limits, performance budgets,
-  latency/throughput floors, storage ceilings.
-- Compliance / legal / privacy / security: data residency, PII,
-  audit trail, licensing, customer contracts.
-- Backward-compat: public APIs, schemas, wire formats, SDK contracts,
-  on-disk formats, CLI flags.
-- Organizational: team ownership boundaries, approval gates,
-  vendor/contract limits, required sign-offs.
-- Fragile assumptions: call these out explicitly; they're risks, not
-  givens.
-- Off-limits: approaches already ruled out, and why.
+## 3. Prepare and land artifacts
 
-At the end of this area, read back a short constraint checklist and
-confirm. Watch for "constraints" that are really preferences ("we
-prefer Postgres" isn't a constraint unless something forbids
-alternatives).
+Follow this order within the authorization established above. In draft mode,
+prepare concrete proposals for approval; do not describe them as landed.
 
-### Area 4 — Surface area
+### Problem brief
 
-Goal: **where the change lands**.
+Invoke `frame-problem` with the problem evidence. Let it handle vault search,
+frontmatter, `briefs/<id>-problem.md`, supersession and commit conventions.
+If it finds an accepted problem brief that already frames this plan, reuse its
+id and report the reuse. Do not duplicate or edit the accepted brief.
 
-- Which surfaces does this touch? (UI, public API, internal API, data
-  model, infra, CLI, docs, SDKs)
-- Which **repos** or services? Name them. Which are primary vs
-  incidental?
-- Any public contracts changing — APIs, schemas, CLI flags, file
-  formats, wire protocols? Who depends on them?
-- Migrations, backfills, or reshaping required?
-- Explicitly **out** of scope?
+### Design brief
 
-Read back the repo list at the end; this list drives the coordination
-plan and the issue fan-out.
+Invoke `propose-design` with the remaining planning evidence and problem id.
+It handles `briefs/<id>.md` with `frames: <problem-brief-id>`, transition checks
+and commits. Keep alternatives and cross-repo coordination in the design brief;
+the repo doc summarizes and links to it. Do not bypass either brief skill.
 
-### Area 5 — Key design decisions
+### Optional repo design doc
 
-Goal: surface the **2–3 hard choices** this work hinges on, early.
-
-- What are the biggest design decisions this depends on?
-- For each: realistic options, leaning?
-- For each option: reversibility, blast radius if wrong.
-- For each option: check against area 3's constraints — does any
-  constraint eliminate it outright?
-- What's unknown, and how do we find out cheaply — spike, prototype,
-  load test, user interview?
-
-For each decision, capture: options considered, chosen direction (or
-"undecided — needs X to choose"), deciding factor. This becomes the
-spine of the design brief.
-
-### Area 6 — Coordination plan
-
-**Skip this area if the change is truly single-repo.** Say so
-explicitly and move on.
-
-- Which repos/teams must change, and what is each piece?
-- Required order of landing? (producer before consumer, schema
-  before callers, flag before rollout)
-- Compatibility seams: flags, version gates, shims, dual writes.
-- Who owns each piece? Who is the **single** person accountable for
-  the whole feature landing?
-- Rollout: dark launch, staged rollout, percentage ramp, cutover?
-- Rollback: what's the "oh no" button at each step?
-- Communication: RFC, design review, stakeholder sign-off, customer
-  comms?
-
-## Step 3 — Fan out the artifacts
-
-Once Q&A is complete, land the outputs in this order. Each step
-pauses for user approval in draft mode; in autonomous mode, proceed
-and report what you did.
-
-### 3a. Vault: problem brief
-
-Invoke the `frame-problem` skill with the Area 1 answers. That skill
-handles its own vault search (for existing/superseded briefs),
-frontmatter, filename (`briefs/<id>-problem.md`), and commit. Do not
-duplicate its logic here.
-
-If `frame-problem` finds an existing accepted problem brief this plan
-should frame against, use that id instead of writing a new one. Note
-the reuse to the user.
-
-### 3b. Vault: design brief
-
-Invoke the `propose-design` skill with Area 2–5 (and Area 6 if it
-applies) and the problem-brief id from 3a. That skill writes
-`briefs/<id>.md` with `frames: <problem-brief-id>` and commits.
-
-Alternatives considered (from Area 5) and the coordination plan (from
-Area 6) live in the design brief's body — that's the design brief's
-job, not the repo doc's.
-
-### 3c. Feature repo: optional design doc
-
-Offer to write `docs/design/<slug>.md` in the primary feature repo.
-This file is **optional**: skip it if the user says so, or if the
-feature repo doesn't conventionally keep design docs. The vault briefs
-are the source of truth either way.
-
-Shape when written:
+Offer `docs/design/<slug>.md` in the primary feature repo. Skip it when the user
+asks or the repo does not keep design docs, and report why. When written, use:
 
 ```markdown
 # <feature title>
@@ -226,12 +134,12 @@ Shape when written:
 <Anything unresolved. Do not invent answers to fill gaps.>
 ```
 
-Commit on a feature branch (not main) and offer to open a draft PR.
-Do not force-push or touch main.
+Commit on a feature branch and offer a draft PR. Do not write to the feature
+repo's `main` branch or force-push.
 
-### 3d. Per-repo issues
+### Tracking issues
 
-For each repo in the coordination plan, draft an issue:
+Draft a tracking issue for each repo's work, including a single-repo plan:
 
 ```
 Title: <feature slug>: <this repo's piece>
@@ -248,46 +156,26 @@ Depends on: <other repo issues, if any>
 Owner: <person>
 ```
 
-In draft mode, print all issue bodies and let the user open them. In
-autonomous mode, open them via the GitHub MCP tools (only for repos
-the user authorized at Step 1) and report URLs back. **Never** open
-issues in a repo the user didn't explicitly authorize, even if it's
-named in the coordination plan.
+In autonomous mode, use GitHub MCP tools to open issues only in explicitly
+authorized repos and report their URLs. Leave other issues as drafts. Never
+invent issue links or treat the coordination plan as authorization.
 
-### 3e. Vault: session note
+### Session note
 
-Commit a short session-note to the vault via the `discuss` skill
-(session-note flavor) summarizing the plan pass: who was involved,
-what briefs landed, what issues were opened, what's still open. This
-is the audit trail for reconciliation.
+Invoke `discuss` in session-note mode to capture participants, planning results,
+briefs, issues and unresolved work. Prepare or commit the note according to the
+established authorization. Do not omit it; reconciliation needs this record.
 
-## Step 4 — Closing checklist
+## 4. Report the handoff
 
-Before declaring the plan complete, confirm aloud (or in output):
+Account for every output, using its actual state:
 
-- [ ] Problem brief landed in vault (`<id>` · status)
-- [ ] Design brief landed in vault, frames problem brief (`<id>`)
-- [ ] Repo design doc: written at `<path>` / explicitly skipped with
-      reason
-- [ ] Per-repo issues: drafted for `<repos>` / opened at `<urls>`
-- [ ] Session-note committed to vault (`<id>`)
-- [ ] Open questions list handed back to the user
+- Problem brief: id and status; reused, drafted or committed.
+- Design brief: id, its problem frame, and draft or commit state.
+- Repo design doc: path and state, or explicit skip reason.
+- Tracking issues: repos with draft bodies or opened URLs.
+- Session note: id and draft or commit state.
+- Open questions and any blocked or unfinished actions.
 
-If any item is missing and wasn't an explicit skip, say so — don't
-silently drop it. This checklist is the reason this skill exists.
-
-## Do not
-
-- Do not write the problem or design brief directly. Chain to
-  `frame-problem` and `propose-design` so the vault conventions
-  (search, frontmatter, supersession, transition checks) are honored.
-- Do not open issues in repos the user didn't authorize in Step 1,
-  even if the coordination plan names them. Draft and hand off
-  instead.
-- Do not skip the session-note. The reconciler needs the trail;
-  otherwise this planning pass becomes invisible to future reflection.
-- Do not write to the feature repo's `main` branch or force-push.
-  Use a feature branch and a draft PR.
-- Do not invent answers to unanswered discovery questions to fill
-  gaps. Carry them into the brief's "what would change the analysis"
-  or the repo doc's "open questions".
+Keep unknowns in the briefs or repo doc's open questions. Do not declare work
+complete while a required artifact or action is missing; name what remains.
