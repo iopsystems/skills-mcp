@@ -1,7 +1,8 @@
 ---
-status: open
+status: shipped
 opened: 2026-10-20
 updated: 2026-10-20
+prs: [87]
 beta_skills: [review-guide]
 ---
 
@@ -59,6 +60,10 @@ agent names remains implicit in both versions; this inherited gap was not
 changed by the rewrite.
 
 ## Outcome
+
+[PR87](https://github.com/iopsystems/skills-mcp/pull/87) merged on
+2026-10-20 at `f74070b84635a8042a4509a74bd84ba243e7c58d`.
+GitHub's merged state and merge commit were verified before closing this entry.
 
 Both versions completed the five tasks with the expected findings, dispositions,
 and permission boundaries. Each passed 35 mechanical checks. This supports the
