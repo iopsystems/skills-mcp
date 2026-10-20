@@ -1,0 +1,142 @@
+{
+  "evals": [
+    {
+      "name": "a design write-up becomes a page",
+      "prompt": "Write up the buffer redesign so the team can read it without me in the room, and give me something I can link in the channel.",
+      "expectations": [
+        "Produce one self-contained HTML file published to a stable URL",
+        "Shape it as a short paper: header, reading guide, parts by audience, numbered sections, footer with evidence and revisions",
+        "Give every section, figure, and table an id with its anchor shown beside the title",
+        "Run the prose pass with the reader named before publishing"
+      ]
+    },
+    {
+      "name": "a chat summary stays in chat",
+      "prompt": "Quick summary of where the redesign stands? Two lines is fine.",
+      "expectations": [
+        "Answer in chat",
+        "Do not build a page for a two-line status"
+      ]
+    },
+    {
+      "name": "sections numbered by hand",
+      "prompt": "I inserted a new section 3, so I'm renumbering sections 4 through 12 and every cross-reference. Any faster way?",
+      "expectations": [
+        "Number sections with a CSS counter so an insertion renumbers the rest",
+        "Keep figures, tables, and listings numbered by hand in order of appearance across the page",
+        "Make cross-references links on stable ids, by number"
+      ]
+    },
+    {
+      "name": "a figure cited as below",
+      "prompt": "The paragraph says 'see the figure below'. The figure is right there, so that's clear, right?",
+      "expectations": [
+        "Refer to the figure by its number as a link",
+        "Explain that a shared anchor or a later edit breaks 'below'"
+      ]
+    },
+    {
+      "name": "a status row that says fixed",
+      "prompt": "The author pushed fixes for all three review findings, so mark the row approved.",
+      "expectations": [
+        "Mark the row awaiting re-review, not approved",
+        "Explain that the author saying it is addressed differs from the reviewer confirming it",
+        "Make the four touches together: row cells, row class, as-of stamp, dated footer paragraph",
+        "Check the live pull-request state rather than the report"
+      ]
+    },
+    {
+      "name": "a number with no baseline",
+      "prompt": "The page says the sampler costs 2.3% CPU. Where that came from doesn't matter for readers, does it?",
+      "expectations": [
+        "Name the branch and commit the measurement was taken on",
+        "Say that a number with no revision cannot be re-derived"
+      ]
+    },
+    {
+      "name": "a branch link in a citation",
+      "prompt": "I linked the source line on the main branch so it stays current.",
+      "expectations": [
+        "Use a commit-pinned blob link with the full hash",
+        "Explain that a branch link moves and the cited line will not be the line described"
+      ]
+    },
+    {
+      "name": "figure colors baked for safety",
+      "prompt": "To be safe I'm putting literal hex colors in the inline SVG so it never depends on the page CSS.",
+      "expectations": [
+        "Use the page's tokens for an inlined figure so it follows the theme and matches the prose",
+        "Reserve baked ink for a figure shipped as an image",
+        "Point at the diagram skills for the rule"
+      ]
+    },
+    {
+      "name": "labels estimated instead of measured",
+      "prompt": "I sized each SVG label box at eight pixels per character, so nothing should overflow. Ready to publish?",
+      "expectations": [
+        "Measure label fit in a real renderer after the figure edit, with fonts confirmed loaded",
+        "Say that character estimates have missed overflows a rendered check found",
+        "Fix overflow, crossing, and out-of-bounds findings before publishing"
+      ]
+    },
+    {
+      "name": "white on white in dark mode",
+      "prompt": "A teammate on dark mode says the cards are unreadable. It looks fine for me.",
+      "expectations": [
+        "Define the full light palette on the root, redefine tokens under both dark blocks, set the body background from a token",
+        "Find the color defined only inside a theme block",
+        "Check both theme states before publishing"
+      ]
+    },
+    {
+      "name": "a reading guide with advice",
+      "prompt": "I'll add 'Most readers only need Part I, about 25 minutes total' at the top of the reading guide.",
+      "expectations": [
+        "Give per-part reading times, who reads each part and why, and the numbered sections",
+        "Add a quick path naming the summary, key figures and table, and the decision",
+        "Drop the total time and the advisory sentence; the reader decides from the summary"
+      ]
+    },
+    {
+      "name": "a wide table in the first part",
+      "prompt": "The guarantees table in Part I has seven columns: property, what the reader sees, layer, how it's derived, where the contract carries it, how it's built in, how it's verified.",
+      "expectations": [
+        "Keep the property columns in the first part, three or four at most",
+        "Move the derivation and verification columns to a twin table in the implementation part that repeats the row labels",
+        "Point from the first table's caption to the twin"
+      ]
+    },
+    {
+      "name": "a reference page with no work to track",
+      "prompt": "This page documents the on-disk format and how the writer and readers use it. There's no implementation plan. Do I still need the progress board and the migration part?",
+      "expectations": [
+        "Drop the progress board and the migration part",
+        "Keep the reading guide, numbered sections, shown anchors, pinned citations, and the footer's evidence baseline and revision notes"
+      ]
+    },
+    {
+      "name": "a second copy in the repo",
+      "prompt": "I'll also commit the HTML to docs/ so it's in version control.",
+      "expectations": [
+        "Keep one source republished to one URL",
+        "Name the committed copy as a second source of truth that drifts on the first change"
+      ]
+    },
+    {
+      "name": "another agent's prose pass is adopted",
+      "prompt": "Codex rewrote the page 25% shorter. Looks good, publishing it.",
+      "expectations": [
+        "Compare before adopting: preformatted blocks and table rows byte-identical, decision terms retained, per-section word counts, fit check, attribution line present",
+        "Publish only after the comparison passes"
+      ]
+    },
+    {
+      "name": "conventions are offered as beta",
+      "prompt": "Our audience is customers, not engineers, and three parts feels wrong for them.",
+      "expectations": [
+        "Treat the parts and reading-time defaults as one team's, open to override",
+        "Record the override and its reason through engineering-journal"
+      ]
+    }
+  ]
+}

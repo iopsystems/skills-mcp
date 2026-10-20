@@ -189,8 +189,9 @@ skills-mcp
 │   ├── source organization ······ rust-source-layout
 │   ├── diagrams from code ······· architecture-diagram · dataflow-diagram
 │   │                              format-layout-diagram
-│   └── prose with a change ······ technical-prose · sweep-comments
-│                                  review-guide · review-exchange
+│   ├── prose with a change ······ technical-prose · sweep-comments
+│   │                              review-guide · review-exchange
+│   └── pages a team reads alone ·· sharable-artifact
 │
 ├── ACTIVE ─ knowledge vault
 │   ├── look first ··············· vault-search
@@ -250,6 +251,13 @@ The rest of this section is the same map with a line of purpose on each entry.
   person who has to review it.
 - `review-exchange` — threaded review notes exchanged with a second local agent
   over a repo-local git bridge.
+
+**Pages a team reads alone**
+
+- `sharable-artifact` *(beta)* — a design preview, status board, or reference
+  as one self-contained HTML page: numbered sections with shown anchors,
+  commit-pinned citations, inline figures on the page's tokens, a progress
+  board with an honest state vocabulary.
 
 ### Active skills that work in the knowledge vault
 
