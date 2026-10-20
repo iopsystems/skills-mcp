@@ -1,0 +1,77 @@
+{
+  "case": "design-missing",
+  "request": "Use propose-design at /tmp/design-discuss-trial/r/skills/propose-design.md.\nLocal dependency instructions are in /tmp/design-discuss-trial/r/skills.\n\nUser request:\nDraft a design for faster repeat usage-chart views in Reader. I am Imani. Today is 2026-10-20. Use the existing problem brief. We are considering either a per-process cache or a shared cache, but have not decided. Before drafting a settled recommendation, help me resolve the key missing requirement. Draft mode only.\n\nVault: /tmp/design-discuss-trial/r/design-missing/vault\nSave your user-facing response to /tmp/design-discuss-trial/r/design-missing/handoff.md.\nSave proposed diffs or temporary notes beside the vault, not inside it.\n\nThis is a local execution trial. Perform authorized file writes and Git commits\nin this disposable vault. There is no remote. No network, live vault or GitHub\naccess is allowed. Git config identifies the fixture owner, not the note author.\nFor vault reads/checks, use this fixture stand-in instead of live MCP calls:\npython /tmp/skills-mcp-reconcile-execution/docs/evals/design-discuss-eval.py tool /tmp/design-discuss-trial/r/design-missing TOOL 'JSON'\nTOOL is vault_search, vault_edges or vault_check_transition. Arguments follow\nthe schemas in the supplied vault-search skill. Search uses simple token overlap;\nedges cover frames, supersedes, depends_on and relates_to. Transition checks\nonly enforce the fixture's unresolved frame/dependency blockers. These are\nsimulated tool results, not production-validator evidence. Read returned files\nfor their full content. The tool writes its own event log outside the vault.\n\nRead only this case, assigned skill/dependencies and tool results. Do not read\nthe harness source, protocol, initial.json, other cases, variants or history\noutside this vault. Do not modify instructions, harness, initial state or logs.\nIf user input is needed, save the question in handoff.md and stop the case.\nDo not wait for a simulated answer or infer approval from the test environment.\n",
+  "initial": {
+    "head": "70bc8d7f6d056459d9ae2b0b8324b2f7ba9a2739",
+    "branch": "work",
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n",
+    "files": {
+      "README.md": "# Disposable knowledge vault\n",
+      "briefs/2026-10-01-reader-repeat-problem.md": "---\nid: 2026-10-01-reader-repeat-problem\ntype: problem-brief\nstatus: accepted\nauthor: Imani\ncreated: '2026-10-01'\n---\n\n# Reader repeat views\n\nAnalysts wait for historical usage charts to reload when switching tabs during account reviews. Repeat views should be faster without exposing another account's data. Acceptable staleness, request volume and budget are not yet known.\n"
+    },
+    "status": ""
+  },
+  "final": {
+    "head": "70bc8d7f6d056459d9ae2b0b8324b2f7ba9a2739",
+    "branch": "work",
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n",
+    "files": {
+      "README.md": "# Disposable knowledge vault\n",
+      "briefs/2026-10-01-reader-repeat-problem.md": "---\nid: 2026-10-01-reader-repeat-problem\ntype: problem-brief\nstatus: accepted\nauthor: Imani\ncreated: '2026-10-01'\n---\n\n# Reader repeat views\n\nAnalysts wait for historical usage charts to reload when switching tabs during account reviews. Repeat views should be faster without exposing another account's data. Acceptable staleness, request volume and budget are not yet known.\n"
+    },
+    "status": ""
+  },
+  "new_files": [],
+  "commits": {},
+  "events": [
+    {
+      "tool": "vault_search",
+      "arguments": {
+        "topic": "Reader usage chart cache"
+      },
+      "result": {
+        "count": 1,
+        "matches": [
+          {
+            "id": "2026-10-01-reader-repeat-problem",
+            "type": "problem-brief",
+            "status": "accepted",
+            "author": "Imani",
+            "created": "2026-10-01",
+            "path": "briefs/2026-10-01-reader-repeat-problem.md",
+            "title": "Reader repeat views"
+          }
+        ]
+      },
+      "head": "70bc8d7f6d056459d9ae2b0b8324b2f7ba9a2739"
+    },
+    {
+      "tool": "vault_edges",
+      "arguments": {
+        "id": "2026-10-01-reader-repeat-problem",
+        "kind": "frames",
+        "direction": "incoming"
+      },
+      "result": {
+        "id": "2026-10-01-reader-repeat-problem",
+        "count": 0,
+        "edges": []
+      },
+      "head": "70bc8d7f6d056459d9ae2b0b8324b2f7ba9a2739"
+    }
+  ],
+  "handoff": "What is the maximum acceptable age of a cached usage chart, and must every Reader process show an update immediately after underlying usage changes? This freshness requirement determines whether independent per-process caches are viable or whether coordinated invalidation/shared state is needed. If a concrete age limit is unknown, please describe which stale-chart behavior would be unacceptable during an account review.\n\nMATCHES (1)\n- id: `2026-10-01-reader-repeat-problem`\n  type: problem-brief; status: accepted; created: 2026-10-01\n  path: `briefs/2026-10-01-reader-repeat-problem.md`\n  title: Reader repeat views\n  connected: no incoming design `frames` edges found.\n\nGAPS\n- Acceptable staleness is unresolved; request volume and budget are also unknown and will be needed to size and cost the options. Both designs must preserve account isolation.\n\nI have not settled on an architecture or written to the vault. The propose-design workflow requires clarifying the design before proposing a complete brief, and your request explicitly asks to resolve the missing requirement first. Instructions used: [propose-design](../skills/propose-design.md), especially \u201cAsk the user clarifying questions,\u201d and [vault-search](../skills/vault-search.md). No execution failures.\n",
+  "checks": {
+    "existing_artifacts_preserved": true,
+    "config_and_branch_preserved": true,
+    "clean_worktree": true,
+    "expected_new_file_count": true,
+    "new_files_in_authorized_folder": true,
+    "expected_commit_presence": true,
+    "history_only_adds_authorized_files": true
+  },
+  "summary": {
+    "passed": 7,
+    "failed": 0
+  }
+}

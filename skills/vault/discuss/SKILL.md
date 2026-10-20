@@ -84,12 +84,16 @@ automatically — the user decides what's worth the follow-up.
 
 ## Drafting workflow
 
-1. Ask who the attendees were (for a discussion) or confirm solo
-   authorship (for a session note).
+1. Use the author, attendees and solo-session context already supplied. Ask
+   only for missing authorship or participant information; do not reconfirm
+   known identities or invent attendees.
 2. Draft the note from the conversation history in this session, or
    ask the user to summarize if you don't have it.
 3. Propose frontmatter + body as a diff. Show the filename.
-4. Write on approval.
+4. Write within the user's authorization. If writing and committing this note
+   are already authorized, proceed without asking again; otherwise obtain
+   approval first. Carry applicable authorization from a calling skill such as
+   `plan-feature`. Authorization for the note does not authorize its followups.
 5. Commit with `git add discussions/<id>.md && git commit -m "Note:
    <one-line>"`.
 6. **Triage** — scan for implications, run `vault-search` on each

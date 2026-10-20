@@ -1,0 +1,36 @@
+--- /dev/null
++++ b/discussions/2026-10-20-export-resume-review-session.md
+@@ -0,0 +1,33 @@
++---
++id: 2026-10-20-export-resume-review-session
++type: session-note
++author: Arun
++created: '2026-10-20'
++scopes: []
++relates_to:
++- 2026-10-01-export-retries-problem
++- 2026-10-02-export-resume
++- 2026-10-03-proxy-range
++---
++
++# Export resume review
++
++Arun reviewed the accepted export resume design during a solo working session. The design uses signed client offsets and frames the accepted export-retries problem, whose constraints include account isolation, existing downloads and retention limits.
++
++Arun found that signed client offsets make revocation difficult and favors investigating opaque account-bound tokens. This is an investigative preference: no replacement design or decision has been approved. The existing design already calls for reconsideration if revocation cannot be enforced; the concern warrants review but does not establish that enforcement is impossible.
++
++Proxy handling of range requests remains unresolved in the open proxy-range inquiry. No prototype result is available. Arun wants to revisit the existing design after that inquiry.
++
++## Implications and open questions
++
++The revocation concern implicates `2026-10-02-export-resume`. A future token proposal could supersede that accepted design while retaining `2026-10-01-export-retries-problem` as its frame. The account-isolation, compatibility and retention constraints still apply; this session did not invalidate the problem framing.
++
++The proxy question is already tracked by `2026-10-03-proxy-range`; a duplicate inquiry is unnecessary. Questions remain about supported proxy behavior and whether opaque tokens can provide enforceable revocation within the existing constraints.
++
++## Follow-up choices
++
++Arun can choose to continue the existing proxy inquiry, then revisit the accepted design once evidence is available. The execution owner and timing have not been assigned.
++
++Arun can choose `propose-design` to investigate an opaque-token successor that frames the existing problem and supersedes the accepted design. This note does not approve or create that design.
++
++If a design choice is reached later, Arun can choose `record-decision` with a link to the resulting design. No decision or status transition follows from this session alone.

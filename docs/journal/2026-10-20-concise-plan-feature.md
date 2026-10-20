@@ -1,7 +1,8 @@
 ---
-status: open
+status: shipped
 opened: 2026-10-20
 updated: 2026-10-20
+prs: [88]
 beta_skills: [review-guide]
 ---
 
@@ -53,6 +54,10 @@ creation, access enforcement or live dependency discovery. Cases share worker
 context; one run per variant does not establish reliability.
 
 ## Outcome
+
+[PR88](https://github.com/iopsystems/skills-mcp/pull/88) merged on
+2026-10-20 at `883904f10b7f8ede0a125fb7d75a19d3238f8a1d`.
+GitHub's merged state and merge commit were verified before closing this entry.
 
 The draft reduces whitespace-delimited words from
 1,926 to 1,148. Frontmatter, including the activation description, and the two

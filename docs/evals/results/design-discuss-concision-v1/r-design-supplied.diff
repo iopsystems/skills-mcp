@@ -1,0 +1,46 @@
+--- /dev/null
++++ briefs/2026-10-20-export-resume-opaque-tokens.md
+@@ -0,0 +1,43 @@
++---
++id: 2026-10-20-export-resume-opaque-tokens
++type: design-brief
++status: draft
++author: Arun
++created: '2026-10-20'
++frames: 2026-10-01-export-retries-problem
++supersedes: 2026-10-02-export-resume
++relates_to: []
++conflicts_with: []
++depends_on:
++- 2026-10-03-proxy-range
++tags: [exports, resume]
++---
++
++# Export resume with opaque tokens
++
++Replace signed client offsets with opaque, account-bound resume tokens. Each token maps server-side to an export id, account id and verified offset. Authenticate every resume request and verify account ownership before resuming; use only the verified offset stored for that token. This is a successor to [Export resume](2026-10-02-export-resume.md), framed by [Export retries](2026-10-01-export-retries-problem.md).
++
++## Why this approach
++
++The frame's account-isolation constraint requires checking the requesting account against both the token's account and the export owner. Its existing-downloads constraint requires keeping the current download path and client fallback. Its retention-limits constraint rules out extending export lifetime: token state must expire with or before the existing export and must not keep export data alive. Server-side lookup also provides a direct revocation point.
++
++## Request flow and rollout
++
++For example, a client presents an opaque token when requesting to resume an export. The API looks up `{export_id, account_id, verified_offset}`, checks ownership against the authenticated account, confirms the export remains available under its existing retention limit, and resumes from the verified offset. Reject revoked, unknown, expired or cross-account tokens without returning export data. A supplied client offset cannot override the stored verified offset. Exact endpoint and response syntax remain implementation details.
++
++Ship the API capability behind a disabled flag, then ship a client that falls back to the existing download flow when resumption is unavailable. Enable the capability for a small cohort only after validation. Roll back by disabling the flag; clients then use the old download path.
++
++## Cost and validation
++
++Budget: three engineer-weeks. Arun is the author and API owner; API, client and proxy-validation work must be coordinated within that budget. Token storage and revocation add server-side lifecycle work. Ownership-check mistakes could violate account isolation; fallback regressions could break existing downloads. No added export retention is permitted.
++
++Required tests cover token revocation, cross-account rejection and old-download fallback. None has run. A prototype must establish whether range requests pass the supported proxy. That evidence is still missing in [Proxy range support](../inquiries/2026-10-03-proxy-range.md), an open dependency of this design.
++
++## Alternatives
++
++- Signed client offsets: set aside because they complicate revocation.
++- Restart exports after interruption, including retaining the current behavior: set aside because restarting repeats expensive work.
++
++## What would change the analysis
++
++Reconsider this approach if the prototype shows that range requests cannot pass the supported proxy. Revisit the design if account isolation, existing-download compatibility or existing retention limits cannot be preserved within the three engineer-week budget. Pending tests and proxy findings are not evidence that this design is ready for acceptance.
