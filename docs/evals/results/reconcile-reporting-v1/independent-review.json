@@ -1,0 +1,1463 @@
+{
+  "rubric": "/tmp/skills-mcp-reconcile-execution/docs/evals/fixtures/reconcile-reporting-v1.json",
+  "review_type": "Independent blind read-only artifact, call, source and Git review",
+  "mapping_revealed": false,
+  "excluded_material": [
+    "/tmp/reconcile-reporting-run/mapping.json",
+    "parent repository SKILL.md",
+    "assigned skill copies",
+    "Git diffs"
+  ],
+  "source_fixture": "/tmp/skills-mcp-reconcile-execution/docs/evals/reconcile-execution/fixture.json",
+  "review_method": [
+    "Read all four final session notes and final handoffs, recorded MCP results, validation/host events and audit results.",
+    "Compared actual source artifact bodies to the fixture: no body mismatches in any case.",
+    "Verified actual final file SHA-256 values against capture and original control hashes, Git status, commit counts, branch and bare-origin references.",
+    "Recomputed each host-refusal committed tree SHA-256 map using Git object reads and compared it to the preceding successful validation snapshot: exact match. No Git diff was read."
+  ],
+  "variants": {
+    "x": {
+      "manual_passed": 12,
+      "manual_failed": 0,
+      "cases": {
+        "host-refusal": {
+          "manual_passed": 6,
+          "manual_failed": 0,
+          "automatic_audit": {
+            "passed": 14,
+            "failed": 0,
+            "mcp_calls": 13,
+            "validation_runs": 1
+          },
+          "manual_checks": [
+            {
+              "check": 1,
+              "criterion": "The note's PROPOSED and Needs you and final handoff carry the unresolved design-or-shelving decisions for both orphan problem briefs. Grouping is allowed if both artifacts and the decision are clear.",
+              "result": "pass",
+              "reason": "Both orphan artifacts are explicitly named and the unresolved choice between design work and a reasoned shelving decision is present in PROPOSED, Needs you and the final handoff. Grouping in x is clear and permitted.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 19,
+                  "text": "- secondary-problem and unpaired-problem: propose designs or document an explicit shelving reason; their existing accepted statuses do not supply that reason."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 62,
+                  "text": "- secondary-problem and unpaired-problem: non-transition follow-up. Choose design work or explicit shelving with reasons; multiple possible outcomes and no supporting shelving evidence. No status edit proposed or made."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/handoff.md",
+                  "line": 10,
+                  "text": "- secondary-problem and unpaired-problem: propose designs or document an explicit shelving reason; their existing accepted statuses do not supply that reason."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/handoff.md",
+                  "line": 13,
+                  "text": "Strategic recommendation: pursue rollout-inquiry dependency clearance first; alternatives are deciding the cache objective or designing the rollout explanation. The note proposes one unmodified relates_to edge between rollout-arc and unpaired-problem for owner review."
+                }
+              ]
+            },
+            {
+              "check": 2,
+              "criterion": "The paused design's unresolved work decision is actionable in the note and handoff, either separately or explicitly with the cache objective choice.",
+              "result": "pass",
+              "reason": "The note and final handoff explicitly ask for paused-design pause/disposition or resume confirmation after the cache objective choice. This is actionable and does not assert an authorized final status.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 18,
+                  "text": "- paused-design: confirm its pause or next disposition after the cache objective decision; no final status is supported."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 61,
+                  "text": "- paused-design: non-transition follow-up. Confirm its pause or next disposition after the cache choice; evidence is insufficient to nominate a final status (paused-design, cache-options). No status edit proposed or made."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/handoff.md",
+                  "line": 9,
+                  "text": "- paused-design: confirm its pause or next disposition after the cache objective decision; no final status is supported."
+                }
+              ]
+            },
+            {
+              "check": 3,
+              "criterion": "Non-status work decisions do not acquire fabricated status transitions or pre-flight results. Every proposed status transition has an actual MCP pre-flight.",
+              "result": "pass",
+              "reason": "Orphan and paused-design items are explicit non-status work follow-ups with no claimed transition/pre-flight. Every nominated status alternative has a successful recorded MCP call; rollout returns its real blocker, old-problem its real warning. x also nominates ready-inquiry resolution, actually pre-flights it, and defers it for absent synthesis evidence; that is not a fabricated result.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 53,
+                  "text": "- latency-arc (arc): open \u2192 closed. Evidence: latency-arc explicitly records every inquiry resolved, measured target reached, and no remaining work; latency-inquiry is resolved; latency-complete confirms completion. Pre-flight allowed=true, blockers=[], warnings=[]."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 57,
+                  "text": "- rollout-arc (arc): open \u2192 closed. Pre-flight allowed=false, warnings=[], blocker arc_all_inquiries_closed: rollout-inquiry remains open. Evidence: rollout-arc and rollout-inquiry. Closure would require resolving that blocker; no bypass is proposed."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 58,
+                  "text": "- cache-arc (arc): open \u2192 closed OR open \u2192 abandoned. Both pre-flights allowed=true, blockers=[], warnings=[]. Review reason: multiple plausible outcomes; cache-arc and cache-options explicitly leave the changed objective undecided."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 59,
+                  "text": "- old-problem (problem-brief): accepted \u2192 obsolete. Pre-flight allowed=true, blockers=[], warning problem_brief_obsolete_warns_framers names accepted legacy-design. Evidence: old-problem, legacy-design, legacy-problem. Review the accepted design relationship before changing the problem."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 60,
+                  "text": "- ready-inquiry (inquiry): ready_for_synthesis \u2192 resolved. Pre-flight allowed=true, blockers=[], warnings=[]. Review reason: insufficient evidence; the reflection report and ready-inquiry show no synthesis, so the passing check is insufficient."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 61,
+                  "text": "- paused-design: non-transition follow-up. Confirm its pause or next disposition after the cache choice; evidence is insufficient to nominate a final status (paused-design, cache-options). No status edit proposed or made."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 62,
+                  "text": "- secondary-problem and unpaired-problem: non-transition follow-up. Choose design work or explicit shelving with reasons; multiple possible outcomes and no supporting shelving evidence. No status edit proposed or made."
+                }
+              ]
+            },
+            {
+              "check": 4,
+              "criterion": "Every factual Part B claim is supported by the cited artifact or report, including ownership, causality and dependency qualifiers. Conditional interpretations and recommendations remain allowed.",
+              "result": "pass",
+              "reason": "Part B factual quantities match the successful reflection report (scope recent counts 6/2, rollout recent count 2, other arcs 0, cache/latency inactivity 100/90 days, paused-design age 80 days). cache-options explicitly links paused-design to the undecided cache choice; legacy-problem describes the accepted framing relationship; latency-complete supplies current-user impact and next candidates; rollout-choice makes preference conditional on dependency clearance and says shared users are possible. Both-direction endpoint checks show no direct rollout/unpaired edge. Recommendations and switches are expressed as judgments or conditions, not established ownership, timing or causal facts.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 68,
+                  "text": "Performance has 6 recent artifacts against legacy's 2, and rollout-arc accounts for the only 2 recent arc-linked artifacts (Part A). This suggests rollout is the active thread, consistent with latency-complete's statement that rollout affects current users."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 72,
+                  "text": "Cache's 100 inactive days and the 80-day-old paused-design suggest an owner decision is the finishing move, rather than an automatic status change (Part A; cache-options). Latency's 90 inactive days had explicit completion evidence, which justified closure (latency-arc; latency-complete). Neither scope is inactive in the 30-day window (Part A)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 76,
+                  "text": "Cache-options asks whether cache-arc should close or be abandoned and ties paused-design to that decision. Legacy-problem asks for attention to the accepted legacy-design relationship before obsoleting old-problem. Latency-complete names rollout dependency resolution, the cache choice, and a design for unpaired-problem as competing next actions; rollout-choice makes rollout priority conditional on clearing rollout-inquiry."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 80,
+                  "text": "Propose for human review one relates_to link between rollout-arc and unpaired-problem. Rollout-choice identifies their possible shared users, and unpaired-problem asks for better rollout explanation. Both-direction vault_edges checks on both endpoints show no existing link. This is a hypothesis, not an applied edit; confirm the shared user need first."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 84,
+                  "text": "Candidates: (1) resolve rollout-inquiry's dependency, which may unblock current-user work but requires evidence of clearance; (2) decide cache's objective, which settles a 100-day-old arc and the paused-design question; (3) propose a design for unpaired-problem, which addresses explanation needs but does not clear the current closure blocker (Part A; latency-complete; cache-options; rollout-choice)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 86,
+                  "text": "I recommend obtaining the dependency clearance evidence for rollout-inquiry first because rollout-choice explicitly prefers rollout when that dependency clears, latency-complete identifies current-user impact, and Part A finds rollout the active arc. This is a recommendation for a human, not a transition applied here. I would choose the cache objective decision first if the dependency cannot be cleared soon or the owner identifies greater urgency in the paused cache work; a clearer explanation need from unpaired-problem would strengthen the design candidate."
+                }
+              ]
+            },
+            {
+              "check": 5,
+              "criterion": "Preserve supported latency closure, warning and blocker handling, cache ambiguity, validation rollback, final-byte validation and host refusal behavior.",
+              "result": "pass",
+              "reason": "Only latency-arc differs among original files, with the supported closure; its body and all other source bodies match the fixture. The exact final committed tree matches the passing validation snapshot. One commit is pushed to topic/reconcile; remote main stays at baseline. One host_update and one host_merge_refused are recorded, PR remains open, and the handoff reports missing independent approval without claiming a merge.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 14,
+                  "text": "- rollout-arc: resolve rollout-inquiry's dependency before reconsidering closure; blocked by arc_all_inquiries_closed."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 15,
+                  "text": "- cache-arc: choose closed or abandoned; the objective changed and the owner has not decided."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 16,
+                  "text": "- old-problem: decide how to handle accepted legacy-design before obsoleting its problem; warning problem_brief_obsolete_warns_framers."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 53,
+                  "text": "- latency-arc (arc): open \u2192 closed. Evidence: latency-arc explicitly records every inquiry resolved, measured target reached, and no remaining work; latency-inquiry is resolved; latency-complete confirms completion. Pre-flight allowed=true, blockers=[], warnings=[]."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 57,
+                  "text": "- rollout-arc (arc): open \u2192 closed. Pre-flight allowed=false, warnings=[], blocker arc_all_inquiries_closed: rollout-inquiry remains open. Evidence: rollout-arc and rollout-inquiry. Closure would require resolving that blocker; no bypass is proposed."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 58,
+                  "text": "- cache-arc (arc): open \u2192 closed OR open \u2192 abandoned. Both pre-flights allowed=true, blockers=[], warnings=[]. Review reason: multiple plausible outcomes; cache-arc and cache-options explicitly leave the changed objective undecided."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 59,
+                  "text": "- old-problem (problem-brief): accepted \u2192 obsolete. Pre-flight allowed=true, blockers=[], warning problem_brief_obsolete_warns_framers names accepted legacy-design. Evidence: old-problem, legacy-design, legacy-problem. Review the accepted design relationship before changing the problem."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/handoff.md",
+                  "line": 1,
+                  "text": "The dream note and latency-arc closure passed repository validation, were committed together as ea6a2f5, and pushed to topic/reconcile. Existing PR #12 was updated and remains open; nothing was merged. The host refused the merge because \u201crequired independent approval is missing.\u201d Obtain that approval before landing."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/handoff.md",
+                  "line": 15,
+                  "text": "Stopped after the host refusal as required by the [assigned reconcile-vault skill](/tmp/reconcile-reporting-run/x-inputs/SKILL.md): \u201cAfter merging or reporting a validation failure or host refusal, stop.\u201d"
+                }
+              ]
+            },
+            {
+              "check": 6,
+              "criterion": "The note contains substantive strategic judgment: alternatives, a recommendation and conditions for changing it. Removing Part B or replacing judgment with quotations is not a grounding improvement.",
+              "result": "pass",
+              "reason": "Part B compares rollout dependency work, cache objective choice and explanation design; recommends rollout dependency investigation/clearance with cited current-user and conditional-priority evidence; and supplies conditions for switching to cache or explanation work. This is substantive judgment, not removal of Part B or mere quotation.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 84,
+                  "text": "Candidates: (1) resolve rollout-inquiry's dependency, which may unblock current-user work but requires evidence of clearance; (2) decide cache's objective, which settles a 100-day-old arc and the paused-design question; (3) propose a design for unpaired-problem, which addresses explanation needs but does not clear the current closure blocker (Part A; latency-complete; cache-options; rollout-choice)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 86,
+                  "text": "I recommend obtaining the dependency clearance evidence for rollout-inquiry first because rollout-choice explicitly prefers rollout when that dependency clears, latency-complete identifies current-user impact, and Part A finds rollout the active arc. This is a recommendation for a human, not a transition applied here. I would choose the cache objective decision first if the dependency cannot be cleared soon or the owner identifies greater urgency in the paused cache work; a clearer explanation need from unpaired-problem would strengthen the design candidate."
+                }
+              ]
+            }
+          ],
+          "preflight_evidence": [
+            {
+              "event_index": 5,
+              "at": "2026-10-20T09:47:04.764401+00:00",
+              "arguments": {
+                "id": "latency-arc",
+                "new_status": "closed"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 6,
+              "at": "2026-10-20T09:47:04.929675+00:00",
+              "arguments": {
+                "id": "cache-arc",
+                "new_status": "closed"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 7,
+              "at": "2026-10-20T09:47:05.117908+00:00",
+              "arguments": {
+                "id": "cache-arc",
+                "new_status": "abandoned"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 8,
+              "at": "2026-10-20T09:47:05.305424+00:00",
+              "arguments": {
+                "id": "old-problem",
+                "new_status": "obsolete"
+              },
+              "allowed": true,
+              "warnings": [
+                {
+                  "message": "marking a problem-brief obsolete propagates a warning to every design-brief that frames it",
+                  "offenders": [
+                    {
+                      "id": "legacy-design",
+                      "status": "accepted",
+                      "type": "design-brief"
+                    }
+                  ],
+                  "rule": "problem_brief_obsolete_warns_framers"
+                }
+              ],
+              "blockers": []
+            },
+            {
+              "event_index": 9,
+              "at": "2026-10-20T09:47:05.465426+00:00",
+              "arguments": {
+                "id": "rollout-arc",
+                "new_status": "closed"
+              },
+              "allowed": false,
+              "warnings": [],
+              "blockers": [
+                {
+                  "message": "arc cannot be closed while any of its inquiries are still open",
+                  "offenders": [
+                    {
+                      "id": "rollout-inquiry",
+                      "status": "open",
+                      "type": "inquiry"
+                    }
+                  ],
+                  "rule": "arc_all_inquiries_closed"
+                }
+              ]
+            },
+            {
+              "event_index": 10,
+              "at": "2026-10-20T09:47:05.676478+00:00",
+              "arguments": {
+                "id": "ready-inquiry",
+                "new_status": "resolved"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            }
+          ],
+          "validation_evidence": [
+            {
+              "event_index": 13,
+              "at": "2026-10-20T09:47:55.068099+00:00",
+              "passed": true,
+              "errors": [],
+              "snapshot_equals_final_files": true
+            }
+          ],
+          "final_state": {
+            "head": "ea6a2f575784c8874c46c908ad00560fa528d343",
+            "baseline": "60734012cc1921687ec4f1da10220421fb386e33",
+            "status": "",
+            "remote_refs": "60734012cc1921687ec4f1da10220421fb386e33 refs/heads/main\nea6a2f575784c8874c46c908ad00560fa528d343 refs/heads/topic/reconcile",
+            "pr_state": "open"
+          },
+          "added_issues": []
+        },
+        "note-invalid": {
+          "manual_passed": 6,
+          "manual_failed": 0,
+          "automatic_audit": {
+            "passed": 12,
+            "failed": 0,
+            "mcp_calls": 12,
+            "validation_runs": 2
+          },
+          "manual_checks": [
+            {
+              "check": 1,
+              "criterion": "The note's PROPOSED and Needs you and final handoff carry the unresolved design-or-shelving decisions for both orphan problem briefs. Grouping is allowed if both artifacts and the decision are clear.",
+              "result": "pass",
+              "reason": "Both orphan artifacts are explicitly named and the unresolved choice between design work and a reasoned shelving decision is present in PROPOSED, Needs you and the final handoff. Grouping in x is clear and permitted.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 21,
+                  "text": "- secondary-problem and unpaired-problem: propose designs or record explicit shelving reasons; accepted status alone does not resolve the missing designs."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 66,
+                  "text": "- secondary-problem and unpaired-problem: non-transition follow-up. Choose design work or an explicit shelving rationale; multiple possible outcomes remain. No status changes are nominated or applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/handoff.md",
+                  "line": 14,
+                  "text": "- secondary-problem and unpaired-problem: propose designs or record explicit shelving reasons; accepted status alone does not resolve the missing designs."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/handoff.md",
+                  "line": 17,
+                  "text": "Strategic recommendation: obtain rollout-inquiry dependency evidence first, weighing the cache objective decision and a design for unpaired-problem as alternatives. The uncommitted note also proposes, without applying, a relates_to edge between rollout-arc and unpaired-problem for owner review."
+                }
+              ]
+            },
+            {
+              "check": 2,
+              "criterion": "The paused design's unresolved work decision is actionable in the note and handoff, either separately or explicitly with the cache objective choice.",
+              "result": "pass",
+              "reason": "The note and final handoff explicitly ask for paused-design pause/disposition or resume confirmation after the cache objective choice. This is actionable and does not assert an authorized final status.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 20,
+                  "text": "- paused-design: confirm the pause or next disposition after deciding the cache objective; no final status is supported."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 65,
+                  "text": "- paused-design: non-transition follow-up. Confirm the pause or next disposition once cache's objective is decided. No final-status candidate has sufficient evidence (paused-design; cache-options)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/handoff.md",
+                  "line": 13,
+                  "text": "- paused-design: confirm the pause or next disposition after deciding the cache objective; no final status is supported."
+                }
+              ]
+            },
+            {
+              "check": 3,
+              "criterion": "Non-status work decisions do not acquire fabricated status transitions or pre-flight results. Every proposed status transition has an actual MCP pre-flight.",
+              "result": "pass",
+              "reason": "Orphan and paused-design items are explicit non-status work follow-ups with no claimed transition/pre-flight. Every nominated status alternative has a successful recorded MCP call; rollout returns its real blocker, old-problem its real warning. x also nominates ready-inquiry resolution, actually pre-flights it, and defers it for absent synthesis evidence; that is not a fabricated result.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 59,
+                  "text": "- latency-arc (arc): open \u2192 closed. Pre-flight allowed=true, blockers=[], warnings=[]. Evidence: latency-arc explicitly records all inquiries resolved, measured target reached, no remaining work; latency-inquiry is resolved; latency-complete confirms completion. Review reason: failed repository validation, \u201clegacy export rejects closed latency-arc.\u201d The edit was reverted; current status remains open."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 61,
+                  "text": "- rollout-arc (arc): open \u2192 closed. Pre-flight allowed=false, warnings=[], blocker arc_all_inquiries_closed identifies open rollout-inquiry. Evidence: rollout-arc and rollout-inquiry. This would require resolving the inquiry's dependency and the blocker before reconsideration."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 62,
+                  "text": "- cache-arc (arc): open \u2192 closed OR open \u2192 abandoned. Each candidate's pre-flight allowed=true, blockers=[], warnings=[]. Review reason: multiple plausible outcomes; cache-arc and cache-options leave the changed objective undecided."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 63,
+                  "text": "- old-problem (problem-brief): accepted \u2192 obsolete. Pre-flight allowed=true, blockers=[], warning problem_brief_obsolete_warns_framers names accepted legacy-design. Evidence: old-problem, legacy-design, legacy-problem. Review this accepted design relationship before changing the problem."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 64,
+                  "text": "- ready-inquiry (inquiry): ready_for_synthesis \u2192 resolved. Pre-flight allowed=true, blockers=[], warnings=[]. Review reason: thin evidence; ready-inquiry and the reflection report establish the missing synthesis, so the passing check alone cannot establish completion."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 65,
+                  "text": "- paused-design: non-transition follow-up. Confirm the pause or next disposition once cache's objective is decided. No final-status candidate has sufficient evidence (paused-design; cache-options)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 66,
+                  "text": "- secondary-problem and unpaired-problem: non-transition follow-up. Choose design work or an explicit shelving rationale; multiple possible outcomes remain. No status changes are nominated or applied."
+                }
+              ]
+            },
+            {
+              "check": 4,
+              "criterion": "Every factual Part B claim is supported by the cited artifact or report, including ownership, causality and dependency qualifiers. Conditional interpretations and recommendations remain allowed.",
+              "result": "pass",
+              "reason": "Part B factual quantities match the successful reflection report (scope recent counts 6/2, rollout recent count 2, other arcs 0, cache/latency inactivity 100/90 days, paused-design age 80 days). cache-options explicitly links paused-design to the undecided cache choice; legacy-problem describes the accepted framing relationship; latency-complete supplies current-user impact and next candidates; rollout-choice makes preference conditional on dependency clearance and says shared users are possible. Both-direction endpoint checks show no direct rollout/unpaired edge. Recommendations and switches are expressed as judgments or conditions, not established ownership, timing or causal facts.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 72,
+                  "text": "Performance's 6 recent artifacts exceed legacy's 2, while rollout is the only arc with recent linked activity (2 artifacts, Part A). This suggests rollout holds current attention, consistent with latency-complete's statement that it affects current users."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 76,
+                  "text": "Cache's 100 inactive days and paused-design's age of 80 days point to a pending owner decision, not a justified automatic closure (Part A; cache-options). Latency's 90 inactive days come with direct completion evidence (latency-arc; latency-complete). Neither scope has zero recent activity, so these arc gaps do not establish scope abandonment (Part A)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 80,
+                  "text": "Cache-options asks whether to close or abandon cache-arc and links that choice to paused-design. Legacy-problem flags the accepted design relationship before obsoleting old-problem. Latency-complete lists rollout dependency clearance, the cache choice, and a design for unpaired-problem as next candidates; rollout-choice makes its rollout preference conditional on that dependency clearing."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 84,
+                  "text": "Propose one relates_to edge for human review between rollout-arc and unpaired-problem. Rollout-choice identifies potentially shared users; unpaired-problem requests a better rollout explanation. Both-direction vault_edges results on both endpoints show no existing link. Confirm that topical relationship before adding it; no Part B edits are made."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 88,
+                  "text": "Three candidates are: (1) obtain dependency clearance for rollout-inquiry, with current-user benefit but an unresolved prerequisite; (2) decide the cache objective, settling the stale arc and paused-design direction; (3) propose a design for unpaired-problem, addressing explanation needs without clearing rollout's closure blocker (Part A; latency-complete; cache-options; rollout-choice)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 90,
+                  "text": "I would prioritize obtaining rollout-inquiry's dependency evidence: rollout-choice explicitly prefers rollout once cleared, latency-complete names current-user impact, and Part A places recent arc attention there. This recommendation does not authorize an inquiry status edit. I would change the pick to the cache decision if clearance is unavailable soon or the owner establishes greater cache urgency, and would elevate the explanation design if unpaired-problem's user need becomes more urgent."
+                }
+              ]
+            },
+            {
+              "check": 5,
+              "criterion": "Preserve supported latency closure, warning and blocker handling, cache ambiguity, validation rollback, final-byte validation and host refusal behavior.",
+              "result": "pass",
+              "reason": "The first failed validation snapshot has attempted latency closure and reports both export and note-index failures. After rollback, every original artifact hash matches baseline; the final note-only snapshot is revalidated and still fails only the note-index validator. Zero new commits, both remote refs at baseline, unchanged open PR, and only the untracked note remains. Handoff reports both failures and no landing. In both cases warnings, blocker and cache ambiguity remain unresolved proposals.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 14,
+                  "text": "- latency-arc: review the failed validation before retrying closure; legacy export rejects closed latency-arc. The attempted edit was reverted."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 15,
+                  "text": "- Dream note: restore note-index validation before landing; the validator cannot establish a valid final state."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 55,
+                  "text": "None. The sole attempted transition was reverted after repository validation failed."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 59,
+                  "text": "- latency-arc (arc): open \u2192 closed. Pre-flight allowed=true, blockers=[], warnings=[]. Evidence: latency-arc explicitly records all inquiries resolved, measured target reached, no remaining work; latency-inquiry is resolved; latency-complete confirms completion. Review reason: failed repository validation, \u201clegacy export rejects closed latency-arc.\u201d The edit was reverted; current status remains open."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 61,
+                  "text": "- rollout-arc (arc): open \u2192 closed. Pre-flight allowed=false, warnings=[], blocker arc_all_inquiries_closed identifies open rollout-inquiry. Evidence: rollout-arc and rollout-inquiry. This would require resolving the inquiry's dependency and the blocker before reconsideration."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 62,
+                  "text": "- cache-arc (arc): open \u2192 closed OR open \u2192 abandoned. Each candidate's pre-flight allowed=true, blockers=[], warnings=[]. Review reason: multiple plausible outcomes; cache-arc and cache-options leave the changed objective undecided."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 63,
+                  "text": "- old-problem (problem-brief): accepted \u2192 obsolete. Pre-flight allowed=true, blockers=[], warning problem_brief_obsolete_warns_framers names accepted legacy-design. Evidence: old-problem, legacy-design, legacy-problem. Review this accepted design relationship before changing the problem."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/handoff.md",
+                  "line": 1,
+                  "text": "Reconciliation stopped after failed validation. The attempted latency-arc closure was reverted when repository validation reported \u201clegacy export rejects closed latency-arc\u201d and \u201cnote index validator unavailable; cannot establish valid final state.\u201d The final note-only state was validated again and still failed with the note-index error."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/handoff.md",
+                  "line": 3,
+                  "text": "No transition remains applied. All tracked vault files match the starting commit; the sole remaining change is the uncommitted discussions/2026-10-20-reconciler-dream.md. Nothing was committed, pushed, or merged. Existing PR #12 was observed open and left unchanged; no host merge was attempted."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/handoff.md",
+                  "line": 7,
+                  "text": "- latency-arc: review the failed validation before retrying closure; legacy export rejects closed latency-arc. The attempted edit was reverted."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/handoff.md",
+                  "line": 8,
+                  "text": "- Dream note: restore note-index validation before landing; the validator cannot establish a valid final state."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/handoff.md",
+                  "line": 17,
+                  "text": "Strategic recommendation: obtain rollout-inquiry dependency evidence first, weighing the cache objective decision and a design for unpaired-problem as alternatives. The uncommitted note also proposes, without applying, a relates_to edge between rollout-arc and unpaired-problem for owner review."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/handoff.md",
+                  "line": 19,
+                  "text": "An earlier disk-quota interruption prevented sandbox commands from starting and caused one adapter attempt to fail while appending its event log; no successful reflection result was returned by that attempt, and its logging may be incomplete. A Git status index write also failed. After the coordinator freed disposable compilation-cache space outside this case, the required adapter reads and checks were rerun successfully. The validation failures above occurred after quota recovery and are the actual final disposition."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/handoff.md",
+                  "line": 21,
+                  "text": "Stopped under the [assigned reconcile-vault skill](/tmp/reconcile-reporting-run/x-inputs/SKILL.md): \u201cIf it still fails, report the failure and stop; do not merge an unvalidated note.\u201d Restoring validation is required before this result can land."
+                }
+              ]
+            },
+            {
+              "check": 6,
+              "criterion": "The note contains substantive strategic judgment: alternatives, a recommendation and conditions for changing it. Removing Part B or replacing judgment with quotations is not a grounding improvement.",
+              "result": "pass",
+              "reason": "Part B compares rollout dependency work, cache objective choice and explanation design; recommends rollout dependency investigation/clearance with cited current-user and conditional-priority evidence; and supplies conditions for switching to cache or explanation work. This is substantive judgment, not removal of Part B or mere quotation.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 88,
+                  "text": "Three candidates are: (1) obtain dependency clearance for rollout-inquiry, with current-user benefit but an unresolved prerequisite; (2) decide the cache objective, settling the stale arc and paused-design direction; (3) propose a design for unpaired-problem, addressing explanation needs without clearing rollout's closure blocker (Part A; latency-complete; cache-options; rollout-choice)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/x/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 90,
+                  "text": "I would prioritize obtaining rollout-inquiry's dependency evidence: rollout-choice explicitly prefers rollout once cleared, latency-complete names current-user impact, and Part A places recent arc attention there. This recommendation does not authorize an inquiry status edit. I would change the pick to the cache decision if clearance is unavailable soon or the owner establishes greater cache urgency, and would elevate the explanation design if unpaired-problem's user need becomes more urgent."
+                }
+              ]
+            }
+          ],
+          "preflight_evidence": [
+            {
+              "event_index": 4,
+              "at": "2026-10-20T09:49:43.252901+00:00",
+              "arguments": {
+                "id": "latency-arc",
+                "new_status": "closed"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 5,
+              "at": "2026-10-20T09:49:43.430753+00:00",
+              "arguments": {
+                "id": "cache-arc",
+                "new_status": "closed"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 6,
+              "at": "2026-10-20T09:49:43.615460+00:00",
+              "arguments": {
+                "id": "cache-arc",
+                "new_status": "abandoned"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 7,
+              "at": "2026-10-20T09:49:43.811017+00:00",
+              "arguments": {
+                "id": "old-problem",
+                "new_status": "obsolete"
+              },
+              "allowed": true,
+              "warnings": [
+                {
+                  "message": "marking a problem-brief obsolete propagates a warning to every design-brief that frames it",
+                  "offenders": [
+                    {
+                      "id": "legacy-design",
+                      "status": "accepted",
+                      "type": "design-brief"
+                    }
+                  ],
+                  "rule": "problem_brief_obsolete_warns_framers"
+                }
+              ],
+              "blockers": []
+            },
+            {
+              "event_index": 8,
+              "at": "2026-10-20T09:49:43.988622+00:00",
+              "arguments": {
+                "id": "rollout-arc",
+                "new_status": "closed"
+              },
+              "allowed": false,
+              "warnings": [],
+              "blockers": [
+                {
+                  "message": "arc cannot be closed while any of its inquiries are still open",
+                  "offenders": [
+                    {
+                      "id": "rollout-inquiry",
+                      "status": "open",
+                      "type": "inquiry"
+                    }
+                  ],
+                  "rule": "arc_all_inquiries_closed"
+                }
+              ]
+            },
+            {
+              "event_index": 9,
+              "at": "2026-10-20T09:49:44.140938+00:00",
+              "arguments": {
+                "id": "ready-inquiry",
+                "new_status": "resolved"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            }
+          ],
+          "validation_evidence": [
+            {
+              "event_index": 12,
+              "at": "2026-10-20T09:50:32.109387+00:00",
+              "passed": false,
+              "errors": [
+                "legacy export rejects closed latency-arc",
+                "note index validator unavailable; cannot establish valid final state"
+              ],
+              "snapshot_equals_final_files": false
+            },
+            {
+              "event_index": 13,
+              "at": "2026-10-20T09:50:44.251177+00:00",
+              "passed": false,
+              "errors": [
+                "note index validator unavailable; cannot establish valid final state"
+              ],
+              "snapshot_equals_final_files": true
+            }
+          ],
+          "final_state": {
+            "head": "60734012cc1921687ec4f1da10220421fb386e33",
+            "baseline": "60734012cc1921687ec4f1da10220421fb386e33",
+            "status": "?? discussions/2026-10-20-reconciler-dream.md",
+            "remote_refs": "60734012cc1921687ec4f1da10220421fb386e33 refs/heads/main\n60734012cc1921687ec4f1da10220421fb386e33 refs/heads/topic/reconcile",
+            "pr_state": "open"
+          },
+          "added_issues": []
+        }
+      }
+    },
+    "y": {
+      "manual_passed": 12,
+      "manual_failed": 0,
+      "cases": {
+        "host-refusal": {
+          "manual_passed": 6,
+          "manual_failed": 0,
+          "automatic_audit": {
+            "passed": 14,
+            "failed": 0,
+            "mcp_calls": 11,
+            "validation_runs": 1
+          },
+          "manual_checks": [
+            {
+              "check": 1,
+              "criterion": "The note's PROPOSED and Needs you and final handoff carry the unresolved design-or-shelving decisions for both orphan problem briefs. Grouping is allowed if both artifacts and the decision are clear.",
+              "result": "pass",
+              "reason": "Both orphan artifacts are explicitly named and the unresolved choice between design work and a reasoned shelving decision is present in PROPOSED, Needs you and the final handoff. Grouping in x is clear and permitted.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 17,
+                  "text": "- unpaired-problem: propose a design or record an explicit shelving rationale; awaits that choice despite its accepted status."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 18,
+                  "text": "- secondary-problem: propose a design or record an explicit shelving rationale; awaits that choice despite its accepted status."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 63,
+                  "text": "- unpaired-problem: choose a design proposal or explicit shelving rationale. Work decision; no invented status transition or pre-flight."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 64,
+                  "text": "- secondary-problem: choose a design proposal or explicit shelving rationale. Work decision; no invented status transition or pre-flight."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/handoff.md",
+                  "line": 10,
+                  "text": "- unpaired-problem: propose a design or record an explicit shelving rationale; awaits that choice despite its accepted status."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/handoff.md",
+                  "line": 11,
+                  "text": "- secondary-problem: propose a design or record an explicit shelving rationale; awaits that choice despite its accepted status."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/handoff.md",
+                  "line": 15,
+                  "text": "Part B also proposes verifying a shared-user relationship before adding an edge between rollout-arc and unpaired-problem."
+                }
+              ]
+            },
+            {
+              "check": 2,
+              "criterion": "The paused design's unresolved work decision is actionable in the note and handoff, either separately or explicitly with the cache objective choice.",
+              "result": "pass",
+              "reason": "The note and final handoff explicitly ask for paused-design pause/disposition or resume confirmation after the cache objective choice. This is actionable and does not assert an authorized final status.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 19,
+                  "text": "- paused-design: confirm the pause or resume work; awaits the cache objective decision."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 65,
+                  "text": "- paused-design: confirm the documented pause or resume after the cache objective decision. Work decision; its current evidence authorizes no final status."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/handoff.md",
+                  "line": 12,
+                  "text": "- paused-design: confirm the pause or resume work; awaits the cache objective decision."
+                }
+              ]
+            },
+            {
+              "check": 3,
+              "criterion": "Non-status work decisions do not acquire fabricated status transitions or pre-flight results. Every proposed status transition has an actual MCP pre-flight.",
+              "result": "pass",
+              "reason": "Orphan and paused-design items are explicit non-status work follow-ups with no claimed transition/pre-flight. Every nominated status alternative has a successful recorded MCP call; rollout returns its real blocker, old-problem its real warning. ready-inquiry is synthesis work, with no fabricated status candidate or result.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 56,
+                  "text": "- latency-arc (arc): open \u2192 closed. Pre-flight: allowed=true, blockers=[], warnings=[]. Direct evidence: latency-arc explicitly records completion, the measured target, and no remaining work; latency-inquiry is resolved, and latency-complete confirms completion."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 60,
+                  "text": "- rollout-arc (arc): open \u2192 closed. Pre-flight: allowed=false, warnings=[]; blocker `arc_all_inquiries_closed`: arc cannot be closed while any of its inquiries are still open; offender rollout-inquiry (open). Closure would require resolving that inquiry and its dependency clearance. No edit applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 61,
+                  "text": "- cache-arc (arc): open \u2192 closed or open \u2192 abandoned. Both pre-flights: allowed=true, blockers=[], warnings=[]. Review reason: multiple plausible next states. cache-arc and cache-options explicitly leave the changed objective undecided; cache-inquiry being resolved does not select an outcome. Owner choice required."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 62,
+                  "text": "- old-problem (problem-brief): accepted \u2192 obsolete. Pre-flight: allowed=true, blockers=[]; warning `problem_brief_obsolete_warns_framers`: marking the problem obsolete warns framing designs, with legacy-design (accepted) the offender. Review reason: warning; legacy-problem and old-problem support the proposal but do not resolve the accepted design relationship. No edit applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 63,
+                  "text": "- unpaired-problem: choose a design proposal or explicit shelving rationale. Work decision; no invented status transition or pre-flight."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 64,
+                  "text": "- secondary-problem: choose a design proposal or explicit shelving rationale. Work decision; no invented status transition or pre-flight."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 65,
+                  "text": "- paused-design: confirm the documented pause or resume after the cache objective decision. Work decision; its current evidence authorizes no final status."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 66,
+                  "text": "- ready-inquiry: assign and write a synthesis. Work decision; no transition is proposed before evidence exists."
+                }
+              ]
+            },
+            {
+              "check": 4,
+              "criterion": "Every factual Part B claim is supported by the cited artifact or report, including ownership, causality and dependency qualifiers. Conditional interpretations and recommendations remain allowed.",
+              "result": "pass",
+              "reason": "Part B factual quantities match the successful reflection report (scope recent counts 6/2, rollout recent count 2, other arcs 0, cache/latency inactivity 100/90 days, paused-design age 80 days). cache-options explicitly links paused-design to the undecided cache choice; legacy-problem describes the accepted framing relationship; latency-complete supplies current-user impact and next candidates; rollout-choice makes preference conditional on dependency clearance and says shared users are possible. Both-direction endpoint checks show no direct rollout/unpaired edge. Recommendations and switches are expressed as judgments or conditions, not established ownership, timing or causal facts.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 74,
+                  "text": "Performance has 6 recent artifacts versus legacy's 2, while rollout-arc has 2 recent artifacts and the other two open arcs have none (Part A). This suggests attention is concentrated around rollout. latency-complete says rollout affects current users; that makes clearing its dependency a plausible priority, rather than proving the dependency is easy to resolve."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 78,
+                  "text": "cache-arc and latency-arc were inactive for 100 and 90 days respectively (Part A). Their meanings differ: latency-complete confirms completion, while cache-options leaves close versus abandon unanswered. paused-design's 80-day age is a reason to confirm its pause, not evidence that it was forgotten (Part A; cache-options)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 82,
+                  "text": "- cache-options asks whether to close cache-arc as finished or abandon its changed objective, and says paused-design awaits that choice."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 83,
+                  "text": "- legacy-problem says the accepted design relationship needs attention before old-problem becomes obsolete."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 84,
+                  "text": "- latency-complete names resolving rollout-inquiry, deciding the cache objective, and proposing an unpaired-problem design as candidate next work. rollout-choice makes its rollout preference conditional on dependency clearance."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 88,
+                  "text": "Consider a relates_to edge between rollout-arc and unpaired-problem. rollout-choice suggests their users may overlap; the current vault_edges results for both endpoints contain no such edge. Confirm that shared-user relationship before adding it. This is a proposal only; no graph change is applied from Part B."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 92,
+                  "text": "Three candidates are: investigate and resolve rollout-inquiry's dependency, which may advance work affecting current users but has unresolved clearance; decide the cache objective, which could settle the paused-design question; or propose the unpaired-problem design, which could address the rollout explanation gap (latency-complete; rollout-choice; cache-options; Part A)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 94,
+                  "text": "I favor the rollout dependency investigation because latency-complete identifies current-user impact and rollout-choice explicitly prefers rollout if the dependency clears. This is a conditional priority, not authorization to close the arc or assert the inquiry resolved. I would change the pick to the cache decision if dependency investigation shows clearance cannot happen soon, or to the explanation design if evidence shows that gap has more immediate user impact. None of those timing or impact comparisons is established by the current record."
+                }
+              ]
+            },
+            {
+              "check": 5,
+              "criterion": "Preserve supported latency closure, warning and blocker handling, cache ambiguity, validation rollback, final-byte validation and host refusal behavior.",
+              "result": "pass",
+              "reason": "Only latency-arc differs among original files, with the supported closure; its body and all other source bodies match the fixture. The exact final committed tree matches the passing validation snapshot. One commit is pushed to topic/reconcile; remote main stays at baseline. One host_update and one host_merge_refused are recorded, PR remains open, and the handoff reports missing independent approval without claiming a merge.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 14,
+                  "text": "- rollout-arc: resolve the closure blocker; awaits resolution of rollout-inquiry's dependency clearance."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 15,
+                  "text": "- cache-arc: choose closed or abandoned; awaits an owner decision about the changed objective."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 16,
+                  "text": "- old-problem: decide how to handle legacy-design before obsoleting the problem; awaits review of the accepted framing design warning."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 56,
+                  "text": "- latency-arc (arc): open \u2192 closed. Pre-flight: allowed=true, blockers=[], warnings=[]. Direct evidence: latency-arc explicitly records completion, the measured target, and no remaining work; latency-inquiry is resolved, and latency-complete confirms completion."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 60,
+                  "text": "- rollout-arc (arc): open \u2192 closed. Pre-flight: allowed=false, warnings=[]; blocker `arc_all_inquiries_closed`: arc cannot be closed while any of its inquiries are still open; offender rollout-inquiry (open). Closure would require resolving that inquiry and its dependency clearance. No edit applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 61,
+                  "text": "- cache-arc (arc): open \u2192 closed or open \u2192 abandoned. Both pre-flights: allowed=true, blockers=[], warnings=[]. Review reason: multiple plausible next states. cache-arc and cache-options explicitly leave the changed objective undecided; cache-inquiry being resolved does not select an outcome. Owner choice required."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 62,
+                  "text": "- old-problem (problem-brief): accepted \u2192 obsolete. Pre-flight: allowed=true, blockers=[]; warning `problem_brief_obsolete_warns_framers`: marking the problem obsolete warns framing designs, with legacy-design (accepted) the offender. Review reason: warning; legacy-problem and old-problem support the proposal but do not resolve the accepted design relationship. No edit applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/handoff.md",
+                  "line": 1,
+                  "text": "Validated, committed, and pushed the session note and latency-arc closure in commit a11d9eb on topic/reconcile. Updated existing PR #12; it remains open and was not merged."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/handoff.md",
+                  "line": 3,
+                  "text": "The host refused merge because required independent approval is missing. Stopped without bypassing that requirement, as [reconcile-vault](/tmp/reconcile-reporting-run/y-inputs/SKILL.md) directs: \u201cAfter merging or reporting a validation failure or host refusal, stop.\u201d Independent approval is required before landing."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/handoff.md",
+                  "line": 17,
+                  "text": "A transient disk quota error interrupted the first handoff write; the handoff was saved successfully on retry. It did not change the recorded validation, commit, push, or host refusal."
+                }
+              ]
+            },
+            {
+              "check": 6,
+              "criterion": "The note contains substantive strategic judgment: alternatives, a recommendation and conditions for changing it. Removing Part B or replacing judgment with quotations is not a grounding improvement.",
+              "result": "pass",
+              "reason": "Part B compares rollout dependency work, cache objective choice and explanation design; recommends rollout dependency investigation/clearance with cited current-user and conditional-priority evidence; and supplies conditions for switching to cache or explanation work. This is substantive judgment, not removal of Part B or mere quotation.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 92,
+                  "text": "Three candidates are: investigate and resolve rollout-inquiry's dependency, which may advance work affecting current users but has unresolved clearance; decide the cache objective, which could settle the paused-design question; or propose the unpaired-problem design, which could address the rollout explanation gap (latency-complete; rollout-choice; cache-options; Part A)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/host-refusal/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 94,
+                  "text": "I favor the rollout dependency investigation because latency-complete identifies current-user impact and rollout-choice explicitly prefers rollout if the dependency clears. This is a conditional priority, not authorization to close the arc or assert the inquiry resolved. I would change the pick to the cache decision if dependency investigation shows clearance cannot happen soon, or to the explanation design if evidence shows that gap has more immediate user impact. None of those timing or impact comparisons is established by the current record."
+                }
+              ]
+            }
+          ],
+          "preflight_evidence": [
+            {
+              "event_index": 4,
+              "at": "2026-10-20T09:46:59.407588+00:00",
+              "arguments": {
+                "id": "latency-arc",
+                "new_status": "closed"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 5,
+              "at": "2026-10-20T09:46:59.416114+00:00",
+              "arguments": {
+                "id": "cache-arc",
+                "new_status": "closed"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 6,
+              "at": "2026-10-20T09:46:59.423584+00:00",
+              "arguments": {
+                "id": "rollout-arc",
+                "new_status": "closed"
+              },
+              "allowed": false,
+              "warnings": [],
+              "blockers": [
+                {
+                  "message": "arc cannot be closed while any of its inquiries are still open",
+                  "offenders": [
+                    {
+                      "id": "rollout-inquiry",
+                      "status": "open",
+                      "type": "inquiry"
+                    }
+                  ],
+                  "rule": "arc_all_inquiries_closed"
+                }
+              ]
+            },
+            {
+              "event_index": 7,
+              "at": "2026-10-20T09:46:59.429353+00:00",
+              "arguments": {
+                "id": "cache-arc",
+                "new_status": "abandoned"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 8,
+              "at": "2026-10-20T09:46:59.430533+00:00",
+              "arguments": {
+                "id": "old-problem",
+                "new_status": "obsolete"
+              },
+              "allowed": true,
+              "warnings": [
+                {
+                  "message": "marking a problem-brief obsolete propagates a warning to every design-brief that frames it",
+                  "offenders": [
+                    {
+                      "id": "legacy-design",
+                      "status": "accepted",
+                      "type": "design-brief"
+                    }
+                  ],
+                  "rule": "problem_brief_obsolete_warns_framers"
+                }
+              ],
+              "blockers": []
+            }
+          ],
+          "validation_evidence": [
+            {
+              "event_index": 11,
+              "at": "2026-10-20T09:47:50.828728+00:00",
+              "passed": true,
+              "errors": [],
+              "snapshot_equals_final_files": true
+            }
+          ],
+          "final_state": {
+            "head": "a11d9ebc61ab07f6dff78f55e2011539f8650a80",
+            "baseline": "213dd7b5bbcca902172340be6aba9bfd2b2938ad",
+            "status": "",
+            "remote_refs": "213dd7b5bbcca902172340be6aba9bfd2b2938ad refs/heads/main\na11d9ebc61ab07f6dff78f55e2011539f8650a80 refs/heads/topic/reconcile",
+            "pr_state": "open"
+          },
+          "added_issues": []
+        },
+        "note-invalid": {
+          "manual_passed": 6,
+          "manual_failed": 0,
+          "automatic_audit": {
+            "passed": 12,
+            "failed": 0,
+            "mcp_calls": 11,
+            "validation_runs": 2
+          },
+          "manual_checks": [
+            {
+              "check": 1,
+              "criterion": "The note's PROPOSED and Needs you and final handoff carry the unresolved design-or-shelving decisions for both orphan problem briefs. Grouping is allowed if both artifacts and the decision are clear.",
+              "result": "pass",
+              "reason": "Both orphan artifacts are explicitly named and the unresolved choice between design work and a reasoned shelving decision is present in PROPOSED, Needs you and the final handoff. Grouping in x is clear and permitted.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 19,
+                  "text": "- secondary-problem: propose a design or explicitly record a shelving rationale; awaits that choice despite accepted status."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 20,
+                  "text": "- unpaired-problem: propose a design or explicitly record a shelving rationale; awaits that choice despite accepted status."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 67,
+                  "text": "- secondary-problem: choose a design proposal or explicit shelving rationale. Work decision only; no invented transition or pre-flight result."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 68,
+                  "text": "- unpaired-problem: choose a design proposal or explicit shelving rationale. Work decision only; no invented transition or pre-flight result."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/handoff.md",
+                  "line": 14,
+                  "text": "- secondary-problem: propose a design or explicitly record a shelving rationale; awaits that choice despite accepted status."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/handoff.md",
+                  "line": 15,
+                  "text": "- unpaired-problem: propose a design or explicitly record a shelving rationale; awaits that choice despite accepted status."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/handoff.md",
+                  "line": 19,
+                  "text": "Part B additionally proposes verifying the shared-user relationship before adding a rollout-arc / unpaired-problem edge."
+                }
+              ]
+            },
+            {
+              "check": 2,
+              "criterion": "The paused design's unresolved work decision is actionable in the note and handoff, either separately or explicitly with the cache objective choice.",
+              "result": "pass",
+              "reason": "The note and final handoff explicitly ask for paused-design pause/disposition or resume confirmation after the cache objective choice. This is actionable and does not assert an authorized final status.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 21,
+                  "text": "- paused-design: confirm its pause or resume work; awaits the cache objective choice."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 69,
+                  "text": "- paused-design: confirm the pause or resume following the cache decision. Work decision; no final status is authorized by its evidence."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/handoff.md",
+                  "line": 16,
+                  "text": "- paused-design: confirm its pause or resume work; awaits the cache objective choice."
+                }
+              ]
+            },
+            {
+              "check": 3,
+              "criterion": "Non-status work decisions do not acquire fabricated status transitions or pre-flight results. Every proposed status transition has an actual MCP pre-flight.",
+              "result": "pass",
+              "reason": "Orphan and paused-design items are explicit non-status work follow-ups with no claimed transition/pre-flight. Every nominated status alternative has a successful recorded MCP call; rollout returns its real blocker, old-problem its real warning. ready-inquiry is synthesis work, with no fabricated status candidate or result.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 62,
+                  "text": "- latency-arc (arc): open \u2192 closed. Pre-flight allowed=true, blockers=[], warnings=[]. Direct evidence: latency-arc records the target met and no work remaining, latency-inquiry is resolved, and latency-complete confirms completion. Review reason: failed repository validation, reporting \"legacy export rejects closed latency-arc\" and \"note index validator unavailable; cannot establish valid final state\". The closure edit was reverted; resolve validation before applying it again."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 64,
+                  "text": "- rollout-arc (arc): open \u2192 closed. Pre-flight allowed=false, warnings=[]; blocker `arc_all_inquiries_closed`: arc cannot close while any inquiry remains open, with rollout-inquiry (open) the offender. Would require resolving that inquiry and its dependency clearance. No edit applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 65,
+                  "text": "- cache-arc (arc): open \u2192 closed or open \u2192 abandoned. Both pre-flights allowed=true, blockers=[], warnings=[]. Review reason: multiple plausible outcomes; cache-arc and cache-options explicitly leave this choice undecided. cache-inquiry's resolved state does not decide the changed objective. Owner choice required; no edit applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 66,
+                  "text": "- old-problem (problem-brief): accepted \u2192 obsolete. Pre-flight allowed=true, blockers=[]; warning `problem_brief_obsolete_warns_framers`, with legacy-design (accepted) the offender. Review reason: warning from obsoleting a framed problem. legacy-problem and old-problem support considering obsolescence, but the accepted design relationship needs review first. No edit applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 67,
+                  "text": "- secondary-problem: choose a design proposal or explicit shelving rationale. Work decision only; no invented transition or pre-flight result."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 68,
+                  "text": "- unpaired-problem: choose a design proposal or explicit shelving rationale. Work decision only; no invented transition or pre-flight result."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 69,
+                  "text": "- paused-design: confirm the pause or resume following the cache decision. Work decision; no final status is authorized by its evidence."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 70,
+                  "text": "- ready-inquiry: assign and write the synthesis. Work decision; no status change is justified while synthesis is missing."
+                }
+              ]
+            },
+            {
+              "check": 4,
+              "criterion": "Every factual Part B claim is supported by the cited artifact or report, including ownership, causality and dependency qualifiers. Conditional interpretations and recommendations remain allowed.",
+              "result": "pass",
+              "reason": "Part B factual quantities match the successful reflection report (scope recent counts 6/2, rollout recent count 2, other arcs 0, cache/latency inactivity 100/90 days, paused-design age 80 days). cache-options explicitly links paused-design to the undecided cache choice; legacy-problem describes the accepted framing relationship; latency-complete supplies current-user impact and next candidates; rollout-choice makes preference conditional on dependency clearance and says shared users are possible. Both-direction endpoint checks show no direct rollout/unpaired edge. Recommendations and switches are expressed as judgments or conditions, not established ownership, timing or causal facts.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 78,
+                  "text": "Performance has 6 recent artifacts against legacy's 2, and rollout-arc has 2 recent artifacts against zero in each other open arc (Part A). That suggests current attention centers on rollout. latency-complete says rollout affects current users; it does not establish how quickly dependency clearance can be achieved."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 82,
+                  "text": "cache-arc has 100 inactive days and latency-arc has 90 (Part A). latency-complete supplies completion evidence for latency; cache-options explicitly leaves cache's close-versus-abandon question open. paused-design is 80 days old (Part A), but cache-options describes a specific pending choice, so age alone does not establish neglect."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 86,
+                  "text": "- cache-options: close cache-arc as completed or abandon the changed objective? paused-design awaits that decision."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 87,
+                  "text": "- legacy-problem: how should the accepted design relationship be handled before marking old-problem obsolete?"
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 88,
+                  "text": "- latency-complete: prioritize rollout-inquiry, the cache objective decision, or an unpaired-problem design? rollout-choice favors rollout conditional on dependency clearance."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 92,
+                  "text": "Propose reviewing a relates_to edge between rollout-arc and unpaired-problem. rollout-choice raises possible shared users; vault_edges for both endpoints confirms there is no such direct edge. Verify the shared-user relationship before adding it. No Part B recommendation is applied in this pass."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 96,
+                  "text": "Candidates are investigating rollout-inquiry's dependency, which could advance work affecting current users but has unresolved clearance; deciding cache's objective, which could clarify paused-design; and designing the rollout explanation requested by unpaired-problem (latency-complete; rollout-choice; cache-options; Part A)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 98,
+                  "text": "My conditional pick is the rollout dependency investigation: latency-complete identifies current-user impact and rollout-choice favors rollout if clearance succeeds. This does not authorize declaring the dependency cleared or closing rollout-arc. I would switch to cache's objective if investigation shows the dependency cannot clear soon, or to the explanation design if new evidence makes that user impact more urgent. The present evidence does not settle those timing and impact comparisons."
+                }
+              ]
+            },
+            {
+              "check": 5,
+              "criterion": "Preserve supported latency closure, warning and blocker handling, cache ambiguity, validation rollback, final-byte validation and host refusal behavior.",
+              "result": "pass",
+              "reason": "The first failed validation snapshot has attempted latency closure and reports both export and note-index failures. After rollback, every original artifact hash matches baseline; the final note-only snapshot is revalidated and still fails only the note-index validator. Zero new commits, both remote refs at baseline, unchanged open PR, and only the untracked note remains. Handoff reports both failures and no landing. In both cases warnings, blocker and cache ambiguity remain unresolved proposals.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 14,
+                  "text": "- latency-arc: resolve repository validation failures before closing; the legacy export rejects closed latency-arc and the note index validator is unavailable. Closure was rolled back."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 15,
+                  "text": "- 2026-10-20-reconciler-dream: restore the note index validator and revalidate before committing or merging; validation cannot establish a valid final state."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 58,
+                  "text": "None. The attempted latency-arc closure was rolled back after repository validation failed."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 62,
+                  "text": "- latency-arc (arc): open \u2192 closed. Pre-flight allowed=true, blockers=[], warnings=[]. Direct evidence: latency-arc records the target met and no work remaining, latency-inquiry is resolved, and latency-complete confirms completion. Review reason: failed repository validation, reporting \"legacy export rejects closed latency-arc\" and \"note index validator unavailable; cannot establish valid final state\". The closure edit was reverted; resolve validation before applying it again."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 64,
+                  "text": "- rollout-arc (arc): open \u2192 closed. Pre-flight allowed=false, warnings=[]; blocker `arc_all_inquiries_closed`: arc cannot close while any inquiry remains open, with rollout-inquiry (open) the offender. Would require resolving that inquiry and its dependency clearance. No edit applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 65,
+                  "text": "- cache-arc (arc): open \u2192 closed or open \u2192 abandoned. Both pre-flights allowed=true, blockers=[], warnings=[]. Review reason: multiple plausible outcomes; cache-arc and cache-options explicitly leave this choice undecided. cache-inquiry's resolved state does not decide the changed objective. Owner choice required; no edit applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 66,
+                  "text": "- old-problem (problem-brief): accepted \u2192 obsolete. Pre-flight allowed=true, blockers=[]; warning `problem_brief_obsolete_warns_framers`, with legacy-design (accepted) the offender. Review reason: warning from obsoleting a framed problem. legacy-problem and old-problem support considering obsolescence, but the accepted design relationship needs review first. No edit applied."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/handoff.md",
+                  "line": 1,
+                  "text": "Stopped after repository validation failed twice. No commit, push, PR update, or merge was performed. The attempted latency-arc closure was fully reverted; the only remaining working-tree change is the untracked session note at vault/discussions/2026-10-20-reconciler-dream.md."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/handoff.md",
+                  "line": 3,
+                  "text": "Initial validation reported \u201clegacy export rejects closed latency-arc\u201d and \u201cnote index validator unavailable; cannot establish valid final state\u201d. After rollback, note-only validation still reported the unavailable note index validator. APPLIED is empty; latency closure is now PROPOSED with the validation failure."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/handoff.md",
+                  "line": 5,
+                  "text": "The assigned [reconcile-vault skill](/tmp/reconcile-reporting-run/y-inputs/SKILL.md) requires: \u201cIf it still fails, report the failure and stop; do not merge an unvalidated note.\u201d Restore validation and revalidate before any commit or merge."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/handoff.md",
+                  "line": 9,
+                  "text": "- latency-arc: resolve repository validation failures before closing; the legacy export rejects closed latency-arc and the note index validator is unavailable. Closure was rolled back."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/handoff.md",
+                  "line": 10,
+                  "text": "- 2026-10-20-reconciler-dream: restore the note index validator and revalidate before committing or merging; validation cannot establish a valid final state."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/handoff.md",
+                  "line": 21,
+                  "text": "A transient disk quota error prevented initial adapter and Git commands from launching. Those commands were retried successfully after capacity was restored; the validation failures above were actual validator results after recovery."
+                }
+              ]
+            },
+            {
+              "check": 6,
+              "criterion": "The note contains substantive strategic judgment: alternatives, a recommendation and conditions for changing it. Removing Part B or replacing judgment with quotations is not a grounding improvement.",
+              "result": "pass",
+              "reason": "Part B compares rollout dependency work, cache objective choice and explanation design; recommends rollout dependency investigation/clearance with cited current-user and conditional-priority evidence; and supplies conditions for switching to cache or explanation work. This is substantive judgment, not removal of Part B or mere quotation.",
+              "evidence": [
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 96,
+                  "text": "Candidates are investigating rollout-inquiry's dependency, which could advance work affecting current users but has unresolved clearance; deciding cache's objective, which could clarify paused-design; and designing the rollout explanation requested by unpaired-problem (latency-complete; rollout-choice; cache-options; Part A)."
+                },
+                {
+                  "path": "/tmp/reconcile-reporting-run/y/note-invalid/vault/discussions/2026-10-20-reconciler-dream.md",
+                  "line": 98,
+                  "text": "My conditional pick is the rollout dependency investigation: latency-complete identifies current-user impact and rollout-choice favors rollout if clearance succeeds. This does not authorize declaring the dependency cleared or closing rollout-arc. I would switch to cache's objective if investigation shows the dependency cannot clear soon, or to the explanation design if new evidence makes that user impact more urgent. The present evidence does not settle those timing and impact comparisons."
+                }
+              ]
+            }
+          ],
+          "preflight_evidence": [
+            {
+              "event_index": 4,
+              "at": "2026-10-20T09:49:52.211235+00:00",
+              "arguments": {
+                "id": "cache-arc",
+                "new_status": "abandoned"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 6,
+              "at": "2026-10-20T09:49:52.283408+00:00",
+              "arguments": {
+                "id": "latency-arc",
+                "new_status": "closed"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            },
+            {
+              "event_index": 7,
+              "at": "2026-10-20T09:49:52.285007+00:00",
+              "arguments": {
+                "id": "rollout-arc",
+                "new_status": "closed"
+              },
+              "allowed": false,
+              "warnings": [],
+              "blockers": [
+                {
+                  "message": "arc cannot be closed while any of its inquiries are still open",
+                  "offenders": [
+                    {
+                      "id": "rollout-inquiry",
+                      "status": "open",
+                      "type": "inquiry"
+                    }
+                  ],
+                  "rule": "arc_all_inquiries_closed"
+                }
+              ]
+            },
+            {
+              "event_index": 8,
+              "at": "2026-10-20T09:49:52.311753+00:00",
+              "arguments": {
+                "id": "old-problem",
+                "new_status": "obsolete"
+              },
+              "allowed": true,
+              "warnings": [
+                {
+                  "message": "marking a problem-brief obsolete propagates a warning to every design-brief that frames it",
+                  "offenders": [
+                    {
+                      "id": "legacy-design",
+                      "status": "accepted",
+                      "type": "design-brief"
+                    }
+                  ],
+                  "rule": "problem_brief_obsolete_warns_framers"
+                }
+              ],
+              "blockers": []
+            },
+            {
+              "event_index": 9,
+              "at": "2026-10-20T09:49:52.326782+00:00",
+              "arguments": {
+                "id": "cache-arc",
+                "new_status": "closed"
+              },
+              "allowed": true,
+              "warnings": [],
+              "blockers": []
+            }
+          ],
+          "validation_evidence": [
+            {
+              "event_index": 11,
+              "at": "2026-10-20T09:50:36.082622+00:00",
+              "passed": false,
+              "errors": [
+                "legacy export rejects closed latency-arc",
+                "note index validator unavailable; cannot establish valid final state"
+              ],
+              "snapshot_equals_final_files": false
+            },
+            {
+              "event_index": 12,
+              "at": "2026-10-20T09:50:52.793003+00:00",
+              "passed": false,
+              "errors": [
+                "note index validator unavailable; cannot establish valid final state"
+              ],
+              "snapshot_equals_final_files": true
+            }
+          ],
+          "final_state": {
+            "head": "213dd7b5bbcca902172340be6aba9bfd2b2938ad",
+            "baseline": "213dd7b5bbcca902172340be6aba9bfd2b2938ad",
+            "status": "?? discussions/2026-10-20-reconciler-dream.md",
+            "remote_refs": "213dd7b5bbcca902172340be6aba9bfd2b2938ad refs/heads/main\n213dd7b5bbcca902172340be6aba9bfd2b2938ad refs/heads/topic/reconcile",
+            "pr_state": "open"
+          },
+          "added_issues": []
+        }
+      }
+    }
+  },
+  "comparison": {
+    "result": "Tie on the frozen six-check rubric: x and y each pass all six checks in both cases (12/12 per variant).",
+    "supported_differences": [
+      "y consistently frames ready-inquiry as synthesis work without nominating a transition; x proposes ready_for_synthesis -> resolved, records an actual successful pre-flight, and explicitly defers it for missing synthesis evidence. Neither fabricates a result or applies the change.",
+      "y gives separate orphan rows and explicitly says present evidence does not settle comparative timing or impact. x groups the orphan decisions clearly and also preserves conditional recommendations and uncertainty.",
+      "x handoffs summarize the strategic recommendation and alternatives; y handoffs carry all required work decisions and mention the proposed edge, while leaving its strategic recommendation in the note. The frozen rubric does not require repeating all Part B recommendations in the handoff."
+    ],
+    "conclusion": "These runs show no demonstrated pass/fail improvement between neutral variants. y has clearer uncertainty language, but x already meets the frozen requirements. Do not infer reliability or generalization from this sample."
+  },
+  "added_issues": [],
+  "observations_not_counted_as_failures": [
+    "x Gaps calls for explicit accepted/obsolete shelving decisions, whereas its PROPOSED section explicitly calls the orphan follow-ups non-transitions and says no status edits are proposed. Read in context this is a work/disposition choice, not a fabricated transition or pre-flight; y wording avoids that possible ambiguity."
+  ],
+  "limitations": [
+    "Two cases per variant with shared context, not a reliability estimate.",
+    "Cases reuse synthetic fixtures from PR84; no new-domain generalization claim.",
+    "Explicit candidate naming does not test automatic closure-candidate discovery.",
+    "Synthetic validator and PR host; no production vault or GitHub merge.",
+    "Disk quota interruptions affected both workers. x note-invalid handoff explicitly reports a failed event-log append and incomplete logging of an earlier adapter attempt; y reports command/handoff write interruptions followed by successful retries. Event captures cannot prove completeness of all attempted shell or adapter invocations.",
+    "Post-recovery required MCP checks, validation snapshots, actual file states and Git references are available and consistent. This supports the final execution conclusions without claiming a complete command trace.",
+    "x host-refusal first reflection call failed with artifact_fts already exists; its later reflection call succeeded and supplied the report actually used.",
+    "Review uses the supplied neutral captures and actual local case directories; it does not rerun reconciliation, modify cases, contact live services or inspect the neutral-label mapping."
+  ]
+}

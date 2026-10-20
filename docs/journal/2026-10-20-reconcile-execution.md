@@ -1,7 +1,8 @@
 ---
-status: open
+status: shipped
 opened: 2026-10-20
 updated: 2026-10-20
+prs: [84]
 beta_skills: [review-guide]
 ---
 
@@ -14,8 +15,8 @@ Test the reconciliation skill beyond the response-only trials in
 edit isolated vault files, validate them, and observe actual Git commits,
 pushes, and local remote refs. Use a local PR host stand-in for disposition.
 
-Single-PR lifecycle. The writing effort is shipped; this entry tracks its
-remaining execution checks without reopening that effort.
+Single-PR lifecycle; landed in PR84. This entry records the execution checks
+following the shipped writing effort.
 
 ## Decision Criteria
 
@@ -70,6 +71,11 @@ validation, an actual local merge, rollback recovery, persistent note-only
 failure, and approval refusal preserving remote `main`.
 
 ## Outcome
+
+Shipped in [PR84](https://github.com/iopsystems/skills-mcp/pull/84), merged as
+`f0c1267fb31e0b8a1733f53dd5a8d1d1afbc8015` on 2026-10-20. The evaluation
+harness and evidence landed; the reporting findings and test gaps below remain
+unresolved.
 
 The five initial executions produced the expected file changes, validation
 outcomes, commits, pushes, and local-host dispositions. The automatic audit
