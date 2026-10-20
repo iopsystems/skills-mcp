@@ -7,11 +7,11 @@
 
 use std::{
     path::{Path, PathBuf},
-    time::UNIX_EPOCH,
+    time::{Duration, Instant, UNIX_EPOCH},
 };
 
 use anyhow::{anyhow, Context, Result};
-use rusqlite::{params, Connection, OptionalExtension};
+use rusqlite::{params, Connection, ErrorCode, OptionalExtension, TransactionBehavior};
 use walkdir::WalkDir;
 
 use crate::vault::{
@@ -25,6 +25,7 @@ pub const INDEX_FILENAME: &str = ".vault-index.sqlite";
 /// Current internal index schema version. Bumped when the sqlite schema
 /// shape changes (independent of the vault schema version).
 const INDEX_SCHEMA_VERSION: u32 = 1;
+const SQLITE_BUSY_TIMEOUT: Duration = Duration::from_secs(5);
 
 /// A handle to a vault's sqlite index. Opening does not refresh — call
 /// [`Index::refresh_if_stale`] or [`Index::rebuild`] explicitly.
@@ -52,8 +53,8 @@ impl Index {
         let db_path = root.join(INDEX_FILENAME);
         let conn =
             Connection::open(&db_path).with_context(|| format!("open {}", db_path.display()))?;
-        conn.pragma_update(None, "journal_mode", "WAL")
-            .context("set journal_mode=WAL")?;
+        enable_wal(&conn, SQLITE_BUSY_TIMEOUT).context("set journal_mode=WAL")?;
+        conn.busy_timeout(SQLITE_BUSY_TIMEOUT)?;
         conn.pragma_update(None, "synchronous", "NORMAL")
             .context("set synchronous=NORMAL")?;
 
@@ -69,16 +70,19 @@ impl Index {
     /// stored version is older, the index is dropped and rebuilt from
     /// scratch — per SCHEMA.md, "there is no ALTER TABLE choreography."
     fn apply_sqlite_schema(&mut self) -> Result<()> {
-        self.conn
-            .execute_batch(
-                "CREATE TABLE IF NOT EXISTS meta (
+        // Acquire the writer lock before reading the version so concurrent
+        // openers cannot both decide to replace the schema.
+        let tx = self
+            .conn
+            .transaction_with_behavior(TransactionBehavior::Immediate)?;
+        tx.execute_batch(
+            "CREATE TABLE IF NOT EXISTS meta (
                     key TEXT PRIMARY KEY,
                     value TEXT NOT NULL
                 );",
-            )
-            .context("create meta table")?;
-        let stored: Option<String> = self
-            .conn
+        )
+        .context("create meta table")?;
+        let stored: Option<String> = tx
             .query_row(
                 "SELECT value FROM meta WHERE key = 'index_schema_version'",
                 [],
@@ -87,19 +91,20 @@ impl Index {
             .optional()?;
         let current = INDEX_SCHEMA_VERSION.to_string();
         if stored.as_deref() != Some(current.as_str()) {
-            self.drop_all_tables()?;
-            self.create_all_tables()?;
-            self.conn.execute(
+            Self::drop_all_tables(&tx)?;
+            Self::create_all_tables(&tx)?;
+            tx.execute(
                 "INSERT INTO meta (key, value) VALUES ('index_schema_version', ?1)
                  ON CONFLICT(key) DO UPDATE SET value = excluded.value",
                 params![current],
             )?;
         }
+        tx.commit()?;
         Ok(())
     }
 
-    fn drop_all_tables(&self) -> Result<()> {
-        self.conn.execute_batch(
+    fn drop_all_tables(conn: &Connection) -> Result<()> {
+        conn.execute_batch(
             "DROP TABLE IF EXISTS artifact_fts;
              DROP TABLE IF EXISTS edge;
              DROP TABLE IF EXISTS artifact;",
@@ -107,8 +112,8 @@ impl Index {
         Ok(())
     }
 
-    fn create_all_tables(&self) -> Result<()> {
-        self.conn.execute_batch(
+    fn create_all_tables(conn: &Connection) -> Result<()> {
+        conn.execute_batch(
             "CREATE TABLE artifact (
                 id                TEXT PRIMARY KEY,
                 type              TEXT NOT NULL,
@@ -209,6 +214,28 @@ impl Index {
 pub enum RefreshOutcome {
     UpToDate,
     Rebuilt,
+}
+
+/// WAL setup can return BUSY without invoking SQLite's busy handler. Retry
+/// only that result, with a deadline, before restoring normal lock waiting.
+fn enable_wal(conn: &Connection, timeout: Duration) -> rusqlite::Result<()> {
+    conn.busy_timeout(Duration::ZERO)?;
+    let deadline = Instant::now() + timeout;
+    loop {
+        match conn.pragma_update(None, "journal_mode", "WAL") {
+            Err(error)
+                if error.sqlite_error_code() == Some(ErrorCode::DatabaseBusy)
+                    && Instant::now() < deadline =>
+            {
+                std::thread::sleep(
+                    deadline
+                        .saturating_duration_since(Instant::now())
+                        .min(Duration::from_millis(10)),
+                );
+            }
+            result => return result,
+        }
+    }
 }
 
 fn insert_artifact_row(
@@ -345,6 +372,141 @@ mod tests {
             )
             .unwrap();
         assert_eq!(v, INDEX_SCHEMA_VERSION.to_string());
+    }
+
+    #[test]
+    fn concurrent_schema_initialization_and_upgrade() {
+        use std::sync::{Arc, Barrier};
+
+        for upgrade in [false, true] {
+            for _ in 0..5 {
+                let vault = make_vault(&[]);
+                let db_path = vault.path().join(INDEX_FILENAME);
+                let conn = Connection::open(&db_path).unwrap();
+                conn.pragma_update(None, "journal_mode", "WAL").unwrap();
+                if upgrade {
+                    let idx = Index::open(vault.path()).unwrap();
+                    idx.conn
+                        .execute(
+                            "UPDATE meta SET value = '0' WHERE key = 'index_schema_version'",
+                            [],
+                        )
+                        .unwrap();
+                }
+                // Prepare connections before releasing the callers together.
+                // This isolates schema initialization from journal-mode setup.
+                let indexes: Vec<_> = (0..8)
+                    .map(|_| Index {
+                        root: vault.path().to_path_buf(),
+                        conn: Connection::open(&db_path).unwrap(),
+                    })
+                    .collect();
+                let barrier = Arc::new(Barrier::new(indexes.len()));
+                let workers: Vec<_> = indexes
+                    .into_iter()
+                    .map(|mut idx| {
+                        let barrier = Arc::clone(&barrier);
+                        std::thread::spawn(move || {
+                            barrier.wait();
+                            idx.apply_sqlite_schema()
+                        })
+                    })
+                    .collect();
+                let errors: Vec<_> = workers
+                    .into_iter()
+                    .filter_map(|worker| worker.join().unwrap().err())
+                    .map(|error| format!("{error:#}"))
+                    .collect();
+                assert!(errors.is_empty(), "upgrade={upgrade}: {errors:?}");
+                let mut idx = Index::open(vault.path()).unwrap();
+                idx.rebuild().unwrap();
+                let found: String = idx
+                    .conn
+                    .query_row(
+                        "SELECT id FROM artifact_fts WHERE artifact_fts MATCH 'schema'",
+                        [],
+                        |row| row.get(0),
+                    )
+                    .unwrap();
+                assert_eq!(found, "schema");
+            }
+        }
+    }
+
+    #[test]
+    fn failed_schema_upgrade_preserves_previous_index() {
+        let vault = make_vault(&[(
+            "briefs/p.md",
+            "id: p\ntype: problem-brief\nstatus: accepted",
+            "# Searchable\n\npreservedword",
+        )]);
+        let mut idx = Index::open(vault.path()).unwrap();
+        idx.rebuild().unwrap();
+        idx.conn
+            .execute_batch(
+                "UPDATE meta SET value = '0' WHERE key = 'index_schema_version';
+                 CREATE TRIGGER reject_schema_version BEFORE UPDATE OF value ON meta
+                 WHEN NEW.key = 'index_schema_version'
+                 BEGIN SELECT RAISE(ABORT, 'injected version failure'); END;",
+            )
+            .unwrap();
+
+        let error = idx.apply_sqlite_schema().unwrap_err();
+        assert!(error.to_string().contains("injected version failure"));
+        let version: String = idx
+            .conn
+            .query_row(
+                "SELECT value FROM meta WHERE key = 'index_schema_version'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(version, "0");
+        let found: String = idx
+            .conn
+            .query_row(
+                "SELECT id FROM artifact_fts WHERE artifact_fts MATCH 'preservedword'",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(found, "p");
+        let count: i64 = idx
+            .conn
+            .query_row("SELECT COUNT(*) FROM artifact", [], |row| row.get(0))
+            .unwrap();
+        assert_eq!(count, 2);
+
+        idx.conn
+            .execute_batch("DROP TRIGGER reject_schema_version")
+            .unwrap();
+        idx.apply_sqlite_schema().unwrap();
+        idx.rebuild().unwrap();
+    }
+
+    #[test]
+    fn wal_setup_retries_contention_and_stops_at_deadline() {
+        let vault = make_vault(&[]);
+        let db_path = vault.path().join(INDEX_FILENAME);
+        let blocker = Connection::open(&db_path).unwrap();
+        blocker
+            .execute_batch("CREATE TABLE held (id INTEGER); BEGIN; SELECT * FROM held;")
+            .unwrap();
+        let conn = Connection::open(&db_path).unwrap();
+        let error = enable_wal(&conn, Duration::from_millis(20)).unwrap_err();
+        assert_eq!(error.sqlite_error_code(), Some(ErrorCode::DatabaseBusy));
+
+        // Release the reader while the next WAL setup is waiting.
+        let release = std::thread::spawn(move || {
+            std::thread::sleep(Duration::from_millis(50));
+            blocker.execute_batch("COMMIT").unwrap();
+        });
+        enable_wal(&conn, Duration::from_secs(2)).unwrap();
+        release.join().unwrap();
+        let mode: String = conn
+            .pragma_query_value(None, "journal_mode", |row| row.get(0))
+            .unwrap();
+        assert_eq!(mode, "wal");
     }
 
     #[test]
