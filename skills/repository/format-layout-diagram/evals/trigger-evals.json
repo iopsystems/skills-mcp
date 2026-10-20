@@ -83,11 +83,12 @@
     },
     {
       "name": "theme-inherited colors fail on the host",
-      "prompt": "The figure uses the page's current text color so it adapts to dark mode. It renders fine locally.",
+      "prompt": "The figure uses the page's current text color so it adapts to dark mode. It renders fine locally. The docs host embeds it as an image.",
       "expectations": [
-        "Emit fixed ink and an opaque ground instead",
-        "Explain that a host embedding the figure as an image strips the page context",
-        "Name the failure: dark ink on dark ground for half the readers"
+        "Emit fixed ink and an opaque ground for a figure the host embeds as an image",
+        "Explain that an image embed strips the page context",
+        "Name the failure: dark ink on dark ground for half the readers",
+        "Say the page's tokens would be right only for a figure inlined in that page"
       ]
     },
     {
@@ -237,6 +238,24 @@
         "Report the persistent overlap and newly clipped edge rather than using the lower error count as acceptance",
         "Keep the previous passing artifact intact as a labeled snapshot, not as a passing result for the current source",
         "Do not weaken checks or promote the failed candidate to the accepted output"
+      ]
+    },
+    {
+      "name": "inlined figure uses the page's tokens",
+      "prompt": "The anatomy figure is inlined in an HTML page whose prose, tables and cards use a semantic token palette. Should the SVG use those tokens or fixed hex?",
+      "expectations": [
+        "Use the page's tokens for a figure inlined in that page so the hue means the same thing in figure and prose and the theme switches together",
+        "Reserve fixed ink over an opaque ground for a figure shipped as an image",
+        "Decide from the embedding; generate both from one source if it ships both ways"
+      ]
+    },
+    {
+      "name": "offset arrows beside flow charts get their own style",
+      "prompt": "The byte anatomy sits on the same page as two dataflow charts of the writer, and they share a key. The offset arrows look like the dataflow arrows.",
+      "expectations": [
+        "Name the offset arrow as a claim about a field's value, not bytes moving",
+        "Draw it curved with an open head, a style the flow edges never use",
+        "Add a separate key entry for stored offsets"
       ]
     }
   ]

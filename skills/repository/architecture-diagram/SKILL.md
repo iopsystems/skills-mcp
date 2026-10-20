@@ -378,6 +378,12 @@ band outside its children's visual block. A hierarchy whose parent and child
 labels share one text rhythm reads flat, however legal each string is on its
 own.
 
+**Label fit is measured, not estimated.** Check a label against its box using
+the rendered text's width — the font's metrics, or a measurement from the
+renderer — never a character count times an average glyph. A label one wide
+glyph too long passes the estimate and overflows for the reader, and the
+bounds check, which sees the box and not the text, passes it too.
+
 **A visual fix that is not a test recurs.** Every rule above is a defect a
 reader reported, and every one would have returned at the next layout change
 had the fix been coordinates. Convert the report into a generator assertion —
@@ -415,6 +421,16 @@ freshness: nothing will catch drift, so stamp the chart with the commit it
 was derived from and present it as a dated snapshot. Skip the charter and the
 review gate. A chart worth keeping makes the script the seed of the installed
 generator.
+
+When the program is not in any repository the generator can read — a
+reference page about a third-party system, a dependency's internals —
+derivation itself is unavailable, and the chart rests on a model derived by
+reading. `dataflow-diagram` states what that model owes the reader: a
+transcription that names the source path and symbol behind every element,
+a provenance table rendered beside the charts, and an evidence baseline
+that says what revision was read and that freshness is not enforced. The
+classification tables and geometry checks still run; the caption says the
+chart was derived by reading, not generated from source.
 
 ## Workflow
 
@@ -500,6 +516,9 @@ it.**
 - Variant panels whose spacing differs for reasons other than a real
   difference.
 - A bounds check loosened to admit an overflowing label.
+- Label fit estimated from a character count rather than measured text.
+- A chart of a program outside the repository presented as generated from
+  it, or shipped without a provenance table and an evidence baseline.
 - A label centered by its first baseline rather than by its line group.
 - Arrows attached to one shape at points chosen one at a time.
 - A connector routed to a column coordinate rather than a resolved border.

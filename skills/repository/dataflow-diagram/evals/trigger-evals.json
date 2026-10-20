@@ -231,6 +231,55 @@
         "Keep the previous passing artifact intact as a labeled snapshot, not as a passing result for the current source",
         "Do not weaken checks or promote the failed candidate to the accepted output"
       ]
+    },
+    {
+      "name": "program outside the repository is derived by reading",
+      "prompt": "Add a figure of how OpenJDK's JFR writer moves an event from the thread-local buffer to the chunk file. The JDK source isn't in this repo; I've been reading jfrStorage.cpp on another machine.",
+      "expectations": [
+        "Recognize that derivation is unavailable and name the model as derived by reading",
+        "Give every node and edge the source path and symbol it was read from",
+        "Render a provenance table beside the charts, one row per node",
+        "State an evidence baseline: the revision read, pinned or not, and that freshness is not enforced",
+        "Keep fail-loud classification and geometry checks; caption the chart as derived by reading, not generated"
+      ]
+    },
+    {
+      "name": "page-owned palette replaces the control-loop roles",
+      "prompt": "The page these figures sit in already has five semantic colors as CSS tokens: implementation, read-then-write tools, buffers where pressure becomes loss, files as the shared contract, fixed values. The skill's fills are sensing, estimation, decision, control. Which do I use?",
+      "expectations": [
+        "Say the default operation roles are a sensing-and-control pipeline's and do not partition this system",
+        "Replace the operation fills wholesale with the page's families; keep shape for compute-versus-data",
+        "Use the page's tokens for a figure inlined in that page so figure and prose agree and the theme switches together",
+        "Record the override and its reason"
+      ]
+    },
+    {
+      "name": "an inlined figure keeps the page tokens; an image bakes ink",
+      "prompt": "To be safe I'm resolving every CSS token to its hex at generation time so the SVG never depends on the page. It's inlined in the HTML.",
+      "expectations": [
+        "Decide from how the figure is embedded, not from caution",
+        "Keep the page's tokens for an inlined figure; baking breaks dark mode and splits the hue from the prose",
+        "Bake fixed ink over an opaque ground only for a figure shipped as an image",
+        "Generate both from one source when the figure ships both ways"
+      ]
+    },
+    {
+      "name": "an offset arrow must not look like a flow edge",
+      "prompt": "The chunk-anatomy figure's header-offset arrows use the same solid arrow as the dataflow charts on the page. They share a key. Fine?",
+      "expectations": [
+        "Name the offset arrow as a claim about a field's value, not movement",
+        "Draw address arrows in a style the flow edges never use, curved with an open head",
+        "Give them their own key entry so a reader cannot take a pointer for a path"
+      ]
+    },
+    {
+      "name": "many hazards are tagged and tabled, not labeled in place",
+      "prompt": "There are about twenty-five places the writer can drop, reallocate, or block. I was going to write each one on the edge where it happens.",
+      "expectations": [
+        "Put a numbered tag on the node or edge and carry the detail in a table keyed by the same numbers",
+        "Explain that the chart answers where and the table answers what and how badly",
+        "Bounds- and collision-check the tags like any other label"
+      ]
     }
   ]
 }
