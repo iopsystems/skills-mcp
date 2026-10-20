@@ -1,0 +1,1386 @@
+{
+  "interactive-mixed": {
+    "mode": "interactive",
+    "ordered_proposed_actions": [
+      {
+        "action": "select_mode",
+        "mode": "interactive",
+        "pivot": "latency-inquiry",
+        "scope": "Pivot and its four immediate neighbors only."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_edges",
+        "arguments": {
+          "id": "latency-inquiry",
+          "direction": "both"
+        },
+        "supplied_result": {
+          "immediate_neighbors": [
+            "latency-arc",
+            "old-problem",
+            "rollout-arc",
+            "cache-arc"
+          ],
+          "known_edge_group": {
+            "arc": [
+              "latency-arc"
+            ]
+          },
+          "remaining_edge_types": "Not supplied; do not invent labels.",
+          "excluded_two_hop_artifact": "secondary-problem"
+        }
+      },
+      {
+        "action": "read",
+        "artifacts": [
+          "latency-inquiry",
+          "latency-arc",
+          "old-problem",
+          "rollout-arc",
+          "cache-arc"
+        ],
+        "supplied_result": "Retrieval succeeds. latency-arc has explicit completion evidence; old-problem has a warning; rollout-arc has an unresolved inquiry; cache-arc has an unresolved close-versus-abandon decision."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "latency-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "old-problem",
+          "candidate_status": "obsolete"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": [
+            "An accepted design still frames this problem."
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "rollout-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": false,
+          "blockers": [
+            "rollout-inquiry is open"
+          ],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "cache-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "disposition",
+        "apply": [
+          "latency-arc: open → closed"
+        ],
+        "retain_for_review": [
+          "old-problem: warning",
+          "rollout-arc: blocker",
+          "cache-arc: multiple plausible outcomes"
+        ],
+        "reason": "Only latency-arc has clean preflight, sufficient direct evidence, and exactly one justified next state; final eligibility still depends on repository validation."
+      },
+      {
+        "action": "edit_frontmatter",
+        "artifact": "latency-arc",
+        "old_status": "open",
+        "new_status": "closed"
+      },
+      {
+        "action": "validate",
+        "proposed_command": "python validate.py",
+        "supplied_result": "PASS",
+        "limit": "This establishes repository validation only, not CI-only checks."
+      },
+      {
+        "action": "inspect_diff",
+        "expected_diff": "Only latency-arc status changes from open to closed. Verify before committing."
+      },
+      {
+        "action": "commit",
+        "proposed_message": "Reconcile latency arc completion",
+        "scope": "Validated latency-arc frontmatter edit only; no extra confirmation."
+      },
+      {
+        "action": "push",
+        "supplied_result": "Success"
+      },
+      {
+        "action": "update_existing_pr",
+        "pr": 12,
+        "review_package": "PROPOSED TRANSITIONS (3)\n1. old-problem (problem-brief): active → obsolete\n   reason: The owner says the problem is obsolete, but an accepted design still frames it.\n   check: allowed; warning: An accepted design still frames this problem.\n   review reason: warning; decide how to handle the accepted design before revisiting this transition.\n   evidence: old-problem.\n2. rollout-arc (arc): open → closed\n   reason: Closure would require resolving rollout-inquiry.\n   check: blocked by rollout-inquiry is open (no rule identifier supplied).\n   review reason: blocker; resolve the inquiry before reconsidering closure.\n   evidence: rollout-arc, rollout-inquiry.\n3. cache-arc (arc): open → closed\n   reason: Completed inquiries alone do not settle whether to close or abandon the changed objective.\n   check: allowed; no blockers or warnings.\n   review reason: multiple plausible outcomes; choose close or abandon. An alternative status has not been checked or authorized.\n   evidence: cache-arc.\n\nNO ACTION NEEDED\n- latency-inquiry: already resolved; it is the pivot.\n- latency-arc: open → closed is eligible and would be applied in this dry run; all inquiries are resolved and its owner explicitly recorded completion.\n- secondary-problem: outside the immediate neighborhood, with no supplied transition evidence; do not inspect or change it.",
+        "supplied_result": "Success",
+        "landing": "Leave PR #12 on its owner’s schedule; do not open another PR or merge."
+      },
+      {
+        "action": "stop",
+        "reason": "Immediate-neighborhood reconciliation complete; no cascade."
+      }
+    ],
+    "full_dream_note": null,
+    "final_user_facing_notification": "Dry run: I would validate, commit, and push latency-arc’s open → closed change because its owner recorded completion and all inquiries are resolved. I would update existing PR #12 with the review items and leave it unmerged for its owner. Local validation passes in the supplied scenario; that does not establish CI-only checks.\n\nPROPOSED TRANSITIONS (3)\n1. old-problem (problem-brief): active → obsolete\n   reason: The owner says the problem is obsolete, but an accepted design still frames it.\n   check: allowed; warning: An accepted design still frames this problem.\n   review reason: warning; decide how to handle the accepted design before revisiting this transition.\n   evidence: old-problem.\n2. rollout-arc (arc): open → closed\n   reason: Closure would require resolving rollout-inquiry.\n   check: blocked by rollout-inquiry is open (no rule identifier supplied).\n   review reason: blocker; resolve the inquiry before reconsidering closure.\n   evidence: rollout-arc, rollout-inquiry.\n3. cache-arc (arc): open → closed\n   reason: Completed inquiries alone do not settle whether to close or abandon the changed objective.\n   check: allowed; no blockers or warnings.\n   review reason: multiple plausible outcomes; choose close or abandon. An alternative status has not been checked or authorized.\n   evidence: cache-arc.\n\nNO ACTION NEEDED\n- latency-inquiry: already resolved; it is the pivot.\n- latency-arc: open → closed is eligible and would be applied in this dry run; all inquiries are resolved and its owner explicitly recorded completion.\n- secondary-problem: outside the immediate neighborhood, with no supplied transition evidence; do not inspect or change it.\n\nPlease decide the warned old-problem transition, resolve rollout-inquiry before closure, and choose close or abandon for cache-arc. No review is needed for the clean latency-arc edit. No actions were actually executed."
+  },
+  "dream-mixed": {
+    "mode": "dream",
+    "ordered_proposed_actions": [
+      {
+        "action": "select_mode",
+        "mode": "dream",
+        "reason": "Explicit dream request; full-vault reflection and one session-note."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_reflect",
+        "arguments": {
+          "window_days": 30,
+          "min_days_stale_design": 14,
+          "min_days_stale_arc": 60
+        },
+        "supplied_result": {
+          "scopes": [
+            {
+              "id": "performance",
+              "total": 12,
+              "recent": 4,
+              "last_activity": "2026-10-20"
+            },
+            {
+              "id": "legacy",
+              "total": 5,
+              "recent": 0,
+              "last_activity": "2026-07-01"
+            }
+          ],
+          "open_arcs": [
+            {
+              "id": "latency-arc",
+              "total": 5,
+              "recent": 3,
+              "last_activity": "2026-10-20"
+            },
+            {
+              "id": "cache-arc",
+              "total": 4,
+              "recent": 0,
+              "last_activity": "2026-07-01"
+            },
+            {
+              "id": "rollout-arc",
+              "total": 3,
+              "recent": 1,
+              "last_activity": "2026-10-19"
+            }
+          ],
+          "orphan_problems": [
+            "unpaired-problem"
+          ],
+          "stale_designs": [
+            {
+              "id": "paused-design",
+              "days_old": 80
+            }
+          ],
+          "pending_syntheses": [
+            "ready-inquiry"
+          ],
+          "stale_open_arcs": [
+            "cache-arc"
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_search",
+        "arguments": {
+          "intent": "Most recent discussions/session-notes and decisions; at most five titles and first paragraphs in each group."
+        },
+        "supplied_result": {
+          "discussions": [
+            "2026-10-20-latency-complete: latency-arc meets completion; compare rollout, cache retirement, unpaired design; rollout affects current users.",
+            "2026-10-19-cache-options: close or abandon unresolved; paused-design awaits decision.",
+            "2026-10-18-legacy-problem: old-problem no longer current; accepted design remains."
+          ],
+          "decisions": [
+            "2026-10-17-rollout-choice: prefer rollout if inquiry dependency clears; possible relationship with unpaired-problem via shared users."
+          ]
+        },
+        "context_budget": "Full reflection loaded; three discussion excerpts and one decision excerpt. No full artifact bodies needed; do not exceed two."
+      },
+      {
+        "action": "assess_candidates",
+        "supplied_result": "Use the supplied status/evidence records. latency-arc has direct owner completion evidence; cache-arc is ambiguous; old-problem has an accepted framing design; rollout-inquiry remains open. Other gaps do not provide a unique justified next status."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "latency-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "old-problem",
+          "candidate_status": "obsolete"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": [
+            "An accepted design still frames this problem."
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "rollout-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": false,
+          "blockers": [
+            "rollout-inquiry is open"
+          ],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "cache-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "disposition",
+        "apply_candidate": [
+          "latency-arc: open → closed"
+        ],
+        "proposed_transitions": [
+          "old-problem: warning",
+          "rollout-arc: blocker",
+          "cache-arc: multiple plausible outcomes"
+        ],
+        "additional_work_decisions": [
+          "unpaired-problem: design or shelving",
+          "paused-design: confirm pause or resume after cache decision"
+        ],
+        "pending_work": "ready-inquiry needs synthesis; do not resolve it without one.",
+        "part_b": "Recommendations and potential edges remain prose only."
+      },
+      {
+        "action": "edit_frontmatter",
+        "artifact": "latency-arc",
+        "old_status": "open",
+        "new_status": "closed",
+        "branch": "topic/reconcile"
+      },
+      {
+        "action": "draft_note",
+        "path": "discussions/2026-10-20-reconciler-dream.md",
+        "details": "Create the full structured dream note. APPLIED remains provisional until repository validation passes; the final note records only validated edits."
+      },
+      {
+        "action": "validate",
+        "proposed_command": "python validate.py",
+        "supplied_result": "PASS"
+      },
+      {
+        "action": "inspect_diff",
+        "details": "Inspect note and attempted latency-arc edit; check scope and evidence."
+      },
+      {
+        "action": "finalize_note",
+        "details": "Use the full_dream_note supplied below as the resulting validated note."
+      },
+      {
+        "action": "commit",
+        "proposed_message": "Reconciler dream: 2026-10-20",
+        "scope": [
+          "discussions/2026-10-20-reconciler-dream.md",
+          "latency-arc frontmatter"
+        ],
+        "details": "One commit for the note and all validated edits, or note alone after successful rollback and revalidation."
+      },
+      {
+        "action": "push",
+        "supplied_result": "Success"
+      },
+      {
+        "action": "update_existing_pr",
+        "pr": 12,
+        "supplied_result": "Success",
+        "details": "Update the branch’s existing PR; do not create a duplicate. PROPOSED items do not block landing."
+      },
+      {
+        "action": "verify_host_requirements",
+        "details": "Check host-required CI and approval separately from local python validate.py; never claim CI-only checks ran locally.",
+        "supplied_result": "Normal host/PR operations succeed; merge permitted."
+      },
+      {
+        "action": "merge_pr",
+        "pr": 12,
+        "supplied_result": "Success",
+        "details": "Merge validated note and edits despite unresolved review proposals."
+      },
+      {
+        "action": "stop",
+        "reason": "Dream pass complete; no chaining."
+      }
+    ],
+    "full_dream_note": "---\nid: 2026-10-20-reconciler-dream\ntype: session-note\nauthor: reconciler\ncreated: 2026-10-20\n---\n# Reconciler dream — 2026-10-20\n\nWindow: last 30 days. Generated by the reconcile-vault dream pass.\n\n## Needs you\n\n- old-problem: decide how to handle the accepted design that still frames it before retrying obsolete; waiting for the warning to be resolved.\n- rollout-arc: resolve rollout-inquiry before reconsidering closure; waiting for the open inquiry.\n- cache-arc: choose close or abandon after the objective changed; waiting for an owner decision.\n- unpaired-problem: choose a proposed design or explicit shelving with a reason; waiting for a direction decision.\n- paused-design: confirm the pause or resume work after the cache decision; waiting for the cache-arc disposition.\n\nThese judgment calls do not hold the merge; validation and host requirements still gate it. Each item is detailed in PROPOSED below.\n\n## Part A — Graph hygiene\n\n### Activity heatmap\n\n- performance: total 12; recent 4; last activity 2026-10-20. This scope has all reported recent scope activity.\n- legacy: total 5; recent 0; last activity 2026-07-01. Candidate retirement for human consideration; zero recent activity alone does not establish that retirement is warranted.\n\n### Arc momentum\n\nReflection snapshot before edits, ranked by recent volume:\n- latency-arc: total 5; recent 3; last activity 2026-10-20.\n- rollout-arc: total 3; recent 1; last activity 2026-10-19.\n- cache-arc: total 4; recent 0; last activity 2026-07-01.\n\n### Gaps\n\n- **Orphan problem-briefs:** unpaired-problem. Choose a proposed design or explicit obsolete / accepted disposition with a shelving reason; no unique status candidate is supported yet.\n- **Stale design-briefs:** paused-design, 80 days old, beyond the 14-day threshold. Confirm whether its pause remains appropriate; 2026-10-19-cache-options says it awaits the cache decision.\n- **Pending syntheses:** ready-inquiry is ready_for_synthesis without a synthesis. A synthesis needs to be written; there is no supplied evidence supporting resolution now.\n- **Stale open arcs:** cache-arc, no activity since 2026-07-01, beyond the 60-day threshold. Decide close versus abandon; see the checked closure proposal below.\n\n### Transitions\n\n**APPLIED**\n\n- latency-arc (arc): open → closed; all inquiries resolved and owner recorded completion. Evidence: latency-inquiry, latency-arc, 2026-10-20-latency-complete. Preflight allowed, no blockers or warnings; repository validation passed.\n\n**PROPOSED**\n\n- old-problem (problem-brief): active → obsolete. Preflight: allowed, no blockers; warning: “An accepted design still frames this problem.” Reason: warning; decide how to handle the framing design before reconsidering the transition. Evidence: old-problem, 2026-10-18-legacy-problem.\n- rollout-arc (arc): open → closed. Preflight: not allowed; blocker: “rollout-inquiry is open”; no warnings. Reason: blocker; would require resolving rollout-inquiry. Evidence: rollout-arc, rollout-inquiry, 2026-10-17-rollout-choice.\n- cache-arc (arc): open → closed. Preflight: allowed, no blockers or warnings. Reason: more than one plausible next state; choose close or abandon because the objective changed. No alternative status was pre-flighted or applied. Evidence: cache-arc, 2026-10-19-cache-options.\n- unpaired-problem (work decision, no status transition proposed): choose a design or explicit shelving with a reason. Reason: thin evidence and multiple plausible outcomes; orphan status alone does not select a next status. Evidence: Part A orphan row, 2026-10-20-latency-complete. Preflight is not applicable to this decision request; any later status candidate needs its own check.\n- paused-design (work decision, no status transition proposed): confirm pause or resume after the cache decision. Reason: multiple plausible outcomes; 80 days old does not prove abandonment, and the discussion records a dependency. Evidence: Part A stale-design row, 2026-10-19-cache-options. Preflight is not applicable to this decision request; any later status candidate needs its own check.\n\n## Part B — Strategic reflection\n\n### What's hot\n\nPerformance has 4 recent artifacts out of 12 total, while legacy has 0 out of 5. Among the reported arcs, latency-arc has 3 recent artifacts and rollout-arc has 1. Those Part A counts suggest attention is concentrated on performance and the latency finishing work; explicit completion evidence supports that reading (2026-10-20-latency-complete).\n\n### What's cold\n\nLegacy has no recent activity and last changed on 2026-07-01; cache-arc likewise has no recent activity, and paused-design is 80 days old (Part A). That merits a retirement or finishing decision, but not an automatic abandonment: 2026-10-19-cache-options records an unresolved close-versus-abandon choice and explains the design's pause.\n\n### Open questions across discussions\n\n- Should cache-arc close as completed or be abandoned after its objective changed, and can paused-design then resume? The decision is still absent (2026-10-19-cache-options).\n- How should the accepted design framing old-problem be handled now that the problem no longer describes current needs? The remaining graph relationship needs a decision (2026-10-18-legacy-problem).\n- What resolves rollout-inquiry's dependency so the preferred rollout can proceed? The preference is conditional (2026-10-17-rollout-choice).\n- Which comes next: rollout, cache retirement, or a design for unpaired-problem? The discussion names all three but emphasizes rollout's current users (2026-10-20-latency-complete).\n\n### Missing edges\n\n- Candidate for inspection: rollout-arc relates_to unpaired-problem, because their shared users are mentioned in 2026-10-17-rollout-choice. The supplied facts suggest the relationship, but do not establish whether the edge is absent; verify before proposing an edit. No edge is added in this pass.\n\n### Highest-leverage next move\n\n1. Resolve rollout-inquiry's dependency. This addresses current users and unlocks the recorded preferred rollout, but depends on clearing the inquiry rather than bypassing it (2026-10-20-latency-complete; 2026-10-17-rollout-choice).\n2. Decide cache closure versus abandonment. This could release paused-design from its recorded wait and address a stale arc, but its objective still needs an owner judgment (2026-10-19-cache-options; Part A cache and design rows).\n3. Frame a design for unpaired-problem. This addresses an orphan and may clarify the shared users with rollout, but the supplied record does not yet choose a solution (Part A orphan row; 2026-10-17-rollout-choice).\n\nI would prioritize resolving rollout-inquiry's dependency: rollout is the recorded conditional preference and the latency discussion links it to current users (2026-10-17-rollout-choice; 2026-10-20-latency-complete). I would change that pick if investigation shows the dependency cannot be cleared soon, or if the owner identifies the cache decision or unpaired problem as more urgent. Until then, the cache disposition is the clearest second candidate because it also releases paused-design's recorded wait (2026-10-19-cache-options). These are recommendations for a human; no Part B recommendation is applied.\n",
+    "dream_note_status": "Validated and merged in the simulated plan.",
+    "final_user_facing_notification": "Dry run: I would validate, commit, and push the dream note together with latency-arc open → closed, then update and merge PR #12 after host checks pass. The owner’s completion statement and resolved inquiries support that sole applied transition. The unresolved proposals would remain in the merged note for human decisions.\n\nNeeds you\n- old-problem: decide how to handle the accepted design that still frames it before retrying obsolete; waiting for the warning to be resolved.\n- rollout-arc: resolve rollout-inquiry before reconsidering closure; waiting for the open inquiry.\n- cache-arc: choose close or abandon after the objective changed; waiting for an owner decision.\n- unpaired-problem: choose a proposed design or explicit shelving with a reason; waiting for a direction decision.\n- paused-design: confirm the pause or resume work after the cache decision; waiting for the cache-arc disposition.\n\nThe full note would be discussions/2026-10-20-reconciler-dream.md. No actual vault, Git, or host actions were executed."
+  },
+  "dream-rollback": {
+    "mode": "dream",
+    "ordered_proposed_actions": [
+      {
+        "action": "select_mode",
+        "mode": "dream",
+        "reason": "Explicit dream request; full-vault reflection and one session-note."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_reflect",
+        "arguments": {
+          "window_days": 30,
+          "min_days_stale_design": 14,
+          "min_days_stale_arc": 60
+        },
+        "supplied_result": {
+          "scopes": [
+            {
+              "id": "performance",
+              "total": 12,
+              "recent": 4,
+              "last_activity": "2026-10-20"
+            },
+            {
+              "id": "legacy",
+              "total": 5,
+              "recent": 0,
+              "last_activity": "2026-07-01"
+            }
+          ],
+          "open_arcs": [
+            {
+              "id": "latency-arc",
+              "total": 5,
+              "recent": 3,
+              "last_activity": "2026-10-20"
+            },
+            {
+              "id": "cache-arc",
+              "total": 4,
+              "recent": 0,
+              "last_activity": "2026-07-01"
+            },
+            {
+              "id": "rollout-arc",
+              "total": 3,
+              "recent": 1,
+              "last_activity": "2026-10-19"
+            }
+          ],
+          "orphan_problems": [
+            "unpaired-problem"
+          ],
+          "stale_designs": [
+            {
+              "id": "paused-design",
+              "days_old": 80
+            }
+          ],
+          "pending_syntheses": [
+            "ready-inquiry"
+          ],
+          "stale_open_arcs": [
+            "cache-arc"
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_search",
+        "arguments": {
+          "intent": "Most recent discussions/session-notes and decisions; at most five titles and first paragraphs in each group."
+        },
+        "supplied_result": {
+          "discussions": [
+            "2026-10-20-latency-complete: latency-arc meets completion; compare rollout, cache retirement, unpaired design; rollout affects current users.",
+            "2026-10-19-cache-options: close or abandon unresolved; paused-design awaits decision.",
+            "2026-10-18-legacy-problem: old-problem no longer current; accepted design remains."
+          ],
+          "decisions": [
+            "2026-10-17-rollout-choice: prefer rollout if inquiry dependency clears; possible relationship with unpaired-problem via shared users."
+          ]
+        },
+        "context_budget": "Full reflection loaded; three discussion excerpts and one decision excerpt. No full artifact bodies needed; do not exceed two."
+      },
+      {
+        "action": "assess_candidates",
+        "supplied_result": "Use the supplied status/evidence records. latency-arc has direct owner completion evidence; cache-arc is ambiguous; old-problem has an accepted framing design; rollout-inquiry remains open. Other gaps do not provide a unique justified next status."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "latency-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "old-problem",
+          "candidate_status": "obsolete"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": [
+            "An accepted design still frames this problem."
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "rollout-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": false,
+          "blockers": [
+            "rollout-inquiry is open"
+          ],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "cache-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "disposition",
+        "apply_candidate": [
+          "latency-arc: open → closed"
+        ],
+        "proposed_transitions": [
+          "old-problem: warning",
+          "rollout-arc: blocker",
+          "cache-arc: multiple plausible outcomes"
+        ],
+        "additional_work_decisions": [
+          "unpaired-problem: design or shelving",
+          "paused-design: confirm pause or resume after cache decision"
+        ],
+        "pending_work": "ready-inquiry needs synthesis; do not resolve it without one.",
+        "part_b": "Recommendations and potential edges remain prose only."
+      },
+      {
+        "action": "edit_frontmatter",
+        "artifact": "latency-arc",
+        "old_status": "open",
+        "new_status": "closed",
+        "branch": "topic/reconcile"
+      },
+      {
+        "action": "draft_note",
+        "path": "discussions/2026-10-20-reconciler-dream.md",
+        "details": "Create the full structured dream note. APPLIED remains provisional until repository validation passes; the final note records only validated edits."
+      },
+      {
+        "action": "validate",
+        "proposed_command": "python validate.py",
+        "supplied_result": "FAIL: legacy export rejects closed latency-arc"
+      },
+      {
+        "action": "inspect_diff",
+        "details": "Inspect note and attempted latency-arc edit; check scope and evidence."
+      },
+      {
+        "action": "revert_transition_edit",
+        "artifact": "latency-arc",
+        "restore_status": "open",
+        "details": "Revert this run’s status edit only; preserve original working-tree state."
+      },
+      {
+        "action": "revise_note",
+        "details": "Remove latency-arc from APPLIED, put it in PROPOSED with exact legacy export failure, and add it to Needs you. No transition edits remain."
+      },
+      {
+        "action": "validate",
+        "proposed_command": "python validate.py",
+        "supplied_result": "PASS"
+      },
+      {
+        "action": "inspect_diff",
+        "expected_diff": "Only the revised session-note remains; latency-arc retains open status."
+      },
+      {
+        "action": "finalize_note",
+        "details": "Use the full_dream_note supplied below as the resulting validated note."
+      },
+      {
+        "action": "commit",
+        "proposed_message": "Reconciler dream: 2026-10-20",
+        "scope": [
+          "discussions/2026-10-20-reconciler-dream.md"
+        ],
+        "details": "One commit for the note and all validated edits, or note alone after successful rollback and revalidation."
+      },
+      {
+        "action": "push",
+        "supplied_result": "Success"
+      },
+      {
+        "action": "update_existing_pr",
+        "pr": 12,
+        "supplied_result": "Success",
+        "details": "Update the branch’s existing PR; do not create a duplicate. PROPOSED items do not block landing."
+      },
+      {
+        "action": "verify_host_requirements",
+        "details": "Check host-required CI and approval separately from local python validate.py; never claim CI-only checks ran locally.",
+        "supplied_result": "Normal host/PR operations succeed; merge permitted."
+      },
+      {
+        "action": "merge_pr",
+        "pr": 12,
+        "supplied_result": "Success",
+        "details": "Merge validated note and edits despite unresolved review proposals."
+      },
+      {
+        "action": "stop",
+        "reason": "Dream pass complete; no chaining."
+      }
+    ],
+    "full_dream_note": "---\nid: 2026-10-20-reconciler-dream\ntype: session-note\nauthor: reconciler\ncreated: 2026-10-20\n---\n# Reconciler dream — 2026-10-20\n\nWindow: last 30 days. Generated by the reconcile-vault dream pass.\n\n## Needs you\n\n- latency-arc: resolve the legacy export failure before retrying closure; waiting for validation compatibility with the closed status.\n- old-problem: decide how to handle the accepted design that still frames it before retrying obsolete; waiting for the warning to be resolved.\n- rollout-arc: resolve rollout-inquiry before reconsidering closure; waiting for the open inquiry.\n- cache-arc: choose close or abandon after the objective changed; waiting for an owner decision.\n- unpaired-problem: choose a proposed design or explicit shelving with a reason; waiting for a direction decision.\n- paused-design: confirm the pause or resume work after the cache decision; waiting for the cache-arc disposition.\n\nThese judgment calls do not hold the merge; validation and host requirements still gate it. Each item is detailed in PROPOSED below.\n\n## Part A — Graph hygiene\n\n### Activity heatmap\n\n- performance: total 12; recent 4; last activity 2026-10-20. This scope has all reported recent scope activity.\n- legacy: total 5; recent 0; last activity 2026-07-01. Candidate retirement for human consideration; zero recent activity alone does not establish that retirement is warranted.\n\n### Arc momentum\n\nReflection snapshot before edits, ranked by recent volume:\n- latency-arc: total 5; recent 3; last activity 2026-10-20.\n- rollout-arc: total 3; recent 1; last activity 2026-10-19.\n- cache-arc: total 4; recent 0; last activity 2026-07-01.\n\n### Gaps\n\n- **Orphan problem-briefs:** unpaired-problem. Choose a proposed design or explicit obsolete / accepted disposition with a shelving reason; no unique status candidate is supported yet.\n- **Stale design-briefs:** paused-design, 80 days old, beyond the 14-day threshold. Confirm whether its pause remains appropriate; 2026-10-19-cache-options says it awaits the cache decision.\n- **Pending syntheses:** ready-inquiry is ready_for_synthesis without a synthesis. A synthesis needs to be written; there is no supplied evidence supporting resolution now.\n- **Stale open arcs:** cache-arc, no activity since 2026-07-01, beyond the 60-day threshold. Decide close versus abandon; see the checked closure proposal below.\n\n### Transitions\n\n**APPLIED**\n\n- None. The latency-arc edit was reverted after repository validation failed; no transition edits remain.\n\n**PROPOSED**\n\n- latency-arc (arc): open → closed. Preflight: allowed, no blockers or warnings. Reason: failed validation — legacy export rejects closed latency-arc. The edit was reverted; closure needs the export failure resolved. Evidence: latency-arc, latency-inquiry, 2026-10-20-latency-complete.\n- old-problem (problem-brief): active → obsolete. Preflight: allowed, no blockers; warning: “An accepted design still frames this problem.” Reason: warning; decide how to handle the framing design before reconsidering the transition. Evidence: old-problem, 2026-10-18-legacy-problem.\n- rollout-arc (arc): open → closed. Preflight: not allowed; blocker: “rollout-inquiry is open”; no warnings. Reason: blocker; would require resolving rollout-inquiry. Evidence: rollout-arc, rollout-inquiry, 2026-10-17-rollout-choice.\n- cache-arc (arc): open → closed. Preflight: allowed, no blockers or warnings. Reason: more than one plausible next state; choose close or abandon because the objective changed. No alternative status was pre-flighted or applied. Evidence: cache-arc, 2026-10-19-cache-options.\n- unpaired-problem (work decision, no status transition proposed): choose a design or explicit shelving with a reason. Reason: thin evidence and multiple plausible outcomes; orphan status alone does not select a next status. Evidence: Part A orphan row, 2026-10-20-latency-complete. Preflight is not applicable to this decision request; any later status candidate needs its own check.\n- paused-design (work decision, no status transition proposed): confirm pause or resume after the cache decision. Reason: multiple plausible outcomes; 80 days old does not prove abandonment, and the discussion records a dependency. Evidence: Part A stale-design row, 2026-10-19-cache-options. Preflight is not applicable to this decision request; any later status candidate needs its own check.\n\n## Part B — Strategic reflection\n\n### What's hot\n\nPerformance has 4 recent artifacts out of 12 total, while legacy has 0 out of 5. Among the reported arcs, latency-arc has 3 recent artifacts and rollout-arc has 1. Those Part A counts suggest attention is concentrated on performance and the latency finishing work; explicit completion evidence supports that reading (2026-10-20-latency-complete).\n\n### What's cold\n\nLegacy has no recent activity and last changed on 2026-07-01; cache-arc likewise has no recent activity, and paused-design is 80 days old (Part A). That merits a retirement or finishing decision, but not an automatic abandonment: 2026-10-19-cache-options records an unresolved close-versus-abandon choice and explains the design's pause.\n\n### Open questions across discussions\n\n- Should cache-arc close as completed or be abandoned after its objective changed, and can paused-design then resume? The decision is still absent (2026-10-19-cache-options).\n- How should the accepted design framing old-problem be handled now that the problem no longer describes current needs? The remaining graph relationship needs a decision (2026-10-18-legacy-problem).\n- What resolves rollout-inquiry's dependency so the preferred rollout can proceed? The preference is conditional (2026-10-17-rollout-choice).\n- Which comes next: rollout, cache retirement, or a design for unpaired-problem? The discussion names all three but emphasizes rollout's current users (2026-10-20-latency-complete).\n\n### Missing edges\n\n- Candidate for inspection: rollout-arc relates_to unpaired-problem, because their shared users are mentioned in 2026-10-17-rollout-choice. The supplied facts suggest the relationship, but do not establish whether the edge is absent; verify before proposing an edit. No edge is added in this pass.\n\n### Highest-leverage next move\n\n1. Resolve rollout-inquiry's dependency. This addresses current users and unlocks the recorded preferred rollout, but depends on clearing the inquiry rather than bypassing it (2026-10-20-latency-complete; 2026-10-17-rollout-choice).\n2. Decide cache closure versus abandonment. This could release paused-design from its recorded wait and address a stale arc, but its objective still needs an owner judgment (2026-10-19-cache-options; Part A cache and design rows).\n3. Frame a design for unpaired-problem. This addresses an orphan and may clarify the shared users with rollout, but the supplied record does not yet choose a solution (Part A orphan row; 2026-10-17-rollout-choice).\n\nI would prioritize resolving rollout-inquiry's dependency: rollout is the recorded conditional preference and the latency discussion links it to current users (2026-10-17-rollout-choice; 2026-10-20-latency-complete). I would change that pick if investigation shows the dependency cannot be cleared soon, or if the owner identifies the cache decision or unpaired problem as more urgent. Until then, the cache disposition is the clearest second candidate because it also releases paused-design's recorded wait (2026-10-19-cache-options). These are recommendations for a human; no Part B recommendation is applied.\n",
+    "dream_note_status": "Validated and merged in the simulated plan.",
+    "final_user_facing_notification": "Dry run: legacy export validation would reject closed latency-arc, so I would revert that transition and record it as PROPOSED. The revised note-only state passes validation; I would commit and push the note alone, update PR #12, and merge it after host checks pass. latency-arc would remain open.\n\nNeeds you\n- latency-arc: resolve the legacy export failure before retrying closure; waiting for validation compatibility with the closed status.\n- old-problem: decide how to handle the accepted design that still frames it before retrying obsolete; waiting for the warning to be resolved.\n- rollout-arc: resolve rollout-inquiry before reconsidering closure; waiting for the open inquiry.\n- cache-arc: choose close or abandon after the objective changed; waiting for an owner decision.\n- unpaired-problem: choose a proposed design or explicit shelving with a reason; waiting for a direction decision.\n- paused-design: confirm the pause or resume work after the cache decision; waiting for the cache-arc disposition.\n\nThe full note would be discussions/2026-10-20-reconciler-dream.md. No actual vault, Git, or host actions were executed."
+  },
+  "dream-note-invalid": {
+    "mode": "dream",
+    "ordered_proposed_actions": [
+      {
+        "action": "select_mode",
+        "mode": "dream",
+        "reason": "Explicit dream request; full-vault reflection and one session-note."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_reflect",
+        "arguments": {
+          "window_days": 30,
+          "min_days_stale_design": 14,
+          "min_days_stale_arc": 60
+        },
+        "supplied_result": {
+          "scopes": [
+            {
+              "id": "performance",
+              "total": 12,
+              "recent": 4,
+              "last_activity": "2026-10-20"
+            },
+            {
+              "id": "legacy",
+              "total": 5,
+              "recent": 0,
+              "last_activity": "2026-07-01"
+            }
+          ],
+          "open_arcs": [
+            {
+              "id": "latency-arc",
+              "total": 5,
+              "recent": 3,
+              "last_activity": "2026-10-20"
+            },
+            {
+              "id": "cache-arc",
+              "total": 4,
+              "recent": 0,
+              "last_activity": "2026-07-01"
+            },
+            {
+              "id": "rollout-arc",
+              "total": 3,
+              "recent": 1,
+              "last_activity": "2026-10-19"
+            }
+          ],
+          "orphan_problems": [
+            "unpaired-problem"
+          ],
+          "stale_designs": [
+            {
+              "id": "paused-design",
+              "days_old": 80
+            }
+          ],
+          "pending_syntheses": [
+            "ready-inquiry"
+          ],
+          "stale_open_arcs": [
+            "cache-arc"
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_search",
+        "arguments": {
+          "intent": "Most recent discussions/session-notes and decisions; at most five titles and first paragraphs in each group."
+        },
+        "supplied_result": {
+          "discussions": [
+            "2026-10-20-latency-complete: latency-arc meets completion; compare rollout, cache retirement, unpaired design; rollout affects current users.",
+            "2026-10-19-cache-options: close or abandon unresolved; paused-design awaits decision.",
+            "2026-10-18-legacy-problem: old-problem no longer current; accepted design remains."
+          ],
+          "decisions": [
+            "2026-10-17-rollout-choice: prefer rollout if inquiry dependency clears; possible relationship with unpaired-problem via shared users."
+          ]
+        },
+        "context_budget": "Full reflection loaded; three discussion excerpts and one decision excerpt. No full artifact bodies needed; do not exceed two."
+      },
+      {
+        "action": "assess_candidates",
+        "supplied_result": "Use the supplied status/evidence records. latency-arc has direct owner completion evidence; cache-arc is ambiguous; old-problem has an accepted framing design; rollout-inquiry remains open. Other gaps do not provide a unique justified next status."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "latency-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "old-problem",
+          "candidate_status": "obsolete"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": [
+            "An accepted design still frames this problem."
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "rollout-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": false,
+          "blockers": [
+            "rollout-inquiry is open"
+          ],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "cache-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "disposition",
+        "apply_candidate": [
+          "latency-arc: open → closed"
+        ],
+        "proposed_transitions": [
+          "old-problem: warning",
+          "rollout-arc: blocker",
+          "cache-arc: multiple plausible outcomes"
+        ],
+        "additional_work_decisions": [
+          "unpaired-problem: design or shelving",
+          "paused-design: confirm pause or resume after cache decision"
+        ],
+        "pending_work": "ready-inquiry needs synthesis; do not resolve it without one.",
+        "part_b": "Recommendations and potential edges remain prose only."
+      },
+      {
+        "action": "edit_frontmatter",
+        "artifact": "latency-arc",
+        "old_status": "open",
+        "new_status": "closed",
+        "branch": "topic/reconcile"
+      },
+      {
+        "action": "draft_note",
+        "path": "discussions/2026-10-20-reconciler-dream.md",
+        "details": "Create the full structured dream note. APPLIED remains provisional until repository validation passes; the final note records only validated edits."
+      },
+      {
+        "action": "validate",
+        "proposed_command": "python validate.py",
+        "supplied_result": "FAIL: legacy export rejects closed latency-arc"
+      },
+      {
+        "action": "inspect_diff",
+        "details": "Inspect note and attempted latency-arc edit; check scope and evidence."
+      },
+      {
+        "action": "revert_transition_edit",
+        "artifact": "latency-arc",
+        "restore_status": "open",
+        "details": "Revert this run’s status edit only; preserve original working-tree state."
+      },
+      {
+        "action": "revise_note",
+        "details": "Remove latency-arc from APPLIED, put it in PROPOSED with exact legacy export failure, and add it to Needs you. No transition edits remain."
+      },
+      {
+        "action": "validate",
+        "proposed_command": "python validate.py",
+        "supplied_result": "FAIL: note index validator unavailable; cannot establish valid final state"
+      },
+      {
+        "action": "inspect_diff",
+        "expected_diff": "Only the revised session-note remains; latency-arc retains open status."
+      },
+      {
+        "action": "stop_without_commit",
+        "reason": "The resulting note-only state is unvalidated. Do not commit, push, update PR #12 with changes, or merge. Leave the local note draft for review and report both validation failures."
+      }
+    ],
+    "full_dream_note": "---\nid: 2026-10-20-reconciler-dream\ntype: session-note\nauthor: reconciler\ncreated: 2026-10-20\n---\n# Reconciler dream — 2026-10-20\n\nWindow: last 30 days. Generated by the reconcile-vault dream pass.\n\n## Needs you\n\n- latency-arc: resolve the legacy export failure before retrying closure; waiting for validation compatibility with the closed status.\n- old-problem: decide how to handle the accepted design that still frames it before retrying obsolete; waiting for the warning to be resolved.\n- rollout-arc: resolve rollout-inquiry before reconsidering closure; waiting for the open inquiry.\n- cache-arc: choose close or abandon after the objective changed; waiting for an owner decision.\n- unpaired-problem: choose a proposed design or explicit shelving with a reason; waiting for a direction decision.\n- paused-design: confirm the pause or resume work after the cache decision; waiting for the cache-arc disposition.\n\nThese judgment calls do not hold the merge; validation and host requirements still gate it. Each item is detailed in PROPOSED below.\n\n## Part A — Graph hygiene\n\n### Activity heatmap\n\n- performance: total 12; recent 4; last activity 2026-10-20. This scope has all reported recent scope activity.\n- legacy: total 5; recent 0; last activity 2026-07-01. Candidate retirement for human consideration; zero recent activity alone does not establish that retirement is warranted.\n\n### Arc momentum\n\nReflection snapshot before edits, ranked by recent volume:\n- latency-arc: total 5; recent 3; last activity 2026-10-20.\n- rollout-arc: total 3; recent 1; last activity 2026-10-19.\n- cache-arc: total 4; recent 0; last activity 2026-07-01.\n\n### Gaps\n\n- **Orphan problem-briefs:** unpaired-problem. Choose a proposed design or explicit obsolete / accepted disposition with a shelving reason; no unique status candidate is supported yet.\n- **Stale design-briefs:** paused-design, 80 days old, beyond the 14-day threshold. Confirm whether its pause remains appropriate; 2026-10-19-cache-options says it awaits the cache decision.\n- **Pending syntheses:** ready-inquiry is ready_for_synthesis without a synthesis. A synthesis needs to be written; there is no supplied evidence supporting resolution now.\n- **Stale open arcs:** cache-arc, no activity since 2026-07-01, beyond the 60-day threshold. Decide close versus abandon; see the checked closure proposal below.\n\n### Transitions\n\n**APPLIED**\n\n- None. The latency-arc edit was reverted after repository validation failed; no transition edits remain.\n\n**PROPOSED**\n\n- latency-arc (arc): open → closed. Preflight: allowed, no blockers or warnings. Reason: failed validation — legacy export rejects closed latency-arc. The edit was reverted; closure needs the export failure resolved. Evidence: latency-arc, latency-inquiry, 2026-10-20-latency-complete.\n- old-problem (problem-brief): active → obsolete. Preflight: allowed, no blockers; warning: “An accepted design still frames this problem.” Reason: warning; decide how to handle the framing design before reconsidering the transition. Evidence: old-problem, 2026-10-18-legacy-problem.\n- rollout-arc (arc): open → closed. Preflight: not allowed; blocker: “rollout-inquiry is open”; no warnings. Reason: blocker; would require resolving rollout-inquiry. Evidence: rollout-arc, rollout-inquiry, 2026-10-17-rollout-choice.\n- cache-arc (arc): open → closed. Preflight: allowed, no blockers or warnings. Reason: more than one plausible next state; choose close or abandon because the objective changed. No alternative status was pre-flighted or applied. Evidence: cache-arc, 2026-10-19-cache-options.\n- unpaired-problem (work decision, no status transition proposed): choose a design or explicit shelving with a reason. Reason: thin evidence and multiple plausible outcomes; orphan status alone does not select a next status. Evidence: Part A orphan row, 2026-10-20-latency-complete. Preflight is not applicable to this decision request; any later status candidate needs its own check.\n- paused-design (work decision, no status transition proposed): confirm pause or resume after the cache decision. Reason: multiple plausible outcomes; 80 days old does not prove abandonment, and the discussion records a dependency. Evidence: Part A stale-design row, 2026-10-19-cache-options. Preflight is not applicable to this decision request; any later status candidate needs its own check.\n\n## Part B — Strategic reflection\n\n### What's hot\n\nPerformance has 4 recent artifacts out of 12 total, while legacy has 0 out of 5. Among the reported arcs, latency-arc has 3 recent artifacts and rollout-arc has 1. Those Part A counts suggest attention is concentrated on performance and the latency finishing work; explicit completion evidence supports that reading (2026-10-20-latency-complete).\n\n### What's cold\n\nLegacy has no recent activity and last changed on 2026-07-01; cache-arc likewise has no recent activity, and paused-design is 80 days old (Part A). That merits a retirement or finishing decision, but not an automatic abandonment: 2026-10-19-cache-options records an unresolved close-versus-abandon choice and explains the design's pause.\n\n### Open questions across discussions\n\n- Should cache-arc close as completed or be abandoned after its objective changed, and can paused-design then resume? The decision is still absent (2026-10-19-cache-options).\n- How should the accepted design framing old-problem be handled now that the problem no longer describes current needs? The remaining graph relationship needs a decision (2026-10-18-legacy-problem).\n- What resolves rollout-inquiry's dependency so the preferred rollout can proceed? The preference is conditional (2026-10-17-rollout-choice).\n- Which comes next: rollout, cache retirement, or a design for unpaired-problem? The discussion names all three but emphasizes rollout's current users (2026-10-20-latency-complete).\n\n### Missing edges\n\n- Candidate for inspection: rollout-arc relates_to unpaired-problem, because their shared users are mentioned in 2026-10-17-rollout-choice. The supplied facts suggest the relationship, but do not establish whether the edge is absent; verify before proposing an edit. No edge is added in this pass.\n\n### Highest-leverage next move\n\n1. Resolve rollout-inquiry's dependency. This addresses current users and unlocks the recorded preferred rollout, but depends on clearing the inquiry rather than bypassing it (2026-10-20-latency-complete; 2026-10-17-rollout-choice).\n2. Decide cache closure versus abandonment. This could release paused-design from its recorded wait and address a stale arc, but its objective still needs an owner judgment (2026-10-19-cache-options; Part A cache and design rows).\n3. Frame a design for unpaired-problem. This addresses an orphan and may clarify the shared users with rollout, but the supplied record does not yet choose a solution (Part A orphan row; 2026-10-17-rollout-choice).\n\nI would prioritize resolving rollout-inquiry's dependency: rollout is the recorded conditional preference and the latency discussion links it to current users (2026-10-17-rollout-choice; 2026-10-20-latency-complete). I would change that pick if investigation shows the dependency cannot be cleared soon, or if the owner identifies the cache decision or unpaired problem as more urgent. Until then, the cache disposition is the clearest second candidate because it also releases paused-design's recorded wait (2026-10-19-cache-options). These are recommendations for a human; no Part B recommendation is applied.\n",
+    "dream_note_status": "Unvalidated local draft; not committed or merged.",
+    "final_user_facing_notification": "Dry run: the latency-arc edit would fail validation because the legacy export rejects closed latency-arc. I would revert that edit and revise the note, but note-only validation also fails: note index validator unavailable; cannot establish valid final state. I would stop with the note as an uncommitted local draft. Nothing would be committed, pushed, or merged; latency-arc would remain open. Validation needs to be restored before retrying.\n\nNeeds you\n- latency-arc: resolve the legacy export failure before retrying closure; waiting for validation compatibility with the closed status.\n- old-problem: decide how to handle the accepted design that still frames it before retrying obsolete; waiting for the warning to be resolved.\n- rollout-arc: resolve rollout-inquiry before reconsidering closure; waiting for the open inquiry.\n- cache-arc: choose close or abandon after the objective changed; waiting for an owner decision.\n- unpaired-problem: choose a proposed design or explicit shelving with a reason; waiting for a direction decision.\n- paused-design: confirm the pause or resume work after the cache decision; waiting for the cache-arc disposition.\n\nThe full note would be discussions/2026-10-20-reconciler-dream.md. No actual vault, Git, or host actions were executed."
+  },
+  "dream-host-refusal": {
+    "mode": "dream",
+    "ordered_proposed_actions": [
+      {
+        "action": "select_mode",
+        "mode": "dream",
+        "reason": "Explicit dream request; full-vault reflection and one session-note."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_reflect",
+        "arguments": {
+          "window_days": 30,
+          "min_days_stale_design": 14,
+          "min_days_stale_arc": 60
+        },
+        "supplied_result": {
+          "scopes": [
+            {
+              "id": "performance",
+              "total": 12,
+              "recent": 4,
+              "last_activity": "2026-10-20"
+            },
+            {
+              "id": "legacy",
+              "total": 5,
+              "recent": 0,
+              "last_activity": "2026-07-01"
+            }
+          ],
+          "open_arcs": [
+            {
+              "id": "latency-arc",
+              "total": 5,
+              "recent": 3,
+              "last_activity": "2026-10-20"
+            },
+            {
+              "id": "cache-arc",
+              "total": 4,
+              "recent": 0,
+              "last_activity": "2026-07-01"
+            },
+            {
+              "id": "rollout-arc",
+              "total": 3,
+              "recent": 1,
+              "last_activity": "2026-10-19"
+            }
+          ],
+          "orphan_problems": [
+            "unpaired-problem"
+          ],
+          "stale_designs": [
+            {
+              "id": "paused-design",
+              "days_old": 80
+            }
+          ],
+          "pending_syntheses": [
+            "ready-inquiry"
+          ],
+          "stale_open_arcs": [
+            "cache-arc"
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_search",
+        "arguments": {
+          "intent": "Most recent discussions/session-notes and decisions; at most five titles and first paragraphs in each group."
+        },
+        "supplied_result": {
+          "discussions": [
+            "2026-10-20-latency-complete: latency-arc meets completion; compare rollout, cache retirement, unpaired design; rollout affects current users.",
+            "2026-10-19-cache-options: close or abandon unresolved; paused-design awaits decision.",
+            "2026-10-18-legacy-problem: old-problem no longer current; accepted design remains."
+          ],
+          "decisions": [
+            "2026-10-17-rollout-choice: prefer rollout if inquiry dependency clears; possible relationship with unpaired-problem via shared users."
+          ]
+        },
+        "context_budget": "Full reflection loaded; three discussion excerpts and one decision excerpt. No full artifact bodies needed; do not exceed two."
+      },
+      {
+        "action": "assess_candidates",
+        "supplied_result": "Use the supplied status/evidence records. latency-arc has direct owner completion evidence; cache-arc is ambiguous; old-problem has an accepted framing design; rollout-inquiry remains open. Other gaps do not provide a unique justified next status."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "latency-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "old-problem",
+          "candidate_status": "obsolete"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": [
+            "An accepted design still frames this problem."
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "rollout-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": false,
+          "blockers": [
+            "rollout-inquiry is open"
+          ],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "cache-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "disposition",
+        "apply_candidate": [
+          "latency-arc: open → closed"
+        ],
+        "proposed_transitions": [
+          "old-problem: warning",
+          "rollout-arc: blocker",
+          "cache-arc: multiple plausible outcomes"
+        ],
+        "additional_work_decisions": [
+          "unpaired-problem: design or shelving",
+          "paused-design: confirm pause or resume after cache decision"
+        ],
+        "pending_work": "ready-inquiry needs synthesis; do not resolve it without one.",
+        "part_b": "Recommendations and potential edges remain prose only."
+      },
+      {
+        "action": "edit_frontmatter",
+        "artifact": "latency-arc",
+        "old_status": "open",
+        "new_status": "closed",
+        "branch": "topic/reconcile"
+      },
+      {
+        "action": "draft_note",
+        "path": "discussions/2026-10-20-reconciler-dream.md",
+        "details": "Create the full structured dream note. APPLIED remains provisional until repository validation passes; the final note records only validated edits."
+      },
+      {
+        "action": "validate",
+        "proposed_command": "python validate.py",
+        "supplied_result": "PASS"
+      },
+      {
+        "action": "inspect_diff",
+        "details": "Inspect note and attempted latency-arc edit; check scope and evidence."
+      },
+      {
+        "action": "finalize_note",
+        "details": "Use the full_dream_note supplied below as the resulting validated note."
+      },
+      {
+        "action": "commit",
+        "proposed_message": "Reconciler dream: 2026-10-20",
+        "scope": [
+          "discussions/2026-10-20-reconciler-dream.md",
+          "latency-arc frontmatter"
+        ],
+        "details": "One commit for the note and all validated edits, or note alone after successful rollback and revalidation."
+      },
+      {
+        "action": "push",
+        "supplied_result": "Success"
+      },
+      {
+        "action": "update_existing_pr",
+        "pr": 12,
+        "supplied_result": "Success",
+        "details": "Update the branch’s existing PR; do not create a duplicate. PROPOSED items do not block landing."
+      },
+      {
+        "action": "verify_host_requirements",
+        "details": "Check host-required CI and approval separately from local python validate.py; never claim CI-only checks ran locally.",
+        "supplied_result": "Required independent approval is missing."
+      },
+      {
+        "action": "merge_pr",
+        "pr": 12,
+        "supplied_result": "REFUSED: required independent approval is missing",
+        "details": "Honor host refusal and leave PR open; no force-merge, bypass, or repeated workaround."
+      },
+      {
+        "action": "stop",
+        "reason": "Report host refusal and leave PR #12 open."
+      }
+    ],
+    "full_dream_note": "---\nid: 2026-10-20-reconciler-dream\ntype: session-note\nauthor: reconciler\ncreated: 2026-10-20\n---\n# Reconciler dream — 2026-10-20\n\nWindow: last 30 days. Generated by the reconcile-vault dream pass.\n\n## Needs you\n\n- old-problem: decide how to handle the accepted design that still frames it before retrying obsolete; waiting for the warning to be resolved.\n- rollout-arc: resolve rollout-inquiry before reconsidering closure; waiting for the open inquiry.\n- cache-arc: choose close or abandon after the objective changed; waiting for an owner decision.\n- unpaired-problem: choose a proposed design or explicit shelving with a reason; waiting for a direction decision.\n- paused-design: confirm the pause or resume work after the cache decision; waiting for the cache-arc disposition.\n\nThese judgment calls do not hold the merge; validation and host requirements still gate it. Each item is detailed in PROPOSED below.\n\n## Part A — Graph hygiene\n\n### Activity heatmap\n\n- performance: total 12; recent 4; last activity 2026-10-20. This scope has all reported recent scope activity.\n- legacy: total 5; recent 0; last activity 2026-07-01. Candidate retirement for human consideration; zero recent activity alone does not establish that retirement is warranted.\n\n### Arc momentum\n\nReflection snapshot before edits, ranked by recent volume:\n- latency-arc: total 5; recent 3; last activity 2026-10-20.\n- rollout-arc: total 3; recent 1; last activity 2026-10-19.\n- cache-arc: total 4; recent 0; last activity 2026-07-01.\n\n### Gaps\n\n- **Orphan problem-briefs:** unpaired-problem. Choose a proposed design or explicit obsolete / accepted disposition with a shelving reason; no unique status candidate is supported yet.\n- **Stale design-briefs:** paused-design, 80 days old, beyond the 14-day threshold. Confirm whether its pause remains appropriate; 2026-10-19-cache-options says it awaits the cache decision.\n- **Pending syntheses:** ready-inquiry is ready_for_synthesis without a synthesis. A synthesis needs to be written; there is no supplied evidence supporting resolution now.\n- **Stale open arcs:** cache-arc, no activity since 2026-07-01, beyond the 60-day threshold. Decide close versus abandon; see the checked closure proposal below.\n\n### Transitions\n\n**APPLIED**\n\n- latency-arc (arc): open → closed; all inquiries resolved and owner recorded completion. Evidence: latency-inquiry, latency-arc, 2026-10-20-latency-complete. Preflight allowed, no blockers or warnings; repository validation passed.\n\n**PROPOSED**\n\n- old-problem (problem-brief): active → obsolete. Preflight: allowed, no blockers; warning: “An accepted design still frames this problem.” Reason: warning; decide how to handle the framing design before reconsidering the transition. Evidence: old-problem, 2026-10-18-legacy-problem.\n- rollout-arc (arc): open → closed. Preflight: not allowed; blocker: “rollout-inquiry is open”; no warnings. Reason: blocker; would require resolving rollout-inquiry. Evidence: rollout-arc, rollout-inquiry, 2026-10-17-rollout-choice.\n- cache-arc (arc): open → closed. Preflight: allowed, no blockers or warnings. Reason: more than one plausible next state; choose close or abandon because the objective changed. No alternative status was pre-flighted or applied. Evidence: cache-arc, 2026-10-19-cache-options.\n- unpaired-problem (work decision, no status transition proposed): choose a design or explicit shelving with a reason. Reason: thin evidence and multiple plausible outcomes; orphan status alone does not select a next status. Evidence: Part A orphan row, 2026-10-20-latency-complete. Preflight is not applicable to this decision request; any later status candidate needs its own check.\n- paused-design (work decision, no status transition proposed): confirm pause or resume after the cache decision. Reason: multiple plausible outcomes; 80 days old does not prove abandonment, and the discussion records a dependency. Evidence: Part A stale-design row, 2026-10-19-cache-options. Preflight is not applicable to this decision request; any later status candidate needs its own check.\n\n## Part B — Strategic reflection\n\n### What's hot\n\nPerformance has 4 recent artifacts out of 12 total, while legacy has 0 out of 5. Among the reported arcs, latency-arc has 3 recent artifacts and rollout-arc has 1. Those Part A counts suggest attention is concentrated on performance and the latency finishing work; explicit completion evidence supports that reading (2026-10-20-latency-complete).\n\n### What's cold\n\nLegacy has no recent activity and last changed on 2026-07-01; cache-arc likewise has no recent activity, and paused-design is 80 days old (Part A). That merits a retirement or finishing decision, but not an automatic abandonment: 2026-10-19-cache-options records an unresolved close-versus-abandon choice and explains the design's pause.\n\n### Open questions across discussions\n\n- Should cache-arc close as completed or be abandoned after its objective changed, and can paused-design then resume? The decision is still absent (2026-10-19-cache-options).\n- How should the accepted design framing old-problem be handled now that the problem no longer describes current needs? The remaining graph relationship needs a decision (2026-10-18-legacy-problem).\n- What resolves rollout-inquiry's dependency so the preferred rollout can proceed? The preference is conditional (2026-10-17-rollout-choice).\n- Which comes next: rollout, cache retirement, or a design for unpaired-problem? The discussion names all three but emphasizes rollout's current users (2026-10-20-latency-complete).\n\n### Missing edges\n\n- Candidate for inspection: rollout-arc relates_to unpaired-problem, because their shared users are mentioned in 2026-10-17-rollout-choice. The supplied facts suggest the relationship, but do not establish whether the edge is absent; verify before proposing an edit. No edge is added in this pass.\n\n### Highest-leverage next move\n\n1. Resolve rollout-inquiry's dependency. This addresses current users and unlocks the recorded preferred rollout, but depends on clearing the inquiry rather than bypassing it (2026-10-20-latency-complete; 2026-10-17-rollout-choice).\n2. Decide cache closure versus abandonment. This could release paused-design from its recorded wait and address a stale arc, but its objective still needs an owner judgment (2026-10-19-cache-options; Part A cache and design rows).\n3. Frame a design for unpaired-problem. This addresses an orphan and may clarify the shared users with rollout, but the supplied record does not yet choose a solution (Part A orphan row; 2026-10-17-rollout-choice).\n\nI would prioritize resolving rollout-inquiry's dependency: rollout is the recorded conditional preference and the latency discussion links it to current users (2026-10-17-rollout-choice; 2026-10-20-latency-complete). I would change that pick if investigation shows the dependency cannot be cleared soon, or if the owner identifies the cache decision or unpaired problem as more urgent. Until then, the cache disposition is the clearest second candidate because it also releases paused-design's recorded wait (2026-10-19-cache-options). These are recommendations for a human; no Part B recommendation is applied.\n",
+    "dream_note_status": "Validated and committed in the simulated plan; merge refused.",
+    "final_user_facing_notification": "Dry run: I would commit and push the validated dream note and latency-arc open → closed edit, then update PR #12. The host would refuse the merge because required independent approval is missing. PR #12 would stay open awaiting that approval; no bypass or force-merge. The unresolved proposals are separate from this host requirement.\n\nNeeds you\n- old-problem: decide how to handle the accepted design that still frames it before retrying obsolete; waiting for the warning to be resolved.\n- rollout-arc: resolve rollout-inquiry before reconsidering closure; waiting for the open inquiry.\n- cache-arc: choose close or abandon after the objective changed; waiting for an owner decision.\n- unpaired-problem: choose a proposed design or explicit shelving with a reason; waiting for a direction decision.\n- paused-design: confirm the pause or resume work after the cache decision; waiting for the cache-arc disposition.\n\nThe full note would be discussions/2026-10-20-reconciler-dream.md. No actual vault, Git, or host actions were executed."
+  },
+  "interactive-main": {
+    "mode": "interactive",
+    "ordered_proposed_actions": [
+      {
+        "action": "select_mode",
+        "mode": "interactive",
+        "pivot": "latency-inquiry",
+        "scope": "Pivot and its four immediate neighbors only."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_edges",
+        "arguments": {
+          "id": "latency-inquiry",
+          "direction": "both"
+        },
+        "supplied_result": {
+          "immediate_neighbors": [
+            "latency-arc",
+            "old-problem",
+            "rollout-arc",
+            "cache-arc"
+          ],
+          "known_edge_group": {
+            "arc": [
+              "latency-arc"
+            ]
+          },
+          "remaining_edge_types": "Not supplied; do not invent labels.",
+          "excluded_two_hop_artifact": "secondary-problem"
+        }
+      },
+      {
+        "action": "read",
+        "artifacts": [
+          "latency-inquiry",
+          "latency-arc",
+          "old-problem",
+          "rollout-arc",
+          "cache-arc"
+        ],
+        "supplied_result": "Retrieval succeeds. latency-arc has explicit completion evidence; old-problem has a warning; rollout-arc has an unresolved inquiry; cache-arc has an unresolved close-versus-abandon decision."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "latency-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "old-problem",
+          "candidate_status": "obsolete"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": [
+            "An accepted design still frames this problem."
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "rollout-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": false,
+          "blockers": [
+            "rollout-inquiry is open"
+          ],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "cache-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "disposition",
+        "apply": [
+          "latency-arc: open → closed"
+        ],
+        "retain_for_review": [
+          "old-problem: warning",
+          "rollout-arc: blocker",
+          "cache-arc: multiple plausible outcomes"
+        ],
+        "reason": "Only latency-arc has clean preflight, sufficient direct evidence, and exactly one justified next state; final eligibility still depends on repository validation."
+      },
+      {
+        "action": "branch_before_edit",
+        "proposed_command": "git switch -c reconcile/latency-2026-10-20",
+        "notification": "I would create a branch before editing because the checkout is on main."
+      },
+      {
+        "action": "edit_frontmatter",
+        "artifact": "latency-arc",
+        "old_status": "open",
+        "new_status": "closed"
+      },
+      {
+        "action": "validate",
+        "proposed_command": "python validate.py",
+        "supplied_result": "PASS",
+        "limit": "This establishes repository validation only, not CI-only checks."
+      },
+      {
+        "action": "inspect_diff",
+        "expected_diff": "Only latency-arc status changes from open to closed. Verify before committing."
+      },
+      {
+        "action": "commit",
+        "proposed_message": "Reconcile latency arc completion",
+        "scope": "Validated latency-arc frontmatter edit only; no extra confirmation."
+      },
+      {
+        "action": "push",
+        "supplied_result": "Success"
+      },
+      {
+        "action": "report_in_session",
+        "review_package": "PROPOSED TRANSITIONS (3)\n1. old-problem (problem-brief): active → obsolete\n   reason: The owner says the problem is obsolete, but an accepted design still frames it.\n   check: allowed; warning: An accepted design still frames this problem.\n   review reason: warning; decide how to handle the accepted design before revisiting this transition.\n   evidence: old-problem.\n2. rollout-arc (arc): open → closed\n   reason: Closure would require resolving rollout-inquiry.\n   check: blocked by rollout-inquiry is open (no rule identifier supplied).\n   review reason: blocker; resolve the inquiry before reconsidering closure.\n   evidence: rollout-arc, rollout-inquiry.\n3. cache-arc (arc): open → closed\n   reason: Completed inquiries alone do not settle whether to close or abandon the changed objective.\n   check: allowed; no blockers or warnings.\n   review reason: multiple plausible outcomes; choose close or abandon. An alternative status has not been checked or authorized.\n   evidence: cache-arc.\n\nNO ACTION NEEDED\n- latency-inquiry: already resolved; it is the pivot.\n- latency-arc: open → closed is eligible and would be applied in this dry run; all inquiries are resolved and its owner explicitly recorded completion.\n- secondary-problem: outside the immediate neighborhood, with no supplied transition evidence; do not inspect or change it.",
+        "pr_decision": "Do not open a PR; none exists and the user did not request one. Leave landing to the branch owner."
+      },
+      {
+        "action": "stop",
+        "reason": "Immediate-neighborhood reconciliation complete; no cascade."
+      }
+    ],
+    "full_dream_note": null,
+    "final_user_facing_notification": "Dry run: I would create a branch from main, validate, commit, and push latency-arc’s open → closed change because its owner recorded completion and all inquiries are resolved. I would leave the review items in this session and leave landing to the branch owner; no PR would be opened. Local validation passes in the supplied scenario; that does not establish CI-only checks.\n\nPROPOSED TRANSITIONS (3)\n1. old-problem (problem-brief): active → obsolete\n   reason: The owner says the problem is obsolete, but an accepted design still frames it.\n   check: allowed; warning: An accepted design still frames this problem.\n   review reason: warning; decide how to handle the accepted design before revisiting this transition.\n   evidence: old-problem.\n2. rollout-arc (arc): open → closed\n   reason: Closure would require resolving rollout-inquiry.\n   check: blocked by rollout-inquiry is open (no rule identifier supplied).\n   review reason: blocker; resolve the inquiry before reconsidering closure.\n   evidence: rollout-arc, rollout-inquiry.\n3. cache-arc (arc): open → closed\n   reason: Completed inquiries alone do not settle whether to close or abandon the changed objective.\n   check: allowed; no blockers or warnings.\n   review reason: multiple plausible outcomes; choose close or abandon. An alternative status has not been checked or authorized.\n   evidence: cache-arc.\n\nNO ACTION NEEDED\n- latency-inquiry: already resolved; it is the pivot.\n- latency-arc: open → closed is eligible and would be applied in this dry run; all inquiries are resolved and its owner explicitly recorded completion.\n- secondary-problem: outside the immediate neighborhood, with no supplied transition evidence; do not inspect or change it.\n\nPlease decide the warned old-problem transition, resolve rollout-inquiry before closure, and choose close or abandon for cache-arc. No review is needed for the clean latency-arc edit. No actions were actually executed."
+  },
+  "interactive-pr-request": {
+    "mode": "interactive",
+    "ordered_proposed_actions": [
+      {
+        "action": "select_mode",
+        "mode": "interactive",
+        "pivot": "latency-inquiry",
+        "scope": "Pivot and its four immediate neighbors only."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_edges",
+        "arguments": {
+          "id": "latency-inquiry",
+          "direction": "both"
+        },
+        "supplied_result": {
+          "immediate_neighbors": [
+            "latency-arc",
+            "old-problem",
+            "rollout-arc",
+            "cache-arc"
+          ],
+          "known_edge_group": {
+            "arc": [
+              "latency-arc"
+            ]
+          },
+          "remaining_edge_types": "Not supplied; do not invent labels.",
+          "excluded_two_hop_artifact": "secondary-problem"
+        }
+      },
+      {
+        "action": "read",
+        "artifacts": [
+          "latency-inquiry",
+          "latency-arc",
+          "old-problem",
+          "rollout-arc",
+          "cache-arc"
+        ],
+        "supplied_result": "Retrieval succeeds. latency-arc has explicit completion evidence; old-problem has a warning; rollout-arc has an unresolved inquiry; cache-arc has an unresolved close-versus-abandon decision."
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "latency-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "old-problem",
+          "candidate_status": "obsolete"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": [
+            "An accepted design still frames this problem."
+          ]
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "rollout-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": false,
+          "blockers": [
+            "rollout-inquiry is open"
+          ],
+          "warnings": []
+        }
+      },
+      {
+        "action": "tool_call",
+        "tool": "vault_check_transition",
+        "arguments": {
+          "id": "cache-arc",
+          "candidate_status": "closed"
+        },
+        "supplied_result": {
+          "allowed": true,
+          "blockers": [],
+          "warnings": []
+        }
+      },
+      {
+        "action": "disposition",
+        "apply": [
+          "latency-arc: open → closed"
+        ],
+        "retain_for_review": [
+          "old-problem: warning",
+          "rollout-arc: blocker",
+          "cache-arc: multiple plausible outcomes"
+        ],
+        "reason": "Only latency-arc has clean preflight, sufficient direct evidence, and exactly one justified next state; final eligibility still depends on repository validation."
+      },
+      {
+        "action": "edit_frontmatter",
+        "artifact": "latency-arc",
+        "old_status": "open",
+        "new_status": "closed"
+      },
+      {
+        "action": "validate",
+        "proposed_command": "python validate.py",
+        "supplied_result": "PASS",
+        "limit": "This establishes repository validation only, not CI-only checks."
+      },
+      {
+        "action": "inspect_diff",
+        "expected_diff": "Only latency-arc status changes from open to closed. Verify before committing."
+      },
+      {
+        "action": "commit",
+        "proposed_message": "Reconcile latency arc completion",
+        "scope": "Validated latency-arc frontmatter edit only; no extra confirmation."
+      },
+      {
+        "action": "push",
+        "supplied_result": "Success"
+      },
+      {
+        "action": "open_pr",
+        "reason": "Explicitly requested by user; no existing PR.",
+        "proposed_title": "Reconcile latency arc completion",
+        "review_package": "PROPOSED TRANSITIONS (3)\n1. old-problem (problem-brief): active → obsolete\n   reason: The owner says the problem is obsolete, but an accepted design still frames it.\n   check: allowed; warning: An accepted design still frames this problem.\n   review reason: warning; decide how to handle the accepted design before revisiting this transition.\n   evidence: old-problem.\n2. rollout-arc (arc): open → closed\n   reason: Closure would require resolving rollout-inquiry.\n   check: blocked by rollout-inquiry is open (no rule identifier supplied).\n   review reason: blocker; resolve the inquiry before reconsidering closure.\n   evidence: rollout-arc, rollout-inquiry.\n3. cache-arc (arc): open → closed\n   reason: Completed inquiries alone do not settle whether to close or abandon the changed objective.\n   check: allowed; no blockers or warnings.\n   review reason: multiple plausible outcomes; choose close or abandon. An alternative status has not been checked or authorized.\n   evidence: cache-arc.\n\nNO ACTION NEEDED\n- latency-inquiry: already resolved; it is the pivot.\n- latency-arc: open → closed is eligible and would be applied in this dry run; all inquiries are resolved and its owner explicitly recorded completion.\n- secondary-problem: outside the immediate neighborhood, with no supplied transition evidence; do not inspect or change it.",
+        "supplied_result": "Success; new PR identifier not supplied.",
+        "landing": "Leave landing to branch owner; no merge request."
+      },
+      {
+        "action": "stop",
+        "reason": "Immediate-neighborhood reconciliation complete; no cascade."
+      }
+    ],
+    "full_dream_note": null,
+    "final_user_facing_notification": "Dry run: I would validate, commit, and push latency-arc’s open → closed change because its owner recorded completion and all inquiries are resolved. I would open the requested PR containing that change and the review items. It would remain unmerged for the branch owner. Local validation passes in the supplied scenario; that does not establish CI-only checks.\n\nPROPOSED TRANSITIONS (3)\n1. old-problem (problem-brief): active → obsolete\n   reason: The owner says the problem is obsolete, but an accepted design still frames it.\n   check: allowed; warning: An accepted design still frames this problem.\n   review reason: warning; decide how to handle the accepted design before revisiting this transition.\n   evidence: old-problem.\n2. rollout-arc (arc): open → closed\n   reason: Closure would require resolving rollout-inquiry.\n   check: blocked by rollout-inquiry is open (no rule identifier supplied).\n   review reason: blocker; resolve the inquiry before reconsidering closure.\n   evidence: rollout-arc, rollout-inquiry.\n3. cache-arc (arc): open → closed\n   reason: Completed inquiries alone do not settle whether to close or abandon the changed objective.\n   check: allowed; no blockers or warnings.\n   review reason: multiple plausible outcomes; choose close or abandon. An alternative status has not been checked or authorized.\n   evidence: cache-arc.\n\nNO ACTION NEEDED\n- latency-inquiry: already resolved; it is the pivot.\n- latency-arc: open → closed is eligible and would be applied in this dry run; all inquiries are resolved and its owner explicitly recorded completion.\n- secondary-problem: outside the immediate neighborhood, with no supplied transition evidence; do not inspect or change it.\n\nPlease decide the warned old-problem transition, resolve rollout-inquiry before closure, and choose close or abandon for cache-arc. No review is needed for the clean latency-arc edit. No actions were actually executed."
+  },
+  "unclear-pivot": {
+    "mode": "interactive (provisional default; clarification pending)",
+    "ordered_proposed_actions": [
+      {
+        "action": "clarify_once",
+        "question": "Which artifact changed, or did you intend a full-vault dream pass?",
+        "reason": "The request supplies neither a pivot nor explicit authorization for broad dream reading. Default to interactive and obtain its required pivot."
+      },
+      {
+        "action": "wait_for_answer",
+        "details": "Do not call vault_edges, vault_reflect, search, or transition checks; no edits, validation, Git operations, or PR operations until the scope/pivot is established."
+      }
+    ],
+    "full_dream_note": null,
+    "final_user_facing_notification": "I’ll default to interactive reconciliation. Which artifact changed, or did you intend a full-vault dream pass? No actions have been taken."
+  }
+}
