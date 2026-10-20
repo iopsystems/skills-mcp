@@ -1,0 +1,154 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "baseline_commit": "57846baca58b828ee3266ec6478c4a0335ed32c8",
+  "fixture_sha256": "c2aa72b70d4393209864be40aa8bebc794bc406739fa15b5001255c39d3915e6",
+  "method": {
+    "generation": "One independent agent per variant and suite; cases share an agent context but were requested as standalone tasks. Agents received skill files and prompts, not expectations or other variant outputs.",
+    "trials_per_case_per_variant": 1,
+    "live_repository_execution": false,
+    "activation_evaluation": false,
+    "grader": "No independent grader completed; author observations only.",
+    "worker_limit": "Workspace credit errors surfaced after complete response artifacts and writing grades were saved. JSON parsed and exact case coverage was checked. Further independent reruns were unavailable."
+  },
+  "skill_versions": {
+    "architecture-diagram": {
+      "baseline_sha256": "a6009072a7485cbf6b49755d98ca24b2bbfdaefe90335dfca9b71dc05f919129",
+      "evaluated_candidate_sha256": "286d719c43dc34286eee044535c2620b84cabe5c91a67a50bd9781920f37e83a",
+      "final_candidate_sha256": "286d719c43dc34286eee044535c2620b84cabe5c91a67a50bd9781920f37e83a"
+    },
+    "dataflow-diagram": {
+      "baseline_sha256": "946cc79a5a379d9f173a66eefa79f25c62721fa1c90170c6b610f0f9bf83dac9",
+      "evaluated_candidate_sha256": "7835ad21e5fab17e1593379a8ce2fcc441be09e1c6206a8df6be31c15972bc2c",
+      "final_candidate_sha256": "7835ad21e5fab17e1593379a8ce2fcc441be09e1c6206a8df6be31c15972bc2c"
+    },
+    "format-layout-diagram": {
+      "baseline_sha256": "75a7e31a539ea43f4dc3a2c96ab1fcf27cdc74039c00c564a7df1d71f0594f75",
+      "evaluated_candidate_sha256": "2f864a92403ae3e54dfc7559579ad00a68a9fcf91f6ae0dd00c95ee993b2ea44",
+      "final_candidate_sha256": "2f864a92403ae3e54dfc7559579ad00a68a9fcf91f6ae0dd00c95ee993b2ea44"
+    }
+  },
+  "word_counts": {
+    "architecture-diagram": {
+      "baseline_words": 4820,
+      "candidate_words": 4618
+    },
+    "dataflow-diagram": {
+      "baseline_words": 4648,
+      "candidate_words": 4188
+    },
+    "format-layout-diagram": {
+      "baseline_words": 2157,
+      "candidate_words": 2121
+    }
+  },
+  "cases": [
+    {
+      "id": "architecture-diagram-03",
+      "responses": {
+        "baseline": "I\u2019ll use the architecture-diagram skill\u2019s single-use workflow. Keep the generator and diagram beside your talk materials, outside the project repository. Derive the structure from the project\u2019s build metadata and validate every component classification. Stamp the diagram with the source commit and date, and describe it as a snapshot without automatic freshness checks. This workflow needs neither a charter nor the project\u2019s review gate.\n\nWhich project and revision should the talk cover?",
+        "candidate": "Use a single-use snapshot kept with your talk materials. The project repository does not need to change. I\u2019m applying the architecture-diagram skill\u2019s single-use workflow: derive the chart from a readable checkout, keep the generator beside the artifact, and stamp the chart with its source commit and date. Without a freshness check, later source changes will not update it automatically. This workflow needs neither a project charter nor a formal review gate.\n\nWhich project and revision should the diagram cover? A repository URL is enough to identify the starting point; no project evidence has been supplied yet."
+      }
+    },
+    {
+      "id": "architecture-diagram-05",
+      "responses": {
+        "baseline": "Keep all four meaningful layers. The three-band arrangement is a default, and collapsing a real distinction would misrepresent the system.\n\nUse four bands or another layout that preserves the layers and their actual dependencies. Record the override and its reason in the charter: \u201cFour layers reflect the system\u2019s structure; three bands obscure a meaningful boundary.\u201d Verify the dependency ordering and review the rendered layout.",
+        "candidate": "Keep all four meaningful layers. The three-band treatment is a visual default, not a constraint on the architecture. Try four bands; if that becomes unreadable, change the layout while preserving the layer distinctions and real dependencies. Record the override and its reason in the charter: \u201cFour layers are semantically distinct; merging them would misrepresent the system.\u201d"
+      }
+    },
+    {
+      "id": "architecture-diagram-09",
+      "responses": {
+        "baseline": "Keep tile area proportional to LOC: the 100- and 400-LOC leaves must have a 1:4 area ratio. Enlarging tiny tiles would distort that comparison.\n\nPut tiny-file labels outside their tiles, or combine the files into an explicit `Other` tile with their exact summed LOC and a member list. List the zero-LOC component as zero without giving it area. Every component still needs an accessible name, LOC count, and share of the scoped total.\n\nCheck area ratios before rounding and again in the serialized rectangles, with a stated rounding tolerance. Gutters must sit outside the quantitative area. Check external labels for collisions and inspect the rendering for readability.",
+        "candidate": "Keep the 100- and 400-LOC leaves at a 1:4 area ratio. Enlarging tiny tiles would make area misrepresent LOC.\n\nPlace tiny-file labels outside their tiles, or combine them into an explicit `Other` tile with their exact summed LOC and a member list. List the zero-LOC component as zero without allocating area. A keyed table can make every component\u2019s name, LOC, and share legible.\n\nCheck proportionality both before pixel rounding and on the serialized rectangles, using a stated rounding tolerance. Keep gutters and labels outside the measured data area; also check external labels for collisions."
+      }
+    },
+    {
+      "id": "architecture-diagram-13",
+      "responses": {
+        "baseline": "Diagram B needs its own rendering check and human approval. Yesterday\u2019s approval applies only to A.\n\nCheck record for B, based on the supplied evidence:\n\n| Item | Record |\n|---|---|\n| Source revision | Not supplied |\n| Dirty inputs | Source changed without committing; changed files and retained snapshot/diff not supplied |\n| Artifact | B overwrote A at the same output path; exact path and B\u2019s content hash not supplied |\n| Regeneration command | Not supplied |\n| Source/claim assertions | Passed, as reported for B |\n| Bounds checks | Passed, as reported for B; containment only |\n| Publishing rasterization | Not run: publishing rasterizer unavailable; tool name not supplied |\n| Other rendering checks | No markup, collision, or deterministic regeneration results supplied |\n| Actual visual inspection | Not run: nobody inspected B; no inspected preview |\n| Required human approval | Not run for B; reviewer not supplied. A\u2019s approval does not transfer |\n\nThe available substitutes are the reported source assertions and bounds checks. They do not establish visual readability or publishing compatibility. Retain the dirty source snapshot or diff and record B\u2019s hash before further edits.\n\nHandoff: Diagram B is an unreviewed candidate at the existing output path. A link cannot be supplied because the path was not provided. Source assertions and bounds checks reportedly pass. Provenance details, publishing rasterization, visual inspection, and approval of B remain outstanding.",
+        "candidate": "Diagram B still needs visual inspection and approval. Yesterday\u2019s approval covers A only; reusing its output path does not transfer approval.\n\nCheck record for B, based on the supplied report:\n\n| Field or check | Record |\n|---|---|\n| Source revision | Not supplied |\n| Dirty inputs | Source changed without a commit; changed files and contents not supplied. Retain the exact input snapshot or diff. |\n| Artifact | B replaced A at the same output path; path and content hash not supplied. Capture B\u2019s hash. |\n| Regeneration command | Not supplied |\n| Source/claim assertions | Passed, as reported, for B |\n| Bounds | Passed, as reported, for B; establishes containment only |\n| Publishing rasterization | Not run: publishing rasterizer unavailable; renderer name not supplied |\n| Other rendering checks | No markup, collision, or deterministic-regeneration results supplied |\n| Actual visual inspection | Not run: nobody inspected B; no preview or inspector to name |\n| Required human approval | Not run for B; reviewer not supplied. A was approved yesterday. |\n| Substitute evidence | Reported source assertions and bounds checks only; no substitute visual review |\n\nHandoff: B has reported passing source assertions and bounds checks. Publishing rasterization, visual inspection, and human approval remain pending. Record the missing source/artifact identifiers and retain the dirty inputs before further changes. Inspect B with the publishing renderer when available and obtain fresh approval. Any later edit needs affected checks rerun and renewed review. The diagram link cannot be filled in until its output path is supplied."
+      }
+    },
+    {
+      "id": "dataflow-diagram-18",
+      "responses": {
+        "baseline": "I\u2019ll use the dataflow-diagram skill. Please provide the pipeline\u2019s wiring source or declarations and the revision the design doc should describe; no pipeline evidence is included yet.\n\nI\u2019ll derive nodes and edges from that evidence, draw buffers and other persistent state as separate nodes, and validate classifications so omissions fail visibly. The initial conventions are rounded compute nodes, square data nodes, and left-to-right flow. I\u2019ll use the document\u2019s semantic palette if it has one. Geometry checks and human review will cover the rendered result.\n\nDoes the pipeline have a kind of node or relationship those defaults would misrepresent?",
+        "candidate": "I\u2019ll use the dataflow-diagram skill to derive the chart from the pipeline\u2019s declarations or wiring. Please provide that source, or a repository path and revision; the pipeline itself is missing from this request.\n\nThe default will read left to right, with rounded compute nodes and square data nodes. Buffers and other persistent state will have their own nodes. I\u2019ll keep the generator with the diagram and identify its source revision. Mention any domain convention those defaults would conflict with."
+      }
+    },
+    {
+      "id": "dataflow-diagram-23",
+      "responses": {
+        "baseline": "Diagram B has not passed visual review. Approval of A does not cover the changed artifact, even though the output path is unchanged.\n\nCheck record for B, based on the supplied evidence:\n\n| Item | Record |\n|---|---|\n| Source revision | Not supplied |\n| Dirty inputs | Uncommitted source changes; affected files and retained snapshot/diff not supplied |\n| Artifact | B at the path previously occupied by A; exact path and content hash not supplied |\n| Regeneration command | Not supplied |\n| Source/claim assertions | Passed, as reported for B |\n| Bounds checks | Passed, as reported for B; containment only |\n| Publishing rasterization | Not run: rasterizer unavailable; tool name not supplied |\n| Other rendering checks | Markup validation, collision checks, and deterministic regeneration results not supplied |\n| Actual visual inspection | Not run: nobody inspected B; no preview inspected |\n| Required human approval | Not run for B; reviewer not supplied. Yesterday\u2019s approval belongs to A |\n\nOnly the reported source assertions and bounds checks stand in for the unavailable preview. They do not satisfy the perceptual gate. Record B\u2019s hash and retain the dirty source snapshot or diff to identify the source/artifact pair.\n\nHandoff: B is an unreviewed candidate. Its link remains missing because the output path was not provided. Source assertions and bounds checks reportedly pass; publishing rasterization, visual inspection, and human approval remain outstanding. Complete the provenance record and review B before treating it as approved.",
+        "candidate": "B has not passed the visual review gate. A\u2019s approval applies only to A, even though B occupies the same path.\n\nCheck record for B, based on the supplied report:\n\n| Field or check | Record |\n|---|---|\n| Source revision | Not supplied |\n| Dirty inputs | Uncommitted source changes; exact files and contents not supplied. Retain a snapshot or diff of the inputs used for B. |\n| Artifact | B at A\u2019s former output path; actual path and B\u2019s content hash not supplied |\n| Regeneration command | Not supplied |\n| Source/claim assertions | Passed, as reported, for B |\n| Bounds | Passed, as reported, for B |\n| Publishing rasterization | Not run: rasterizer unavailable; renderer name not supplied |\n| Other rendering checks | Markup validity, collision checks, and deterministic regeneration have no supplied results |\n| Actual visual inspection | Not run: nobody inspected B; no preview or inspector to identify |\n| Required human approval | Not run for B; reviewer not supplied. Yesterday\u2019s approval belongs to A. |\n| Substitute evidence | Reported source and bounds checks only; neither establishes readability |\n\nHandoff: B\u2019s source assertions and bounds reportedly pass. Publishing-renderer verification, visual inspection, and fresh human approval remain pending. Capture the missing revision, dirty-input snapshot, artifact hash, path, and command. Review the identified B artifact, then rerun affected checks and obtain fresh approval after any edit. A diagram link is pending the actual output path."
+      }
+    },
+    {
+      "id": "dataflow-diagram-26",
+      "responses": {
+        "baseline": "I\u2019ll use the dataflow-diagram skill\u2019s model derived by reading. Please supply the `jfrStorage.cpp` excerpts you read, the relevant caller/callee excerpts, and the JDK revision or version range. The filename alone does not establish the event\u2019s path, so I cannot yet draw its intermediate stages or branches.\n\nThe figure will keep buffers and the chunk file separate from the operations that move data. Each node and edge in the transcription will cite its source path and symbol. A visible provenance table beside the figure will identify each node\u2019s evidence.\n\nThe caption will say \u201cderived by reading,\u201d identify the evidence baseline, and state that freshness is not enforced. If the reading was not pinned, it will say so. Unknown relationships will remain gaps. Classification and geometry checks can validate the model\u2019s consistency, but matching the implementation requires checking the reading against the exact JDK version.",
+        "candidate": "I\u2019ll use the dataflow-diagram skill\u2019s external-source workflow. Because the JDK source is unavailable here, this must be labeled a model derived by reading. The reference to `jfrStorage.cpp` alone does not establish the intermediate steps or branches.\n\nPlease provide the relevant excerpts and the JDK revision you read. For an unpinned reading, provide the version range and mark it unpinned. I\u2019ll preserve unknown steps as gaps rather than infer the writer\u2019s behavior.\n\nThe figure will need:\n\n- A transcription model with a source path and symbol for every node and edge.\n- A visible provenance table beside the figure, with one row per node.\n- An evidence baseline and a caption stating that freshness is not enforced; readers must recheck the exact JDK version they use.\n\nBuffers and the chunk file will be separate data nodes from the operations that move events. Classification and geometry checks can validate the model\u2019s presentation; they cannot establish that the transcription matches OpenJDK."
+      }
+    },
+    {
+      "id": "dataflow-diagram-28",
+      "responses": {
+        "baseline": "Keep the semantic CSS tokens in the inline SVG. It shares the HTML page\u2019s styling context, so resolving every token to hex would freeze the colors and break theme changes or shared color meanings.\n\nUse fixed colors over an opaque background for a separately exported image. If you ship both forms, generate both from the same source. Verify the inline version in the page\u2019s supported themes.",
+        "candidate": "Keep the semantic CSS tokens for the inline SVG. They let the diagram share the page\u2019s meanings and change with its theme. Resolving them to fixed hex values would freeze that relationship.\n\nFor a separately embedded image, generate fixed colors over an opaque background. If you need both forms, generate both from the same source."
+      }
+    },
+    {
+      "id": "format-layout-diagram-01",
+      "responses": {
+        "baseline": "Yes\u2014as a relationship schematic, with the reserved chain dashed and shipped structures solid. State explicitly in the caption that chaining is reserved and unimplemented.\n\nA generated byte-anatomy figure must show an existing encoded fixture; it cannot establish the reserved format. For the schematic, record its design source, regeneration command, and claim in a provenance row. If it is a hand-authored design snapshot, date it and name the review that established the design.",
+        "candidate": "Yes\u2014as a relationship schematic. Use dashed connections for the reserved chaining and solid connections for shipped behavior. The caption must say that chaining is reserved and unimplemented.\n\nDo not present it as a generated byte anatomy: no shipping codec or fixture produces that format yet. Keep the schematic\u2019s graph source and a provenance row stating its design source and claim. If it is a hand-authored design snapshot, date it and identify the review it records."
+      }
+    },
+    {
+      "id": "format-layout-diagram-18",
+      "responses": {
+        "baseline": "No. Decode the frozen fixture with the shipping codec, then re-encode each decoded value and compare the bytes. Decoding checks the reading; the byte comparison checks that the labels describe values the encoder actually produces. It can catch a width-tier table that has drifted from the encoder.\n\nAlso assert every drawn span, count, length, and stored-offset target against the fixture. Any disagreement must abort generation. These checks support the labels\u2019 meaning; rendering checks still need to verify that labels attach to the correct spans and remain readable.",
+        "candidate": "No. Decode a frozen test fixture with the shipping codec, then re-encode each decoded entry and compare its bytes with the fixture. Decoding alone can miss labels based on a tier table that has drifted from the encoder.\n\nAlso assert every drawn span against the bytes: lengths, counts, and stored offsets must match their targets. Abort on a mismatch. These checks establish the labels\u2019 encoding claims; rendering still needs its own checks."
+      }
+    },
+    {
+      "id": "format-layout-diagram-23",
+      "responses": {
+        "baseline": "B remains unreviewed. A\u2019s approval does not transfer to the new source/artifact pair.\n\nCheck record for B, based on the supplied evidence:\n\n| Item | Record |\n|---|---|\n| Source revision and fixture | Not supplied |\n| Dirty inputs | Uncommitted source changes; affected files and retained snapshot/diff not supplied |\n| Artifact | B replaced A at the same output path; exact path and content hash not supplied |\n| Regeneration command | Not supplied |\n| Source assertions | Passed, as reported for B |\n| Codec/span assertions | Coverage not supplied: cannot infer shipping-codec decoding, re-encoding byte comparisons, or span/offset checks from \u201csource assertions\u201d |\n| Bounds checks | Passed, as reported for B; containment only |\n| Publishing rasterization | Not run: publishing rasterizer unavailable; tool name not supplied |\n| Other rendering checks | Markup validation, collision checks, and deterministic regeneration results not supplied |\n| Actual visual inspection | Not run: nobody inspected B; no preview inspected |\n| Human approval | Not run for B; reviewer not supplied. A was approved yesterday |\n\nThe reported source assertions and bounds checks are the only available substitutes for the missing publishing preview. They do not establish publishing compatibility or readability. Retain the dirty input snapshot or diff and record B\u2019s content hash before further changes.\n\nHandoff: B is an unreviewed candidate at the existing output path. The path was not supplied, so a figure link remains missing. Complete the provenance and codec-check coverage, run the publishing rasterizer when available, and inspect B. Obtain any required human approval for B itself.",
+        "candidate": "B remains unverified for publication. A\u2019s approval does not cover B, even at the same output path.\n\nCheck record for B, based on the supplied report:\n\n| Field or check | Record |\n|---|---|\n| Source revision and fixture | Neither supplied |\n| Dirty inputs | Source changed without a commit; retain the exact input snapshot or diff. Its contents are not supplied. |\n| Artifact | B replaced A at the same output path; actual path and B\u2019s content hash not supplied |\n| Regeneration command | Not supplied |\n| Source assertions | Passed, as reported, for B |\n| Codec/span assertions | Scope not supplied; the report does not establish shipping-codec decoding, span checks, or re-encode comparisons |\n| Bounds | Passed, as reported, for B |\n| Publishing rasterization | Not run: publishing rasterizer unavailable; renderer name not supplied |\n| Other rendering checks | No markup-validity, collision, or deterministic-regeneration results supplied |\n| Actual visual inspection | Not run: nobody inspected B; no preview or inspector to name |\n| Human approval | Not run for B; reviewer not supplied. A was approved yesterday. |\n| Substitute evidence | Reported source assertions and bounds only; no substitute visual inspection |\n\nHandoff: B\u2019s source assertions and bounds reportedly pass. Its codec-check coverage must be identified. Publishing rasterization, visual inspection, and any required fresh approval remain pending. Capture the missing source, fixture, dirty-input snapshot, artifact hash, and regeneration command. A browser preview, if later inspected, will not establish compatibility with the publishing rasterizer. Further edits require affected checks and review again. The figure link is pending its actual output path."
+      }
+    },
+    {
+      "id": "format-layout-diagram-26",
+      "responses": {
+        "baseline": "Use the page\u2019s semantic tokens. The inline SVG shares the page\u2019s styling context, so matching roles should use the same tokens as the prose, tables, and cards. That keeps their meanings consistent as the theme changes.\n\nFor a standalone image export, emit fixed colors over an opaque background. If both forms are needed, generate them from one source. Check the inline figure in the page\u2019s supported themes and provide an accessible label plus adjacent prose stating its claim.",
+        "candidate": "Use the page\u2019s semantic tokens in the inline SVG. Map each field role to the same meaning used by the prose, tables, and cards, so the figure changes with the page\u2019s theme.\n\nIf you also export a standalone image, generate that version with fixed colors over an opaque background from the same source."
+      }
+    }
+  ],
+  "author_observations": [
+    {
+      "case": "architecture-diagram-03",
+      "observation": "The candidate retains source derivation, generator retention, dated snapshot and the single-use review exception, but omits an explicit fail-loud classification step present in the baseline answer. The skill still contains that requirement; retest with a concrete source inventory."
+    },
+    {
+      "case": "architecture-diagram-09",
+      "observation": "Both responses preserve the 1:4 ratio, tiny-file alternatives, zero-area handling and rounding checks. Neither explicitly names decorative headers; no rendered output was produced."
+    },
+    {
+      "case": "dataflow-diagram-26",
+      "observation": "Both retain transcription provenance and a freshness warning. They mention classification checks without explicitly stating the fail-loud condition."
+    },
+    {
+      "case": "check records and embedding",
+      "observation": "All six check-record responses preserve missing evidence and fresh-review requirements. Both versions distinguish inline theme tokens from standalone image colors."
+    }
+  ],
+  "limits": [
+    "No independent grading or repeat trials completed. The author observations are not an evaluation pass.",
+    "No renderer ran and no real diagram was inspected. Readability, layout preservation and end-to-end task success remain unverified.",
+    "The prompt corpus was unchanged; its selected response exercises do not prove skill selection or all operational requirements."
+  ]
+}

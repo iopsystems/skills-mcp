@@ -28,14 +28,12 @@ derive-never-draw, fail-loud, verify-the-rendering. `architecture-diagram` owns
 what exists and what contains what; `dataflow-diagram` owns what moves where.
 When the question is "which byte is that field in", it is this one.
 
-## What this is, and what it is not yet
+## Defaults and scope
 
-Treat this skill as **beta**. Its conventions come from one binary collection
-format in one repository, whose figures were built without a skill and whose
-author proposed this one afterward. Three rules below are that author's, stated
-in their own words; the rest is inference from the artifacts and carries less
-weight. When one fights your format, the override and its reason are the most
-valuable thing the effort produces: record it through `engineering-journal`.
+Treat this skill as **beta**. Its conventions come from one binary format in one
+repository. The three rules below were supplied by that work's author; the
+remaining guidance is inferred from the artifacts and has weaker evidence.
+Record overrides and their reasons through `engineering-journal`.
 
 ## Three rules
 

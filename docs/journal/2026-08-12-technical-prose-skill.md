@@ -46,8 +46,8 @@ Three structural facts about this repository constrain the design:
   and no active skill has a `references/` directory. An active skill is
   therefore exactly one file, and a shared rule set cannot be a servable
   sub-file — it must be its own skill with its own trigger.
-- `skills/repository/architecture-diagram/SKILL.md:31` ("principles carried into a domain")
-  and `:42` ("use `dataflow-diagram` directly") establish the precedent for one
+- [architecture-diagram at the pre-edit revision](https://github.com/iopsystems/skills-mcp/blob/57846baca58b828ee3266ec6478c4a0335ed32c8/skills/repository/architecture-diagram/SKILL.md#L31) ("principles carried into a domain")
+  and [its dataflow routing rule](https://github.com/iopsystems/skills-mcp/blob/57846baca58b828ee3266ec6478c4a0335ed32c8/skills/repository/architecture-diagram/SKILL.md#L42) ("use `dataflow-diagram` directly") establish the precedent for one
   skill deferring to another in prose, by name, with no import mechanism.
 - `templates/document-feature-skill/` is an inert template, seeded and
   customized per project. A reference from it to an MCP-served skill dangles in

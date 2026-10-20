@@ -26,36 +26,25 @@ make different claims. Bind them visually through shared component names
 and colors (see "Chips bridge the halves"). Add the weighted companion when
 source size is part of the request; it does not replace the dependency chart.
 
-## What this is, and what it is not yet
+## Defaults and scope
 
-This is the `dataflow-diagram` skill's principles carried into a domain it
-was not written for. The principles survived the trip; the duo-specific
-conventions are younger — derived against a multi-binary cache framework,
-then carried to a second system, an io_uring runtime library, whose reader
-supplied the layout rules below — so treat this skill as **beta**. Adopt the
-conventions wholesale, and when one fights your system, the override with its
-stated reason is the most valuable thing the effort can produce: record it in
-the charter and bring it back here. Where the two skills deliberately disagree
-(arrows dropped from the build chart, provenance demoted from a channel,
-geometry emitted directly rather than through a layout engine), the reason
-appears in the section that overrides it. For a pipeline or DAG chart of
-one running program, use `dataflow-diagram` directly. The weighted source
-companion adds quantitative conventions; its scenario corpus is guidance
-for evaluation, not evidence that a rendered view is readable.
+Treat this skill as **beta**. Its conventions adapt `dataflow-diagram` to
+architecture, with experience from a cache framework and an io_uring runtime.
+Adopt the defaults, record overrides and their reasons in the charter, and
+bring that feedback back to the skill. Domain-specific departures are explained
+where they apply. Use `dataflow-diagram` directly for a pipeline or DAG of one
+running program. The weighted-source scenario corpus specifies expected
+behavior; it does not establish rendered readability.
 
-The skill itself is a complete set of working defaults, usable with no
-configuration (including single-use charts, below). The
-`architecture-diagram-skill` template adds a charter: a *delta* recording
-the bindings no default can supply, plus any deviation with its reason. A
-convention absent from the charter means the default applies.
+The skill is complete without configuration, including for single-use charts.
+The `architecture-diagram-skill` template adds a charter for project bindings
+and justified deviations. Defaults apply wherever the charter is silent.
 
 ## Shared principles (all views)
 
 **Derive, never draw.** Nodes, edges, labels, and composition come from the
-program's own structures at generation time. A hand-maintained diagram is a
-second source of truth: right the day it is drawn, wrong on the first
-refactor, silent about the divergence. A generated chart is regenerated; a
-drawn one is renegotiated.
+program's own structures at generation time. Hand-maintained copies can drift
+without breaking the picture.
 
 **Fail loudly on the unclassified.** An element no classification table
 covers must abort the run — silent omission still renders a
@@ -476,9 +465,8 @@ Recorded so they are not re-attempted:
 ## Prose in the chart
 
 Prose in and around a chart — node labels, the key, the caption, the charter —
-follows `technical-prose`, including its default of American spelling. A
-convention the user or the project states overrides that default; a mixture of
-both overrides nothing and reads as several authors.
+follows `technical-prose`. Use American spelling unless the user or project
+specifies another convention; apply the chosen convention consistently.
 
 ## Draw the state, do not bury it
 
@@ -486,12 +474,8 @@ A stateful component folded into the label of the thing that reads or writes it
 is invisible: a ring named inside a process box, a queue mentioned in an edge
 label, a store that exists only as a verb. Draw it as its own node.
 
-In a structure chart this decides what a unit *is*. A process that owns a
-buffer and a process that borrows one look identical until the buffer is drawn
-and the ownership edge has somewhere to land. In a runtime chart it decides
-where the interesting failures live: a thread cannot lose a record, but the
-queue between two threads can, and a chart with no queue has nowhere to put
-the loss.
+Drawing the buffer lets a structure chart distinguish ownership from borrowing.
+Drawing the queue gives a runtime chart somewhere to show capacity and loss.
 
 The test: **if a box names both a unit and something that outlives it, split
 it.**
