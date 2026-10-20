@@ -15,9 +15,9 @@ description: |
 
 # Review exchange
 
-Two independent local agents trade review notes on a branch. Each note is a
-round in a thread; the thread lives in this repository's git directory, so it is
-untracked, branch-independent, and shared by every linked worktree.
+Two independent local agents exchange review rounds in a thread stored in
+the repository's git directory: untracked, branch-independent, and shared
+across linked worktrees.
 
 ## Install or upgrade the bridge
 
@@ -344,31 +344,26 @@ fi
 
 ## Read before you write
 
-Run `git review-feedback --as <your-name>` before writing anything. A round
-written without reading the unread ones repeats findings that were already
-answered, which is the failure the thread exists to prevent.
+Run `git review-feedback --as <your-name>` before writing anything so you
+do not repeat answered findings.
 
-`--peek` shows the unread rounds without marking them read. Use it when you are
-only checking whether there is work, not doing it.
+Use `--peek` to check for unread rounds without marking them read.
 
 ## Reviewing
 
-Scope the review at the merge base against the base branch, not at the branch
-tip. You are reviewing what would merge.
+Review the changes since the merge base with the base branch: what would merge.
 
 Write one round with `--role reviewer`:
 
-- **Findings**, in severity order. Each cites `file:line` and states the failure
-  concretely — the input or state, and the wrong result. A finding a reader
-  cannot act on is not a finding.
+- **Findings**, in severity order. Each cites `file:line`, the triggering
+  input or state, and the wrong result. Include only actionable findings.
 - **Open questions**, where the change is defensible either way and you need the
   author's intent.
-- **Verification**: the commands you ran and what they returned. Name the ones
-  that failed as plainly as the ones that passed.
+- **Verification**: commands run and their results, including failures.
 - **Residual risk**: what you could not check.
 
-An empty Findings section means you found nothing actionable. It does not mean
-the change is defect-free, and it is not evidence of correctness. Say so.
+If Findings is empty, state that you found nothing actionable; this does
+not establish correctness or absence of defects.
 
 ## Answering
 
@@ -377,31 +372,24 @@ Write one round with `--role author` and `--replies-to <n>`.
 Every finding in the round you are answering gets exactly one disposition:
 
 - **fixed** — cite the commit that fixed it.
-- **disputed** — cite the evidence that the finding is wrong or does not apply.
-  A dispute without evidence is a refusal.
+- **disputed** — cite evidence that the finding is wrong or does not apply.
 - **deferred** — state why, and what would reopen it.
 
-Silence is not a disposition. A finding you skip will come back next round, and
-the reviewer will not know whether you disagreed or missed it.
-
-Then answer the open questions, and list anything else you changed that no
-finding asked for.
+Do not skip findings. Answer the open questions and list changes beyond
+those requested.
 
 ## Convergence
 
-A thread converges when a reviewer round carries no findings and no open
-questions. Either agent may observe that; neither may declare it on the other's
-behalf. If you are the author and you believe the thread is done, say so and
-leave it open — the reviewer's round is what closes it.
+A reviewer round with no findings or open questions establishes convergence.
+Either agent may report it; neither may declare it on the other's behalf.
+An author who believes the work is done says so and leaves the thread open
+for the reviewer.
 
 ## What this is not
 
-The store lives in `.git/`. It is untracked, shared across linked worktrees, and
-destroyed by a fresh clone. It is a working channel, not a record.
-
-Anything that must outlive the branch goes somewhere durable: the pull-request
-body through `review-guide`, or an entry through `engineering-journal`. Do not
-commit the thread into the repository.
+The `.git/` store is lost on a fresh clone. Put conclusions that must outlive
+the branch in the PR body through `review-guide`, or an entry through
+`engineering-journal`. Do not commit the thread into the repository.
 
 ## Red flags
 

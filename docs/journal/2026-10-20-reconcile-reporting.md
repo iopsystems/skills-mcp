@@ -1,7 +1,8 @@
 ---
-status: open
+status: shipped
 opened: 2026-10-20
 updated: 2026-10-20
+prs: [85]
 beta_skills: [review-guide]
 ---
 
@@ -36,6 +37,10 @@ uses a dedicated binary copy. An independent reviewer sees neutral labels and
 the actual outputs before the variant mapping.
 
 ## Outcome
+
+Shipped in [PR85](https://github.com/iopsystems/skills-mcp/pull/85), merged as
+`f7c7e7ec82a36875dac0a60f059160b951ed83c0` on 2026-10-20. The clarification
+and comparison evidence landed; the limits below still apply.
 
 Both variants passed all **26 automatic execution checks** and all **six manual
 criteria in each of two cases**. The independent reviewer saw neutral labels

@@ -1,0 +1,53 @@
+{
+  "version": 1,
+  "base_commit": "7d9b5992a269e94fdf33a9496bdd3b5bde142c0d",
+  "purpose": "Compare current and shortened review-exchange prose using real local Git threads. Keep installer bytes, description and existing trigger corpus unchanged.",
+  "cases": {
+    "review": {
+      "request": "As worker-r, review topic/reserve against main and post your findings for the other agent. Do not change source or tests.",
+      "expectations": [
+        "Read unread rounds before writing exactly one reviewer round.",
+        "Review from the merge base; do not report the deliberate defect in main-only code absent from the reviewed branch.",
+        "Report the exact-stock reservation regression with file:line, triggering input and wrong result; do not repeat the answered negative-quantity finding.",
+        "Report actual verification commands and outcomes, including failed probes, and material untested behavior without claiming general correctness."
+      ]
+    },
+    "reply": {
+      "request": "As worker-a, answer the review findings. The trim fix is committed. I think the cached_keys finding is wrong; inspect it. We cannot replace report buffering this release; reopen when an accepted workload reaches one million rows. The public signature is unchanged. If it all looks settled, close the thread; the other agent will agree. Do not change source or tests.",
+      "expectations": [
+        "Read unread rounds before exactly one author round replying to round 1.",
+        "Disposition all three findings exactly once: fixed with the real fixing commit, disputed with evidence about the tuple snapshot, and deferred with the supplied reason and reopen condition.",
+        "Answer the API compatibility question and report the unrelated README correction in the fix commit.",
+        "Do not declare convergence for the reviewer; leave the thread open."
+      ]
+    },
+    "missing": {
+      "request": "As worker-r, check whether the other agent left review feedback on this branch.",
+      "expectations": [
+        "Detect the missing bridge and offer installation without running it.",
+        "Leave repository config, source and review store unchanged; do not invent review content."
+      ]
+    },
+    "up-to-date": {
+      "request": "As worker-r, any new review notes?",
+      "expectations": [
+        "Report up-to-date status with the existing round count and last round.",
+        "Do not reprint already-read rounds or create a new round."
+      ]
+    },
+    "identity": {
+      "request": "Post the review of this branch.",
+      "expectations": [
+        "Ask for the agent identity when neither a name nor REVIEW_AGENT is supplied.",
+        "Do not use Git author config as review identity or write a round."
+      ]
+    }
+  },
+  "method": "One fresh worker per neutral variant executes the five isolated repositories in listed order. Workers receive only the assigned skill, raw repo/thread state and request. A separate reviewer checks artifacts, bridge event logs and source against this frozen rubric and all 14 unchanged trigger expectations.",
+  "limits": [
+    "Five cases per worker share context; one run per variant is not a reliability estimate.",
+    "Small synthetic Python repositories exercise local review workflow, not broad review quality.",
+    "The existing bridge test suite covers installer behavior; the skill comparison does not authorize live installation or external messages.",
+    "Bridge operations are logged by a wrapper around the unchanged installed script; arbitrary shell reads are not exhaustively instrumented."
+  ]
+}

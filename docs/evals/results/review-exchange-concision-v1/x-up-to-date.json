@@ -1,0 +1,107 @@
+{
+  "case": "up-to-date",
+  "request": "Use the review-exchange skill at /tmp/review-exchange-concision/x/SKILL.md.\nUser request: As worker-r, any new review notes?\n\nRepository: /tmp/review-exchange-concision/x/up-to-date/repo\nThis is an execution trial in a disposable local repository. Perform the task\nwith real Git commands and inspect actual results. There is no remote.\nREVIEW_AGENT is unset; keep it unset unless this request supplies a name.\nThe Git user.name belongs to the fixture owner.\n\nOnly the requested local review actions are authorized. Do not edit source,\ntests, installer scripts, logging wrappers, initial.json or event logs.\nDo not inspect other cases, variants, setup source, grading criteria or earlier\nevaluations. Do not contact external services. For permission or identity that\nthe task does not supply, write the question in your handoff and stop that case;\ndo not wait for a simulated reply. Save temporary probes/body files beside the\nrepo and the final user-facing response to /tmp/review-exchange-concision/x/up-to-date/handoff.md.\n",
+  "initial": {
+    "head": "b14b77594f85474674bfc68324f3289589631676",
+    "branch": "topic/report",
+    "files": {
+      "README.md": "# Reservation service\n\nPublc API example.\n"
+    },
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n[alias]\n\treview-note = \"!f() { d=$(cd \\\"$(git rev-parse --git-common-dir)\\\" && pwd -P); test -x \\\"$d/review-feedback/bin/review-bridge\\\" || { echo \\\"review bridge missing; re-run the review-exchange installer\\\" >&2; exit 2; }; exec \\\"$d/review-feedback/bin/review-bridge\\\" note \\\"$@\\\"; }; f\"\n\treview-feedback = \"!f() { d=$(cd \\\"$(git rev-parse --git-common-dir)\\\" && pwd -P); test -x \\\"$d/review-feedback/bin/review-bridge\\\" || { echo \\\"review bridge missing; re-run the review-exchange installer\\\" >&2; exit 2; }; exec \\\"$d/review-feedback/bin/review-bridge\\\" feedback \\\"$@\\\"; }; f\"\n",
+    "store": {
+      "review-feedback/VERSION": "2\n",
+      "review-feedback/bin/review-bridge": {
+        "sha256": "5249b227bb70b0e2df30b20e753f4228ef21b9dacc95799e2900ce2fe3a32043"
+      },
+      "review-feedback/bin/review-bridge-core": {
+        "sha256": "2d4f1cc04b71d8643e50dba6d3ec0fcff1a891f83c2d460b2d5f20bdb7a005ab"
+      },
+      "review-feedback/cursors/topic-report/worker-r": "1\n",
+      "review-feedback/cursors/topic-report/peer": "1\n",
+      "review-feedback/threads/topic-report/001-peer-b14b775.md": "---\nround:       1\nagent:       peer\nrole:        reviewer\nbranch:      topic/report\nbase:        main\ncommit:      b14b77594f85474674bfc68324f3289589631676\nmerge_base:  b14b77594f85474674bfc68324f3289589631676\nwritten:     2026-10-20T03:11:13-0700\n---\n\n## Findings\n\nNone actionable; this does not establish correctness.\n\n## Open questions\n\nNone.\n\n## Verification\n\nNo commands run in this seeded fixture review.\n\n"
+    }
+  },
+  "final": {
+    "head": "b14b77594f85474674bfc68324f3289589631676",
+    "branch": "topic/report",
+    "files": {
+      "README.md": "# Reservation service\n\nPublc API example.\n"
+    },
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n[alias]\n\treview-note = \"!f() { d=$(cd \\\"$(git rev-parse --git-common-dir)\\\" && pwd -P); test -x \\\"$d/review-feedback/bin/review-bridge\\\" || { echo \\\"review bridge missing; re-run the review-exchange installer\\\" >&2; exit 2; }; exec \\\"$d/review-feedback/bin/review-bridge\\\" note \\\"$@\\\"; }; f\"\n\treview-feedback = \"!f() { d=$(cd \\\"$(git rev-parse --git-common-dir)\\\" && pwd -P); test -x \\\"$d/review-feedback/bin/review-bridge\\\" || { echo \\\"review bridge missing; re-run the review-exchange installer\\\" >&2; exit 2; }; exec \\\"$d/review-feedback/bin/review-bridge\\\" feedback \\\"$@\\\"; }; f\"\n",
+    "store": {
+      "review-feedback/VERSION": "2\n",
+      "review-feedback/bin/review-bridge": {
+        "sha256": "5249b227bb70b0e2df30b20e753f4228ef21b9dacc95799e2900ce2fe3a32043"
+      },
+      "review-feedback/bin/review-bridge-core": {
+        "sha256": "2d4f1cc04b71d8643e50dba6d3ec0fcff1a891f83c2d460b2d5f20bdb7a005ab"
+      },
+      "review-feedback/cursors/topic-report/worker-r": "1\n",
+      "review-feedback/cursors/topic-report/peer": "1\n",
+      "review-feedback/threads/topic-report/001-peer-b14b775.md": "---\nround:       1\nagent:       peer\nrole:        reviewer\nbranch:      topic/report\nbase:        main\ncommit:      b14b77594f85474674bfc68324f3289589631676\nmerge_base:  b14b77594f85474674bfc68324f3289589631676\nwritten:     2026-10-20T03:11:13-0700\n---\n\n## Findings\n\nNone actionable; this does not establish correctness.\n\n## Open questions\n\nNone.\n\n## Verification\n\nNo commands run in this seeded fixture review.\n\n"
+    }
+  },
+  "events": [
+    {
+      "started": "2026-10-20T10:14:07.085986+00:00",
+      "arguments": [
+        "feedback",
+        "--as",
+        "worker-r",
+        "--list"
+      ],
+      "exit_code": 0,
+      "stdout": "topic-report \u2014 1 rounds, 0 unread\n",
+      "stderr": ""
+    },
+    {
+      "started": "2026-10-20T10:14:07.148999+00:00",
+      "arguments": [
+        "feedback",
+        "--as",
+        "worker-r",
+        "--peek"
+      ],
+      "exit_code": 0,
+      "stdout": "up to date on topic/report (1 rounds, last: peer round 1)\n",
+      "stderr": ""
+    }
+  ],
+  "handoff": "No new review notes on topic/report. `git review-feedback --as worker-r --peek` reports up to date: one round, last from peer (round 1).\n\nUsed the assigned [review-exchange skill](../SKILL.md). No round was posted and the read cursor was unchanged.\n",
+  "checks": [
+    {
+      "name": "Tracked source, HEAD, branch and config unchanged",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "No untracked repository files",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Existing bridge and rounds preserved",
+      "passed": true,
+      "evidence": null
+    },
+    {
+      "name": "Requested number of new rounds",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "Only cursor and round files added",
+      "passed": true,
+      "evidence": []
+    },
+    {
+      "name": "No review store mutation",
+      "passed": true,
+      "evidence": null
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0
+  }
+}
