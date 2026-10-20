@@ -1,7 +1,8 @@
 ---
 status: open
 opened: 2026-10-19
-updated: 2026-10-19
+updated: 2026-10-20
+beta_skills: [sharable-artifact, review-guide]
 ---
 
 # Sharable artifact: a page a team reads alone
@@ -95,6 +96,78 @@ test, the bridge test, and the release build.
 The scenario corpus specifies expected behavior; one fresh-agent run per arm
 is a wording check, not a behavioral evaluation.
 
+## Concision Follow-up
+
+This single-PR update shortens the instructions while preserving the page
+conventions. It removes repeated history and rationale, combines the duplicate
+checklists into one final check, and keeps operational rules in their relevant
+sections. The description and all 16 existing scenarios remain unchanged.
+Whitespace-delimited word count, including frontmatter, falls from 2,490 to
+1,644 (846 words, 34%). Size alone does not establish better behavior.
+
+The [frozen fixture](../evals/fixtures/skill-concision-artifact-v1.json) defines
+one paired revision of the original engineering design page. Each independent
+worker receives the same page, source witness, captured PR states, local
+publication copy, request, and companion skills. Only `sharable-artifact`
+differs. The workers do not receive the criteria or the other output.
+
+Independent contract review covered the entire instructions and all 42
+expectations in the 16 scenarios. It caught three losses of precision in the
+first draft: source-line provenance said revision rather than commit, authorship
+no longer specified who wrote what, and the beta note overstated what was
+untested. Those details were restored, along with explicit append wording and
+short diagnostic rationales. The record distinguishes the first candidate from
+the final text.
+
+The task updates the progress board and summary, adds a pinned source citation,
+and lengthens a figure label while preserving its identifier and relationships.
+A controlled author-addressed report tests the distinction from independent
+re-review. An added note in the publication copy tests preservation of content
+absent from the starting editing copy.
+
+Rendering uses Chromium through Playwright with the page's declared fonts.
+Publication is a local file operation, so the trial cannot establish deployment
+or hosting behavior. Raw team content, PR snapshots, patches, and screenshots
+stay in local scratch. The public fixture retains hashes and redacted criteria;
+it cannot reproduce the private-page execution by itself.
+
+The [result record](../evals/results/skill-concision-artifact-v1.json) preserves
+the contract reviews, independent behavioral grades, artifact manifests, and
+validation results. Both versions passed all ten frozen criteria:
+
+- All 17 progress rows and the header agree with the 14 captured PR records.
+  Author-addressed findings remain distinct from approval.
+- The source citation uses the supplied full commit, path, and line. Status
+  cells, row classes, board stamp, revision history, and attribution agree.
+- Browser checks cover all 40 labels in the edited figure and 12 combinations
+  of viewport, system theme, and explicit theme choice. Final geometry and
+  page-overflow checks pass.
+- The current-publication note, existing anchors, seven other figure/listing
+  elements, and preformatted content survive. Local publication updates the
+  same destination with a version label.
+
+The independent grader inspected HTML, scripts, saved browser results, and
+rasters, then checked status accuracy, graph relationships, preservation, and
+evidence bindings. It did not rerun the browser. The prose-pass chronology
+remains a worker report. The baseline repaired an inherited duplicate marker
+identifier; the candidate retained and disclosed it, with no observed effect
+on the requested figure relationships.
+
+The candidate first executed with the initial shortened draft. After contract
+corrections, the same worker reread the final skill and checked the completed
+artifact against it. No page or script changes were needed; the saved checks
+still bind the final page hash. This is one continued trial, not a fresh run of
+the final wording. The original source changed during the trial; both isolated
+inputs still match the captured version, and this workflow did not write to the
+original path.
+
+All 151 repository tests passed. The final skill passed `quick_validate.py`;
+description and corpus identity, exact contract-review coverage, artifact
+hashes, and `git diff --check` were also checked. No concision regression was
+observed in this case. The proposed shorter text preserves the contract under
+static review; general equivalence, new-page generation, other audiences, and
+reader comprehension remain unestablished.
+
 ## Deferred Work
 
 - Try the shape on a page for a non-engineering audience before treating the
@@ -103,9 +176,31 @@ is a wording check, not a behavioral evaluation.
   belong beside the skill if a second repository needs it.
 - Measure whether the reading-time estimates in the guide are read.
 
+## Skill Feedback
+
+### sharable-artifact (beta)
+
+- **Confirmation:** both variants preserved the current-publication note,
+  separated author reports from approval, pinned source evidence, and repaired
+  layout findings using browser measurements.
+- **Friction:** the trial requested local publication from a frozen service
+  response. Both workers recorded those overrides to the live-service and
+  publishing defaults and retained evidence copies without treating them as
+  competing maintained sources. No hosting behavior follows from the trial.
+
+### review-guide (beta)
+
+- **Confirmation:** the concision PR distinguishes static contract review,
+  artifact assessment, worker-executed browser checks, and the final candidate's
+  same-context continuation.
+
 ## Appendix: Skills Invoked
 
 - `superpowers:writing-skills` — baseline before relying on the draft, recipe
   form, conditionals on observable predicates.
 - `technical-prose` — the skill text.
 - `engineering-journal` — this record.
+- `skill-creator` — concision edit, contract review, and independent forward-testing.
+- `sharable-artifact` (beta) — paired local page revisions.
+- `dataflow-diagram` — edited-figure measurements and visual-check guidance.
+- `review-guide` (beta) — concision PR description and validation limits.

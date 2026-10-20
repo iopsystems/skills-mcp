@@ -1,0 +1,1248 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "fixture": "../fixtures/skill-concision-artifact-v1.json",
+  "fixture_sha256": "43ee00127612b01a204e9b01d5826b98015093a3e719d0a253d747e131b02251",
+  "word_count": {
+    "method": "Whitespace-delimited, including unchanged frontmatter",
+    "baseline": 2490,
+    "candidate": 1644
+  },
+  "method": {
+    "worker_mapping": {
+      "a": "baseline",
+      "b": "candidate"
+    },
+    "grader_mapping": {
+      "X": "candidate",
+      "Y": "baseline"
+    },
+    "trials": "One worker per variant, one real-page revision each. Both received the same late reminder to preserve failed checks and distinguish edited-figure measurements from whole-page claims. No rubric or other output was supplied.",
+    "candidate_continuation": "The initial candidate completed before receiving the final restored wording. The same worker reread the final skill, checked the existing artifact and evidence bindings, and found no changes needed. Initial artifacts were preserved. This is a continuation, not a fresh trial of the final text.",
+    "grading": "A separate agent reads frozen criteria, source evidence, actual HTML, scripts, saved checks, and rendered previews under hidden X/Y identities. It does not receive skill texts or contract reviews.",
+    "private_evidence": "Raw team input, generated pages, source witness, status capture, patches, scripts and screenshots remain in local scratch. Public evidence contains hashes and aggregate findings, so it cannot reproduce execution alone.",
+    "publication": "Same-path local file publication with version labels; no external deployment or live publication race tested."
+  },
+  "skill_hashes": {
+    "baseline": "1befbb72929aaf9b6b3b309f500730a3579dd61a10490c36a11b0a8173bf52bc",
+    "initial_candidate": "ef49be166ccb21fee07001bba232832ce6b75bdb09d99f99e755d6d9299dceb7",
+    "final_candidate": "0c737b01e1126a3ef671787c709edaba7d45ac6be781ff38f8a29cbc4de9d9ee"
+  },
+  "contract_review": {
+    "review_type": "independent static semantic contract review",
+    "inputs": {
+      "baseline": "/tmp/sharable-concision-eval/baseline-skill.md",
+      "candidate": "/tmp/skills-mcp-concise-sharable/skills/repository/sharable-artifact/SKILL.md",
+      "corpus": "/tmp/skills-mcp-concise-sharable/skills/repository/sharable-artifact/evals/trigger-evals.json"
+    },
+    "scope": "Read both complete skill files and all 16 corpus scenarios. Compared normative requirements, defaults, exceptions, provenance, evidence limits, and diagnostic examples. Did not apply either skill operationally.",
+    "verdict": "mostly_preserved_with_small_semantic_changes",
+    "summary": "All 16 scenarios retain their principal operational behavior. One citation requirement is less specific, authorship granularity is less explicit, and the description of prior validation changes. Some scenario rationales lose explicit wording. The removed checklist and red-flag lists largely duplicate retained requirements.",
+    "findings": [
+      {
+        "id": "F1",
+        "severity": "medium",
+        "type": "weakened_requirement",
+        "subject": "Line-number baseline must be a commit, not any revision",
+        "baseline_location": "baseline-skill.md:116-118",
+        "candidate_location": "SKILL.md:101-103",
+        "baseline": "The containing paragraph or table says which commit the line numbers belong to.",
+        "candidate": "State the line-number revision in the containing paragraph or table.",
+        "impact": "Revision can mean a branch or tag. The full-hash rule still governs durable links, but no longer explicitly requires the accompanying paragraph/table to identify the commit for the line numbers. A citation using a moving revision in prose could satisfy the new local wording.",
+        "recommendation": "Replace line-number revision with commit the line numbers belong to.",
+        "corpus_coverage": "Not directly exercised: branch-link scenario covers link targets, not the required textual baseline for path:line citations."
+      },
+      {
+        "id": "F2",
+        "severity": "low",
+        "type": "reduced_specificity",
+        "subject": "Contribution-level authorship",
+        "baseline_location": "baseline-skill.md:91",
+        "candidate_location": "SKILL.md:80-82",
+        "baseline": "Last, who wrote what.",
+        "candidate": "authorship",
+        "impact": "A list of names can satisfy authorship without stating who wrote which parts. Candidate retains attribution-preservation checks, but these do not restore contribution detail.",
+        "recommendation": "Use authorship (who wrote what).",
+        "corpus_coverage": "The prose-pass scenario checks retention of an attribution line, not contribution-level completeness."
+      },
+      {
+        "id": "F3",
+        "severity": "low",
+        "type": "changed_evidence_limit",
+        "subject": "What has and has not been tried",
+        "baseline_location": "baseline-skill.md:27-34",
+        "candidate_location": "SKILL.md:25-29",
+        "baseline": "Conventions held across the originating team pages; they were not tried on another audience, and reading-time/word-count defaults are that team's.",
+        "candidate": "Other audiences, reading-time estimates, and word-count defaults remain untested.",
+        "impact": "The candidate turns limited validation outside the originating team into an unqualified statement that its time and word-count defaults are untested. This is more pessimistic, but not the same evidence claim.",
+        "recommendation": "Say other audiences remain untested and reading-time/word-count defaults are the originating team's.",
+        "corpus_coverage": "Beta scenario retains override behavior but does not distinguish this provenance change."
+      }
+    ],
+    "nonblocking_observations": [
+      {
+        "subject": "Status revisions",
+        "detail": "Baseline says append a dated footer paragraph; candidate says update a dated footer paragraph as one of four touches. The footer still requires one paragraph per revision, so history preservation survives when reading the whole file. Restoring append would eliminate local ambiguity."
+      },
+      {
+        "subject": "Explicit diagnostic explanations",
+        "detail": "The no-revision/cannot-re-derive explanation, the first-change-drift explanation, and reader-decides-from-summary explanation were removed. Their operative requirements remain; a model may no longer reproduce the exact rationale expected by scenarios 6, 11, and 14."
+      },
+      {
+        "subject": "Removed examples and evidence",
+        "detail": "Seven measured overflows missed by estimates becomes a generic missed-overflow statement; the important distinction remains. The example that technical-prose caught factual errors was removed, but the mandatory prose pass remains."
+      },
+      {
+        "subject": "Checklist and red flags",
+        "detail": "Most are restatements of surviving rules. The warning against a footer paragraph with no board change is no longer explicit; interpreted as status-history consistency it follows from the retained four-touch rule. Read literally as applying to all revisions, the old warning conflicts with revision paragraphs for non-status edits, so its removal is not treated as a clear contract regression."
+      },
+      {
+        "subject": "Corpus is not a complete oracle",
+        "detail": "Two-line chat behavior is inferred from scope in both versions. The table scenario says three or four at most, whereas both versions state a target, not a hard upper bound."
+      }
+    ],
+    "whole_document_audit": [
+      {
+        "area": "Frontmatter and triggering",
+        "result": "Description unchanged, including concrete trigger phrases, symptom triggers, beta qualifier, and engineering-journal referral."
+      },
+      {
+        "area": "Scope and companion skills",
+        "result": "Beta override path and named technical-prose/dataflow-diagram/format-layout-diagram ownership retained. Prior-validation wording changes in F3."
+      },
+      {
+        "area": "One file/source/URL",
+        "result": "Self-contained inline HTML/CSS/SVG, no build, one source, same URL, short version labels, 2-4-word title, and description-only explainer retained."
+      },
+      {
+        "area": "Header and navigation",
+        "result": "Eyebrow scope/assumptions, two-sentence problem, conditional board link, part navigation, time, audience, numbered links, five-minute quick path, and no total/advice retained."
+      },
+      {
+        "area": "Audience parts and defaults",
+        "result": "Three design parts with full subject lists, reader-time ordering, approximate combined 2500-word budget, mechanism pointers by number/title, and no-plan reference exception retained."
+      },
+      {
+        "area": "Section numbering and footer",
+        "result": "CSS counters, non-counting part dividers, ordered evidence/revisions/authorship retained. Contribution granularity reduced in F2."
+      },
+      {
+        "area": "Citations and anchors",
+        "result": "All four element types, stable ids, visible monospace anchors, prefixes, hand/global figure-table-listing numbering, caption positions, linked number references, banned spatial references, and target highlight/clearance retained."
+      },
+      {
+        "area": "Evidence baselines",
+        "result": "PR numbered links with checked commit or merge date, full-hash durable blobs, survey branch/commit, code-font identifiers throughout retained. Source-line textual commit requirement weakened in F1."
+      },
+      {
+        "area": "SVG figures",
+        "result": "ViewBox, own scroller, role and descriptive label including arrows, claim caption, uppercase monospace panel label, shared semantic tokens, image-export exception, per-figure markers, and conditional token legend retained."
+      },
+      {
+        "area": "Label-fit evidence",
+        "result": "Real renderer after each edit, loaded fonts, all four collision/boundary comparisons, no character-count substitute, and correction before publishing retained."
+      },
+      {
+        "area": "Tables/cards/listings",
+        "result": "Caption-first tables, uppercase spaced headers, token colors, yes/no dots, scrollers, property/mechanism twin-table split with repeated labels/caption link, three role cards, and three manual listing span categories/no highlighter retained."
+      },
+      {
+        "area": "Progress tracking",
+        "result": "Conditional header board, four columns, exact six-state vocabulary, bold first state, author/reviewer distinction, row color class, date/main commit stamp, synchronized four touches, and live PR checks retained."
+      },
+      {
+        "area": "Theme/type/layout",
+        "result": "Complete root light palette, both dark blocks, explicit choice precedence in both directions, system default, explicit token body background, semantic hues/fill twins/accent neutrals, allowed font host/fallbacks/type specs, one readable column/grid gaps/mobile gutter/collapse/no page scroll retained."
+      },
+      {
+        "area": "Publishing workflow",
+        "result": "Named-reader prose pass, fit repair, live board checks, both themes, reread/merge published version to protect teammate edits, and same-URL labeled publishing retained."
+      },
+      {
+        "area": "External-agent review",
+        "result": "review-exchange with Markdown render; comparison before adopting including byte-identical preformatted blocks/table rows, decision terms, per-section counts, fit, attribution retained."
+      }
+    ],
+    "scenario_count": 16,
+    "expectation_count": 42,
+    "scenario_coverage": [
+      {
+        "scenario": "a design write-up becomes a page",
+        "expectations": [
+          {
+            "expectation": "Produce one self-contained HTML file published to a stable URL",
+            "assessment": "explicit",
+            "evidence": "One HTML source and stable URL retained."
+          },
+          {
+            "expectation": "Shape it as a short paper: header, reading guide, parts by audience, numbered sections, footer with evidence and revisions",
+            "assessment": "explicit",
+            "evidence": "All requested structural elements retained."
+          },
+          {
+            "expectation": "Give every section, figure, and table an id with its anchor shown beside the title",
+            "assessment": "explicit",
+            "evidence": "Stable ids and anchors beside titles retained."
+          },
+          {
+            "expectation": "Run the prose pass with the reader named before publishing",
+            "assessment": "explicit",
+            "evidence": "Named-reader technical-prose pass retained."
+          }
+        ]
+      },
+      {
+        "scenario": "a chat summary stays in chat",
+        "expectations": [
+          {
+            "expectation": "Answer in chat",
+            "assessment": "scope_inference",
+            "evidence": "Neither version explicitly instructs answering this negative case in chat; both describe standalone team pages as the scope."
+          },
+          {
+            "expectation": "Do not build a page for a two-line status",
+            "assessment": "scope_inference",
+            "evidence": "Neither version explicitly says not to create a page for two lines. No new trigger broadening detected."
+          }
+        ]
+      },
+      {
+        "scenario": "sections numbered by hand",
+        "expectations": [
+          {
+            "expectation": "Number sections with a CSS counter so an insertion renumbers the rest",
+            "assessment": "explicit",
+            "evidence": "CSS section counters retained."
+          },
+          {
+            "expectation": "Keep figures, tables, and listings numbered by hand in order of appearance across the page",
+            "assessment": "explicit",
+            "evidence": "Manual global numbering of figures, tables, and listings retained."
+          },
+          {
+            "expectation": "Make cross-references links on stable ids, by number",
+            "assessment": "explicit",
+            "evidence": "Stable ids and linked numbered references retained."
+          }
+        ]
+      },
+      {
+        "scenario": "a figure cited as below",
+        "expectations": [
+          {
+            "expectation": "Refer to the figure by its number as a link",
+            "assessment": "explicit",
+            "evidence": "Numbered, linked references and ban on below retained."
+          },
+          {
+            "expectation": "Explain that a shared anchor or a later edit breaks 'below'",
+            "assessment": "inference",
+            "evidence": "Both versions motivate stable citations surviving edits; specific shared-anchor/below explanation is inferred."
+          }
+        ]
+      },
+      {
+        "scenario": "a status row that says fixed",
+        "expectations": [
+          {
+            "expectation": "Mark the row awaiting re-review, not approved",
+            "assessment": "explicit",
+            "evidence": "Author-addressed findings are explicitly awaiting re-review."
+          },
+          {
+            "expectation": "Explain that the author saying it is addressed differs from the reviewer confirming it",
+            "assessment": "explicit",
+            "evidence": "Author action versus reviewer confirmation remains explicit."
+          },
+          {
+            "expectation": "Make the four touches together: row cells, row class, as-of stamp, dated footer paragraph",
+            "assessment": "explicit_with_local_softening",
+            "evidence": "All four touches retained; append became update a dated paragraph, but one paragraph per revision remains globally required."
+          },
+          {
+            "expectation": "Check the live pull-request state rather than the report",
+            "assessment": "explicit",
+            "evidence": "Every row must be checked against live PR state before publishing."
+          }
+        ]
+      },
+      {
+        "scenario": "a number with no baseline",
+        "expectations": [
+          {
+            "expectation": "Name the branch and commit the measurement was taken on",
+            "assessment": "explicit",
+            "evidence": "Measurements still require branch and commit."
+          },
+          {
+            "expectation": "Say that a number with no revision cannot be re-derived",
+            "assessment": "reduced_explicitness",
+            "evidence": "Baseline explicitly says a number without a revision cannot be re-derived. Candidate omits that explanatory sentence; baseline requirement survives in the heading and measurement rule."
+          }
+        ]
+      },
+      {
+        "scenario": "a branch link in a citation",
+        "expectations": [
+          {
+            "expectation": "Use a commit-pinned blob link with the full hash",
+            "assessment": "explicit",
+            "evidence": "Commit-pinned blob and full hash retained."
+          },
+          {
+            "expectation": "Explain that a branch link moves and the cited line will not be the line described",
+            "assessment": "inference",
+            "evidence": "Candidate calls branch links moving, as baseline did; resulting cited-line mismatch remains inferred."
+          }
+        ]
+      },
+      {
+        "scenario": "figure colors baked for safety",
+        "expectations": [
+          {
+            "expectation": "Use the page's tokens for an inlined figure so it follows the theme and matches the prose",
+            "assessment": "explicit",
+            "evidence": "Inline tokens, theme following, and semantic consistency retained."
+          },
+          {
+            "expectation": "Reserve baked ink for a figure shipped as an image",
+            "assessment": "explicit",
+            "evidence": "Exported images bake their ink retained."
+          },
+          {
+            "expectation": "Point at the diagram skills for the rule",
+            "assessment": "explicit",
+            "evidence": "Companion section retains named diagram skills and inline-token rule; precise attribution of the full rule to format-layout-diagram was compressed."
+          }
+        ]
+      },
+      {
+        "scenario": "labels estimated instead of measured",
+        "expectations": [
+          {
+            "expectation": "Measure label fit in a real renderer after the figure edit, with fonts confirmed loaded",
+            "assessment": "explicit",
+            "evidence": "Real renderer after every figure edit and loaded-font prerequisite retained."
+          },
+          {
+            "expectation": "Say that character estimates have missed overflows a rendered check found",
+            "assessment": "explicit",
+            "evidence": "Failure of character estimates retained, though the specific seven-overflow result is generalized."
+          },
+          {
+            "expectation": "Fix overflow, crossing, and out-of-bounds findings before publishing",
+            "assessment": "explicit",
+            "evidence": "Fix overflow, crossing, and out-of-bounds findings retained."
+          }
+        ]
+      },
+      {
+        "scenario": "white on white in dark mode",
+        "expectations": [
+          {
+            "expectation": "Define the full light palette on the root, redefine tokens under both dark blocks, set the body background from a token",
+            "assessment": "explicit",
+            "evidence": "Root light palette, both dark blocks, and token body background retained."
+          },
+          {
+            "expectation": "Find the color defined only inside a theme block",
+            "assessment": "explicit",
+            "evidence": "Ban on colors only inside a theme block retained; the diagnostic action follows from the ban."
+          },
+          {
+            "expectation": "Check both theme states before publishing",
+            "assessment": "explicit",
+            "evidence": "Both theme states must render before publishing."
+          }
+        ]
+      },
+      {
+        "scenario": "a reading guide with advice",
+        "expectations": [
+          {
+            "expectation": "Give per-part reading times, who reads each part and why, and the numbered sections",
+            "assessment": "explicit",
+            "evidence": "Per-part time, audience/purpose, and numbered links retained."
+          },
+          {
+            "expectation": "Add a quick path naming the summary, key figures and table, and the decision",
+            "assessment": "explicit",
+            "evidence": "Quick-path destinations retained."
+          },
+          {
+            "expectation": "Drop the total time and the advisory sentence; the reader decides from the summary",
+            "assessment": "explicit_with_rationale_omitted",
+            "evidence": "Total/advisory ban retained. The explanatory reader-decides-from-summary sentence was removed."
+          }
+        ]
+      },
+      {
+        "scenario": "a wide table in the first part",
+        "expectations": [
+          {
+            "expectation": "Keep the property columns in the first part, three or four at most",
+            "assessment": "inherited_corpus_overstatement",
+            "evidence": "Both skills say three or four columns is a target, while the corpus says at most. Property columns remain required; candidate has not introduced this discrepancy."
+          },
+          {
+            "expectation": "Move the derivation and verification columns to a twin table in the implementation part that repeats the row labels",
+            "assessment": "explicit",
+            "evidence": "Twin implementation table, repeated row labels, and displaced mechanism columns retained."
+          },
+          {
+            "expectation": "Point from the first table's caption to the twin",
+            "assessment": "explicit",
+            "evidence": "First caption links to twin retained."
+          }
+        ]
+      },
+      {
+        "scenario": "a reference page with no work to track",
+        "expectations": [
+          {
+            "expectation": "Drop the progress board and the migration part",
+            "assessment": "explicit",
+            "evidence": "Reference-with-no-work exception retained."
+          },
+          {
+            "expectation": "Keep the reading guide, numbered sections, shown anchors, pinned citations, and the footer's evidence baseline and revision notes",
+            "assessment": "explicit",
+            "evidence": "Keep the rest retains guide, numbering, anchors, citations, and footer."
+          }
+        ]
+      },
+      {
+        "scenario": "a second copy in the repo",
+        "expectations": [
+          {
+            "expectation": "Keep one source republished to one URL",
+            "assessment": "explicit",
+            "evidence": "Single source, same stable URL retained."
+          },
+          {
+            "expectation": "Name the committed copy as a second source of truth that drifts on the first change",
+            "assessment": "reduced_explicitness",
+            "evidence": "Repository second-copy prohibition and second-source-of-truth diagnosis retained. Drift on the first change is no longer stated explicitly."
+          }
+        ]
+      },
+      {
+        "scenario": "another agent's prose pass is adopted",
+        "expectations": [
+          {
+            "expectation": "Compare before adopting: preformatted blocks and table rows byte-identical, decision terms retained, per-section word counts, fit check, attribution line present",
+            "assessment": "explicit",
+            "evidence": "Byte identity, decision terms, per-section word counts, rendered fit, and attribution all retained."
+          },
+          {
+            "expectation": "Publish only after the comparison passes",
+            "assessment": "explicit",
+            "evidence": "Before adopting and before-publishing placement retain comparison as a prerequisite."
+          }
+        ]
+      },
+      {
+        "scenario": "conventions are offered as beta",
+        "expectations": [
+          {
+            "expectation": "Treat the parts and reading-time defaults as one team's, open to override",
+            "assessment": "explicit_with_provenance_change",
+            "evidence": "Beta and overrides retain flexibility, but wording now calls reading-time and word-count defaults untested without limiting that claim to other audiences; see F3."
+          },
+          {
+            "expectation": "Record the override and its reason through engineering-journal",
+            "assessment": "explicit",
+            "evidence": "Override plus reason must go through engineering-journal."
+          }
+        ]
+      }
+    ],
+    "limits": [
+      "Static review only; no model runs, HTML rendering, publication, or runtime behavior evaluated.",
+      "No worker outputs, evaluation protocol, or private team artifacts inspected.",
+      "This report distinguishes principal behavioral preservation from loss of explicitly stated explanations; an inference-compatible rewrite does not guarantee identical model responses.",
+      "No operational skill commands executed and no source/corpus files edited."
+    ]
+  },
+  "contract_rereview": {
+    "review_type": "independent static contract rereview",
+    "inputs": {
+      "baseline": "/tmp/sharable-concision-eval/baseline-skill.md",
+      "candidate": "/tmp/skills-mcp-concise-sharable/skills/repository/sharable-artifact/SKILL.md",
+      "corpus": "/tmp/skills-mcp-concise-sharable/skills/repository/sharable-artifact/evals/trigger-evals.json",
+      "initial_report": "/tmp/sharable-concision-eval/contract-review.json"
+    },
+    "candidate_sha256": "0c737b01e1126a3ef671787c709edaba7d45ac6be781ff38f8a29cbc4de9d9ee",
+    "baseline_sha256": "1befbb72929aaf9b6b3b309f500730a3579dd61a10490c36a11b0a8173bf52bc",
+    "initial_report_sha256": "b0c8c88e2f4296cd1e8f358cff9d34eaf60548a34cfbfbb7c6c22e978ae44f4e",
+    "verdict": "pass_static_semantic_review",
+    "review_scope": "Read the complete final baseline-to-candidate diff, checking the earlier whole-document normative audit and all 16 scenarios/42 expectations. Verified all reported corrections and checked the final wording for new semantic loss.",
+    "resolved_findings": [
+      {
+        "id": "F1",
+        "result": "resolved",
+        "evidence": "Source citations now explicitly state which commit the line numbers belong to in the containing paragraph or table; full-hash blob requirement also remains."
+      },
+      {
+        "id": "F2",
+        "result": "resolved",
+        "evidence": "Footer explicitly requires authorship (who wrote what)."
+      },
+      {
+        "id": "F3",
+        "result": "resolved",
+        "evidence": "Conventions are said to have held across originating-team pages; other audiences remain untried; reading-time and word-count defaults belong to that team."
+      }
+    ],
+    "restored_observations": [
+      {
+        "subject": "Status history",
+        "result": "The fourth touch now explicitly appends a dated footer paragraph. All four changes must occur together."
+      },
+      {
+        "subject": "Measurement rationale",
+        "result": "Explicit inability to re-derive a number without a revision is restored."
+      },
+      {
+        "subject": "Single-source rationale",
+        "result": "Explicit drift on the first change is restored."
+      },
+      {
+        "subject": "Reading-guide rationale",
+        "result": "Explicit reader-decides-from-summary explanation is restored."
+      }
+    ],
+    "remaining_concrete_findings": [],
+    "new_semantic_loss_detected": false,
+    "scenario_coverage": {
+      "scenarios": 16,
+      "expectations": 42,
+      "principal_behavior": "retained for all scenarios",
+      "previously_reduced_rationales": "restored",
+      "inherited_limits": [
+        "The two-line chat negative case is inferred from scope in both versions.",
+        "The corpus says three or four columns at most; both versions specify a target rather than a hard maximum.",
+        "Some requested explanations, such as why a shared anchor makes below fragile, are inferred from retained stable-citation requirements in both versions."
+      ]
+    },
+    "remaining_nonblocking_compressions": [
+      "The historical result of seven renderer-detected overflows missed by character estimates is generalized; the failure distinction and mandatory renderer/font checks remain.",
+      "The historical observation that technical-prose caught factual errors is omitted; the mandatory pass remains.",
+      "The explicit footer-without-board-change red flag is compressed into synchronized status edits and per-revision footer requirements; no operational loss identified when read as status-history consistency.",
+      "Checklist and red-flag duplication is removed; their operative requirements survive in substantive sections."
+    ],
+    "limits": [
+      "Static semantic review only; no generation, renderer, or publication behavior tested.",
+      "No worker outputs, evaluation protocol, or private team artifacts inspected.",
+      "Initial review preserved unchanged. No source or corpus edits made.",
+      "No operational commands from reviewed skills executed."
+    ]
+  },
+  "environment": {
+    "chromium": "155.0.8059.79",
+    "playwright_core": "1.64.1",
+    "font_loading": "Actual declared IBM Plex faces loaded from the page's existing font providers. No hosted-font version pinning claimed.",
+    "browser_launch": "Headless existing Chromium with --no-sandbox and tool escalation; sandbox-launch failures retained."
+  },
+  "variants": {
+    "baseline": {
+      "private_artifact_manifest": [
+        {
+          "path": "checks/editing-before.html",
+          "bytes": 175654,
+          "sha256": "b51d8c613de7dcfc2dc43305986b55fcd6dac00dfce155da7e019ff59bc82cd9"
+        },
+        {
+          "path": "checks/prose.py",
+          "bytes": 1197,
+          "sha256": "2d15db3a1a2010cd5a3e367ae002f09a9205183e75b76178e949cf808e24cff6"
+        },
+        {
+          "path": "checks/publication-before.html",
+          "bytes": 175801,
+          "sha256": "35864b6475dc9d3f8569375a2c7f088b69ac2da71038391eb4124436f7d44351"
+        },
+        {
+          "path": "checks/publish.py",
+          "bytes": 1852,
+          "sha256": "a195d5b1540ccfea5bc5ce094dc366d0236e385522b5dcf37d51ba8e6185b330"
+        },
+        {
+          "path": "checks/render.cjs",
+          "bytes": 5952,
+          "sha256": "c6651c11d696278c564a41d046e1647a3d8753f311468a49f7ca9b623d9108bf"
+        },
+        {
+          "path": "checks/revise.py",
+          "bytes": 8266,
+          "sha256": "7691630a4905c904b741f12898cf1afb91b7b23ecad620190255677268937b7e"
+        },
+        {
+          "path": "checks/verify.py",
+          "bytes": 6058,
+          "sha256": "3eeaafbf5ea2c74dfd03d621fd3d3cf42ff16b31a3b884aae5b77c22085bfb4b"
+        },
+        {
+          "path": "input/live-state.json",
+          "bytes": 11557,
+          "sha256": "cff3912f3bcb1d4d191f706c26df1838c0781ec4865568407648322b43dca1a7"
+        },
+        {
+          "path": "input/page.html",
+          "bytes": 175654,
+          "sha256": "b51d8c613de7dcfc2dc43305986b55fcd6dac00dfce155da7e019ff59bc82cd9"
+        },
+        {
+          "path": "input/provenance.json",
+          "bytes": 649,
+          "sha256": "8100352fc126728dd5b5d857607ce5b86fed069f1bb93f119e8af12b76b94629"
+        },
+        {
+          "path": "input/source-witness.json",
+          "bytes": 624,
+          "sha256": "e0b4d59aa235ed28e48ae6c6d0f30e8d513bb9b97446f3f1d6cb10619c615162"
+        },
+        {
+          "path": "page.html",
+          "bytes": 176395,
+          "sha256": "c293786c26e226937a1588a46bbda83b52aa4d539a68acae64b10aac562c9d33"
+        },
+        {
+          "path": "publication/log.json",
+          "bytes": 909,
+          "sha256": "1fe3736db6dda221e8844dca7be53d523ff6dd061aab51adc6b89159c9158037"
+        },
+        {
+          "path": "publication/page.html",
+          "bytes": 176395,
+          "sha256": "c293786c26e226937a1588a46bbda83b52aa4d539a68acae64b10aac562c9d33"
+        },
+        {
+          "path": "report.md",
+          "bytes": 4960,
+          "sha256": "946913458000181233264d8453575c9d69980b30cf11ca2dd183b5aeb6325cea"
+        },
+        {
+          "path": "request.md",
+          "bytes": 2139,
+          "sha256": "c27e11d100a02ab08677e76d99e7b2b722b42a46a4ebe361f321e1f92d6ef4bc"
+        },
+        {
+          "path": "results/board-expected.json",
+          "bytes": 1969,
+          "sha256": "639a22ce8f47f3f3659ff272170ba3b98dc821986321240f9c83e287b7214efe"
+        },
+        {
+          "path": "results/browser-sandbox-failure.txt",
+          "bytes": 6907,
+          "sha256": "c70aee56ab0c1ca90d5a5e0a6216f6ac4647a57ec568c40a723103c8f0af73f7"
+        },
+        {
+          "path": "results/check-history.json",
+          "bytes": 1210,
+          "sha256": "6b8410529c8acc16d51b3c6b944f158a70ff294dd88a3b85df1f82038955e119"
+        },
+        {
+          "path": "results/checks.json",
+          "bytes": 8650,
+          "sha256": "99d72ecd45bd27c3cd4fb8583a21e1a73a8769bd4f83aa6cbda1d6849bc9c3d8"
+        },
+        {
+          "path": "results/figure3-1440-dark.png",
+          "bytes": 116004,
+          "sha256": "579526c593160f0171665a179fe4a2adc72772adbc308a76d747fa463ed9355b"
+        },
+        {
+          "path": "results/figure3-1440-light.png",
+          "bytes": 115505,
+          "sha256": "ce6790ebd6e27efe803f7b36e35066d6daf39206e452524ad1e0554794cb2f3e"
+        },
+        {
+          "path": "results/figure3-390-dark.png",
+          "bytes": 53663,
+          "sha256": "59fdc09a0b8e830dd4be1065ed67b563ac1bd8df5ffc7bde56f4613afecc4a73"
+        },
+        {
+          "path": "results/figure3-390-light.png",
+          "bytes": 53038,
+          "sha256": "fd9be867f82faf0657b0fa74fc39809b4023040bede56860df3d8d0d8bcab969"
+        },
+        {
+          "path": "results/first-render.json",
+          "bytes": 25198,
+          "sha256": "dd7422f701b06d833bda8c1e855ce5f180ba1a2741400c3297cdc80bdb66ae06"
+        },
+        {
+          "path": "results/header-1440-dark.png",
+          "bytes": 490537,
+          "sha256": "5acbbb5cd30ea19183c720c51d3df600e27dc48e7c64351e9a2500187cb3d979"
+        },
+        {
+          "path": "results/header-1440-light.png",
+          "bytes": 479338,
+          "sha256": "d1483c5a45aa0c0f8a2667639266a0910b835ccff6633be7b428ec0d0c0c62fd"
+        },
+        {
+          "path": "results/header-390-dark.png",
+          "bytes": 361500,
+          "sha256": "4bcdbf930c18c4c894092c09482c48ae610da8bd8afb29f9ea05e6a31ab29950"
+        },
+        {
+          "path": "results/header-390-light.png",
+          "bytes": 351811,
+          "sha256": "f558b1f155ecaba4c6ca28a04e32af06280be6bff26779f008cdd093cff14cbf"
+        },
+        {
+          "path": "results/page-text.txt",
+          "bytes": 85467,
+          "sha256": "ee90e9c56cfdf92ea6e2bf369d52d612c1bc4410e5ad6cebe9235e3e1b8e5b6b"
+        },
+        {
+          "path": "results/prose-run.txt",
+          "bytes": 76,
+          "sha256": "f2b8c64c5762e7cb33c217f88b3a94835f74a81d0940adff368e8f2b33911726"
+        },
+        {
+          "path": "results/prose-section-counts.json",
+          "bytes": 1381,
+          "sha256": "32f36aa1c112881d03d091599e40eb02a68f85c579f0a81ca52e6b54cb375dcd"
+        },
+        {
+          "path": "results/prose-text.txt",
+          "bytes": 67484,
+          "sha256": "f13d22e6e78c1a7cb6b7313927f1c40360aa4bb00ad5948c7775c71575737ab7"
+        },
+        {
+          "path": "results/publication-run.txt",
+          "bytes": 222,
+          "sha256": "852ba5e500e9ad0da07eb8acfd21afb10238b435578992ce6891eded87bbb665"
+        },
+        {
+          "path": "results/render-run.txt",
+          "bytes": 159,
+          "sha256": "e2809944870c4e46aca513c6b925cf8855b9f7c9a8a94f2626bfc7f925a5cb04"
+        },
+        {
+          "path": "results/render.json",
+          "bytes": 21810,
+          "sha256": "57d0fdfc62f2ee34a44fc6a0aa2d092d08e597b18ad48d1fcca1b87381a38b8a"
+        },
+        {
+          "path": "results/revision.diff",
+          "bytes": 34868,
+          "sha256": "e71b402f9484ec1fd54b39480a00d62891ac6aaafe9ac828e3fa9528342e9499"
+        },
+        {
+          "path": "results/sha256.json",
+          "bytes": 3209,
+          "sha256": "7e66c03077e9cbeb62aa4e06f0b8643f34188b8389d9547da29d02c648ee8a8f"
+        },
+        {
+          "path": "results/verify-run.txt",
+          "bytes": 51,
+          "sha256": "d94f58d9752e64ab1b02d093078614d887da38137ec7fbf0dcb39701663aba1c"
+        }
+      ],
+      "author_preservation_checks": {
+        "original_page_sha256": "b51d8c613de7dcfc2dc43305986b55fcd6dac00dfce155da7e019ff59bc82cd9",
+        "final_page_sha256": "c293786c26e226937a1588a46bbda83b52aa4d539a68acae64b10aac562c9d33",
+        "local_source_equals_publication": true,
+        "figure_count_before": 8,
+        "figure_count_after": 8,
+        "unrelated_figures_byte_identical": true,
+        "unrelated_figure_count": 7,
+        "preformatted_blocks_byte_identical": true,
+        "preformatted_block_count": 1,
+        "existing_ids_preserved": true,
+        "missing_ids": [],
+        "publication_note_preserved": true,
+        "immutable_source_citation_present": true,
+        "source_table_rows_including_header": 18
+      },
+      "observed_worker_results": {
+        "static_checks_passed": 66,
+        "rendered_theme_viewport_cases": 12,
+        "edited_figure_text_elements": 40,
+        "final_geometry_findings": 0,
+        "system_modes": [
+          "light",
+          "dark"
+        ],
+        "explicit_selections": [
+          "automatic",
+          "light",
+          "dark"
+        ],
+        "viewport_widths": [
+          1440,
+          390
+        ]
+      },
+      "worker_report_sha256": "946913458000181233264d8453575c9d69980b30cf11ca2dd183b5aeb6325cea",
+      "publication_log_sha256": "1fe3736db6dda221e8844dca7be53d523ff6dd061aab51adc6b89159c9158037",
+      "artifact_sha256": "c293786c26e226937a1588a46bbda83b52aa4d539a68acae64b10aac562c9d33"
+    },
+    "candidate": {
+      "private_artifact_manifest": [
+        {
+          "path": "checks/check.py",
+          "bytes": 4604,
+          "sha256": "38ddf54741d0d21418dfb5e9544f092712ffbea60e4c113e4c59b0499bf8a9a9"
+        },
+        {
+          "path": "checks/publish.py",
+          "bytes": 1343,
+          "sha256": "38dbb01c6743bec08dea325c51d0e892a0d6fa19a769eff6693db2adf33fc0d8"
+        },
+        {
+          "path": "checks/render.cjs",
+          "bytes": 5133,
+          "sha256": "1696fb87ef4c84b3a83fe6a5a6ffd8aa0dac0925bb17e952c35b68bb7faed5f7"
+        },
+        {
+          "path": "checks/revise.py",
+          "bytes": 7432,
+          "sha256": "5828d9d837e5b8e09f55e969d8b85305bd1fb1cd04b874820bce82e20a557a98"
+        },
+        {
+          "path": "continuation.md",
+          "bytes": 2194,
+          "sha256": "7c8670b0b44bde4956f8861e87ea0eadda16a32e4d5ec79f9f7ca2bdcb6709ac"
+        },
+        {
+          "path": "input/live-state.json",
+          "bytes": 11557,
+          "sha256": "cff3912f3bcb1d4d191f706c26df1838c0781ec4865568407648322b43dca1a7"
+        },
+        {
+          "path": "input/page.html",
+          "bytes": 175654,
+          "sha256": "b51d8c613de7dcfc2dc43305986b55fcd6dac00dfce155da7e019ff59bc82cd9"
+        },
+        {
+          "path": "input/provenance.json",
+          "bytes": 649,
+          "sha256": "8100352fc126728dd5b5d857607ce5b86fed069f1bb93f119e8af12b76b94629"
+        },
+        {
+          "path": "input/source-witness.json",
+          "bytes": 624,
+          "sha256": "e0b4d59aa235ed28e48ae6c6d0f30e8d513bb9b97446f3f1d6cb10619c615162"
+        },
+        {
+          "path": "outputs/board-1440-dark.png",
+          "bytes": 296335,
+          "sha256": "c0bc68eb8b1ec19b186716cc5afc8dbae3ed5e09a1f422c32a6cd8ad7a7a8e6c"
+        },
+        {
+          "path": "outputs/board-1440-light.png",
+          "bytes": 289300,
+          "sha256": "cd15e2478c71acc37efc12d3f59330d66cbcdbd096d304d96d6713ed20e5e781"
+        },
+        {
+          "path": "outputs/board-390-dark.png",
+          "bytes": 162801,
+          "sha256": "b3e76172ccfdf3ba828f3e15edc9f354c6e296a93565b8056481da792ca1edec"
+        },
+        {
+          "path": "outputs/board-390-light.png",
+          "bytes": 156268,
+          "sha256": "9314bafea8a9d0f659d876c2f6a0c1b2ea94b1b5697a15f0ff33b3425bf881c5"
+        },
+        {
+          "path": "outputs/continuation-binding.json",
+          "bytes": 1393,
+          "sha256": "2f7b0b629f51336cf9ac37559620b989bab9a94e9d8559b3e1be15773e03ffad"
+        },
+        {
+          "path": "outputs/earlier-failures.json",
+          "bytes": 2073,
+          "sha256": "e98e4602ce7a55ccec7c0d3ee4efc60a69284f034e8253bdb64f04ddcac45ca9"
+        },
+        {
+          "path": "outputs/figure3-1440-dark.png",
+          "bytes": 119615,
+          "sha256": "29ef2b8e219fc63926949ce5d3d82ebca4a21624cc8e8210f809292c460b9de2"
+        },
+        {
+          "path": "outputs/figure3-1440-light.png",
+          "bytes": 119292,
+          "sha256": "7bd90a3155ac61f0efed0f21c6c96f6f1f6b89a15fab2c07d97b240ae33c1d9c"
+        },
+        {
+          "path": "outputs/figure3-390-dark.png",
+          "bytes": 56277,
+          "sha256": "74cfca1f0238c683c3c19955b28f4370eeed6aa0adfe39b5d04c83094ad90d9f"
+        },
+        {
+          "path": "outputs/figure3-390-light.png",
+          "bytes": 55548,
+          "sha256": "bf74a6c59030a57b43282e07c5ccd827a1e719b430ac12a4d143b2df0ce79214"
+        },
+        {
+          "path": "outputs/final-manifest.json",
+          "bytes": 1024,
+          "sha256": "93b3eaeac8b3a682b40c6f8e1db83d31a43240c67a016da418cd516e8e60e9f7"
+        },
+        {
+          "path": "outputs/header-1440-dark.png",
+          "bytes": 226951,
+          "sha256": "a17fdeeae354dbe647a824e1ae05b7d689ed4df3c7413a47fad66ae4f35f939f"
+        },
+        {
+          "path": "outputs/header-1440-light.png",
+          "bytes": 224389,
+          "sha256": "c91cd23ad97851913afc25c008f81d374a4b8afc129f44fff2bc4e3b7463a5de"
+        },
+        {
+          "path": "outputs/header-390-dark.png",
+          "bytes": 103479,
+          "sha256": "a874359eedcd64b62a4aaa2c575c29de30770fb43a6513912452e79c14482b86"
+        },
+        {
+          "path": "outputs/header-390-light.png",
+          "bytes": 105102,
+          "sha256": "8fa04129717dcf7333f8d687e59ca222f147ba82875c73706d7df08957dd8378"
+        },
+        {
+          "path": "outputs/page-text.md",
+          "bytes": 79994,
+          "sha256": "220b96e9febdad14e26c28fab99ce14c4875b91a3c044594252e502019d8978d"
+        },
+        {
+          "path": "outputs/render-results.json",
+          "bytes": 18746,
+          "sha256": "2d0d1e57bae485d1f023f202325c6546d46ec302dc683ffd1090596b1796da38"
+        },
+        {
+          "path": "outputs/static-results.json",
+          "bytes": 8924,
+          "sha256": "d2c716ac5841868b5ebcaf1dc5764725ef27575a9a51fab55f572f72fb92b671"
+        },
+        {
+          "path": "page.html",
+          "bytes": 176675,
+          "sha256": "f76426902c855249f950c5f9eeaed7a98bf02caba31e9c4cae6725cda41caf2d"
+        },
+        {
+          "path": "publication/log.json",
+          "bytes": 806,
+          "sha256": "0745630cb0550f99a7b24d88386eee592f62cfa10e107941c94b05fa0a075326"
+        },
+        {
+          "path": "publication/page.html",
+          "bytes": 176675,
+          "sha256": "f76426902c855249f950c5f9eeaed7a98bf02caba31e9c4cae6725cda41caf2d"
+        },
+        {
+          "path": "report.md",
+          "bytes": 7120,
+          "sha256": "d2f4b50a5579fc3342c45091c35e8020a88e780085f7be5ef5550bc75ea4d987"
+        },
+        {
+          "path": "request.md",
+          "bytes": 2139,
+          "sha256": "c27e11d100a02ab08677e76d99e7b2b722b42a46a4ebe361f321e1f92d6ef4bc"
+        },
+        {
+          "path": "snapshots/editing-before.html",
+          "bytes": 175654,
+          "sha256": "b51d8c613de7dcfc2dc43305986b55fcd6dac00dfce155da7e019ff59bc82cd9"
+        },
+        {
+          "path": "snapshots/publication-before.html",
+          "bytes": 175801,
+          "sha256": "35864b6475dc9d3f8569375a2c7f088b69ac2da71038391eb4124436f7d44351"
+        }
+      ],
+      "author_preservation_checks": {
+        "original_page_sha256": "b51d8c613de7dcfc2dc43305986b55fcd6dac00dfce155da7e019ff59bc82cd9",
+        "final_page_sha256": "f76426902c855249f950c5f9eeaed7a98bf02caba31e9c4cae6725cda41caf2d",
+        "local_source_equals_publication": true,
+        "figure_count_before": 8,
+        "figure_count_after": 8,
+        "unrelated_figures_byte_identical": true,
+        "unrelated_figure_count": 7,
+        "preformatted_blocks_byte_identical": true,
+        "preformatted_block_count": 1,
+        "existing_ids_preserved": true,
+        "missing_ids": [],
+        "publication_note_preserved": true,
+        "immutable_source_citation_present": true,
+        "source_table_rows_including_header": 18
+      },
+      "observed_worker_results": {
+        "static_checks_passed": 64,
+        "rendered_theme_viewport_cases": 12,
+        "edited_figure_text_elements": 40,
+        "final_geometry_findings": 0,
+        "system_modes": [
+          "light",
+          "dark"
+        ],
+        "explicit_selections": [
+          "automatic",
+          "light",
+          "dark"
+        ],
+        "viewport_widths": [
+          1440,
+          390
+        ]
+      },
+      "worker_report_sha256": "d2f4b50a5579fc3342c45091c35e8020a88e780085f7be5ef5550bc75ea4d987",
+      "publication_log_sha256": "0745630cb0550f99a7b24d88386eee592f62cfa10e107941c94b05fa0a075326",
+      "artifact_sha256": "f76426902c855249f950c5f9eeaed7a98bf02caba31e9c4cae6725cda41caf2d",
+      "continuation_binding": {
+        "assessment": "No artifact or check changes required by revised skill; existing checks bind the unchanged page.",
+        "hashes": {
+          "skills/sharable-artifact/SKILL.md": "0c737b01e1126a3ef671787c709edaba7d45ac6be781ff38f8a29cbc4de9d9ee",
+          "page.html": "f76426902c855249f950c5f9eeaed7a98bf02caba31e9c4cae6725cda41caf2d",
+          "publication/page.html": "f76426902c855249f950c5f9eeaed7a98bf02caba31e9c4cae6725cda41caf2d",
+          "publication/log.json": "0745630cb0550f99a7b24d88386eee592f62cfa10e107941c94b05fa0a075326",
+          "report.md": "d2f4b50a5579fc3342c45091c35e8020a88e780085f7be5ef5550bc75ea4d987",
+          "checks/revise.py": "5828d9d837e5b8e09f55e969d8b85305bd1fb1cd04b874820bce82e20a557a98",
+          "checks/render.cjs": "1696fb87ef4c84b3a83fe6a5a6ffd8aa0dac0925bb17e952c35b68bb7faed5f7",
+          "checks/publish.py": "38dbb01c6743bec08dea325c51d0e892a0d6fa19a769eff6693db2adf33fc0d8",
+          "checks/check.py": "38ddf54741d0d21418dfb5e9544f092712ffbea60e4c113e4c59b0499bf8a9a9",
+          "outputs/static-results.json": "d2c716ac5841868b5ebcaf1dc5764725ef27575a9a51fab55f572f72fb92b671",
+          "outputs/render-results.json": "2d0d1e57bae485d1f023f202325c6546d46ec302dc683ffd1090596b1796da38",
+          "outputs/earlier-failures.json": "e98e4602ce7a55ccec7c0d3ee4efc60a69284f034e8253bdb64f04ddcac45ca9"
+        },
+        "staticChecks": 64,
+        "renderedThemeCases": 12,
+        "renderedFigureTextElements": 40,
+        "failures": []
+      }
+    }
+  },
+  "repository_validation": {
+    "skill_validator": {
+      "command": "python3 /home/yao/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/repository/sharable-artifact",
+      "exit_code": 0,
+      "output": "Skill is valid!"
+    },
+    "tests": {
+      "command": "cargo test --locked --quiet",
+      "exit_code": 0,
+      "passed": 151,
+      "suite_counts": [
+        83,
+        4,
+        11,
+        4,
+        5,
+        12,
+        15,
+        17
+      ],
+      "stage": "Final skill, fixture/results and journal; also passed on the initial candidate."
+    },
+    "diff_whitespace": {
+      "command": "git diff --check",
+      "exit_code": 0
+    },
+    "final_documentation_checks": {
+      "command": "cargo test --locked --quiet --test citations --test repository_documentation",
+      "exit_code": 0,
+      "tests_passed": 23
+    },
+    "evidence_consistency": {
+      "frozen_protocol_and_corpus": true,
+      "final_skill_hash_matches_contract_rereview": true,
+      "all_private_artifact_manifests_verified": true,
+      "criterion_grades_checked": 20,
+      "private_content_scan": "No original repository/service identifiers, page excerpts, or private URLs in public fixture/results."
+    }
+  },
+  "source_recheck": {
+    "snapshot_matches_capture": true,
+    "source_sha256_at_capture": "b51d8c613de7dcfc2dc43305986b55fcd6dac00dfce155da7e019ff59bc82cd9",
+    "source_sha256_at_final_check": "9eeb7e4ad34e6538e8998ea9215fbd04a971fab6c44180d043c2c7dfd67dca94",
+    "source_modified_at_final_check": "2026-10-20T08:23:57.820179+00:00",
+    "observation": "Original source changed during the isolated trial. Evaluation inputs remain byte-identical to capture. This workflow did not write that path; no attribution to another actor is established."
+  },
+  "limits": [
+    "One originating-team page and one trial per variant; no general equivalence, superiority, or reader-comprehension claim.",
+    "Final candidate received a same-worker continuation; no fresh end-to-end run of the final wording.",
+    "Existing 16 scenarios received static contract review, not 16 behavioral executions.",
+    "Frozen PR evidence and a controlled author-report premise replace live-service reads during the trial.",
+    "Geometry checks cover the edited figure; other figures were checked for byte preservation.",
+    "No independent maintainer visual approval, application tests, deployment or hosting behavior evaluated.",
+    "Raw private artifacts are intentionally absent from this public repository."
+  ],
+  "independent_behavior_grades": {
+    "method": "Independent blinded artifact assessment against the ten frozen criteria. Only the assigned trial directories and permitted shared inputs were read; no skill text, mapping, contract review or source repository was read. Actual HTML, revision/publication/check scripts, saved browser results and selected rendered rasters were inspected. Independent read-only checks compared snapshot states and revisions, immutable citations, publication equality, render-source binding, preserved figures/listings/IDs/attribution/footer note, unchanged body regions, directed graph endpoints and saved label geometry. No worker output was modified and no publication script was invoked.",
+    "evidence_types": {
+      "independently_observed": "File contents and comparisons, source/result bindings, script logic, preserved structure, selected saved screenshots and independent calculations over saved browser geometry.",
+      "worker_execution_evidence": "Saved Chromium metrics/font/theme results and static assertion results; verified against final page bytes but not independently rerun.",
+      "worker_report_only": "Cold-read process, exact initial read chronology, earlier execution escalation and absence of outside actions beyond inspected scripts."
+    },
+    "labels": {
+      "X": {
+        "summary": {
+          "pass": 10,
+          "partial": 0,
+          "fail": 0
+        },
+        "criteria": [
+          {
+            "criterion": 1,
+            "name": "Progress consistency",
+            "grade": "pass",
+            "evidence": "All 17 rows agree with the supplied snapshot: six merged, three ready, two approved, five unstarted, and one awaiting re-review. The header agrees. The historical prerequisite links remain distinct from the unstarted migration, and earlier-head approval is qualified.",
+            "limits": "The snapshot is a trial premise; this review did not query the external service."
+          },
+          {
+            "criterion": 2,
+            "name": "Author report versus confirmation",
+            "grade": "pass",
+            "evidence": "The affected migration row and header attribute completed fixes to the author and leave independent re-review pending. They do not promote that report to reviewer approval.",
+            "limits": "The author report is the supplied scenario premise; the reviewer did not independently validate the fixes."
+          },
+          {
+            "criterion": 3,
+            "name": "Coordinated revision metadata",
+            "grade": "pass",
+            "evidence": "The affected PR cells carry the expected checked revisions or merge dates; row state classes agree with their state cells. Board date, main revision and dated footer update agree. The original attribution paragraph remains byte-identical.",
+            "limits": "Short display revisions are checked against the full supplied snapshot; no current repository inspection was performed."
+          },
+          {
+            "criterion": 4,
+            "name": "Immutable source citation",
+            "grade": "pass",
+            "evidence": "The actual citation URL exactly matches the supplied repository, full immutable revision, source path and line. Its visible source reference is accurate, and adjacent prose limits the witness to source presence rather than a successful build or behavior test.",
+            "limits": "The file witness was supplied; no application build or behavioral validation was run by this reviewer."
+          },
+          {
+            "criterion": 5,
+            "name": "Edited figure semantics and accessibility",
+            "grade": "pass",
+            "evidence": "The requested human-facing heading and implementation identifier remain visible. Caption and accessible description agree. An independent comparison of actual SVG endpoints confirms all six directed connections retain their source and destination boxes. The original figure anchor and numbering remain.",
+            "limits": "This confirms preservation of the supplied diagram, not independent correctness of the underlying system design. One inherited duplicate SVG marker identifier remains, and the handoff explicitly records it. Its presence did not alter the observed requested figure relationships."
+          },
+          {
+            "criterion": 6,
+            "name": "Browser label measurements",
+            "grade": "pass",
+            "evidence": "Saved Chromium measurements are bound to the final page bytes and include all 40 edited-figure labels. Saved results show the declared fonts loaded and no final containment, free-label/shape, text/text, connector/text or viewBox failures. The reviewer inspected the measurement scripts, independently checked saved label boxes for unrelated rectangle intersections, and visually inspected desktop and narrow-screen figure rasters. The final desktop dark and narrow light rasters were viewed directly.",
+            "limits": "Browser execution was performed by the trial worker; this reviewer inspected its scripts, results and screenshots rather than launching another browser. Geometry coverage is the edited figure only."
+          },
+          {
+            "criterion": 7,
+            "name": "Theme tokens and narrow-screen behavior",
+            "grade": "pass",
+            "evidence": "Actual edited SVG colors use page tokens or currentColor. Saved browser results cover 12 combinations of desktop/narrow width, system light/dark and automatic/explicit theme; backgrounds and document widths match expectations. The scrolling wrapper and SVG minimum width remain in actual CSS, and narrow screenshots show locally clipped scrolling content with the surrounding page contained.",
+            "limits": "Saved automated theme assertions primarily cover page background and overflow, rather than every computed SVG color. SVG token usage and the available light/dark rasters supply additional evidence."
+          },
+          {
+            "criterion": 8,
+            "name": "Publication reconciliation and versioning",
+            "grade": "pass",
+            "evidence": "The revision starts from a saved current-publication baseline; the publication-only footer note survives byte-for-byte. The publication script rereads the destination and rejects unexpected intervening bytes. The final editing and publication files are byte-identical, and the local log records a version and actions.",
+            "limits": "The baseline, scripts, log and resulting files support reconciliation; the reviewer did not replay a write or independently observe the initial baseline read."
+          },
+          {
+            "criterion": 9,
+            "name": "Reader-specific prose and preservation",
+            "grade": "pass",
+            "evidence": "Changed prose explains status, evidence scope and the figure heading for a reader outside the review threads. All other figures and preformatted listings are byte-identical to the publication baseline; existing IDs remain. The body outside the intended header, figure, style and footer edit areas is unchanged.",
+            "limits": "The reported cold-read process is worker testimony. The reviewer assessed the resulting text and preservation directly; historical technical claims were preserved rather than revalidated."
+          },
+          {
+            "criterion": 10,
+            "name": "Reproducible and accurate handoff",
+            "grade": "pass",
+            "evidence": "The handoff includes executable revision, browser, static-check and guarded local-publication scripts, saved measurements and screenshots, a version log, and explicit limits. Final saved assertions pass and render evidence matches final bytes. Reports distinguish local publication, author statements and independent review; no external deployment or new maintainer approval is claimed. The saved static suite has 64 passing checks. The continuation states that final artifact and scripts were unchanged; direct final-byte comparisons confirm the render/static evidence still matches.",
+            "limits": "The reviewer inspected scripts and artifacts and performed independent read-only comparisons, but did not rerun the worker suites or audit all external activity. Application validation and independent maintainer review remain outside the trial evidence. The continuation did not rerun checks; its final artifact is unchanged."
+          }
+        ]
+      },
+      "Y": {
+        "summary": {
+          "pass": 10,
+          "partial": 0,
+          "fail": 0
+        },
+        "criteria": [
+          {
+            "criterion": 1,
+            "name": "Progress consistency",
+            "grade": "pass",
+            "evidence": "All 17 rows agree with the supplied snapshot: six merged, three ready, two approved, five unstarted, and one awaiting re-review. The header agrees. The historical prerequisite links remain distinct from the unstarted migration, and earlier-head approval is qualified.",
+            "limits": "The snapshot is a trial premise; this review did not query the external service."
+          },
+          {
+            "criterion": 2,
+            "name": "Author report versus confirmation",
+            "grade": "pass",
+            "evidence": "The affected migration row and header attribute completed fixes to the author and leave independent re-review pending. They do not promote that report to reviewer approval.",
+            "limits": "The author report is the supplied scenario premise; the reviewer did not independently validate the fixes."
+          },
+          {
+            "criterion": 3,
+            "name": "Coordinated revision metadata",
+            "grade": "pass",
+            "evidence": "The affected PR cells carry the expected checked revisions or merge dates; row state classes agree with their state cells. Board date, main revision and dated footer update agree. The original attribution paragraph remains byte-identical.",
+            "limits": "Short display revisions are checked against the full supplied snapshot; no current repository inspection was performed."
+          },
+          {
+            "criterion": 4,
+            "name": "Immutable source citation",
+            "grade": "pass",
+            "evidence": "The actual citation URL exactly matches the supplied repository, full immutable revision, source path and line. Its visible source reference is accurate, and adjacent prose limits the witness to source presence rather than a successful build or behavior test.",
+            "limits": "The file witness was supplied; no application build or behavioral validation was run by this reviewer."
+          },
+          {
+            "criterion": 5,
+            "name": "Edited figure semantics and accessibility",
+            "grade": "pass",
+            "evidence": "The requested human-facing heading and implementation identifier remain visible. Caption and accessible description agree. An independent comparison of actual SVG endpoints confirms all six directed connections retain their source and destination boxes. The original figure anchor and numbering remain. The duplicated internal marker was repaired within the edited figure while all original page IDs remain present elsewhere as applicable.",
+            "limits": "This confirms preservation of the supplied diagram, not independent correctness of the underlying system design."
+          },
+          {
+            "criterion": 6,
+            "name": "Browser label measurements",
+            "grade": "pass",
+            "evidence": "Saved Chromium measurements are bound to the final page bytes and include all 40 edited-figure labels. Saved results show the declared fonts loaded and no final containment, free-label/shape, text/text, connector/text or viewBox failures. The reviewer inspected the measurement scripts, independently checked saved label boxes for unrelated rectangle intersections, and visually inspected desktop and narrow-screen figure rasters. The final desktop light and narrow dark rasters were viewed directly.",
+            "limits": "Browser execution was performed by the trial worker; this reviewer inspected its scripts, results and screenshots rather than launching another browser. Geometry coverage is the edited figure only."
+          },
+          {
+            "criterion": 7,
+            "name": "Theme tokens and narrow-screen behavior",
+            "grade": "pass",
+            "evidence": "Actual edited SVG colors use page tokens or currentColor. Saved browser results cover 12 combinations of desktop/narrow width, system light/dark and automatic/explicit theme; backgrounds and document widths match expectations. The scrolling wrapper and SVG minimum width remain in actual CSS, and narrow screenshots show locally clipped scrolling content with the surrounding page contained.",
+            "limits": "Saved automated theme assertions primarily cover page background and overflow, rather than every computed SVG color. SVG token usage and the available light/dark rasters supply additional evidence."
+          },
+          {
+            "criterion": 8,
+            "name": "Publication reconciliation and versioning",
+            "grade": "pass",
+            "evidence": "The revision starts from a saved current-publication baseline; the publication-only footer note survives byte-for-byte. The publication script rereads the destination and rejects unexpected intervening bytes. The final editing and publication files are byte-identical, and the local log records a version and actions.",
+            "limits": "The baseline, scripts, log and resulting files support reconciliation; the reviewer did not replay a write or independently observe the initial baseline read."
+          },
+          {
+            "criterion": 9,
+            "name": "Reader-specific prose and preservation",
+            "grade": "pass",
+            "evidence": "Changed prose explains status, evidence scope and the figure heading for a reader outside the review threads. All other figures and preformatted listings are byte-identical to the publication baseline; existing IDs remain. The body outside the intended header, figure, style and footer edit areas is unchanged.",
+            "limits": "The reported cold-read process is worker testimony. The reviewer assessed the resulting text and preservation directly; historical technical claims were preserved rather than revalidated."
+          },
+          {
+            "criterion": 10,
+            "name": "Reproducible and accurate handoff",
+            "grade": "pass",
+            "evidence": "The handoff includes executable revision, browser, static-check and guarded local-publication scripts, saved measurements and screenshots, a version log, and explicit limits. Final saved assertions pass and render evidence matches final bytes. Reports distinguish local publication, author statements and independent review; no external deployment or new maintainer approval is claimed. The saved static suite has 66 passing assertions, including a semantic connector comparison and final render-source binding.",
+            "limits": "The reviewer inspected scripts and artifacts and performed independent read-only comparisons, but did not rerun the worker suites or audit all external activity. Application validation and independent maintainer review remain outside the trial evidence."
+          }
+        ]
+      }
+    },
+    "comparison": "Both final artifacts satisfy all ten frozen criteria. The evidence does not establish a behavioral regression between labels. One label retains and discloses an inherited duplicate marker, while the other repairs it; this is outside a demonstrated failure of the requested preserved figure behavior. Quality of process narration or raw check count was not scored as a substitute for artifact correctness."
+  },
+  "outcome": {
+    "baseline": "10/10 frozen criteria pass",
+    "candidate": "10/10 frozen criteria pass",
+    "interpretation": "No concision regression observed in this single continued paired trial; final static contract review has no remaining concrete findings."
+  }
+}

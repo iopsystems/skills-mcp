@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "baseline_commit": "65a529cc236b2ed3268f2ab15c1cdb4dcde05870",
+  "method": "One independent worker per variant receives the same real-page snapshot and request, assigned skill and unchanged companions; criteria hidden. Separate contract review covers all 16 existing scenario expectations. A fresh independent grader receives labeled final outputs and frozen criteria without variant identities. Local-only publication stand-in; not a live platform test.",
+  "request_summary": "Revise an existing engineering design page: refresh all status rows and the header from a frozen service snapshot, distinguish an author-addressed report from independent re-review, add a pinned source citation, lengthen one diagram node heading while retaining its identifier and relationships, check rendering and themes, and merge onto the latest local publication copy before updating it with a version label. No external publication is authorized.",
+  "raw_request_sha256": "c27e11d100a02ab08677e76d99e7b2b722b42a46a4ebe361f321e1f92d6ef4bc",
+  "raw_protocol_sha256": "f02fdc8a886a43bd89412bed8016b2e5fe143bee8da5331b3838786911302972",
+  "source_page_sha256": "b51d8c613de7dcfc2dc43305986b55fcd6dac00dfce155da7e019ff59bc82cd9",
+  "source_page_bytes": 175654,
+  "status_capture_sha256": "cff3912f3bcb1d4d191f706c26df1838c0781ec4865568407648322b43dca1a7",
+  "captured_at": "2026-10-20T08:20:00.349690+00:00",
+  "controlled_inputs": [
+    "An author-addressed report without supplied independent re-review is an evaluation premise, not a verified review finding.",
+    "The current publication copy includes an additional footer note absent from the editing copy."
+  ],
+  "expectations": [
+    "Update all progress rows and the header summary consistently with the supplied PR snapshot, distinguishing historical PRs from unstarted migration work.",
+    "Keep the target author report distinct from independent confirmation; use awaiting re-review rather than approved for that report.",
+    "Update affected PR cells, state cells and classes together with the board date/main revision and a dated footer revision; preserve authorship.",
+    "Add the requested source citation with the supplied full immutable commit and accurate path/line, without inventing a validation result.",
+    "Keep the requested human-facing heading and the original node identifier visible; preserve the figure relationships, accessible description, caption, stable anchor and numbering.",
+    "Measure SVG labels in a real browser with required fonts loaded, check containment, unrelated-shape and text collisions and viewBox bounds; fix findings or report unresolved ones honestly.",
+    "Keep inline SVG colors on page tokens and verify system light/dark and explicit overrides; retain bounded scrolling on a narrow screen.",
+    "Read the current publication source before replacing it, preserve its additional footer note, and update the same local destination with a version label.",
+    "Apply a reader-specific prose pass and preserve unrelated figures, code listings, technical claims, stable anchors, and the page structure.",
+    "Provide actual checks and a reproducible handoff with accurate limits; make no external publication or maintainer-approval claim."
+  ],
+  "expectation_note": "Public criteria redact the private row and node names only. Raw protocol was frozen before editing the skill or running either worker.",
+  "variants": {
+    "a": "baseline",
+    "b": "candidate",
+    "baseline_sha256": "1befbb72929aaf9b6b3b309f500730a3579dd61a10490c36a11b0a8173bf52bc",
+    "initial_candidate_sha256": "ef49be166ccb21fee07001bba232832ce6b75bdb09d99f99e755d6d9299dceb7",
+    "final_candidate_sha256": "0c737b01e1126a3ef671787c709edaba7d45ac6be781ff38f8a29cbc4de9d9ee"
+  },
+  "existing_scenarios": {
+    "path": "skills/repository/sharable-artifact/evals/trigger-evals.json",
+    "sha256": "6d8e26c8b971ae07991ccf55573e796cdefc89330db828d0ea4a70c5e4efa473",
+    "count": 16,
+    "use": "Independent contract review; not 16 executed behavioral trials."
+  },
+  "private_artifacts": "Raw page, PR capture, witness, generated HTML, patches and screenshots remain in local scratch. Hashes and aggregate findings are retained here. Public files alone cannot reproduce the private-page execution.",
+  "publication_limit": "A file-based publication stand-in tests source preservation and version labeling; deployment and platform behavior are not evaluated.",
+  "candidate_revision_note": "Independent contract review restored explicit commit provenance, contribution-level authorship, the original limited-domain evidence claim, append wording, and short diagnostic rationales after the initial candidate trial began. Initial and final skill hashes are retained; execution coverage of the final text is reported with results."
+}
