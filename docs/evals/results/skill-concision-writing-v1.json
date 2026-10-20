@@ -1,0 +1,440 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "baseline_commit": "57846baca58b828ee3266ec6478c4a0335ed32c8",
+  "fixture_sha256": "55efef305b11b42bc17992b227a03a3d5b22627ce863ea384b23fe2bf81be473",
+  "method": {
+    "generation": "One independent agent per variant and suite; cases share an agent context but were requested as standalone tasks. Agents received skill files and prompts, not expectations or other variant outputs.",
+    "trials_per_case_per_variant": 1,
+    "live_repository_execution": false,
+    "activation_evaluation": false,
+    "grader": "Independent agent, blind labels randomized per case with seed 7319.",
+    "worker_limit": "Workspace credit errors surfaced after complete response artifacts and writing grades were saved. JSON parsed and exact case coverage was checked. Further independent reruns were unavailable."
+  },
+  "skill_versions": {
+    "review-guide": {
+      "baseline_sha256": "40f1d6e1298ba72f7a989a2a43221da00588a6a84e8765de6e1f3055a9b880df",
+      "evaluated_candidate_sha256": "9459b4de7cd981590883d1d2980ca0719ef238e716eb5488d5930495b98abc08",
+      "final_candidate_sha256": "9459b4de7cd981590883d1d2980ca0719ef238e716eb5488d5930495b98abc08"
+    },
+    "sweep-comments": {
+      "baseline_sha256": "8bc08823a69bc775640f1d2e1f01ea83285e5ed04efc4956a51ed7bf57411649",
+      "evaluated_candidate_sha256": "0e8ca447a3bd3587da3f717da9de00202d2bd4dc8e36adec3e10cc3ef3240eb9",
+      "final_candidate_sha256": "85f5e909c075ddd1a0e00718ce6a2f0c37156b33bea54c9a57a08f1edd59610d"
+    },
+    "technical-prose": {
+      "baseline_sha256": "b08b0abfa8e434b1070969774880f302abde85767e0f208e7eb58ddd4eb7a573",
+      "evaluated_candidate_sha256": "1d7106ce2826e605741186501bcb0fa084004083f05814ee914b678272725c62",
+      "final_candidate_sha256": "1d7106ce2826e605741186501bcb0fa084004083f05814ee914b678272725c62"
+    }
+  },
+  "word_counts": {
+    "review-guide": {
+      "baseline_words": 2341,
+      "candidate_words": 2189
+    },
+    "sweep-comments": {
+      "baseline_words": 6351,
+      "candidate_words": 4919
+    },
+    "technical-prose": {
+      "baseline_words": 3044,
+      "candidate_words": 2045
+    }
+  },
+  "cases": [
+    {
+      "id": "technical-prose-02",
+      "responses": {
+        "baseline": "Callers must not hold the lock across an await point.\n\n\u201cMay not\u201d expresses a prohibition here; \u201ccannot\u201d would incorrectly claim impossibility.",
+        "candidate": "Callers may not hold the lock across an await point.\n\nKeep \u201cmay not\u201d: it prohibits the action. \u201cCannot\u201d would claim the action is impossible."
+      },
+      "blind_label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "partial",
+          "reason": "Correctly treats the modal as a prohibition and rejects impossibility, but changes \u201cmay not\u201d to \u201cmust not\u201d instead of leaving \u201cmay not\u201d intact."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Preserves \u201cmay not,\u201d identifies its prohibition sense, and distinguishes it from impossibility."
+        }
+      }
+    },
+    {
+      "id": "technical-prose-28",
+      "responses": {
+        "baseline": "Start with a 30-second timeout to match the measured latency of the usual workload. Other timeouts are supported.",
+        "candidate": "Start with a 30-second timeout to match the usual workload\u2019s measured latency. Other timeouts are supported."
+      },
+      "blind_label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "pass",
+          "reason": "Preserves the recommended starting timeout, measured usual-workload rationale, and support for other timeouts without imposing a mandatory value."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Preserves the recommended starting timeout, measured usual-workload rationale, and support for other timeouts without imposing a mandatory value."
+        }
+      }
+    },
+    {
+      "id": "technical-prose-29",
+      "responses": {
+        "baseline": "Nested cfg expressions are untested and might be misclassified. No failure has been observed.",
+        "candidate": "Nested cfg expressions might be misclassified. No fixture covers them yet, and no failure has been observed."
+      },
+      "blind_label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "pass",
+          "reason": "Keeps the suspected failure distinct from an observed failure and explicitly preserves the missing-fixture gap."
+        },
+        "B": {
+          "result": "partial",
+          "reason": "Preserves uncertainty and the absence of an observed failure, but replaces the specific missing-fixture gap with the broader, unsupported assertion that the expressions are \u201cuntested.\u201d"
+        }
+      }
+    },
+    {
+      "id": "technical-prose-31",
+      "responses": {
+        "baseline": "We count comments and blank lines because the chart measures the source a reader must navigate.",
+        "candidate": "We count comments and blank lines because the chart measures the source a reader must navigate."
+      },
+      "blind_label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "pass",
+          "reason": "Preserves counting comments and blanks and the navigation rationale while removing chronology and redundant finality."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Preserves counting comments and blanks and the navigation rationale while removing chronology and redundant finality."
+        }
+      }
+    },
+    {
+      "id": "technical-prose-32",
+      "responses": {
+        "baseline": "The author reports a parser fix. Its regression fixture passes; independent re-review is pending.",
+        "candidate": "The author reports a parser fix. Its regression fixture passes; independent re-review is pending."
+      },
+      "blind_label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "pass",
+          "reason": "Separates the attributed fix report, passing regression fixture, and pending independent re-review without asserting complete resolution or restricting remaining risk."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Separates the attributed fix report, passing regression fixture, and pending independent re-review without asserting complete resolution or restricting remaining risk."
+        }
+      }
+    },
+    {
+      "id": "technical-prose-35",
+      "responses": {
+        "baseline": "Opening:\n\nVersion 1 cannot read the version-2 index. To revert, follow [Rollback](#rollback).\n\nRollback:\n\nRestore the pre-upgrade snapshot before restarting version 1.\n\nChecklist item:\n\n- Before restarting version 1, complete [Rollback](#rollback).",
+        "candidate": "Opening: \u201cVersion 1 cannot read the version-2 index. Before restarting version 1, restore the pre-upgrade snapshot; see [Rollback](#rollback).\u201d\n\nRollback: \u201cRestore the pre-upgrade snapshot before restarting version 1.\u201d\n\nChecklist: \u201cBefore restarting version 1, restore the pre-upgrade snapshot as described in [Rollback](#rollback).\u201d"
+      },
+      "blind_label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "pass",
+          "reason": "Removes the duplicated incompatibility explanation from Rollback, preserves the version-specific snapshot-before-restart requirement, and retains a usable checklist link. Repeating the operational requirement at entry points is justified."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Consolidates the incompatibility explanation and rollback procedure, preserves the required snapshot-before-restart ordering and version identifiers, and links both opening and checklist to Rollback."
+        }
+      }
+    },
+    {
+      "id": "sweep-comments-15",
+      "responses": {
+        "baseline": "Keep the test\u2019s one-sentence property statement: it binds the test to the model clause and helps diagnose a failure. Also keep a short comment explaining why the fixture\u2019s capacity is deliberately undersized. Do not invent that reason if it is not supplied. Remove narration of the test mechanics or repetition of its name.",
+        "candidate": "Keep the test\u2019s one-sentence property statement: it identifies the promise a failure breaks, even when the module doc states the same model. Keep a note beside the undersized capacity explaining the fixture\u2019s purpose. Do not invent that purpose if it is not supplied."
+      },
+      "blind_label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "partial",
+          "reason": "Preserves the property as a claim binding and the undersized-fixture rationale without inventing its purpose, but omits the expected removal of mechanics narration inside the test body."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Preserves the property binding and scenario rationale and explicitly removes narration of test mechanics."
+        }
+      }
+    },
+    {
+      "id": "sweep-comments-17",
+      "responses": {
+        "baseline": "Delete the clause that echoes the model home. Keep the forward design commitment as a standalone sentence, preserving the future executor\u2019s specific obligation. The original sentence is needed for an exact rewrite.",
+        "candidate": "Remove the clause repeating the model. Keep the future-executor commitment as a standalone constraint, preserving its subject and obligation. The sentence itself is needed for an exact rewrite."
+      },
+      "blind_label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "partial",
+          "reason": "Separates the echo from the forward statement and acknowledges that exact wording is unavailable, but calls the future executor statement an \u201cobligation,\u201d failing to preserve the prediction-versus-obligation distinction."
+        },
+        "B": {
+          "result": "partial",
+          "reason": "Removes the model echo and retains a standalone forward statement, but explicitly recasts it as a \u201cconstraint\u201d with an \u201cobligation,\u201d contrary to the expectation not to turn a prediction into an obligation."
+        }
+      }
+    },
+    {
+      "id": "sweep-comments-20",
+      "responses": {
+        "baseline": "Nothing may be moved out of the record here. A forwarder re-encodes it unchanged.",
+        "candidate": "Nothing may be moved out of the record here; a forwarder re-encodes it unchanged."
+      },
+      "blind_label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "partial",
+          "reason": "The rewrite preserves the prohibition and forwarding rationale. It does not explicitly reject the descriptive alternative or explain that a description would license the edit the comment prevents."
+        },
+        "B": {
+          "result": "partial",
+          "reason": "The rewrite preserves the prohibition and forwarding rationale. It does not explicitly reject the descriptive alternative or explain that a description would license the edit the comment prevents."
+        }
+      }
+    },
+    {
+      "id": "sweep-comments-25",
+      "responses": {
+        "baseline": "Never steps backwards.\n\nKeep \u201cnever\u201d: this states a guarantee. \u201cMust not regress\u201d would turn it into an obligation.",
+        "candidate": "Never steps backwards.\n\nUse this fragment when the documented sequence supplies the subject. It preserves the guarantee; \u201cmust not regress\u201d would turn it into an obligation."
+      },
+      "blind_label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "partial",
+          "reason": "Keeps a behavioral guarantee in fragment form and correctly rejects turning it into an obligation, but does not cite the expected compress-don\u2019t-paraphrase rule."
+        },
+        "B": {
+          "result": "partial",
+          "reason": "Keeps a behavioral guarantee in an appropriately conditioned fragment and rejects obligation wording, but does not cite the expected compress-don\u2019t-paraphrase rule."
+        }
+      }
+    },
+    {
+      "id": "sweep-comments-32",
+      "responses": {
+        "baseline": "The absence claim needs verification before it can be retained: check producers and sibling tests for streams carrying metadata. The supplied note alone does not establish that the reverse direction is untestable.\n\nIf the claim is confirmed, use: \u201cThe reverse direction cannot yet be tested because no producer attaches metadata to its message stream.\u201d If it is false, replace the note with the actual coverage limitation.",
+        "candidate": "The wording depends on two claims that need checking: whether any producer attaches metadata, and whether that actually prevents testing the reverse direction. The supplied note alone establishes neither.\n\nIf both claims are verified: \u201cThe reverse direction cannot be tested yet because no producer attaches metadata to its message stream.\u201d"
+      },
+      "blind_label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "partial",
+          "reason": "Honestly identifies verification as pending rather than claiming checks ran. It does not direct checks to the registry and crate tests, specify correction if a producer exists, or prefer adding a second test over prose."
+        },
+        "B": {
+          "result": "partial",
+          "reason": "Honestly requests producer and sibling-test verification and provides a correction path if the claim is false. It does not explicitly include the registry or prefer making the reverse-direction claim a second test. No verification is treated as executed."
+        }
+      }
+    },
+    {
+      "id": "sweep-comments-34",
+      "responses": {
+        "baseline": "The header doc is incorrect: `encode_header` writes four little-endian `u64` words\u2014`sequence`, `cursor`, `lost`, and `stamp`\u2014for 32 bytes, matching `HEADER_BYTES`. Replace it with:\n\n```rust\n/// Encoded header: four u64 words in little-endian order.\n```\n\nRemove the relocation history from the module doc:\n\n```rust\n//! Header schema for the transport.\n```\n\nThe encoder and constant need no change.",
+        "candidate": "The header doc is incorrect: `HEADER_BYTES` is 32, and `encode_header` writes four little-endian `u64` words: `sequence`, `cursor`, `lost`, and `stamp`. Change the comment to \u201cEncoded header: four u64 words in little-endian order.\u201d\n\nRemove \u201cdeclarations and encoder were moved together\u201d from the module doc; it records change history. Keep \u201cHeader schema for the transport.\u201d"
+      },
+      "blind_label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "pass",
+          "reason": "Checks both the 32-byte constant and four encoded words, corrects the false inherited schema comment, and removes relocation history without changing the binary format or claiming edits, tests, or a full sweep."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Checks both the 32-byte constant and four encoded words, corrects the false inherited schema comment, and removes relocation history without changing the binary format or claiming edits, tests, or a full sweep."
+        }
+      }
+    },
+    {
+      "id": "review-guide-59",
+      "responses": {
+        "baseline": "Adds a Rust source-layout skill and a convention for source-footprint treemaps. Layout boundaries follow responsibility while preserving public paths. Roughly 500 production lines prompts inspection; this is an uncalibrated heuristic.\n\nThe treemap measures how much source a reader navigates, so it counts physical handwritten lines, including comments, blank lines, and verification source. Generated and vendored source are excluded. Nesting represents ownership; area represents LOC. A hatched partition shows verification within each component\u2019s total.\n\nThe trial generator and Rust scanner produced these charts:\n\n| Project | Crates | Lines | Verification |\n| --- | ---: | ---: | ---: |\n| Pelikan | 23 | 31,551 | 18.1% |\n| cache-rs | 5 | 27,363 | 47.8% |\n\nEach chart uses its own area scale, so areas cannot be compared across charts.\n\nReview should focus on the scanner\u2019s attribute classification and module traversal. Review found bugs on valid Rust; the author reports fixes at `e7ad242`. At that revision, 151 repository tests and both Python self-tests passed. Independent re-review of the fixes is pending, and the scanner has not been validated across the full Rust grammar.\n\nThe agent scenario corpus has not been executed independently. The Pelikan rendering awaits maintainer review. Template instructions mirror the skill; mechanical README count and digest updates can be skimmed.",
+        "candidate": "This PR adds a Rust source-layout skill and a source-footprint treemap convention. Layout boundaries follow responsibility while preserving public paths. Roughly 500 production lines prompts inspection; that threshold has no calibration study.\n\nThe treemap counts physical handwritten lines, including comments, blanks, and verification source, because it measures the source a reader navigates. Generated and vendored source are excluded. Nesting shows ownership; area shows LOC. A hatched partition distinguishes verification within each component\u2019s total.\n\nThe trial generator and Rust scanner produced these charts:\n\n| Project | Crates | Lines | Verification |\n| --- | ---: | ---: | ---: |\n| Pelikan | 23 | 31,551 | 18.1% |\n| cache-rs | 5 | 27,363 | 47.8% |\n\nEach chart has its own area scale, so areas cannot be compared directly between charts. The Pelikan rendering awaits maintainer review.\n\nReview should focus on the scanner\u2019s attribute classification and module traversal. Review found bugs on valid Rust; the author reports fixes at `e7ad242`, where 151 repository tests and both Python self-tests passed. Independent re-review of those fixes is pending. The scanner has not been validated across the full Rust grammar, and the agent scenario corpus has not been executed independently.\n\nTemplate instructions mirror the skill. README counts and digests are mechanical and can be skimmed."
+      },
+      "blind_label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "partial",
+          "reason": "Preserves the two additions, LOC rationale and partition, inspection heuristic, separate chart scales, mechanical updates, and all evidence boundaries. Scanner classification is an explicit review priority, but rendered proportionality is not; stating area semantics and pending maintainer review does not identify checking proportionality as consequential review work."
+        },
+        "B": {
+          "result": "partial",
+          "reason": "Preserves the two additions, LOC rationale and partition, inspection trigger, separate chart scales, mechanical updates, and all evidence boundaries. Scanner classification is an explicit review priority, but rendered proportionality is not; the rendering\u2019s pending maintainer review does not identify that check."
+        }
+      }
+    },
+    {
+      "id": "review-guide-60",
+      "responses": {
+        "baseline": "Renames the configuration setting across the CLI, configuration loader, and metrics exporter under the approved migration policy. Both keys remain accepted; the old key emits a warning. Most edits mechanically replace the internal name.\n\n`cargo test --locked` passed 42 tests covering both keys. The warning has not been checked in the packaged CLI.",
+        "candidate": "This PR renames the configuration setting across the CLI, configuration loader, and metrics exporter. Both keys remain accepted; the old key emits a warning under the approved migration policy. Most edits mechanically replace the internal name.\n\n`cargo test --locked` passed 42 tests covering both keys. The warning has not been checked in the packaged CLI."
+      },
+      "blind_label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "pass",
+          "reason": "Clearly states compatibility, warning behavior, approved policy, mechanical scope, supplied passing tests, and the packaged-CLI gap without inventing decisions or risk sections. Additional review directions are optional here."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Clearly states compatibility, warning behavior, approved policy, mechanical scope, supplied passing tests, and the packaged-CLI gap without inventing decisions or risk sections. Additional review directions are optional here."
+        }
+      }
+    },
+    {
+      "id": "review-guide-61",
+      "responses": {
+        "baseline": "The opening overstates connection persistence: the source permits reselection before sending begins.\n\nRevised body:\n\nBefore any bytes are sent, a failed connection causes the request to select another connection. Once sending begins, the selected connection stays fixed.\n\n`cargo test --locked` passed 18 tests covering both paths.",
+        "candidate": "The opening overstates connection lifetime: the source permits reselection before sending begins.\n\nRevised body:\n\nIf a connection fails before any bytes are sent, the request selects another connection. Once sending begins, the selected connection stays fixed.\n\n`cargo test --locked` passed 18 tests covering both paths."
+      },
+      "blind_label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "pass",
+          "reason": "Identifies the overbroad lifetime claim and revises it to distinguish pre-send reselection from post-send persistence, retaining the supplied test evidence without inventing an implementation defect."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Identifies the overbroad lifetime claim and revises it to distinguish pre-send reselection from post-send persistence, retaining the supplied test evidence without inventing an implementation defect."
+        }
+      }
+    },
+    {
+      "id": "review-guide-65",
+      "responses": {
+        "baseline": "Declares status reports from edge hosts to the central host without adding a publisher. Before merge, decide whether edge hosts also need reports from the central host. The sorted-map choice follows the required audit ordering.\n\nReader records move to format 2. Mixed format-1/format-2 deployment has not been tested, and it is unknown whether deployment permits mixed releases. Confirm the deployment policy; if mixed releases are permitted, compatibility needs validation or explicit risk acceptance. No mitigation is established by the supplied evidence.\n\n`cargo test --locked` passed 30 tests covering encoding and the declared topology. These results do not establish mixed-release compatibility.",
+        "candidate": "This PR declares status reports from edge hosts to the central host; it adds no publisher. Before merge, decide whether edge hosts also need the central host\u2019s reports. The declarations currently cover only the edge-to-central direction.\n\nReports use a sorted map to satisfy required audit ordering. Reader records move to format 2. Mixed format-1/format-2 deployment has not been tested, and whether deployment permits mixed releases is unknown. Confirm that deployment constraint; if mixed releases are permitted, compatibility remains unverified.\n\n`cargo test --locked` passed 30 tests covering encoding and the declared topology. These checks do not establish mixed-format deployment compatibility."
+      },
+      "blind_label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "partial",
+          "reason": "Preserves declaration-only scope, the topology merge decision, settled audit-ordering rationale, separate deployment-policy uncertainty and test gap, and actual check strength. However, \u201ccompatibility needs validation or explicit risk acceptance\u201d adds a conditional approval/validation requirement beyond the supplied merge gate."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Preserves declaration-only scope, the explicit topology decision before merge, settled sorted-map rationale, separate deployment-policy uncertainty and mixed-format test gap, and the limited strength of the passing checks without adding a merge gate."
+        }
+      }
+    },
+    {
+      "id": "review-guide-66",
+      "responses": {
+        "baseline": "Title: `refactor: separate declarations from implementation across four components`\n\nSeparates declarations from implementation in the settings registry, packet transport, scheduler, and output converter. Existing import paths and runtime values remain unchanged.\n\nReview the transport header constants in `wire_layout`, scheduler declarations in `settings`, and output coverage decisions beside output policy. Independent review covered only the initial settings registry move; these later changes have not been independently reviewed.\n\n`cargo test --locked` passed 84 tests on the final revision, covering settings lookup, packet encoding, and output coverage. No end-to-end service launch ran.",
+        "candidate": "Title: `refactor: separate declarations from implementation`\n\nThis PR separates declarations from implementation across the settings registry, packet transport, scheduler, and output converter. It splits the 2,400-line registry into modules, places transport header constants in `wire_layout` and scheduler settings in `settings`, and locates output coverage decisions beside output policy. Existing imports and runtime values remain unchanged.\n\nIndependent review covered only the initial registry move. The transport, scheduler, and output changes still need independent review.\n\n`cargo test --locked` passed 84 tests on the final revision, covering settings lookup, packet encoding, and output coverage. No end-to-end service launch ran."
+      },
+      "blind_label_mapping": {
+        "A": "candidate",
+        "B": "baseline"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "pass",
+          "reason": "Reframes title and opening around the final separation across all four components, preserves imports and values, and distinguishes the initial independent review from later changes while retaining final-revision tests and the missing service launch."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Reframes title and opening around the final separation across all four components, guides review to the later unreviewed changes, and preserves import paths, values, final-revision tests, and the missing service launch."
+        }
+      }
+    },
+    {
+      "id": "review-guide-67",
+      "responses": {
+        "baseline": "Most declarations move unchanged while preserving existing public paths. The final change also replaces a runtime-generated endpoint list with a static list containing the same entries and exposes four formerly private retry constants in a library settings module for use by both the binary and library. Runtime values and behavior are intended to remain unchanged.\n\nBefore merge, decide whether the expanded public API is acceptable. Focus review on that visibility change and the endpoint-list replacement; unchanged declaration moves can be skimmed.\n\n`cargo test --locked` passed 52 tests, including endpoint parity. No external-client compatibility check has run.",
+        "candidate": "This PR moves declarations while preserving existing public paths. It also replaces the runtime-generated endpoint list with a static list containing the same entries and makes four previously private retry constants public in the library settings module so the binary and library can share them. Before merge, decide whether that public API expansion is acceptable.\n\nMost declaration moves are unchanged and can be skimmed. Review the static endpoint list and the visibility changes closely; runtime values and behavior are intended to remain unchanged.\n\n`cargo test --locked` passed 52 tests, including endpoint parity. No external-client compatibility check has run."
+      },
+      "blind_label_mapping": {
+        "A": "baseline",
+        "B": "candidate"
+      },
+      "blind_grades": {
+        "A": {
+          "result": "pass",
+          "reason": "Distinguishes unchanged moves, static endpoint construction, and public API expansion; preserves intended behavior and public paths; makes the visibility decision a before-merge requirement; and reports parity coverage and absent external-client checking at their supplied strength."
+        },
+        "B": {
+          "result": "pass",
+          "reason": "Distinguishes unchanged moves, static endpoint construction, and public API expansion; preserves intended behavior and public paths; makes the visibility decision a before-merge requirement; and reports parity coverage and absent external-client checking at their supplied strength."
+        }
+      }
+    }
+  ],
+  "strict_grade_counts": {
+    "baseline": {
+      "partial": 8,
+      "pass": 10
+    },
+    "candidate": {
+      "pass": 12,
+      "partial": 6
+    }
+  },
+  "limits": [
+    "Candidate sweep-comments response for case 15 fell from pass to partial: it omitted mechanics-narration cleanup. That rule remains in the skill; a concrete-test rerun is needed before attributing the difference to the edit.",
+    "The independent contract review caught and verified restoration of the derivation-destination instruction after response generation. Behavioral hashes distinguish the evaluated and final sweep-comments text.",
+    "One run and targeted selection do not establish improvement, equivalence, or downstream reader comprehension. Partial grades include explanation omissions on prompts with missing artifacts."
+  ]
+}

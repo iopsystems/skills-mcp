@@ -34,9 +34,8 @@ Consider each of these before drafting:
 - What ran, what did it establish, and what material gaps remain?
 - What depends on deployment conditions unavailable in local checks?
 
-These are assessment questions, not required sections. Publish a finding when
-it changes how the reviewer understands, checks, or decides on this change.
-A true, unique fact can still be irrelevant to that task.
+These are assessment questions, not required sections. Publish only findings
+that help the reviewer understand, check, or decide on this change.
 
 A mechanical change can need one sentence plus relevant validation. Crossing
 subsystems or making a performance claim calls for closer assessment; neither
@@ -45,10 +44,8 @@ path still needs that gap stated. Omit empty categories without announcing that
 the checks found nothing. Do not invent asks, risks, or a reading order to show
 that the assessment happened.
 
-Preserve the explanation needed to evaluate a consequential choice. Cut
-repeated summaries, incidental details, and process narration before cutting
-that rationale. Accessibility and brevity both serve the reviewer; neither
-requires a fixed word count or an exhaustive account.
+Preserve consequential rationale before summaries, incidental details, or
+process history. Do not impose a fixed word count.
 
 ## Open with the concrete change
 
@@ -61,9 +58,8 @@ For example:
 > A timed-out upload can be retried indefinitely. This change stops retries
 > when the configured budget is exhausted and returns the last upload error.
 
-This establishes something the reviewer can check. "Improves reliability with
-a reusable retry workflow" does not explain the behavior. Do not invent a
-before-state or a motivation merely to complete the opening.
+Do not replace concrete behavior with claims such as "improves reliability,"
+or invent a before-state or motivation to complete the opening.
 
 Identifiers are welcome when they make the change more precise. Explain an
 unfamiliar concept at first use, including concepts that predate the diff.
@@ -91,14 +87,11 @@ concept one name and keep it consistent. A clause can introduce a familiar
 mechanism; interacting ownership rules or a topology can need a paragraph or a
 diagram. Add a separate mental-model section only when that organization helps.
 
-A before/problem/change sequence is useful when it explains a consequence.
-Do not repeat the sequence in every paragraph or restate the same starting
-point as both context and motivation. If the opening already supplies the
-model, continue to the review evidence.
+Explain a before/problem/change sequence once where it clarifies a consequence.
+If the opening supplies the model, continue to the review evidence.
 
-Cut a subsystem tour that would fit any PR against these files. Preserve a
-specific invariant the reviewer needs even if it also matters to other changes.
-The test is relevance to this review, not novelty of the explanation.
+Cut generic subsystem tours. Keep invariants needed to review this change,
+even when they also matter to other changes.
 
 In a stack, link the base guide's shared model and explain this change's delta.
 Do not reproduce the same subsystem explanation or diagram in every PR. When
@@ -106,11 +99,9 @@ pointing to another section, use its actual heading or a direct link.
 
 ## Distinguish rationale from open decisions
 
-A settled choice can deserve explanation without becoming a question. Keep its
-reason where the reviewer needs it. Do not ask the reviewer to reconfirm a
-choice already established by the requirements, or list every reversible value
-chosen during implementation. A small edit can still carry a major consequence:
-a timeout or retention threshold earns attention when its effect does.
+Explain consequential settled choices without asking for reconfirmation. Omit
+incidental reversible values; a timeout or retention threshold still deserves
+attention when its effect matters.
 
 For a real open decision, give enough context to understand the alternatives,
 link the evidence, and state what needs deciding. Include the proposed choice,
@@ -271,11 +262,9 @@ After drafting, read as the reviewer and check:
 - Can they distinguish what was checked from what remains unverified?
 - Does each passage help them evaluate this change?
 
-Shortening fails if it loses a reason, condition, or material gap. Expansion
-fails if it only repeats a fact, describes the process, or fills a template.
-When a rewrite grows, inspect what the extra text contributes rather than
-accepting or rejecting it by word count. Keep precise numbers, identifiers,
-commands, and quoted errors intact.
+Judge a rewrite by what its text contributes, not its length. Preserve reasons,
+conditions, material gaps, precise numbers, identifiers, commands, and quoted
+errors.
 
 ## Boundaries and feedback
 

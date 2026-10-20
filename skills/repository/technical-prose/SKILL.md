@@ -13,39 +13,17 @@ description: |
 
 # Technical prose
 
-This skill owns **what carries a fact to its reader** — at the scale of a word,
-and at the scale of the material around it, including how many claims one
-sentence carries. It does not own whether a unit is a fragment or a sentence.
-
-That boundary is not a division of labor; it follows from what varies between
-readers. A word carries the same fact wherever it lands — "gracefully handles"
-is a promise with no content in a doc comment, a README, and an error message
-alike, so one rule serves all three. So does a clause chain: three claims
-joined by "and" cost the same reading in a doc comment and a README. Grammar
-does not travel: a doc comment sits beneath a declaration that already
-supplies its subject and its article, while a README paragraph stands alone
-and must supply both. A rule that mandated complete grammar everywhere would
-be right for one and wrong for the other.
-
-So the calling skill decides articles and whether fragments are correct at its
-sites. This skill never overrides those, and a rewrite that converts a fragment
-to a sentence — or the reverse — is out of scope here.
-
-The same test admits a paragraph. A true, nonrepeated fact still needs to help
-this reader understand, decide, or act. This skill owns that relevance test;
-the calling skill owns the artifact's purpose and required content.
+Edit wording, sentence complexity, and relevance to the reader. Follow the
+calling skill's rules for articles, fragments, structure, and required content.
+Do not convert fragments to sentences or vice versa. Keep material that helps
+the reader understand, decide, or act.
 
 ## The reader is not you
 
-**Naming the reader comes first.** Nothing below is applied until you can say
-who will read this and what they lack that you hold now — the diff, the
-thread, the meeting, the last hour. The reader is inherited when the user or a
-calling skill names one, and inferred when the artifact does: a doc comment is
-read by the file's next editor, a commit body by whoever has the log and the
-diff open. **When neither settles it, ask.** A reader chosen on a guess is
-the default failure with the guess in your place: writing for yourself a
-minute ago. A writer cannot un-know what they know, so the gap never shows
-from the inside.
+**Naming the reader comes first.** Identify who will read this and what context
+they lack. Use the reader named by the user or calling skill, or established by
+the artifact: a doc comment serves the next editor; a commit body accompanies
+the log and diff. **When neither settles it, ask.**
 
 **The cold read.** Reread as the named reader. Every phrase that resolves only
 because you were in the room gets its referent stated: "this arc" becomes the
@@ -125,38 +103,18 @@ reader knows. If it does not, delete it rather than replacing it.
 | and/or | pick one, or write "X, Y, or both" |
 | e.g., i.e., etc. | for example, that is, (name the items) |
 
-Two of these deserve their reason stated, because they look like content and are
-not. **"Gracefully handles"** names a quality of the handling instead of the
-handling, so a reader who needs to know what happens still does not; it is the
-single most common way agent-written prose describes behavior without stating
-it. **"Robust"** and its neighbors assert a property the reader cannot check —
-if the property is real it has a measurement, and the measurement is the fact.
-
 ## One item, one name
 
-Pick one term per thing and keep it for the whole document, and across a
-document and the sites that point at it. Synonym rotation reads as variety to
-the writer and as three distinct things to the reader, who has no way to know
-that "the executor", "the runner", and "the scheduler" are one object.
-
-This matters most at a boundary: when an explanation lives in one place and
-other sites refer back to it, a renamed reference breaks the association it
-existed to create.
-
-Rotation is worth catching in both directions. One name for two things is the
-worse failure of the two, and it hides better.
+Use one term per thing throughout the document and its referring sites. Calling
+one component "the executor", "the runner", and "the scheduler" suggests three
+components. Also check the reverse: one name must not conceal two things.
 
 ## One spelling: American
 
 Write `color`, not `colour`; `behavior`, not `behaviour`; `-ize`, not `-ise`;
 `gray`, not `grey`; `judgment` and `acknowledgment` without the middle `e`.
 
-This is the same rule as one item, one name, applied to the word rather than
-the thing. Mixed spelling inside one document reads as several authors who did
-not talk to each other, and it costs the reader a half-second of wondering
-whether the difference is meaningful. It never is.
-
-Two carve-outs, both absolute:
+Two exceptions:
 
 - **The user's choice wins.** If the user or the project asks for British
   spelling, or for any other convention, use it and keep it consistent. This
@@ -206,14 +164,8 @@ cutting. **Stop at the first rung that carries the fact intact.**
 5. **A paragraph.**
 6. **A section with a heading.**
 
-The drift is upward and invisible one step at a time: a clause becomes a
-sentence, then a paragraph with a lead-in, then a section, and no single step
-looks wrong.
-
-**Be lazy about the prose, never about the thinking.** A rung is chosen after
-the material is understood, not instead of understanding it. A short paragraph
-written to avoid working out what is true is worse than the long one it
-replaced.
+Choose a rung after understanding the material. Brevity does not excuse an
+unsupported claim.
 
 **Cut assertions before examples.** When a paragraph and the example under it
 say the same thing, the example survives. It shows; the paragraph asserts, and
@@ -240,26 +192,6 @@ Never rewrite these, even when they break every rule above:
 
 A de-slop pass that edits an identifier has broken the artifact it was cleaning.
 When a rule and a name conflict, the name wins silently.
-
-## Rationalizations
-
-| Excuse | Reality |
-|---|---|
-| "'Should' is softer and more collegial" | An established requirement needs must. A recommendation stays a recommendation; explain its reason. |
-| "'May not' is banned modality, so it becomes 'cannot'" | `cannot` claims impossibility. If the thing were impossible you would not be writing a rule about it. Permission-sense `may` survives. |
-| "'Robust' tells the reader it is well built" | It tells them you believe so. If there is a property behind the word it has a number, and the number is what they needed. |
-| "Varying the word avoids repetition" | Repetition is not a defect in technical prose; it is how the reader knows it is the same thing. Save variety for writing that has a plot. |
-| "The intensifier conveys confidence" | Confidence is conveyed by a fact that survives checking. An unfalsifiable adjective reads as marketing and gets discounted wholesale. |
-| "This skill says complete sentences, so my fragments are wrong" | This skill rules on words, not sentence shape. Fragments are the calling skill's call, and in some places they are correct. |
-| "Passive voice is more objective" | It is more anonymous. "The value is cached" leaves the reader asking by what, which is usually the fact they came for. |
-| "'Etc.' implies the reader knows the rest" | It implies the writer stopped. If the list is obvious, finishing it costs a line; if it is not, "etc." dropped real content. |
-| "The paragraph gives it room to breathe." | Name the fact the room carries. If there is none, the rung below fits. |
-| "The rule needs its rationale spelled out." | Once. Not once as a metaphor, once as a restatement, and once as a summary. |
-| "The reviewer knows what 'this arc' means." | Today. The text was written for whoever reads the log, the backlog, or the grep hit in six months, and they were not in the room. |
-| "Asking who the reader is would be overhead; I'll assume an engineer." | An assumed reader is the writer's guess, and the writer is the one person who cannot check it. When the artifact does not settle it and nobody said, one question costs less than the rewrite. |
-| "I tightened it, so it is done." | Tightening finds needless words, not missing ones. A missing referent survives every style pass; only a cold read finds it. |
-| "Every sentence is true and unique." | A fact still needs to help this reader understand, decide, or act. |
-| "The tests passed, so the issue is resolved." | Report what the tests establish. Preserve attribution and any material gap in review or coverage. |
 
 ## Red flags
 
