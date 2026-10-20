@@ -1,52 +1,55 @@
 ---
 name: reconcile-vault
 description: |
-  Reconcile the knowledge-iop vault. Two modes, same skill. **Interactive** — invoked after a phase skill commits an artifact; scoped to the touched artifact and its immediate graph neighborhood; applies and commits clean transitions by default. **Dream** — invoked by a Claude Max scheduled task; runs across the whole vault; writes a session-note with Part A (graph hygiene — deterministic) and Part B (strategic reflection — judgment), applies the transitions that pass the same clean-run test interactive mode uses, and merges both in one pull request by default. Use whenever the user says things like "reconcile the vault", "what needs attention", "dream over the vault", "check for blocked transitions", "what's the state of the project", "run reconciliation". Route blockers, warnings, ambiguity, and failed validation to human review. Interactive mode opens a pull request only when the user asks for one or a finding needs human review; dream mode always opens one, because it writes unattended. The vault has no force_accept and neither does this skill.
+  Reconcile the knowledge-iop vault after a phase-skill commit or discussion,
+  around a named artifact, or across the vault in dream mode. Use for
+  "reconcile the vault", "what needs attention", "dream over the vault",
+  "check for blocked transitions", "what's the state of the project", or
+  "run reconciliation". Apply clean transitions; route blockers, warnings,
+  ambiguity, and failed validation to human review. Interactive mode commits
+  and pushes; it opens or merges a PR only on user request. Dream mode writes
+  a session-note and merges it with validated edits through a PR by default.
 ---
 
 # Reconcile vault
 
-You are reconciling the knowledge-iop vault. Pick your mode first.
-
 ## Mode selection
 
-**Interactive** if any of the following applies:
-- You were just invoked by a phase skill (frame-problem, propose-design,
-  record-decision, synthesize, close-arc, ...) after a commit.
-- The user names a specific artifact ("reconcile around <id>").
-- The user just finished a discussion whose implications need triage.
+Use **interactive** after a phase skill commits, for a named artifact, or
+when a discussion needs triage. Scope it to the touched artifacts and their
+immediate graph neighbors.
 
-**Dream** if:
-- You were invoked by a scheduled task with no specific artifact in focus.
-- The user says something like "dream over the vault", "what's been
-  stalling", "give me the state of things".
+Use **dream** for a scheduled task without a pivot, or an explicit request
+such as "dream over the vault", "what's been stalling", or "give me the state
+of things". It scans the full vault and writes one session-note.
 
-If unclear, ask once — but default to interactive. Dream is expensive
-(reads widely) and should be explicit.
+If unclear, ask once and default to interactive. Dream reads widely and
+requires an explicit request or scheduled invocation.
 
----
+| Mode | Default disposition | Findings needing judgment |
+|---|---|---|
+| Interactive | Validate, commit, push; branch owner handles landing. Open or merge a PR only on user request. | Report in the existing PR, or in the session if none. Do not open a PR just for a finding. |
+| Dream | Validate, commit note and edits together, push, open or update a PR, merge. | Put in PROPOSED and Needs you; deliver Needs you in the run notification. Proposals do not hold the merge. |
+
+Both modes use the same transition criteria below. Host rules and failed
+checks still prevent merging.
 
 ## Mode A: Interactive
 
-Scope: the artifact(s) just touched and their immediate graph neighborhood.
-
 ### Step 1 — Identify the pivot
 
-- From the phase skill's output or the user's message, get the pivot
-  artifact id(s).
-- If unclear, ask: "which artifact did we just change?"
+Get the pivot artifact id(s) from the phase skill's output or user message.
+If missing, ask which artifact changed.
 
 ### Step 2 — Walk the edges
 
-- Call `vault_edges` with `id: <pivot>`, `direction: both`. This returns
-  everything connected to the pivot.
-- Group neighbors by edge kind: `frames`, `supersedes`, `superseded_by`,
-  `relates_to`, `depends_on`, `derived_from`, `arc`, `scopes`, `inquiry`.
+Call `vault_edges` with `id: <pivot>`, `direction: both`. Group neighbors by
+`frames`, `supersedes`, `superseded_by`, `relates_to`, `depends_on`,
+`derived_from`, `arc`, `scopes`, and `inquiry`.
 
 ### Step 3 — Propose transitions
 
-For each neighbor, ask: "given the pivot's new state, does this neighbor
-need a status change?" The common patterns:
+Consider whether the pivot's new state warrants a neighbor's status change:
 
 | Pivot change | Neighbor pattern | Proposed transition |
 |---|---|---|
@@ -59,59 +62,36 @@ need a status change?" The common patterns:
 
 ### Step 4 — Pre-flight each proposed transition
 
-For every transition you want to propose:
-
-1. Call `vault_check_transition` with the neighbor's id and the
-   candidate new status.
-2. Attach the result (`allowed` + any `blockers` / `warnings`) to the
-   proposal.
+For every proposed transition, call `vault_check_transition` with
+`id: <neighbor>`, `new_status: <candidate>`. Record `allowed`, `blockers`,
+and `warnings` with the proposal.
 
 ### Step 5 — Choose the disposition
 
-Applying is the default. A run is clean only when every proposed
-transition:
+A transition is clean only when it:
 
 - is `allowed` with no blockers or warnings;
-- cites direct, sufficient evidence;
-- has exactly one justified next state; and
-- passes repository validation.
+- cites direct, sufficient evidence and has exactly one justified next state; and
+- passes repository validation after application.
 
-Require human review if any transition is blocked or warned, evidence is
-incomplete or ambiguous, multiple outcomes are plausible, or validation
-fails.
+Apply eligible transitions even when other candidates need review. Keep
+blocked, warned, ambiguous, or unsupported transitions as proposals. A
+passing pre-flight alone does not establish evidence or resolve ambiguity.
 
-Repository validation is the whole gate on the clean path. It used to
-share the job with a pull request's required checks, and dropping the
-pull request drops those, so a check that only ever ran in CI no longer
-runs before the commit lands. Nothing else moves: an uncertain
-transition is still not applied, and the review package below is still
-produced.
+Repository validation gates the commit. Checks available only in CI do not
+run before an interactive commit unless separately invoked; do not claim
+that local validation covers them.
 
 ### Step 6 — Apply or request review
 
-For a clean run:
+If on `main`, create a branch before editing and say so. Apply eligible
+transitions by editing frontmatter, run repository validation, and inspect
+the diff. Commit and push validated edits without asking for confirmation.
+Do not commit invalid transitions.
 
-1. Apply every transition with a direct frontmatter edit.
-2. Run the repository's validation and inspect the diff.
-3. Commit and push the current branch, then stop.
-
-Whatever opened the branch owns landing it — this skill rides along with
-the phase skill's own change rather than opening a second one. Open a
-pull request only when the user asked for one, and update rather than
-duplicate an existing one for the branch.
-
-Do not ask for confirmation on this path. Do not commit to `main`
-directly, bypass branch protection, or force-push. When the current
-branch is `main`, branch first and say so; a reconciliation that lands
-unreviewed on the default branch is the ceremony being removed for the
-wrong reason.
-
-When human review is required, do not apply the uncertain or invalid
-transition. Surface it where the user will see it: in an existing pull
-request for the branch, or in the session when there is none. Surfacing
-is not holding — the clean transitions from the same run still commit,
-and a pull request that was already open stays open on its owner's
-schedule, not this skill's. Produce a concise proposal list:
+Update an existing PR rather than duplicating it. Open a new PR only on user
+request; otherwise leave landing to the branch owner. Unresolved findings
+go in that PR, or in the session if none exists:
 
 ```
 PROPOSED TRANSITIONS (N)
@@ -127,61 +107,38 @@ NO ACTION NEEDED
 - <neighbor-id>: <why touched, why unchanged>
 ```
 
-State the exact review reason for each item: blocker, warning, ambiguous
-evidence, multiple plausible outcomes, or failed validation. Ask the user
-to decide only those items.
+For each proposed transition, state its exact review reason: blocker,
+warning, ambiguous evidence, multiple plausible outcomes, or failed
+validation. Ask the user to decide only those items. Clean edits from the
+same run still commit; an existing PR stays on its owner's schedule.
 
 ### Step 7 — Stop
 
-After the clean transitions are committed, or after the review package is
-presented, interactive reconciliation is done. Do NOT cascade further — the next phase skill invocation will
-trigger its own interactive reconciliation if needed.
-
----
+Stop after committing the clean edits or presenting the review package.
+Do not cascade beyond the immediate neighborhood; the next phase skill
+invocation triggers its own reconciliation.
 
 ## Mode B: Dream
 
-Scope: the full vault. Write one session-note, and apply the transitions that
-pass Mode A Step 5's clean-run test. Everything that test does not clear stays
-a proposal.
-
-**Mode B applies what Mode A would apply, and nothing more.** The test is Step
-5's, reused unchanged: `allowed` with no blockers or warnings, direct and
-sufficient evidence, exactly one justified next state, repository validation
-passing. This is permission to land what the invariant machinery already
-cleared, not permission to reach past it — a proposal the dream pass may only
-describe is one Mode A could not have applied either.
-
-The reason is that a proposal nobody can act on from where they are reading it
-is re-derived rather than acted on. Three consecutive dreams carried the same
-four cleared transitions and none of them landed, because the note could
-describe an edit and not make it, and each next reader had to rebuild the
-argument before applying it or defer and let the following dream rebuild it
-again.
+Apply only transitions that pass Mode A Step 5. Write one session-note
+with deterministic graph hygiene in Part A and strategic judgment in Part B.
 
 ### Step 1 — Run the reflection report
 
-Call `vault_reflect` with default windows (or windows the user
-specified):
+Call `vault_reflect` with these defaults unless the user specifies windows:
 
-- `window_days: 30` — what counts as "recent activity"
-- `min_days_stale_design: 14` — how old a `draft`/`proposed` design
-  must be to flag
-- `min_days_stale_arc: 60` — how quiet an `open` arc must be to flag
-
-This returns structured data for Part A.
+- `window_days: 30` — recent activity.
+- `min_days_stale_design: 14` — age of draft/proposed designs to flag.
+- `min_days_stale_arc: 60` — inactivity of open arcs to flag.
 
 ### Step 2 — Gather context for Part B
 
-Part B is judgment, grounded in evidence. To ground it, additionally
-call:
-
-- `vault_search` with `type: discussion`, sorted by recency (take the
-  last ~5 discussions or session-notes).
-- `vault_search` with `type: decision`, sorted by recency (last ~5).
-
-Keep token budget bounded — read titles and first paragraphs, not full
-bodies, unless Part B specifically needs to cite something.
+Call `vault_search` separately with `type: discussion`, `type: session-note`,
+and `type: decision`, each with `limit: 5`. Without a `topic` filter, results
+are newest first; there is no sort argument. Keep the five newest combined
+discussions/session-notes and five decisions. Read titles and first paragraphs,
+plus no more than two full artifact bodies when Part B needs to cite them.
+Load the full reflection report; keep other context within these bounds.
 
 ### Step 3 — Write the session-note
 
@@ -306,104 +263,50 @@ was allowed to make.
   <blocker>" — and the follow-up is on the user.
 ```
 
-### Step 4 — Apply, commit, and choose the disposition
+### Step 4 — Apply, commit, and merge
 
-Apply every transition on the APPLIED list with a direct frontmatter
-edit, run the repository's validation, and inspect the diff. Then commit
-the note and those edits together and push the current branch:
+If on `main`, branch before editing and say so. Apply eligible transitions
+by editing frontmatter, run repository validation, and inspect the diff.
+Record only actual, validated edits as APPLIED.
+If finalizing the note changes it after validation, validate the final note
+and edits again before committing.
+
+If validation fails after applying, revert those transition edits. Move
+them to PROPOSED with the validation failure and update Needs you. Validate
+the resulting note-only state and inspect the diff again. If it still fails,
+report the failure and stop; do not merge an unvalidated note.
+
+Commit the note and validated edits together, then push:
 
 `git add discussions/<id>.md <edited artifacts> && git commit -m
 "Reconciler dream: <YYYY-MM-DD>"`.
 
-One commit, not two. The note is the record of what the edits were for,
-and splitting them leaves a reader holding one half.
+Use one commit so the note records the edits it accompanies. After a
+successful rollback and revalidation, commit the note alone.
 
-If validation fails after applying, revert the edits, move every
-transition to PROPOSED with the failure as its reason, and commit the
-note alone. A dream pass never leaves the vault failing validation.
-
-Then open or update a pull request for the branch.
-
-**Dream mode keeps its pull request; interactive mode does not.** The
-difference is who is present. Interactive runs immediately after a phase
-skill commits, on a branch someone already owns and will land, so a
-second pull request reviews an edit its owner is already reviewing.
-Dream runs unattended, so its pull request is the merge record for
-autonomous writes to the vault.
-
-**A finding needing human judgment does not hold the merge.** Merge once
-validation passes, whatever the PROPOSED list contains. The judgment
-calls travel in the note, under their own heading, and they reach the
-human through the run's notification — not by sitting in an unmerged
-branch.
-
-Blocking on a reviewer is what produced the loop this mode is built to
-escape. A dream that leaves its pull request open waits for a human who
-is not there, so the next night's pass re-derives the same findings and
-opens a second one beside it. The queue grows, the signal does not, and
-the transitions that were already clear stay unapplied for as long as
-the unclear ones do. Nothing about a judgment call makes a mechanical
-edit less correct.
-
-The only thing that holds the merge is failed validation, because a
-vault that does not validate is broken rather than undecided. On that
-path the Step 4 revert applies: the edits come out, the transitions move
-to PROPOSED, and the note lands alone.
+Open or update the branch's PR and merge once validation and host
+requirements pass. Dream runs unattended; the PR records its autonomous
+writes. PROPOSED items need human decisions, but do not hold up the validated
+note and edits. Deliver those items through Needs you in the run notification.
 
 ### Step 5 — Stop
 
-After the pull request merges, or after the review-required findings are
-surfaced, stop. Do not chain.
+After merging or reporting a validation failure or host refusal, stop.
+Do not chain. If the host refuses the merge, leave the PR open and report
+its requirement; do not claim it merged.
 
----
-
-## Shared rules
-
-### Default to apply; gate on observable risk
-
-Apply and commit clean, evidence-backed work by default. Human review is
-required when any candidate has a blocker or warning, the evidence is
-incomplete or ambiguous, more than one outcome is plausible, or validation
-fails.
-
-In interactive mode the default is applying, never landing: committing on
-the current branch is where a clean run ends, and opening or merging a pull
-request happens only when the user asks. Dream mode lands, because it writes
-unattended and its pull request is the merge record for those writes.
-
-Human review is a consumer of this skill's output, never a gate on it. What
-needs judgment is listed, highlighted, and merged along with everything else.
-The one exception is failed validation, which is a broken vault rather than an
-undecided one.
+## Shared boundaries
 
 Never bypass a blocker, warning, branch protection rule, or failed check.
-Never use `force_accept`, force-push, or force-merge. A refusal from the
-host is a review result, not permission to work around it.
+Never commit directly to `main`, use `force_accept`, force-push, or
+force-merge. A host refusal requires review, not a workaround.
 
-That prohibition is what SCHEMA.md states. Its escape hatches —
-`withdraw_exploration` and `abandon_inquiry` — are explicit and logged, and
-there is deliberately no `force_accept` or `override_blocking`: "You can get
-unstuck; you can't pretend something is resolved when it isn't." The sentence
-governs bypassing an invariant, not who applies a transition that satisfies
-every invariant. Do not cite it for either side of the question of who
-applies.
+SCHEMA.md's escape hatches — `withdraw_exploration` and `abandon_inquiry` —
+are explicit and logged. It has no `force_accept` or `override_blocking`:
+"You can get unstuck; you can't pretend something is resolved when it isn't."
+This prohibits bypassing invariants; it does not determine who may apply
+transitions that satisfy them.
 
-### Token budget
-
-Dream mode reads broadly. Cap what you load:
-
-- Full `vault_reflect` output (~compact JSON).
-- Titles + first paragraph only for the top 5 most recent
-  discussions and decisions.
-- Full body of no more than 2 artifacts, and only if you must cite
-  them in Part B.
-
-If the report balloons, your rubric is wrong. Cut.
-
-### When in doubt, ask
-
-If a proposal is ambiguous — two plausible next states, or the offender
-evidence is thin — classify the run as human-review-required, name the
-ambiguity, and leave open any pull request the branch already has.
-Reconciliation that hallucinates certainty is worse than reconciliation
-that names uncertainty.
+Ambiguity requires review of the affected transition. In interactive mode,
+leave landing to the branch owner unless the user requests it. In dream
+mode, merge the validated result with unresolved proposals in the note.

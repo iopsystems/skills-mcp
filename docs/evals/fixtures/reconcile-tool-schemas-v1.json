@@ -1,0 +1,93 @@
+{
+  "vault_check_transition": {
+    "additionalProperties": false,
+    "properties": {
+      "id": {
+        "description": "The artifact id to transition",
+        "type": "string"
+      },
+      "new_status": {
+        "description": "The proposed new status",
+        "type": "string"
+      }
+    },
+    "required": [
+      "id",
+      "new_status"
+    ],
+    "type": "object"
+  },
+  "vault_edges": {
+    "additionalProperties": false,
+    "properties": {
+      "direction": {
+        "enum": [
+          "outgoing",
+          "incoming",
+          "both"
+        ],
+        "type": "string"
+      },
+      "id": {
+        "description": "The artifact id to pivot on",
+        "type": "string"
+      },
+      "kind": {
+        "type": "string"
+      }
+    },
+    "required": [
+      "id"
+    ],
+    "type": "object"
+  },
+  "vault_reflect": {
+    "additionalProperties": false,
+    "properties": {
+      "min_days_stale_arc": {
+        "description": "An open arc with no activity for longer than this is stale. Default 60.",
+        "maximum": 3650,
+        "minimum": 1,
+        "type": "integer"
+      },
+      "min_days_stale_design": {
+        "description": "A design-brief in draft/proposed longer than this is stale. Default 14.",
+        "maximum": 3650,
+        "minimum": 1,
+        "type": "integer"
+      },
+      "window_days": {
+        "description": "How many days back counts as 'recent'. Default 30.",
+        "maximum": 3650,
+        "minimum": 1,
+        "type": "integer"
+      }
+    },
+    "type": "object"
+  },
+  "vault_search": {
+    "additionalProperties": false,
+    "properties": {
+      "author": {
+        "type": "string"
+      },
+      "limit": {
+        "maximum": 500,
+        "minimum": 1,
+        "type": "integer"
+      },
+      "status": {
+        "type": "string"
+      },
+      "topic": {
+        "description": "FTS5 search term over title + body",
+        "type": "string"
+      },
+      "type": {
+        "description": "Artifact type: scope, arc, problem-brief, design-brief, decision, discussion, session-note, inquiry, exploration, synthesis, claim, schema",
+        "type": "string"
+      }
+    },
+    "type": "object"
+  }
+}

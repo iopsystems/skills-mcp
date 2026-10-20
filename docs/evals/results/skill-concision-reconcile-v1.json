@@ -1,0 +1,1777 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-20",
+  "fixture": "../fixtures/skill-concision-reconcile-v1.json",
+  "fixture_sha256": "fc64f2ffef11b05df8007d4c9c6a82efa1773b0028e8fb14c0a73d80a8ff7481",
+  "word_count": {
+    "method": "Whitespace-delimited, including frontmatter and fenced templates",
+    "baseline": 2773,
+    "candidate": 2046,
+    "initial_candidate": 2010,
+    "intermediate_candidate": 2029
+  },
+  "skill_hashes": {
+    "baseline": "5be1758eda950d4faa60ab5debe01874e9d2b5d7c74d4fa7ca0974718e555fb7",
+    "initial_candidate": "642a835a85e93e817f01e841b77974a9c7f6de3a0d6efb2d0655339bdbf742f0",
+    "intermediate_candidate": "1e675b196dff3c3c4f88e51362aa303390c9159f519249bdb461c4dd54c4bfe4",
+    "final_candidate": "39eab7d035c631e6fab70fbc8a1d0e83ef2de2bf3abb26c37d75a8eb7121dfe5"
+  },
+  "method": {
+    "trial_type": "response-only dry run",
+    "workers": "Fresh workers for baseline, initial candidate, intermediate candidate (eight cases each), and final candidate (four dream cases). No worker saw expectations or prior outcomes. Final change is confined to dream validation ordering; interactive responses are retained from the intermediate trial.",
+    "worker_mapping": {
+      "a": "baseline",
+      "b": "initial_candidate",
+      "c": "intermediate_candidate",
+      "d": "final_candidate_dream_cases"
+    },
+    "grader_mapping": {
+      "initial": {
+        "X": "initial_candidate",
+        "Y": "baseline"
+      },
+      "intermediate": {
+        "P": "intermediate_candidate",
+        "Q": "baseline"
+      },
+      "followup": "The intermediate grader reviewed the new four-case dream output, retaining its prior grading context. This is not a fresh blinded comparison."
+    },
+    "worker_instructions": "Use the assigned reconcile-vault skill to handle each request independently. This is a response-only dry run: use the supplied synthetic tool outcomes; do not call live vault tools, mutate vaults, run Git, or contact a host. Write one JSON object keyed by case id. For each case include mode, ordered proposed actions (tool calls and their supplied results, edits, checks, commit/push/PR decisions), the full dream note when applicable, and the final user-facing notification. Show conditional actions in sequence for supplied failures; do not claim actual execution. Do not read repository journals, other variants, graders or expectations. Write only in the assigned output file.",
+    "worker_input_sha256": "5620334fe1503dda0c5454a317d60382a8127fe51d5e05c9f33345bba406e5c5",
+    "input_reconstruction": "Build worker-input.json with keys instructions, shared_facts and cases; use worker_instructions here and the fixture facts/cases with expectations removed. Serialize with json.dumps(indent=2) plus a trailing newline.",
+    "grading": "Fresh blinded graders assessed the initial and intermediate paired comparisons. A targeted independent follow-up assessed the final four dream cases. Prior grades are retained without revision.",
+    "execution_limit": "Tool outcomes are synthetic premises. No reconciliation tools, Git mutations, repository validators or host operations executed in these trials. The cargo tests below are separate real repository checks.",
+    "revision": "Initial decision grades passed, but schema inspection found invalid tool arguments. Exact argument names and search ordering resolved these in a fresh intermediate trial. Its grader then found post-validation note edits in two cases. One dream-mode sentence now requires revalidation after finalizing a note; a fresh worker reran all four dream cases.",
+    "dream_worker_input_sha256": "563bb156652333290dfbe40eaa979ac84e464681455d7cb497a975f572ad5a4a",
+    "dream_input_reconstruction": "Use the same worker input, retaining only case IDs beginning dream-. Shared facts and instructions are unchanged."
+  },
+  "responses": {
+    "baseline": {
+      "path": "skill-concision-reconcile-v1/baseline.json",
+      "sha256": "b3bf3da5973093a04236490caae64fbe37d52853097f2134f5651669384caa8b"
+    },
+    "initial-candidate": {
+      "path": "skill-concision-reconcile-v1/initial-candidate.json",
+      "sha256": "fdab621d55fc09616af286fe4d147983ce7743ea143928dce864ce940ede881f"
+    },
+    "intermediate-candidate": {
+      "path": "skill-concision-reconcile-v1/intermediate-candidate.json",
+      "sha256": "4fb32e9ced305016749b72e486b33f5a6e7a4dcf70cb42811a7a02cdea0647c5"
+    },
+    "candidate-dream": {
+      "path": "skill-concision-reconcile-v1/candidate-dream.json",
+      "sha256": "99544ad9064ee152712e03c3ea83746c98d71ec72594a0b942c835f3d2344a8b"
+    },
+    "candidate": {
+      "path": "skill-concision-reconcile-v1/candidate.json",
+      "sha256": "c1a09dcd6a97914eac7f1cad40bd26ebf126c06fd894747ea011aad84b0a9db7",
+      "assembly": "Per-case composite: four interactive/missing-pivot cases from intermediate-candidate, four dream cases from candidate-dream. Data objects are copied unchanged; this is not a single fresh eight-case run."
+    }
+  },
+  "contract_review": {
+    "review_type": "independent_static_semantic_contract_review",
+    "baseline": "skills/vault/reconcile-vault/SKILL.md at 50e82c8b2fc87253262d820565644147f8ae1fc6",
+    "candidate": "skills/vault/reconcile-vault/SKILL.md",
+    "historical_sources": [
+      "docs/journal/2026-08-31-reconcile-vault-pr-opt-in.md",
+      "docs/journal/2026-08-31-dream-applies-clean-transitions.md"
+    ],
+    "findings": [
+      {
+        "id": "context-cap-softened",
+        "severity": "low",
+        "candidate_line": 137,
+        "category": "unintended_contract_loss",
+        "finding": "The candidate asks for about five recent discussions/session-notes and decisions of each kind. The baseline shared Token budget explicitly caps title/first-paragraph loading at the top 5 most recent discussions and decisions. About five permits loading more than five, weakening the hard context bound outside the authorized semantic changes.",
+        "recommendation": "Replace about five of each with at most five of each (or another wording preserving the explicit five-item cap).",
+        "baseline_evidence": "Shared rules / Token budget: Cap what you load ... Titles + first paragraph only for the top 5 most recent discussions and decisions.",
+        "status": "resolved",
+        "resolution": "Re-read final candidate: line 137 now says at most five of each, restoring the hard cap."
+      }
+    ],
+    "remaining_contradictions": [],
+    "preserved_boundaries": [
+      {
+        "boundary": "Fenced output templates",
+        "result": "All three fenced templates are identical to the baseline, including the proposal package, YAML frontmatter, and dream note body."
+      },
+      {
+        "boundary": "Interactive disposition",
+        "result": "Commits and pushes validated changes; branch owner handles landing; PR creation or merging requires user request. Findings surface in an existing PR or session. This resolves baseline contradictions according to journal implementation and outcome."
+      },
+      {
+        "boundary": "Dream disposition",
+        "result": "Creates or updates one PR and merges validated note plus edits without waiting for judgment-only proposals; delivers Needs you via the run notification."
+      },
+      {
+        "boundary": "Per-transition eligibility",
+        "result": "Both modes require allowed pre-flight, no blockers or warnings, direct sufficient evidence, one justified next state, and passing repository validation. Clean candidates proceed despite other review candidates."
+      },
+      {
+        "boundary": "Validation failure",
+        "result": "Dream reverts transition edits, records failed validation in proposals and Needs you, validates the note-only result, and stops if that still fails. This is an authorized clarification of the baseline prohibition against leaving an invalid vault."
+      },
+      {
+        "boundary": "Host refusals and protections",
+        "result": "No direct main commits, force-push, force-merge, force_accept, blocker/warning bypass, or failed-check bypass. Host refusal leaves the PR open and is reported; this is an authorized clarification."
+      },
+      {
+        "boundary": "Scope and stopping",
+        "result": "Interactive stays within touched artifacts and immediate graph neighbors; dream scans the full vault and stops after its single disposition without chaining."
+      },
+      {
+        "boundary": "Evidence and Part B",
+        "result": "Part B remains evidence-grounded judgment only; its recommendations cannot be applied. Alternatives, citations, missing-edge limits, and note structure remain intact in the preserved template."
+      },
+      {
+        "boundary": "Tools and windows",
+        "result": "Pivot lookup, bidirectional graph walk, per-candidate transition checking, reflection defaults (30/14/60), and full-body maximum of two cited artifacts are retained."
+      }
+    ],
+    "scope_notes": [
+      "Read only the baseline, candidate, and the two requested journals; did not inspect worker outputs or evaluation expectations.",
+      "No edits to the skill were made."
+    ],
+    "final_disposition": {
+      "status": "pass",
+      "open_findings": 0,
+      "remaining_contradictions": 0,
+      "candidate_sha256": "39eab7d035c631e6fab70fbc8a1d0e83ef2de2bf3abb26c37d75a8eb7121dfe5",
+      "summary": "Targeted final-note revalidation addition preserves transition and landing rules while ensuring the committed final state has been validated. No other skill changes since prior review; templates unchanged. Original findings and all prior dispositions retained."
+    },
+    "prior_dispositions": [
+      {
+        "status": "pass",
+        "open_findings": 0,
+        "remaining_contradictions": 0,
+        "candidate_sha256": "642a835a85e93e817f01e841b77974a9c7f6de3a0d6efb2d0655339bdbf742f0",
+        "summary": "Final full-text re-review found no unintended contract losses or remaining contradictions within authorized scope. Explicit evidence citation is retained in Step 5. All three fenced templates remain identical."
+      },
+      {
+        "status": "pass",
+        "open_findings": 0,
+        "remaining_contradictions": 0,
+        "candidate_sha256": "1e675b196dff3c3c4f88e51362aa303390c9159f519249bdb461c4dd54c4bfe4",
+        "summary": "Final schema-specific wording matches source and preserves the original context limits. No unintended contract loss or remaining contradiction found within authorized scope. Initial resolved finding and prior disposition retained."
+      }
+    ],
+    "supplemental_schema_review": {
+      "status": "pass",
+      "findings": [],
+      "sources": [
+        "/tmp/skills-mcp-concise-reconcile/src/main.rs:201",
+        "/tmp/skills-mcp-concise-reconcile/src/main.rs:250",
+        "/tmp/skills-mcp-concise-reconcile/src/main.rs:507",
+        "/tmp/skills-mcp-concise-reconcile/src/main.rs:595",
+        "/tmp/skills-mcp-concise-reconcile/src/vault/query.rs:41",
+        "/tmp/skills-mcp-concise-reconcile/src/vault/query.rs:74",
+        "/tmp/skills-mcp-concise-reconcile/src/vault/query.rs:91"
+      ],
+      "checks": [
+        {
+          "boundary": "Transition tool arguments",
+          "result": "id and new_status are the exact schema properties, both required and parsed by the handler. No invented argument remains in the edited prose."
+        },
+        {
+          "boundary": "Search arguments",
+          "result": "type is a single string matched by equality; discussion, session-note, and decision are documented artifact types. Separate calls are correct. limit 5 is valid under the schema range 1..500. No sort property exists; additionalProperties is false."
+        },
+        {
+          "boundary": "Search recency",
+          "result": "Without topic, SQL orders by created descending, nulls last, then artifact id. With topic it orders by FTS rank. The candidate accurately describes newest-first ordering without topic and does not request a sort argument."
+        },
+        {
+          "boundary": "Context limits",
+          "result": "Fetching the top five metadata rows from each of discussion and session-note is sufficient to select the combined newest five. The retained reading set is five discussions/session-notes combined plus five decisions, preserving the original reading cap, rather than increasing it to five of each of three types. The full-body maximum remains two."
+        },
+        {
+          "boundary": "Template preservation",
+          "result": "All three fenced blocks remain identical to baseline."
+        }
+      ],
+      "scope": "Read the final candidate and requested local schema/query source only; did not inspect trial outputs or grades."
+    },
+    "supplemental_resolutions": [
+      {
+        "id": "validate-final-note-state",
+        "status": "pass",
+        "location": "Mode B Step 4",
+        "addition": "If finalizing the note changes it after validation, validate the final note\nand edits again before committing.",
+        "assessment": "Requires validation to cover the exact final note and artifact edits before commit when note finalization changes already-validated content. This narrows validation ordering consistently with the existing validated-commit gate; it changes neither eligible transition criteria nor dream PR/merge disposition or host requirements.",
+        "scope_verification": "Removing exactly the two added lines reproduces the prior reviewed candidate hash. All three fenced templates remain identical to baseline."
+      }
+    ]
+  },
+  "supplemental_schema_observation": {
+    "method": "Captured four input schemas with initialize + tools/list from the locally built skills-mcp binary. IOP_VAULT_PATH pointed to a nonexistent scratch directory; no vault tool was invoked. Checked proposed arguments using the committed Python checker.",
+    "schemas": "../fixtures/reconcile-tool-schemas-v1.json",
+    "schemas_sha256": "6599294a731d58fe03ab2caee32a0406d9f3b760d05c39f05d2b5a692a3b0218",
+    "source_commit": "50e82c8b2fc87253262d820565644147f8ae1fc6 (tool implementation unchanged in this PR)",
+    "checker": "../check-reconcile-call-arguments.py",
+    "checker_sha256": "52d675b7d357b288782db8cbc9b821736198124f03b69e7d85531eac281e483c",
+    "command": "python docs/evals/check-reconcile-call-arguments.py docs/evals/fixtures/reconcile-tool-schemas-v1.json docs/evals/results/skill-concision-reconcile-v1/candidate.json",
+    "initial_results": {
+      "/tmp/reconcile-concision-eval/output-a.json": {
+        "checked_calls": 43,
+        "errors": [
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[2]",
+            "tool": "vault_search",
+            "error": "$args.sort: undeclared argument"
+          },
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[3]",
+            "tool": "vault_search",
+            "error": "$args.sort: undeclared argument"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[2]",
+            "tool": "vault_search",
+            "error": "$args.sort: undeclared argument"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[3]",
+            "tool": "vault_search",
+            "error": "$args.sort: undeclared argument"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[2]",
+            "tool": "vault_search",
+            "error": "$args.sort: undeclared argument"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[3]",
+            "tool": "vault_search",
+            "error": "$args.sort: undeclared argument"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[2]",
+            "tool": "vault_search",
+            "error": "$args.sort: undeclared argument"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[3]",
+            "tool": "vault_search",
+            "error": "$args.sort: undeclared argument"
+          }
+        ]
+      },
+      "/tmp/reconcile-concision-eval/output-b.json": {
+        "checked_calls": 39,
+        "errors": [
+          {
+            "path": "$.interactive-mixed.ordered_proposed_actions[3]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-mixed.ordered_proposed_actions[3]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-mixed.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-mixed.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-mixed.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-mixed.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-mixed.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-mixed.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[2]",
+            "tool": "vault_search",
+            "error": "$args.intent: undeclared argument"
+          },
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[7]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-mixed.ordered_proposed_actions[7]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[2]",
+            "tool": "vault_search",
+            "error": "$args.intent: undeclared argument"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[7]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-rollback.ordered_proposed_actions[7]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[2]",
+            "tool": "vault_search",
+            "error": "$args.intent: undeclared argument"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[7]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-note-invalid.ordered_proposed_actions[7]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[2]",
+            "tool": "vault_search",
+            "error": "$args.intent: undeclared argument"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[7]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.dream-host-refusal.ordered_proposed_actions[7]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-main.ordered_proposed_actions[3]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-main.ordered_proposed_actions[3]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-main.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-main.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-main.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-main.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-main.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-main.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-pr-request.ordered_proposed_actions[3]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-pr-request.ordered_proposed_actions[3]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-pr-request.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-pr-request.ordered_proposed_actions[4]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-pr-request.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-pr-request.ordered_proposed_actions[5]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          },
+          {
+            "path": "$.interactive-pr-request.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.new_status: required"
+          },
+          {
+            "path": "$.interactive-pr-request.ordered_proposed_actions[6]",
+            "tool": "vault_check_transition",
+            "error": "$args.candidate_status: undeclared argument"
+          }
+        ]
+      }
+    },
+    "final_results": {
+      "docs/evals/results/skill-concision-reconcile-v1/candidate.json": {
+        "checked_calls": 47,
+        "errors": []
+      }
+    },
+    "initial_findings": "Baseline: eight vault_search calls used undeclared sort. Initial candidate: four search calls used intent; 28 transition calls used candidate_status and omitted required new_status (60 argument errors across 32 calls).",
+    "final_result": "All 47 calls in the assembled candidate response satisfy captured schemas; checker exits 0.",
+    "interpretation": "Valid argument shapes do not establish actual response handling, repository validation, Git/host integration or production correctness."
+  },
+  "repository_checks": {
+    "cargo_test": {
+      "command": "CARGO_TARGET_DIR=/tmp/skills-mcp-concise-sharable/target cargo test --locked --quiet",
+      "passed": 151,
+      "failed": 0,
+      "test_binary_counts": [
+        83,
+        4,
+        11,
+        4,
+        5,
+        12,
+        15,
+        17
+      ],
+      "environment_note": "Initial fresh-target build failed with Disk quota exceeded. Removed only this run's generated target cache and reused an existing target directory. Final run succeeded."
+    },
+    "skill_validator": {
+      "command": "python /home/yao/.codex/skills/.system/skill-creator/scripts/quick_validate.py skills/vault/reconcile-vault",
+      "result": "Skill is valid!"
+    },
+    "artifact_checks": [
+      "Frozen fixture hash unchanged",
+      "Both responses cover exactly the eight frozen case IDs",
+      "Final skill hash matches independent contract review",
+      "All three fenced templates byte-identical to baseline"
+    ]
+  },
+  "outcome": {
+    "baseline": "22/22 frozen expectations pass across eight cases; 8 search calls fail argument-schema checks",
+    "initial_candidate": "22/22 frozen expectations pass; 32 calls fail argument-schema checks",
+    "intermediate_candidate": "20 pass, 2 partial, 0 fail; 47 proposed calls pass schemas. Partials concern changing note content after validation without revalidation.",
+    "candidate": "10 previously passing interactive expectations plus 12 passing expectations from the final four dream cases; all 47 proposed calls pass schemas.",
+    "interpretation": "Final coverage combines unchanged interactive instructions from the intermediate trial with fresh execution of the four response-only dream cases. This small sample does not establish general reliability, automatic selection or live execution."
+  },
+  "initial_blind_grades": {
+    "schema_version": 1,
+    "evaluation": "Blinded response-only grading of frozen reconcile concision cases",
+    "fixture": "/tmp/skills-mcp-concise-reconcile/docs/evals/fixtures/skill-concision-reconcile-v1.json",
+    "blinding": {
+      "read_inputs": [
+        "/tmp/skills-mcp-concise-reconcile/docs/evals/fixtures/skill-concision-reconcile-v1.json",
+        "/tmp/reconcile-concision-eval/output-X.json",
+        "/tmp/reconcile-concision-eval/output-Y.json"
+      ],
+      "variant_mapping_read": false,
+      "skills_or_other_trial_files_read": false
+    },
+    "grading_policy": "Grade proposed behavior, supplied evidence, final notes, and notifications against each frozen expectation. Pass means all material clauses are supported; partial means a material clause is missing or inconsistent; fail means contrary behavior or missing central behavior. No penalty for length, wording, semantic action-name differences, or clearly labeled provisional draft content that is corrected before final publication. Read action traces as simulations, not executed operations.",
+    "results": {
+      "X": {
+        "response_file": "/tmp/reconcile-concision-eval/output-X.json",
+        "summary": {
+          "pass": 22,
+          "partial": 0,
+          "fail": 0
+        },
+        "cases": {
+          "interactive-mixed": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Use interactive mode and inspect immediate edges; preflight every proposed transition.",
+                "grade": "pass",
+                "evidence": "Selects interactive around latency-inquiry, requests edges in both directions, limits scope to the four immediate neighbors, and checks closed/obsolete/closed/closed for latency-arc/old-problem/rollout-arc/cache-arc before editing.",
+                "source": "ordered_proposed_actions (mode, vault_edges, four vault_check_transition calls)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Apply only latency-arc -> closed, validate, inspect, commit and push despite unresolved neighbors.",
+                "grade": "pass",
+                "evidence": "Only latency-arc open \u2192 closed is edited. python validate.py PASS precedes diff inspection, commit, and push; warning, blocker, and ambiguous candidates remain review items.",
+                "source": "ordered_proposed_actions (disposition through push)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Leave PR #12 open; put exact warning, blocker and ambiguity in the review package, with evidence and unchanged neighbors.",
+                "grade": "pass",
+                "evidence": "Existing PR #12 is updated and left open. Review text preserves \u201cAn accepted design still frames this problem.\u201d, \u201crollout-inquiry is open\u201d, and cache close-versus-abandon ambiguity, names evidence, and retains the three unresolved candidates.",
+                "source": "review package and final notification",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 4,
+                "expectation": "Do not cascade to secondary-problem or infer that allowed=true clears warnings or ambiguity.",
+                "grade": "pass",
+                "evidence": "Explicitly excludes two-hop secondary-problem and stops without cascading. old-problem is withheld despite allowed=true because of its warning; cache-arc is withheld despite a clean preflight because no outcome is chosen.",
+                "source": "ordered_proposed_actions (scope/disposition/stop), review package",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": [
+              {
+                "severity": "minor presentation ambiguity; no grade deduction",
+                "detail": "The review package places latency-arc under NO ACTION NEEDED while also saying its closure would be applied. The ordered edit and notification make the intended clean transition explicit; the heading is imprecise, not a contradictory action."
+              }
+            ]
+          },
+          "dream-mixed": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Use dream mode, reflection defaults 30/14/60 and bounded context reads.",
+                "grade": "pass",
+                "evidence": "Selects dream; reflection arguments are window_days=30, min_days_stale_design=14, min_days_stale_arc=60. Reads three supplied discussion excerpts and one decision excerpt within limits of five per group; no additional full bodies are needed.",
+                "source": "ordered_proposed_actions (vault_reflect and context search)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Apply only latency-arc -> closed and write one session-note with accurate APPLIED and PROPOSED, explicit Needs you, complete Part A and grounded Part B.",
+                "grade": "pass",
+                "evidence": "Only latency-arc closes. One dated session-note has latency-arc under APPLIED and the three unresolved status transitions under PROPOSED with their exact reasons. Explicit Needs you covers those transitions. Part A includes both scope counts, all three ranked arcs, and all four gap categories. Part B grounds hot/cold observations, open questions, a relationship to verify, and comparison of three next moves in supplied evidence, with conditions that would change the recommendation. X additionally includes unpaired-problem and paused-design as explicitly labeled work decisions, not unchecked status transitions, under PROPOSED and Needs you.",
+                "source": "ordered_proposed_actions (edit/write note), full dream note",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Validate, inspect, commit note and edit together, push, update PR #12 and merge despite the unresolved proposals.",
+                "grade": "pass",
+                "evidence": "python validate.py PASS and diff inspection precede one commit containing note plus latency-arc edit, push, update of existing PR #12, and ordinary successful merge. Unresolved proposals do not stop landing.",
+                "source": "ordered_proposed_actions (validation through merge)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 4,
+                "expectation": "Carry Needs you into the final notification; do not enact Part B or chain.",
+                "grade": "pass",
+                "evidence": "Notification repeats the note\u2019s Needs you transition findings. Part B stays advisory; the candidate relationship is explicitly unverified and unedited. The action sequence ends after this dream without chaining. The additional unpaired-problem and paused-design decision requests also carry into its notification.",
+                "source": "full dream note, final notification, stop action",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          },
+          "dream-rollback": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Attempt the clean edit, then revert only that transition when validation fails.",
+                "grade": "pass",
+                "evidence": "Attempts latency-arc closure, receives \u201cFAIL: legacy export rejects closed latency-arc\u201d, and restores only that frontmatter status to open.",
+                "source": "ordered_proposed_actions (edit, first validation, rollback)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Move the rolled-back transition to PROPOSED with the validation failure, leave no false APPLIED entry, and include it in Needs you.",
+                "grade": "pass",
+                "evidence": "Final APPLIED is None. latency-arc is in PROPOSED with the legacy export failure, explicitly marked reverted, and included in Needs you before retrying closure.",
+                "source": "revised full dream note, final notification",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Validate the final note-only state before committing, pushing, updating PR and merging; preserve other artifact states.",
+                "grade": "pass",
+                "evidence": "After rollback and note revision, python validate.py PASS validates the note-only state; inspection confirms no remaining status edits. Only the note is committed, pushed, included in updated PR #12, and merged. Other artifact states remain unchanged.",
+                "source": "ordered_proposed_actions (second validation through merge)",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          },
+          "dream-note-invalid": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Revert the transition and keep all remaining transitions proposed.",
+                "grade": "pass",
+                "evidence": "Restores latency-arc to open after the export failure. APPLIED is None and all four status transitions remain PROPOSED; there are no other artifact edits.",
+                "source": "ordered_proposed_actions (rollback and note revision), full dream note",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Do not merge an unvalidated note-only result; report the remaining failure accurately without bypass or false success.",
+                "grade": "pass",
+                "evidence": "Second validation returns \u201cFAIL: note index validator unavailable; cannot establish valid final state\u201d. Stops with an uncommitted note draft and no commit, push, or merge. Notification accurately states the export failure, remaining note validation failure, and unchanged latency-arc status; there is no bypass or claimed success.",
+                "source": "ordered_proposed_actions (second validation and stop), final notification",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": [
+              {
+                "severity": "minor reporting omission; no grade deduction",
+                "detail": "The full note records the transition export failure but does not itself record the subsequent note-index validation failure. dream_note_status and the final notification identify the note as an uncommitted draft and accurately report that failure. The rubric requires accurate reporting and no unvalidated merge, which the complete response provides."
+              }
+            ]
+          },
+          "dream-host-refusal": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Complete the validated note plus clean edit and attempt ordinary PR merge.",
+                "grade": "pass",
+                "evidence": "Validates and inspects the note plus latency-arc closure, commits them together, pushes, updates existing PR #12, and attempts ordinary merge.",
+                "source": "ordered_proposed_actions (edit through merge)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Stop on the refusal, leave the PR open and report the exact host requirement. No force, bypass, repeated workaround or claimed merge.",
+                "grade": "pass",
+                "evidence": "Merge result is \u201cREFUSED: required independent approval is missing\u201d. Stops and leaves PR #12 open pending that requirement; no force, alternative-route retry, or successful-merge claim appears.",
+                "source": "ordered_proposed_actions (merge result and stop), final notification",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Deliver unresolved Needs you findings even though the host refused the merge.",
+                "grade": "pass",
+                "evidence": "Despite refusal, notification delivers old-problem\u2019s design warning, rollout-inquiry\u2019s open blocker, and cache-arc\u2019s close-or-abandon decision. It additionally carries unpaired-problem and paused-design work decisions.",
+                "source": "final notification Needs you",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          },
+          "interactive-main": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Create a branch before edits and say so; apply and commit/push the clean subset.",
+                "grade": "pass",
+                "evidence": "Creates a named topic branch from main and announces this before the only edit, latency-arc open \u2192 closed. Validation and diff inspection precede commit and push.",
+                "source": "ordered_proposed_actions (branch before edit through push), final notification",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Do not open or merge a PR without a user request; surface review findings in the session.",
+                "grade": "pass",
+                "evidence": "No PR exists and none was requested, so review findings are surfaced in the session, no PR is opened, and no merge is attempted.",
+                "source": "ordered_proposed_actions (session review and stop), final notification",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": [
+              {
+                "severity": "minor presentation ambiguity; no grade deduction",
+                "detail": "The review package places latency-arc under NO ACTION NEEDED while also saying its closure would be applied. The ordered edit and notification make the intended clean transition explicit; the heading is imprecise, not a contradictory action."
+              }
+            ]
+          },
+          "interactive-pr-request": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Apply the clean subset and open one PR after validation, commit and push.",
+                "grade": "pass",
+                "evidence": "Applies only latency-arc closure, validates with python validate.py, inspects, commits, and pushes before opening one requested PR. Does not invent its identifier.",
+                "source": "ordered_proposed_actions (edit through PR open)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Include unresolved findings and leave the PR open; opening a PR is not merge permission.",
+                "grade": "pass",
+                "evidence": "The new PR includes old-problem\u2019s warning, rollout-arc\u2019s blocker, and cache-arc\u2019s ambiguity with evidence. Explicitly leaves it unmerged; opening permission is not treated as merge permission.",
+                "source": "PR review package and final notification",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": [
+              {
+                "severity": "minor presentation ambiguity; no grade deduction",
+                "detail": "The review package places latency-arc under NO ACTION NEEDED while also saying its closure would be applied. The ordered edit and notification make the intended clean transition explicit; the heading is imprecise, not a contradictory action."
+              }
+            ]
+          },
+          "unclear-pivot": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Ask once for the missing pivot or scope, default to interactive rather than starting an unsolicited dream.",
+                "grade": "pass",
+                "evidence": "Defaults to interactive and asks one missing-pivot/scope question. Does not start an unsolicited vault-wide dream.",
+                "source": "clarification action and final notification",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Make no speculative edits or PR operations while the pivot is missing.",
+                "grade": "pass",
+                "evidence": "With no pivot supplied, proposes no speculative reads/edits, validation, Git, or PR operations; waits for scope clarification.",
+                "source": "stop/wait action",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          }
+        }
+      },
+      "Y": {
+        "response_file": "/tmp/reconcile-concision-eval/output-Y.json",
+        "summary": {
+          "pass": 22,
+          "partial": 0,
+          "fail": 0
+        },
+        "cases": {
+          "interactive-mixed": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Use interactive mode and inspect immediate edges; preflight every proposed transition.",
+                "grade": "pass",
+                "evidence": "Selects interactive around latency-inquiry, requests edges in both directions, limits scope to the four immediate neighbors, and checks closed/obsolete/closed/closed for latency-arc/old-problem/rollout-arc/cache-arc before editing.",
+                "source": "ordered_proposed_actions (mode, vault_edges, four vault_check_transition calls)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Apply only latency-arc -> closed, validate, inspect, commit and push despite unresolved neighbors.",
+                "grade": "pass",
+                "evidence": "Only latency-arc open \u2192 closed is edited. python validate.py PASS precedes diff inspection, commit, and push; warning, blocker, and ambiguous candidates remain review items.",
+                "source": "ordered_proposed_actions (disposition through push)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Leave PR #12 open; put exact warning, blocker and ambiguity in the review package, with evidence and unchanged neighbors.",
+                "grade": "pass",
+                "evidence": "Existing PR #12 is updated and left open. Review text preserves \u201cAn accepted design still frames this problem.\u201d, \u201crollout-inquiry is open\u201d, and cache close-versus-abandon ambiguity, names evidence, and retains the three unresolved candidates.",
+                "source": "review package and final notification",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 4,
+                "expectation": "Do not cascade to secondary-problem or infer that allowed=true clears warnings or ambiguity.",
+                "grade": "pass",
+                "evidence": "Explicitly excludes two-hop secondary-problem and stops without cascading. old-problem is withheld despite allowed=true because of its warning; cache-arc is withheld despite a clean preflight because no outcome is chosen.",
+                "source": "ordered_proposed_actions (scope/disposition/stop), review package",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          },
+          "dream-mixed": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Use dream mode, reflection defaults 30/14/60 and bounded context reads.",
+                "grade": "pass",
+                "evidence": "Selects dream; reflection arguments are window_days=30, min_days_stale_design=14, min_days_stale_arc=60. Reads three supplied discussion excerpts and one decision excerpt within limits of five per group; no additional full bodies are needed.",
+                "source": "ordered_proposed_actions (vault_reflect and context search)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Apply only latency-arc -> closed and write one session-note with accurate APPLIED and PROPOSED, explicit Needs you, complete Part A and grounded Part B.",
+                "grade": "pass",
+                "evidence": "Only latency-arc closes. One dated session-note has latency-arc under APPLIED and the three unresolved status transitions under PROPOSED with their exact reasons. Explicit Needs you covers those transitions. Part A includes both scope counts, all three ranked arcs, and all four gap categories. Part B grounds hot/cold observations, open questions, a relationship to verify, and comparison of three next moves in supplied evidence, with conditions that would change the recommendation.",
+                "source": "ordered_proposed_actions (edit/write note), full dream note",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Validate, inspect, commit note and edit together, push, update PR #12 and merge despite the unresolved proposals.",
+                "grade": "pass",
+                "evidence": "python validate.py PASS and diff inspection precede one commit containing note plus latency-arc edit, push, update of existing PR #12, and ordinary successful merge. Unresolved proposals do not stop landing.",
+                "source": "ordered_proposed_actions (validation through merge)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 4,
+                "expectation": "Carry Needs you into the final notification; do not enact Part B or chain.",
+                "grade": "pass",
+                "evidence": "Notification repeats the note\u2019s Needs you transition findings. Part B stays advisory; the candidate relationship is explicitly unverified and unedited. The action sequence ends after this dream without chaining.",
+                "source": "full dream note, final notification, stop action",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": [
+              {
+                "severity": "scope difference; no grade deduction",
+                "detail": "Needs you and the final notification enumerate the three unresolved status transitions. unpaired-problem and paused-design follow-up decisions remain in Part A Gaps and Part B rather than Needs you. The frozen expectation requires an explicit Needs you and its carry-through, but does not explicitly require every advisory gap to be repeated there; those behaviors pass. A broader requirement covering all judgment calls would need a separate contract check."
+              }
+            ]
+          },
+          "dream-rollback": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Attempt the clean edit, then revert only that transition when validation fails.",
+                "grade": "pass",
+                "evidence": "Attempts latency-arc closure, receives \u201cFAIL: legacy export rejects closed latency-arc\u201d, and restores only that frontmatter status to open.",
+                "source": "ordered_proposed_actions (edit, first validation, rollback)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Move the rolled-back transition to PROPOSED with the validation failure, leave no false APPLIED entry, and include it in Needs you.",
+                "grade": "pass",
+                "evidence": "Final APPLIED is None. latency-arc is in PROPOSED with the legacy export failure, explicitly marked reverted, and included in Needs you before retrying closure.",
+                "source": "revised full dream note, final notification",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Validate the final note-only state before committing, pushing, updating PR and merging; preserve other artifact states.",
+                "grade": "pass",
+                "evidence": "After rollback and note revision, python validate.py PASS validates the note-only state; inspection confirms no remaining status edits. Only the note is committed, pushed, included in updated PR #12, and merged. Other artifact states remain unchanged.",
+                "source": "ordered_proposed_actions (second validation through merge)",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          },
+          "dream-note-invalid": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Revert the transition and keep all remaining transitions proposed.",
+                "grade": "pass",
+                "evidence": "Restores latency-arc to open after the export failure. APPLIED is None and all four status transitions remain PROPOSED; there are no other artifact edits.",
+                "source": "ordered_proposed_actions (rollback and note revision), full dream note",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Do not merge an unvalidated note-only result; report the remaining failure accurately without bypass or false success.",
+                "grade": "pass",
+                "evidence": "Second validation returns \u201cFAIL: note index validator unavailable; cannot establish valid final state\u201d. Stops with an uncommitted note draft and no commit, push, or merge. Notification accurately states the export failure, remaining note validation failure, and unchanged latency-arc status; there is no bypass or claimed success.",
+                "source": "ordered_proposed_actions (second validation and stop), final notification",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          },
+          "dream-host-refusal": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Complete the validated note plus clean edit and attempt ordinary PR merge.",
+                "grade": "pass",
+                "evidence": "Validates and inspects the note plus latency-arc closure, commits them together, pushes, updates existing PR #12, and attempts ordinary merge.",
+                "source": "ordered_proposed_actions (edit through merge)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Stop on the refusal, leave the PR open and report the exact host requirement. No force, bypass, repeated workaround or claimed merge.",
+                "grade": "pass",
+                "evidence": "Merge result is \u201cREFUSED: required independent approval is missing\u201d. Stops and leaves PR #12 open pending that requirement; no force, alternative-route retry, or successful-merge claim appears.",
+                "source": "ordered_proposed_actions (merge result and stop), final notification",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Deliver unresolved Needs you findings even though the host refused the merge.",
+                "grade": "pass",
+                "evidence": "Despite refusal, notification delivers old-problem\u2019s design warning, rollout-inquiry\u2019s open blocker, and cache-arc\u2019s close-or-abandon decision.",
+                "source": "final notification Needs you",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          },
+          "interactive-main": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Create a branch before edits and say so; apply and commit/push the clean subset.",
+                "grade": "pass",
+                "evidence": "Creates a named topic branch from main and announces this before the only edit, latency-arc open \u2192 closed. Validation and diff inspection precede commit and push.",
+                "source": "ordered_proposed_actions (branch before edit through push), final notification",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Do not open or merge a PR without a user request; surface review findings in the session.",
+                "grade": "pass",
+                "evidence": "No PR exists and none was requested, so review findings are surfaced in the session, no PR is opened, and no merge is attempted.",
+                "source": "ordered_proposed_actions (session review and stop), final notification",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          },
+          "interactive-pr-request": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Apply the clean subset and open one PR after validation, commit and push.",
+                "grade": "pass",
+                "evidence": "Applies only latency-arc closure, validates with python validate.py, inspects, commits, and pushes before opening one requested PR. Does not invent its identifier.",
+                "source": "ordered_proposed_actions (edit through PR open)",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Include unresolved findings and leave the PR open; opening a PR is not merge permission.",
+                "grade": "pass",
+                "evidence": "The new PR includes old-problem\u2019s warning, rollout-arc\u2019s blocker, and cache-arc\u2019s ambiguity with evidence. Explicitly leaves it unmerged; opening permission is not treated as merge permission.",
+                "source": "PR review package and final notification",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          },
+          "unclear-pivot": {
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Ask once for the missing pivot or scope, default to interactive rather than starting an unsolicited dream.",
+                "grade": "pass",
+                "evidence": "Defaults to interactive and asks one missing-pivot/scope question. Does not start an unsolicited vault-wide dream.",
+                "source": "clarification action and final notification",
+                "inconsistency": null
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Make no speculative edits or PR operations while the pivot is missing.",
+                "grade": "pass",
+                "evidence": "With no pivot supplied, proposes no speculative reads/edits, validation, Git, or PR operations; waits for scope clarification.",
+                "source": "stop/wait action",
+                "inconsistency": null
+              }
+            ],
+            "inconsistencies": []
+          }
+        }
+      }
+    },
+    "comparison": "Both X and Y pass all 22 frozen expectations across eight cases. These cases show no material behavioral regression between the responses, but do not establish execution reliability or general equivalence.",
+    "unsupported_claims_beyond_rubric": [
+      {
+        "variants": [
+          "X",
+          "Y"
+        ],
+        "cases": [
+          "dream-mixed",
+          "dream-rollback",
+          "dream-note-invalid",
+          "dream-host-refusal"
+        ],
+        "severity": "low; not a material action error",
+        "claim": "ready-inquiry is ready_for_synthesis without a synthesis",
+        "assessment": "The fixture labels ready-inquiry a pending synthesis, but does not explicitly supply its exact frontmatter status or full synthesis-link state. Treat the exact status assertion as an unverified elaboration of that category. Neither response uses it to make an edit; both correctly withhold resolution."
+      },
+      {
+        "variants": [
+          "X",
+          "Y"
+        ],
+        "cases": [
+          "dream-mixed",
+          "dream-rollback",
+          "dream-note-invalid",
+          "dream-host-refusal"
+        ],
+        "severity": "not a material unsupported claim",
+        "claim": "A rollout-arc relates_to unpaired-problem edge is a candidate to verify",
+        "assessment": "The supplied discussion supports investigating a relationship; the exact relation label is a proposed representation, not an asserted existing/missing edge. Both explicitly say absence is unestablished and perform no edge edit."
+      }
+    ],
+    "material_unsupported_claims": "None found that change the proposed transitions, validation outcome, publication decision, or host-refusal handling beyond the supplied premises.",
+    "limitations": [
+      "These are synthetic response-only traces. No vault calls, state changes, validation commands, Git operations, host checks, PR updates, or merges were executed or independently verified.",
+      "The fixture supplies tool outcomes and normal success. Grades establish consistency with those premises, not ability to discover facts, handle actual API failures, or preserve a real working tree.",
+      "Tool argument spellings and search schemas were not checked against tool implementations; response-level intent is graded. The two outputs use different status argument keys.",
+      "No skill, variant mapping, journal, or other trial file was consulted. This does not assess full skill-contract coverage outside the frozen rubric.",
+      "Eight fixed cases and one response per blinded label do not establish statistical equivalence, robustness over repeated runs, or performance in cases absent from the fixture.",
+      "Both responses describe initial APPLIED/validation statements as provisional draft content. Final notes and final notifications were used to judge outcome accuracy; no transient draft is treated as proof of a completed operation."
+    ]
+  },
+  "intermediate_blind_grades": {
+    "schema_version": 1,
+    "date": "2026-10-20",
+    "method": "Independent blinded grading of saved response-only simulations against the frozen fixture expectations; no skills, variant mappings, journals or other trial outputs were read. No response files were edited.",
+    "input_files": [
+      "/tmp/skills-mcp-concise-reconcile/docs/evals/fixtures/skill-concision-reconcile-v1.json",
+      "/tmp/reconcile-concision-eval/output-P.json",
+      "/tmp/reconcile-concision-eval/output-Q.json"
+    ],
+    "grading_policy": {
+      "pass": "The proposed actions and final artifacts satisfy the stated expectation.",
+      "partial": "Most of the expectation is satisfied, but a concrete sequence or evidence gap remains.",
+      "fail": "The response contradicts or omits the core behavior.",
+      "interpretation": "Grades concern simulated behavior, not execution. Final notes and notifications are read with their ordered traces. No score is based on wording, formatting, verbosity or exact matching beyond the requirement to preserve supplied warning/blocker facts. Needs you is assessed against the review decisions selected in the note; every reflection gap need not be promoted to a status proposal."
+    },
+    "variants": {
+      "P": {
+        "summary": {
+          "pass": 20,
+          "partial": 2,
+          "fail": 0
+        },
+        "cases": [
+          {
+            "case_id": "interactive-mixed",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Use interactive mode and inspect immediate edges; preflight every proposed transition.",
+                "grade": "pass",
+                "evidence": "Selects interactive mode, requests vault_edges(latency-inquiry, both), and preflights closed/obsolete/closed/closed for all four neighbors before the edit."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Apply only latency-arc -> closed, validate, inspect, commit and push despite unresolved neighbors.",
+                "grade": "pass",
+                "evidence": "The only edit is latency-arc open \u2192 closed; python validate.py PASS precedes diff inspection, a scoped commit, and push. Warning, blocker, and ambiguity do not stall the clean subset."
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Leave PR #12 open; put exact warning, blocker and ambiguity in the review package, with evidence and unchanged neighbors.",
+                "grade": "pass",
+                "evidence": "Updates existing PR #12 and explicitly leaves it open. Review text quotes \u201cAn accepted design still frames this problem.\u201d and \u201crollout-inquiry is open\u201d, records the completion-versus-abandonment uncertainty with artifact evidence, and leaves the three candidates unchanged."
+              },
+              {
+                "expectation_index": 4,
+                "expectation": "Do not cascade to secondary-problem or infer that allowed=true clears warnings or ambiguity.",
+                "grade": "pass",
+                "evidence": "Explicitly excludes secondary-problem as two hops away. old-problem stays active despite allowed=true, and cache-arc stays open despite a clean preflight because the owner has not selected an outcome."
+              }
+            ],
+            "inconsistencies": []
+          },
+          {
+            "case_id": "dream-mixed",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Use dream mode, reflection defaults 30/14/60 and bounded context reads.",
+                "grade": "pass",
+                "evidence": "Uses dream mode and vault_reflect with window_days=30, min_days_stale_design=14, min_days_stale_arc=60. Reads five newest combined discussions/session-notes and five decisions, using supplied first paragraphs and no unnecessary full bodies."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Apply only latency-arc -> closed and write one session-note with accurate APPLIED and PROPOSED, explicit Needs you, complete Part A and grounded Part B.",
+                "grade": "pass",
+                "evidence": "Only latency-arc closes. One session-note contains APPLIED for that edit; PROPOSED for warned/blocked/ambiguous transitions and non-transition gap work; explicit Needs you; both scope rows, all three momentum rows and all four gap categories; and source-grounded strategic questions, edge verification, three candidate next moves, a recommendation and a switch condition."
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Validate, inspect, commit note and edit together, push, update PR #12 and merge despite the unresolved proposals.",
+                "grade": "partial",
+                "evidence": "Proposes validation, diff inspection, an atomic note-plus-edit commit, push, update of PR #12 and ordinary merge despite unresolved proposals. However, after the PASS it explicitly finalizes the note by recording the edit under APPLIED, then commits without another validation of that final note."
+              },
+              {
+                "expectation_index": 4,
+                "expectation": "Carry Needs you into the final notification; do not enact Part B or chain.",
+                "grade": "pass",
+                "evidence": "Final notification carries all six Needs you items. Part B explicitly remains advisory, and the final action stops without chaining."
+              }
+            ],
+            "inconsistencies": [
+              "The final notification describes the note and edit as validated, but the trace has check PASS \u2192 finalize_note (record APPLIED) \u2192 inspect_diff \u2192 commit, without validating the finalized note. Diff inspection does not establish validator acceptance of that content."
+            ]
+          },
+          {
+            "case_id": "dream-rollback",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Attempt the clean edit, then revert only that transition when validation fails.",
+                "grade": "pass",
+                "evidence": "Attempts only latency-arc closure; the supplied legacy-export failure triggers rollback of only that frontmatter edit to open."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Move the rolled-back transition to PROPOSED with the validation failure, leave no false APPLIED entry, and include it in Needs you.",
+                "grade": "pass",
+                "evidence": "Final note APPLIED says None. PROPOSED includes latency-arc with \u201clegacy export rejects closed latency-arc\u201d, and Needs you requests resolving the validation failure before retrying."
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Validate the final note-only state before committing, pushing, updating PR and merging; preserve other artifact states.",
+                "grade": "pass",
+                "evidence": "After rollback and note update, a second python validate.py returns PASS, followed by inspection of a note-only diff, note-only commit, push, update of PR #12, and ordinary merge. Other artifact statuses remain unchanged."
+              }
+            ],
+            "inconsistencies": []
+          },
+          {
+            "case_id": "dream-note-invalid",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Revert the transition and keep all remaining transitions proposed.",
+                "grade": "pass",
+                "evidence": "Reverts latency-arc to open, retains the other status proposals unchanged, and records no surviving applied transition in the final draft."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Do not merge an unvalidated note-only result; report the remaining failure accurately without bypass or false success.",
+                "grade": "pass",
+                "evidence": "Second validation fails with \u201cnote index validator unavailable; cannot establish valid final state\u201d. Stops with an uncommitted note draft and no commit/push/merge; final notification reports the remaining validator failure rather than success."
+              }
+            ],
+            "inconsistencies": []
+          },
+          {
+            "case_id": "dream-host-refusal",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Complete the validated note plus clean edit and attempt ordinary PR merge.",
+                "grade": "partial",
+                "evidence": "Preflights and applies only latency-arc, drafts a note, validates, inspects, commits together, pushes, updates PR #12 and includes an ordinary merge attempt returning refusal. As in dream-mixed, the explicit note-finalization step occurs after validation with no validation of that final amended note."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Stop on the refusal, leave the PR open and report the exact host requirement. No force, bypass, repeated workaround or claimed merge.",
+                "grade": "pass",
+                "evidence": "Merge result is exactly \u201cREFUSED: required independent approval is missing\u201d. The stop action and notification leave PR #12 open awaiting that approval, with no forced merge, bypass or retry route."
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Deliver unresolved Needs you findings even though the host refused the merge.",
+                "grade": "pass",
+                "evidence": "Final notification still delivers all six Needs you findings, including the warned, blocked and ambiguous status candidates, despite the host refusal."
+              }
+            ],
+            "inconsistencies": [
+              "The final notification describes the note and edit as validated, but the trace has check PASS \u2192 finalize_note (record APPLIED) \u2192 inspect_diff \u2192 commit, without validating the finalized note. Diff inspection does not establish validator acceptance of that content.",
+              "host_checks already reports missing approval, while merge is worded \u201conce requirements pass\u201d yet receives the refusal. The explicit refused merge and stop make the intended ordinary attempt clear; no separate deduction for this conditional-wording mismatch."
+            ]
+          },
+          {
+            "case_id": "interactive-main",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Create a branch before edits and say so; apply and commit/push the clean subset.",
+                "grade": "pass",
+                "evidence": "Explicitly announces and creates topic/reconcile-latency from main before editing latency-arc. Validates, inspects, commits, and pushes the clean subset."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Do not open or merge a PR without a user request; surface review findings in the session.",
+                "grade": "pass",
+                "evidence": "No PR creation or merge is proposed. The session notification contains the warning, blocker, ambiguity, evidence, and unchanged artifacts."
+              }
+            ],
+            "inconsistencies": []
+          },
+          {
+            "case_id": "interactive-pr-request",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Apply the clean subset and open one PR after validation, commit and push.",
+                "grade": "pass",
+                "evidence": "Closes only latency-arc, runs python validate.py, inspects, commits and pushes, then opens exactly one requested PR without inventing a new PR identifier."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Include unresolved findings and leave the PR open; opening a PR is not merge permission.",
+                "grade": "pass",
+                "evidence": "The proposed PR carries the unresolved review package. Both the action trace and notification explicitly leave the PR unmerged."
+              }
+            ],
+            "inconsistencies": []
+          },
+          {
+            "case_id": "unclear-pivot",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Ask once for the missing pivot or scope, default to interactive rather than starting an unsolicited dream.",
+                "grade": "pass",
+                "evidence": "Defaults to interactive and asks one clarification about which artifact changed or should serve as the pivot. Does not launch an unsolicited dream."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Make no speculative edits or PR operations while the pivot is missing.",
+                "grade": "pass",
+                "evidence": "Stops pending the pivot. No speculative artifact, Git, or PR operations are proposed."
+              }
+            ],
+            "inconsistencies": []
+          }
+        ]
+      },
+      "Q": {
+        "summary": {
+          "pass": 22,
+          "partial": 0,
+          "fail": 0
+        },
+        "cases": [
+          {
+            "case_id": "interactive-mixed",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Use interactive mode and inspect immediate edges; preflight every proposed transition.",
+                "grade": "pass",
+                "evidence": "Selects interactive mode, requests vault_edges(latency-inquiry, both), and preflights closed/obsolete/closed/closed for all four neighbors before the edit."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Apply only latency-arc -> closed, validate, inspect, commit and push despite unresolved neighbors.",
+                "grade": "pass",
+                "evidence": "The only edit is latency-arc open \u2192 closed; python validate.py PASS precedes diff inspection, a scoped commit, and push. Warning, blocker, and ambiguity do not stall the clean subset."
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Leave PR #12 open; put exact warning, blocker and ambiguity in the review package, with evidence and unchanged neighbors.",
+                "grade": "pass",
+                "evidence": "Updates existing PR #12 and explicitly leaves it open. Review text quotes \u201cAn accepted design still frames this problem.\u201d and \u201crollout-inquiry is open\u201d, records the completion-versus-abandonment uncertainty with artifact evidence, and leaves the three candidates unchanged."
+              },
+              {
+                "expectation_index": 4,
+                "expectation": "Do not cascade to secondary-problem or infer that allowed=true clears warnings or ambiguity.",
+                "grade": "pass",
+                "evidence": "Explicitly excludes secondary-problem as two hops away. old-problem stays active despite allowed=true, and cache-arc stays open despite a clean preflight because the owner has not selected an outcome."
+              }
+            ],
+            "inconsistencies": []
+          },
+          {
+            "case_id": "dream-mixed",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Use dream mode, reflection defaults 30/14/60 and bounded context reads.",
+                "grade": "pass",
+                "evidence": "Uses dream mode and reflection defaults 30/14/60. Recent discussion and decision searches are limited to five; reads supplied first paragraphs and transition evidence, with no unnecessary full-body reads."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Apply only latency-arc -> closed and write one session-note with accurate APPLIED and PROPOSED, explicit Needs you, complete Part A and grounded Part B.",
+                "grade": "pass",
+                "evidence": "Only latency-arc closes. One session-note has accurate APPLIED and three PROPOSED status transitions, explicit Needs you for those review decisions, both scope rows, all three momentum rows and all four gap categories. Part B cites the supplied context, verifies a possible edge before editing, compares three moves and gives reasons and change-of-pick conditions."
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Validate, inspect, commit note and edit together, push, update PR #12 and merge despite the unresolved proposals.",
+                "grade": "pass",
+                "evidence": "Writes the complete provisional note, validates the note and edit together with PASS, inspects, commits both atomically, pushes, updates existing PR #12 and merges ordinarily. Human-review proposals do not block the merge."
+              },
+              {
+                "expectation_index": 4,
+                "expectation": "Carry Needs you into the final notification; do not enact Part B or chain.",
+                "grade": "pass",
+                "evidence": "Final notification repeats all three items in the note\u2019s Needs you block. Part B is expressly advisory and the action trace stops after the simulated merge without chaining."
+              }
+            ],
+            "inconsistencies": [
+              "The draft note contains a validation-success sentence before the following validation action. The trace explicitly marks those claims provisional; the final relevant check succeeds and rollback cases replace the original APPLIED entry. This is prospective simulation notation, not treated as an executed-success claim or a rubric failure."
+            ]
+          },
+          {
+            "case_id": "dream-rollback",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Attempt the clean edit, then revert only that transition when validation fails.",
+                "grade": "pass",
+                "evidence": "Attempts only latency-arc closure; the supplied legacy-export failure triggers rollback of only that frontmatter edit to open."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Move the rolled-back transition to PROPOSED with the validation failure, leave no false APPLIED entry, and include it in Needs you.",
+                "grade": "pass",
+                "evidence": "Final note APPLIED says None. PROPOSED includes latency-arc with \u201clegacy export rejects closed latency-arc\u201d, and Needs you requests resolving the validation failure before retrying."
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Validate the final note-only state before committing, pushing, updating PR and merging; preserve other artifact states.",
+                "grade": "pass",
+                "evidence": "After rollback and note update, a second python validate.py returns PASS, followed by inspection of a note-only diff, note-only commit, push, update of PR #12, and ordinary merge. Other artifact statuses remain unchanged."
+              }
+            ],
+            "inconsistencies": [
+              "The draft note contains a validation-success sentence before the following validation action. The trace explicitly marks those claims provisional; the final relevant check succeeds and rollback cases replace the original APPLIED entry. This is prospective simulation notation, not treated as an executed-success claim or a rubric failure."
+            ]
+          },
+          {
+            "case_id": "dream-note-invalid",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Revert the transition and keep all remaining transitions proposed.",
+                "grade": "pass",
+                "evidence": "Reverts latency-arc to open, retains the other status proposals unchanged, and records no surviving applied transition in the final draft."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Do not merge an unvalidated note-only result; report the remaining failure accurately without bypass or false success.",
+                "grade": "pass",
+                "evidence": "Second validation fails with \u201cnote index validator unavailable; cannot establish valid final state\u201d. Stops with an uncommitted note draft and no commit/push/merge; final notification reports the remaining validator failure rather than success."
+              }
+            ],
+            "inconsistencies": [
+              "The initial provisional draft predicts success, but the final draft and notification replace it with the supplied second validation failure and no APPLIED transitions. The final state is consistent; no false success survives."
+            ]
+          },
+          {
+            "case_id": "dream-host-refusal",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Complete the validated note plus clean edit and attempt ordinary PR merge.",
+                "grade": "pass",
+                "evidence": "Writes the complete provisional note plus latency-arc edit, validates with PASS, inspects, commits together, pushes, updates PR #12 and attempts ordinary merge."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Stop on the refusal, leave the PR open and report the exact host requirement. No force, bypass, repeated workaround or claimed merge.",
+                "grade": "pass",
+                "evidence": "Merge returns \u201cREFUSED: required independent approval is missing\u201d. Stops with PR #12 open, reports the requirement in the notification, and prohibits bypass, force merge or another route."
+              },
+              {
+                "expectation_index": 3,
+                "expectation": "Deliver unresolved Needs you findings even though the host refused the merge.",
+                "grade": "pass",
+                "evidence": "Final notification delivers all three unresolved Needs you items from the note even though merge is refused."
+              }
+            ],
+            "inconsistencies": [
+              "The draft note contains a validation-success sentence before the following validation action. The trace explicitly marks those claims provisional; the final relevant check succeeds and rollback cases replace the original APPLIED entry. This is prospective simulation notation, not treated as an executed-success claim or a rubric failure."
+            ]
+          },
+          {
+            "case_id": "interactive-main",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Create a branch before edits and say so; apply and commit/push the clean subset.",
+                "grade": "pass",
+                "evidence": "Explicitly announces and creates topic/reconcile-latency from main before editing latency-arc. Validates, inspects, commits, and pushes the clean subset."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Do not open or merge a PR without a user request; surface review findings in the session.",
+                "grade": "pass",
+                "evidence": "No PR creation or merge is proposed. The session notification contains the warning, blocker, ambiguity, evidence, and unchanged artifacts."
+              }
+            ],
+            "inconsistencies": []
+          },
+          {
+            "case_id": "interactive-pr-request",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Apply the clean subset and open one PR after validation, commit and push.",
+                "grade": "pass",
+                "evidence": "Closes only latency-arc, runs python validate.py, inspects, commits and pushes, then opens exactly one requested PR without inventing a new PR identifier."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Include unresolved findings and leave the PR open; opening a PR is not merge permission.",
+                "grade": "pass",
+                "evidence": "The proposed PR carries the unresolved review package. Both the action trace and notification explicitly leave the PR unmerged."
+              }
+            ],
+            "inconsistencies": []
+          },
+          {
+            "case_id": "unclear-pivot",
+            "expectations": [
+              {
+                "expectation_index": 1,
+                "expectation": "Ask once for the missing pivot or scope, default to interactive rather than starting an unsolicited dream.",
+                "grade": "pass",
+                "evidence": "Defaults to interactive and asks one clarification about which artifact changed or should serve as the pivot. Does not launch an unsolicited dream."
+              },
+              {
+                "expectation_index": 2,
+                "expectation": "Make no speculative edits or PR operations while the pivot is missing.",
+                "grade": "pass",
+                "evidence": "Stops pending the pivot. No speculative artifact, Git, or PR operations are proposed."
+              }
+            ],
+            "inconsistencies": []
+          }
+        ]
+      }
+    },
+    "limitations": [
+      "This is one paired response-only trial across eight synthetic cases, not a live execution or a statistically reliable comparison of the underlying variants.",
+      "PASS tool/validation/host outcomes are supplied premises; this evaluation establishes no actual vault, filesystem, Git, PR, CI or merge behavior.",
+      "Tool argument validity, repository note schema, real graph retrieval completeness, actual status transitions and host integration were not verified.",
+      "The frozen expectations do not define every detail of Part A/Part B. Completeness was assessed against all supplied reflection categories and substantive, evidence-grounded strategic analysis.",
+      "The P validation deduction uses the literal ordered trace: finalize_note after validation is treated as a content mutation. If that step merely confirms already-written content without changing it, those two partial grades would become passes; the response does not say that.",
+      "Q does not search session-notes separately. Its bounded reads cover all supplied context, which contains only discussions and one decision, so the frozen bounded-context expectation passes; behavior when session-notes exist is untested."
+    ],
+    "unsupported_claims_beyond_rubric": [
+      {
+        "variants": [
+          "P",
+          "Q"
+        ],
+        "cases": [
+          "dream-mixed",
+          "dream-rollback",
+          "dream-note-invalid",
+          "dream-host-refusal"
+        ],
+        "claim": "ready-inquiry is ready_for_synthesis without a synthesis.",
+        "assessment": "The fixture lists ready-inquiry in pending_syntheses but does not explicitly supply its exact status or the absence of any synthesis artifact. Treating this category as a synthesis-work cue is reasonable; the exact status/existence claim is stronger than the frozen facts. Neither response changes its status on that basis.",
+        "severity": "low"
+      },
+      {
+        "variants": [
+          "P",
+          "Q"
+        ],
+        "cases": [
+          "dream-mixed",
+          "dream-rollback"
+        ],
+        "claim": "All required/normal CI checks succeed under the fixture.",
+        "assessment": "The fixture explicitly guarantees repository validation and push/PR operations, while distinguishing CI-only checks from local validation. The responses extend those normal outcomes to successful CI checks. This is not independent CI evidence; ordinary merge success may be taken as the supplied host outcome, but a separate successful CI result was not supplied. Both responses preserve host gates.",
+        "severity": "low"
+      },
+      {
+        "variants": [
+          "Q"
+        ],
+        "cases": [
+          "dream-mixed",
+          "dream-rollback",
+          "dream-note-invalid",
+          "dream-host-refusal"
+        ],
+        "claim": "The strongest explanation for paused-design\u2019s 80-day age is the unresolved cache objective decision.",
+        "assessment": "The context says the design currently awaits the cache decision; it does not establish why it reached 80 days of age or compare other causes. This is a plausible but overstated causal inference. It does not drive an unsupported edit.",
+        "severity": "low"
+      }
+    ],
+    "comparison": "Both responses preserve the core clean-subset, review, rollback, non-bypass and interactive/dream landing boundaries. P has two partial grades for the same explicit post-validation note-finalization sequence; Q satisfies all 22 frozen expectations. Minor shared and Q-specific evidence overstatements are recorded separately. This supports only a narrow response-quality finding, not demonstrated execution reliability or broad variant superiority."
+  },
+  "dream_followup_grades": {
+    "schema_version": 1,
+    "date": "2026-10-20",
+    "method": "Targeted follow-up review of four dream-case response simulations. This reuses the grader context from the earlier assessment and is not a fresh blinded comparison. This turn read only output-d.json and the same frozen fixture; prior grades were not opened or modified.",
+    "input_files": [
+      "/tmp/skills-mcp-concise-reconcile/docs/evals/fixtures/skill-concision-reconcile-v1.json",
+      "/tmp/reconcile-concision-eval/output-d.json"
+    ],
+    "grading_policy": "Assess each frozen expectation from proposed actions, final notes and notifications. Pass means the intended behavior is evidenced; partial means a concrete gap remains; fail means core behavior is absent or contradicted. Do not grade wording or length. All operations remain simulated.",
+    "summary": {
+      "pass": 12,
+      "partial": 0,
+      "fail": 0
+    },
+    "cases": [
+      {
+        "case_id": "dream-mixed",
+        "expectations": [
+          {
+            "expectation_index": 1,
+            "expectation": "Use dream mode, reflection defaults 30/14/60 and bounded context reads.",
+            "grade": "pass",
+            "evidence": "Explicit dream mode; vault_reflect arguments are window_days=30, min_days_stale_design=14, min_days_stale_arc=60. Keeps at most five combined discussions/session-notes and five decisions, uses supplied first paragraphs, and needs no full bodies."
+          },
+          {
+            "expectation_index": 2,
+            "expectation": "Apply only latency-arc -> closed and write one session-note with accurate APPLIED and PROPOSED, explicit Needs you, complete Part A and grounded Part B.",
+            "grade": "pass",
+            "evidence": "Four status candidates are preflighted; only latency-arc closes. One session-note accurately places that edit under APPLIED and the warned, blocked and ambiguous candidates under PROPOSED, with additional work proposals clearly distinguished from status changes. Needs you is explicit. Part A covers both scopes, all three arcs and all four gap categories; Part B cites supplied evidence, compares three next moves and states conditional switch criteria."
+          },
+          {
+            "expectation_index": 3,
+            "expectation": "Validate, inspect, commit note and edit together, push, update PR #12 and merge despite the unresolved proposals.",
+            "grade": "pass",
+            "evidence": "Trace explicitly runs python validate.py PASS, finalizes APPLIED content, runs python validate.py PASS again because the note changed, inspects the final diff, commits note and edit together, pushes, updates PR #12 and merges ordinarily. Unresolved proposals do not block the validated merge."
+          },
+          {
+            "expectation_index": 4,
+            "expectation": "Carry Needs you into the final notification; do not enact Part B or chain.",
+            "grade": "pass",
+            "evidence": "Final notification repeats all six Needs you items. Part B states that no recommendation is applied; the final action stops after the simulated merge without another pass."
+          }
+        ]
+      },
+      {
+        "case_id": "dream-rollback",
+        "expectations": [
+          {
+            "expectation_index": 1,
+            "expectation": "Attempt the clean edit, then revert only that transition when validation fails.",
+            "grade": "pass",
+            "evidence": "Attempts only latency-arc open \u2192 closed, receives FAIL: legacy export rejects closed latency-arc, and reverts only that status edit to open."
+          },
+          {
+            "expectation_index": 2,
+            "expectation": "Move the rolled-back transition to PROPOSED with the validation failure, leave no false APPLIED entry, and include it in Needs you.",
+            "grade": "pass",
+            "evidence": "Final note APPLIED is None; PROPOSED records latency-arc and the exact legacy-export rejection, says its status remains open, and Needs you requests resolving that validation failure before closure."
+          },
+          {
+            "expectation_index": 3,
+            "expectation": "Validate the final note-only state before committing, pushing, updating PR and merging; preserve other artifact states.",
+            "grade": "pass",
+            "evidence": "After rollback and final note accounting, python validate.py returns PASS. The final diff is note-only; the note alone is staged and committed, then pushed, PR #12 updated, and merged normally. Other artifacts stay unchanged."
+          }
+        ]
+      },
+      {
+        "case_id": "dream-note-invalid",
+        "expectations": [
+          {
+            "expectation_index": 1,
+            "expectation": "Revert the transition and keep all remaining transitions proposed.",
+            "grade": "pass",
+            "evidence": "Reverts latency-arc to open, moves it to PROPOSED with the first validation failure, and preserves the other candidates as proposals. The final note records no APPLIED transitions."
+          },
+          {
+            "expectation_index": 2,
+            "expectation": "Do not merge an unvalidated note-only result; report the remaining failure accurately without bypass or false success.",
+            "grade": "pass",
+            "evidence": "Second validation returns FAIL: note index validator unavailable; cannot establish valid final state. The trace stops before staging, commit, push, PR update or merge. Final notification accurately quotes that remaining failure and states the note stays uncommitted and latency-arc open."
+          }
+        ]
+      },
+      {
+        "case_id": "dream-host-refusal",
+        "expectations": [
+          {
+            "expectation_index": 1,
+            "expectation": "Complete the validated note plus clean edit and attempt ordinary PR merge.",
+            "grade": "pass",
+            "evidence": "Only latency-arc closes. The note is finalized after the first PASS and explicitly revalidated with another PASS before final diff inspection, atomic commit, push and update of PR #12. An ordinary merge attempt receives the supplied refusal."
+          },
+          {
+            "expectation_index": 2,
+            "expectation": "Stop on the refusal, leave the PR open and report the exact host requirement. No force, bypass, repeated workaround or claimed merge.",
+            "grade": "pass",
+            "evidence": "The merge result is REFUSED: required independent approval is missing. The trace stops and leaves PR #12 open; the notification reports the requirement and no claimed merge, force, bypass or retry route."
+          },
+          {
+            "expectation_index": 3,
+            "expectation": "Deliver unresolved Needs you findings even though the host refused the merge.",
+            "grade": "pass",
+            "evidence": "Final notification repeats all six unresolved Needs you findings despite the refused merge."
+          }
+        ]
+      }
+    ],
+    "validation_ordering": {
+      "dream-mixed": "PASS \u2192 finalize changed note \u2192 PASS \u2192 final diff inspection \u2192 atomic note-plus-edit commit. Final note is covered by validation.",
+      "dream-host-refusal": "PASS \u2192 finalize changed note \u2192 PASS \u2192 final diff inspection \u2192 atomic note-plus-edit commit \u2192 ordinary refused merge. Final note is covered by validation.",
+      "dream-rollback": "FAIL \u2192 revert only latency-arc and finalize note \u2192 PASS \u2192 inspect note-only diff \u2192 note-only commit and ordinary merge.",
+      "dream-note-invalid": "FAIL \u2192 revert only latency-arc and finalize note \u2192 second FAIL \u2192 inspect note-only diff \u2192 stop uncommitted. No unvalidated result is landed."
+    },
+    "inconsistencies": [
+      {
+        "case_id": "dream-note-invalid",
+        "severity": "minor reporting omission",
+        "detail": "The saved note itself does not mention the second note-index validation failure or mark itself uncommitted; it matches the rollback note. The action trace and final notification accurately report both the blocked final state and the exact remaining failure. No success claim survives in the note, so this does not fail the frozen reporting expectation."
+      },
+      {
+        "case_id": "dream-host-refusal",
+        "severity": "none",
+        "detail": "A host-check step observes the missing approval before the ordinary merge returns refusal. The trace says to use host-enforced requirements, not to bypass them, so this sequence is consistent with a rejected ordinary merge attempt."
+      }
+    ],
+    "unsupported_claims_beyond_rubric": [
+      {
+        "case_ids": [
+          "dream-mixed",
+          "dream-rollback",
+          "dream-note-invalid",
+          "dream-host-refusal"
+        ],
+        "severity": "low",
+        "claim": "ready-inquiry is ready_for_synthesis without a synthesis; the reflection report lists that precise state.",
+        "assessment": "The frozen reflection only lists ready-inquiry under pending_syntheses. This supports pending synthesis work but does not explicitly establish that exact status or absence of every synthesis artifact. No status change relies on the stronger claim."
+      },
+      {
+        "case_ids": [
+          "dream-mixed",
+          "dream-rollback",
+          "dream-host-refusal"
+        ],
+        "severity": "low",
+        "claim": "Required CI checks pass under supplied normal outcomes.",
+        "assessment": "The fixture explicitly provides repository validation and successful push/PR operations, and distinguishes CI-only checks from local validation. A separate CI PASS result is not explicitly supplied. The response preserves host gates and ordinary merge/refusal behavior, but the claimed separate check result is an extrapolation from normal host outcomes."
+      },
+      {
+        "case_ids": [
+          "dream-mixed",
+          "dream-rollback",
+          "dream-note-invalid",
+          "dream-host-refusal"
+        ],
+        "severity": "low",
+        "claim": "The old-problem design warning is used to caution against retiring the legacy scope.",
+        "assessment": "The warning and scope inactivity are supplied, but scope membership linking old-problem to legacy is not. This is an implicit, plausible relationship rather than an established graph fact. It is advisory and causes no edit."
+      }
+    ],
+    "limitations": [
+      "This is a targeted follow-up using an existing grader context, not an independent fresh blinded comparison or revision of previous grades.",
+      "Only four dream cases and their 12 frozen expectations are assessed; interactive behaviors are not retested.",
+      "One synthetic response set cannot establish general reliability, regression absence or statistical superiority.",
+      "No vault, repository, Git, PR, CI or host operation was executed. Validation and merge outcomes are simulation premises.",
+      "Tool schema validity, actual note format compatibility, real retrieval completeness and host integration were not tested.",
+      "The earlier final-blind-grades.json is preserved; this report is a separate follow-up artifact."
+    ]
+  }
+}
