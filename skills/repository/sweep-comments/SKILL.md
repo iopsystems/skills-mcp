@@ -16,34 +16,10 @@ restatements.
 
 ## The two readers
 
-A comment is read by a human and by a coding agent, and it must serve
-both. They differ in exactly one way that matters here, and the whole
-of this skill's placement rule follows from it.
-
-The **human** is a professional who is competent at reading code and
-willing to learn the context on their own. They can read a call
-signature, follow a loop, look up a library, and derive what the
-language's own rules guarantee. They arrive through the file: module
-doc first, then the internals. A reader who did not read the code is
-not a reader the codebase serves — their confusion is not grounds for
-a comment. Assuming an incompetent reader is what produces restatement
-comments.
-
-The **coding agent** has that same competence and none of that reading
-order. It arrives at a function by grep or symbol lookup, holding that
-function and little else, and it edits confidently on that much. It
-has usually not read the module doc, and a pointer costs it a
-retrieval it may not spend.
-
-The competence bar is shared, so **tier 1 dies for both**: a
-restatement wastes a human's attention and burns the context an agent
-needed for the code itself. Verbosity is not agent-friendly; it is the
-tax both readers pay.
-
-The reading order is not shared, and that is the entire difference. It
-changes nothing about *what* is worth saying and one thing about
-*where*: **a fact that constrains edits must be legible at the site
-where a wrong edit would be made**, not only at the model home.
+Assume humans and coding agents can read code, follow calls, and look up APIs.
+Do not explain facts they can derive locally. A coding agent may reach a function
+through symbol lookup without reading its module documentation, so keep edit
+constraints at the sites where an otherwise valid edit could violate them.
 
 ## Explanation follows the architecture
 
@@ -59,17 +35,6 @@ hoisted above its level — a module doc narrating one method's edge
 case — taxes every reader of the level and goes stale when that one
 method changes. If no level exists where a fact is invariant, that is
 a design smell, not a commenting problem.
-
-Code materializes the leaves of that tree completely, which is why
-comments have value at every altitude above the code and none at zero:
-a comment at the code's own level restates what is already
-materialized, while prose is the only medium that can state the
-interior nodes — intent, models, protocols, why. The two media trade
-in opposite directions: code must be functionally sound and so cannot
-be vague — it is forced to total precision at the leaf level — while
-prose is licensed to abstract and omit, which is exactly what lets it
-serve one idea at different levels of detail. A comment competing with
-the code on precision is a restatement; choose its altitude instead.
 
 ### The model home
 
@@ -288,15 +253,9 @@ the constraint. When a fragment cannot keep these, write the sentence.
 
 ### The rest
 
-`technical-prose` is the home for modality, empty vocabulary,
-one-name-per-thing, and the ladder of how much to write; use it directly when
-the problem is wording rather than placement. It disclaims fragment versus
-sentence, which is why the fragment rule above can stand against a standard
-that would otherwise demand full grammar. The modality requirement is
-stated in both places on purpose: it is an edit constraint, and the reader
-shortening a comment here is the one who never opened that skill.
-
-The bullets below are what comment writing adds on top of that bar:
+Use `technical-prose` for wording, relevance, and evidence strength. This skill
+owns comment placement and fragments. Keep modality explicit here because it
+constrains the edit being made. Additional comment rules:
 
 - One short constraint per comment. A kept comment carrying more than
   one must justify each as a distinct tier-2-at-home or tier-3 fact; connective tissue, illustrative examples, and rhetorical
@@ -308,6 +267,7 @@ The bullets below are what comment writing adds on top of that bar:
   cut whole sentences instead.
 - Never mix a restatement with a real fact to justify the comment.
   Keep the real clause, delete the restatement half.
+- Put derivation walkthroughs in the PR description; keep the invariant in code.
 - A docstring longer than the function it documents is an action
   trigger, not a style note: cut it down, or justify it. The public-API
   allowance covers parameter, error, and panic contracts — not essays.
@@ -537,38 +497,6 @@ has a home, and it is not the code:
   answer in the review thread and strengthen the model home; a comment
   written to end a conversation serves the wrong reader.
 - **Guessed rationales** — never write a why you do not actually know.
-
-| Excuse | Reality |
-|---|---|
-| "It's a concurrency/memory-ordering comment — those are keepers" | The test is derivability, not topic. An ordering justified by a visible lock is tier 1; only the protocol fact with no other guard survives, and it lives at the model home. |
-| "The reader might not have read the module doc" | The human will — that is what the home is for. The agent will not, which buys exactly one sentence at a site that passes the retrieval test, and nothing anywhere else. |
-| "Agents don't follow pointers, so every pointer should go back to being a copy" | Only where a wrong edit would compile and pass. Everywhere else the agent that skips the pointer also skips a fact it had no use for. The carve-out is edit constraints, not comfort. |
-| "A pointer can't drift, so it beats a copy everywhere" | It also can't be read by someone who never follows it. At a site that can silently break the fact, an unread pointer is a missing fact, and drift is the cheaper failure. |
-| "Serving coding agents means keeping more comments" | It means one sentence at edit sites and the same deletions everywhere else. Tier 1 costs an agent more than a human — it burns the context window the code needed. |
-| "This diff states the model, so the diff is its home" | Being the only copy you can see is not being the home. Look in the dependency and the parent branch first — a stacked PR's models are usually homed one branch down, and a new consumer's are homed in what it consumes. |
-| "Agents don't read pictures, so a diagram is wasted effort" | The model home's job is comprehension and half the readership is human. Keep the source text-based (ASCII, D2) and the cost to the other half is zero. |
-| "A picture is always clearer than a paragraph" | Not when the paragraph already carries it. A diagram that restates one sentence is a restatement that also has to be kept true. |
-| "The diagram is a bit out of date but still roughly right" | A diagram reads as more authoritative than prose, so a stale one misleads harder. Redraw it or delete it. |
-| "Each copy states a real constraint, so each copy is a keeper" | A fact stated in five places is one statement and four echoes. Distributed echoes are invisible comment-by-comment; only the model inventory catches them. |
-| "The test doc restates the module doc, so it's an echo" | Across the code/test boundary a restatement is a claim binding: it names which promise the test enforces. Delete it and a red CI run stops saying what broke. |
-| "This echo is convenient right where it's used" | Two copies of one model drift independently; the stale one becomes a lie with authority. Pointer or nothing. |
-| "It's public API, so the length is fine" | Public API earns parameter, error, and panic contracts — not essays. |
-| "Rewording it shorter is compression" | Compression preserves meaning exactly; a guarantee must not become an obligation. Cut sentences, don't mutate them. |
-| "Shorter is always better, so drop the verb" | Only while the fact survives. Modality and the subject of a claim are content, not grammar — a fragment that loses either says something else. |
-| "The fragment is obvious from context" | Obvious that the fact is *true*, perhaps. Check that it is still obvious the fact *binds*: a description reads as reversible where a prohibition does not. |
-| "It's an edit constraint, so it has to be a full sentence" | Only the modal clause does. `Ring must outlive the reader.` is a fragment and a prohibition at once. |
-| "The derivation helps reviewers check the math" | Put derivations in the PR description. In code, one sentence states the invariant. |
-| "The team lead wants thorough documentation" | Thorough means every comment is true, non-obvious, and taught in the right place — not that every line has one. |
-| "I'll leave the old comment as historical context" | Git history is the historical context. |
-| "No time to sweep before the PR" | A sweep of touched files takes minutes; a reviewer misled by a stale comment costs a review round. |
-| "The diff is huge — I'll fan the reading out to subagents and keep the judgment" | Judgment built on delegated reading is delegated judgment. The sweep's value is one reader seeing the whole change. |
-| "The reader might not know this API" | The reader is a competent professional who will look it up. Document your constraint, not their library. |
-| "One more true comment can't hurt — it buys reviewer goodwill" | Every comment is a liability that must stay true through every future edit. Goodwill belongs in the review thread, not pinned to the code. |
-| "A TODO is free — I'll leave it in case we want this later" | A TODO with no ticket or commitment is a stale-comment seed with no owner. It costs nothing today and lies within a quarter. |
-| "Suppressing the linter is cheating; writing the docstring is compliance" | The manufactured docstring is the cheat — it fakes documentation to green a check. A visible suppression records the deliberate absence honestly. |
-| "I'll keep the old code commented out until the new path is proven in prod" | If prod breaks you revert the commit; you don't uncomment a block that stopped compiling against its neighbors weeks ago. |
-| "The comment was already there; I only reworded it" | Rewording re-asserts every claim under your name. An inherited claim is checked like a new one, and the prose pass will not do it for you. |
-| "It's true in the design, so the comment is true" | The comment is read against the code. A design that has not landed is a future-tense fact, and stating it in the present is a false claim with a plan behind it. |
 
 ## Red flags — stop and re-check
 

@@ -1,0 +1,227 @@
+{
+  "schema_version": 1,
+  "baseline_commit": "57846baca58b828ee3266ec6478c4a0335ed32c8",
+  "selection": "Targeted existing cases, selected before editing; not exhaustive or a live-repository task suite.",
+  "cases": [
+    {
+      "id": "technical-prose-02",
+      "skill": "technical-prose",
+      "request": "Apply the modal rules to: 'Callers may not hold the lock across an await point.'",
+      "name": "prohibition with may not is preserved",
+      "expectations": [
+        "Recognize may as permission-sense, not possibility",
+        "Leave may not intact",
+        "Do not rewrite to cannot or to can"
+      ]
+    },
+    {
+      "id": "technical-prose-28",
+      "skill": "technical-prose",
+      "request": "Tighten this advice: 'Operators should start with a 30-second timeout because it matches the measured latency of the usual workload. Other timeouts are supported.'",
+      "name": "recommendation remains a recommendation",
+      "expectations": [
+        "Preserve the recommendation and its workload condition",
+        "Do not turn should into must",
+        "Retain the reason rather than replacing it with an unsupported assertion that 30 seconds is best"
+      ]
+    },
+    {
+      "id": "technical-prose-29",
+      "skill": "technical-prose",
+      "request": "Make this note more direct: 'Nested cfg expressions might be misclassified; no fixture covers them yet.' We have not observed a failure.",
+      "name": "untested hypothesis remains uncertain",
+      "expectations": [
+        "Keep the distinction between a suspected failure and an observed failure",
+        "Retain the specific validation gap",
+        "Do not assert that the scanner misclassifies nested expressions or add unrelated caveats"
+      ]
+    },
+    {
+      "id": "technical-prose-31",
+      "skill": "technical-prose",
+      "request": "Shorten this PR paragraph for a reviewer: 'After two review rounds and three versions, we settled on counting comments and blank lines. We count them because the chart measures the source a reader must navigate. This was the final approach we selected.'",
+      "name": "reason survives before process history",
+      "expectations": [
+        "Keep the physical-line counting choice and its navigation rationale",
+        "Remove the review chronology and redundant statement of finality",
+        "Do not shorten it to a bare assertion that physical LOC is used"
+      ]
+    },
+    {
+      "id": "technical-prose-32",
+      "skill": "technical-prose",
+      "request": "Rewrite this status for a reviewer. Evidence: the author reports a parser fix, its regression fixture passes, and independent re-review is pending. Draft: 'All parser issues are resolved. Only usability risk remains.'",
+      "name": "reported fix is not independent confirmation",
+      "expectations": [
+        "Replace the unsupported closure with the attributed fix report and observed fixture result",
+        "Keep independent re-review pending",
+        "Do not infer that all parser issues are fixed or all remaining risk is usability",
+        "State the material evidence boundary once without generic caveats"
+      ]
+    },
+    {
+      "id": "technical-prose-35",
+      "skill": "technical-prose",
+      "request": "Edit this deployment note for an on-call operator. Opening: 'Version 1 cannot read the version-2 index; restore the pre-upgrade snapshot before restarting version 1.' The Rollback section says 'Restore the pre-upgrade snapshot before restarting version 1; version 1 cannot read the version-2 index.' A later checklist says 'Before restarting version 1, follow Rollback.' The operator may enter through the checklist. Preserve the rollback requirement and usable navigation. No external actions are needed.",
+      "name": "useful cross-reference survives repetition pass",
+      "expectations": [
+        "Consolidate repeated explanation where it does not aid the operator",
+        "Retain a usable checklist reference to the rollback instructions",
+        "Preserve the snapshot requirement, version identifiers, and restore-before-restart ordering",
+        "Do not treat every repeated mention or navigational reference as redundant"
+      ]
+    },
+    {
+      "id": "sweep-comments-15",
+      "skill": "sweep-comments",
+      "request": "A test's doc comment restates the model clause it enforces, and its fixture uses a deliberately undersized capacity; the module doc already states the model.",
+      "name": "test claim binding survives the echo rule",
+      "expectations": [
+        "Keep the property statement as a claim binding, not an echo",
+        "Keep the scenario-contrivance rationale",
+        "Delete mechanics narration inside the test body"
+      ]
+    },
+    {
+      "id": "sweep-comments-17",
+      "skill": "sweep-comments",
+      "request": "One sentence combines an echo of the model home with a forward design commitment about a future executor.",
+      "name": "mixed sentence split preserves the underivable clause",
+      "expectations": [
+        "Split the sentence and delete the echo clause",
+        "Recompose the forward commitment to stand alone",
+        "Do not mutate the prediction into an obligation"
+      ]
+    },
+    {
+      "id": "sweep-comments-20",
+      "skill": "sweep-comments",
+      "request": "Shorten 'The record is still whole: a forwarder re-encodes it unchanged, so nothing may be moved out of it here.'",
+      "name": "edit constraint keeps its modality",
+      "expectations": [
+        "Keep 'may not' or an equivalent prohibition",
+        "Reject 'nothing moved out here' as a description rather than a prohibition",
+        "Note that a description licenses the edit the comment existed to prevent"
+      ]
+    },
+    {
+      "id": "sweep-comments-25",
+      "skill": "sweep-comments",
+      "request": "Shorten a doc saying a sequence 'never steps backwards' while applying the fragment preference.",
+      "name": "guarantee is not shortened into an obligation",
+      "expectations": [
+        "Keep it a guarantee about behavior",
+        "Reject 'must not regress', which makes it an obligation on the reader",
+        "Cite compress-don't-paraphrase"
+      ]
+    },
+    {
+      "id": "sweep-comments-32",
+      "skill": "sweep-comments",
+      "request": "Reword this test's module note for clarity. It currently says the reverse direction is untestable because no producer attaches metadata to its message stream yet.",
+      "name": "inherited false claim of absence",
+      "expectations": [
+        "Check the claim against the registry and the crate's own tests before rewording it",
+        "Correct the note when a producer does attach metadata",
+        "Prefer making the claim a second test over restating it as prose"
+      ]
+    },
+    {
+      "id": "sweep-comments-34",
+      "skill": "sweep-comments",
+      "request": "Review the comments in this relocated Rust block against the supplied current implementation and report any correction. The block moved without functional changes, and the comment text was copied unchanged. This is a focused comment review, not an edit request or a full pre-PR sweep. Do not propose a change to the binary format merely to agree with the comment. No external actions are needed.\n\nSource:\n//! Header schema for the transport; declarations and encoder were moved together.\n\n/// Encoded header: three u64 words in little-endian order.\npub(crate) const HEADER_BYTES: usize = 4 * 8;\n\nfn encode_header(sequence: u64, cursor: u64, lost: u64, stamp: u64) -> Vec<u8> {\n    let mut bytes = Vec::with_capacity(HEADER_BYTES);\n    for word in [sequence, cursor, lost, stamp] {\n        bytes.extend_from_slice(&word.to_le_bytes());\n    }\n    bytes\n}\n",
+      "name": "an unchanged relocated comment still needs claim verification",
+      "expectations": [
+        "Verify the numeric schema claim against both the size expression and the actual encoder",
+        "Identify that four words are encoded while the inherited comment says three",
+        "Correct or remove the false claim without changing the binary format to match it",
+        "Do not treat unchanged wording or a behavior-preserving relocation as proof of documentation accuracy",
+        "Do not claim to have run tests or completed a full pre-PR sweep, or edit files in this focused review"
+      ]
+    },
+    {
+      "id": "review-guide-59",
+      "skill": "review-guide",
+      "request": "Draft a PR body using these supplied facts; no external actions are needed. The PR adds a Rust source-layout skill and a source-footprint treemap convention. Layout boundaries follow responsibility and preserve public paths; roughly 500 production lines prompts inspection, with no calibration study. The treemap counts physical handwritten LOC including comments, blanks, and verification source because it measures how much source a reader navigates. Generated and vendored source are excluded. Nesting means ownership, area means LOC, and a hatched partition distinguishes verification within each component total. A trial generator and Rust scanner produced Pelikan (23 crates, 31,551 lines, 18.1% verification) and cache-rs (5 crates, 27,363 lines, 47.8% verification) charts; each chart has its own area scale. The scanner classifies attributes and follows module declarations. Review found scanner bugs on valid Rust; the author reports fixes at e7ad242. At that revision, 151 repository tests and both Python self-tests passed. Independent re-review of those fixes is pending. The scanner has not been validated across the full Rust grammar; the agent scenario corpus has not been executed independently. The Pelikan rendering awaits maintainer review. Template instructions mirror the skill; README counts and digests are mechanical. A journal contains the sequence of experiments and review rounds. Use paths only if supplied; do not invent source links or commands.",
+      "name": "source-layout and treemap PR keeps rationale and evidence boundaries",
+      "expectations": [
+        "The opening lets the reviewer identify both the source-organization guidance and the source-footprint view",
+        "Retain why physical LOC includes comments and why verification is partitioned within the total",
+        "Identify scanner classification and rendered proportionality as consequential review areas; distinguish mechanical updates",
+        "Keep the inspection heuristic distinct from a mandatory split threshold",
+        "Separate the author-reported fixes, observed passing checks, pending independent re-review, and unexecuted agent evaluations",
+        "Do not claim all issues are resolved or that only behavioral risk remains",
+        "If comparing charts, disclose separate area scales; do not imply their absolute tile sizes are comparable",
+        "Do not retell review rounds, invent an open policy decision, or add empty sections",
+        "A reader can locate the change, its rationale, review priorities, and remaining gaps without the journal or conversation history"
+      ]
+    },
+    {
+      "id": "review-guide-60",
+      "skill": "review-guide",
+      "request": "Draft a PR body from these facts. A configuration rename crosses the CLI, configuration loader, and metrics exporter. Old and new keys remain accepted; the old key warns. The migration policy is already approved. cargo test --locked passes 42 tests covering both keys. One gap remains: nobody has checked the warning in the packaged CLI. There are no other identified open decisions or deployment risks. Most edits mechanically replace the internal name.",
+      "name": "cross-subsystem change with one material gap",
+      "expectations": [
+        "State compatibility and the warning behavior",
+        "Keep the packaged-CLI validation gap findable",
+        "Direct attention to alias handling and warning emission if useful, with mechanical renames safe to skim",
+        "Omit empty decisions and production-risk sections despite the number of subsystems",
+        "Do not invent citations, risk acceptance, or new approval questions"
+      ]
+    },
+    {
+      "id": "review-guide-61",
+      "skill": "review-guide",
+      "request": "Evaluate and revise this PR body from the supplied evidence. Opening: 'Each request keeps its selected connection for its entire lifetime.' Later: 'Before any bytes are sent, a failed connection causes reselection. After sending begins, the connection stays fixed.' The source implements those two paths. cargo test --locked passed 18 tests covering both. No external actions or source links are needed.",
+      "name": "opening preserves a retry exception",
+      "expectations": [
+        "Identify the conflict between the lifetime claim and pre-send reselection",
+        "Qualify the opening so its behavior agrees with the source and detailed exception",
+        "Preserve the distinction between pre-send retries and the fixed connection after sending begins",
+        "Do not change the implementation or invent a defect in behavior merely because its summary is wrong"
+      ]
+    },
+    {
+      "id": "review-guide-65",
+      "skill": "review-guide",
+      "request": "Draft a PR body from these facts. The change declares status reports but adds no publisher. Required audit ordering already settles the sorted-map choice. Reports go from edge hosts to the central host; whether edge hosts also need the central host's reports remains undecided and must be settled before merge. Reader records move to format 2. Mixed format-1/format-2 deployment has not been tested; whether deployment permits mixed releases is unknown. cargo test --locked passed 30 tests covering encoding and the declared topology. No external actions or source links are needed.",
+      "name": "mixed review concerns retain their distinct roles",
+      "expectations": [
+        "State that the change declares reports without publishing them",
+        "Keep the topology decision findable and preserve its merge-blocking status",
+        "Explain audit ordering as settled rationale rather than asking the reviewer to choose a map",
+        "Separate the mixed-format test gap from the factual question about deployment policy",
+        "Do not invent an observed incompatibility, an approved rollout policy, or another merge gate",
+        "Do not require a section for each category when concise prose makes the distinctions clear"
+      ]
+    },
+    {
+      "id": "review-guide-66",
+      "skill": "review-guide",
+      "request": "Revise this PR title and description for a competent engineer reviewing the final diff. Use only the supplied evidence; no external actions or source links are needed.\n\nTitle:\nrefactor(settings): split the settings registry\n\nBody:\nThe settings registry grew to 2400 lines. This PR splits it into modules and preserves existing import paths.\n\nLater additions: transport header constants now live in wire_layout; scheduler settings now live in settings; output coverage decisions now live beside output policy. These moves follow the same separation of declarations from implementation.\n\nThe wire layout has 12 constants. The scheduler has 9 settings. Output policy has 6 supported types and 2 deliberate exclusions. The first commit was reviewed before the later additions.\n\nTests: cargo test --locked passed 84 tests on the final revision. They cover settings lookup, packet encoding, and output coverage. No end-to-end service launch ran.\n\nEvidence:\nThe final diff separates declarations from implementation in the settings registry, packet transport, scheduler, and output converter. Existing imports and runtime values remain unchanged. There is no required title format beyond a conventional commit prefix. The supplied test result is an observed check at the final revision. Independent review covered only the first registry move; the later changes have not been independently reviewed.",
+      "name": "expanded scope rebuilds the title and review explanation",
+      "expectations": [
+        "Update the title and opening to cover the final separation of declarations from implementation across all four components",
+        "Organize review guidance around the final change instead of retaining the original premise and appending each later commit",
+        "Retain preserved import paths, final-revision test evidence, and the missing end-to-end service launch",
+        "Keep the first move's independent review distinct from the later unreviewed additions",
+        "Do not invent runtime changes, reviewer decisions, validation, or source links",
+        "Do not rewrite Git history or impose a fixed description length"
+      ]
+    },
+    {
+      "id": "review-guide-67",
+      "skill": "review-guide",
+      "request": "Draft a PR description from the final diff evidence. No external actions or source links are needed.\n\nEvidence:\nThe branch was originally described as 'a verbatim move; everything is mechanical and safe to skim.' Most declarations move unchanged. Later commits replace a runtime-generated endpoint list with a static list containing the same entries; a parity test covers the entries. Four formerly private retry constants become public in a library settings module so both the binary and library can import them. Existing public paths are preserved. Runtime values and behavior are intended to remain unchanged. Whether the expanded public API is acceptable is unresolved and the reviewer must decide before merge. cargo test --locked passed 52 tests, including endpoint parity. No external-client compatibility check has run.",
+      "name": "unchanged runtime behavior does not make every edit a verbatim move",
+      "expectations": [
+        "Distinguish unchanged declaration moves from static endpoint construction and public API expansion",
+        "Preserve that unchanged runtime behavior is the intent and that existing public paths remain valid",
+        "Keep the public-visibility decision explicit as a before-merge review decision",
+        "Avoid blanket safe-to-skim guidance that includes the unresolved visibility choice",
+        "Report the endpoint parity test and the unperformed external-client compatibility check at their actual strength",
+        "Do not infer that every edit is verbatim, that unchanged values prove all behavior, or that existing paths imply an unchanged public API"
+      ]
+    }
+  ]
+}
