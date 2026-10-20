@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-10-20 | [Complete reconciliation handoffs and grounded claims](2026-10-20-reconcile-reporting.md) | open |
 | 2026-10-20 | [Reconciliation with real tools and local Git](2026-10-20-reconcile-execution.md) | shipped |
 | 2026-10-20 | [Shorter reconciliation instructions with explicit mode boundaries](2026-10-20-concise-reconcile-vault.md) | shipped |
 | 2026-10-20 | [Shorter diagram introductions and rationale](2026-10-20-concise-diagram-skills.md) | shipped |

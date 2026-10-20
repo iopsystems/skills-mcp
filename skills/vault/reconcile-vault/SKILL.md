@@ -165,14 +165,11 @@ dream pass.
 
 ## Needs you
 
-The judgment calls, and nothing else. One line each: the artifact, what
-is being asked, and what it is waiting for. Say "nothing this pass" when
-there is nothing, rather than omitting the heading — an absent list and
-an empty one read the same, and only one of them means the pass looked.
-
-Every item here is also in the PROPOSED list below with its full reason.
-This block is the version written to be acted on, and it is what the
-run's notification carries. None of it holds the merge.
+Summarize every unresolved decision from Gaps and PROPOSED, including work
+that needs no status change. One line each: artifact, decision, and what
+it awaits. Keep the full reason in PROPOSED and deliver this list in the
+run notification. If empty, say "nothing this pass". Proposals do not hold
+the merge.
 
 ## Part A — Graph hygiene
 
@@ -207,11 +204,12 @@ differently — one is a changelog, the other is a worklist:
 
 - **APPLIED** — cleared Step 5's test and was edited in this pass.
   One line each: id, type, old status, new status, the evidence cited.
-- **PROPOSED** — did not clear it, and needs a human. One line each,
-  plus the exact reason: blocker, warning, thin evidence, more than one
-  plausible next state, or failed validation. Every entry is also
-  summarized in the note's "Needs you" block, which is what the
-  notification carries.
+- **PROPOSED** — unresolved transitions and work decisions from Gaps.
+  Give each transition's exact reason: blocker, warning, thin evidence,
+  more than one plausible next state, or failed validation. For work
+  such as proposing a design or confirming a pause, state the decision
+  without inventing a status transition or pre-flight result. Summarize
+  every entry in Needs you and the run notification.
 
   It does not hold anything back. A PROPOSED entry sits in a merged
   note, not an open branch.
@@ -224,9 +222,10 @@ was allowed to make.
 
 **This is judgment, not SQL.** The rules:
 
-1. **Evidence-or-don't-say-it.** Every claim cites an artifact id or a
-   number from Part A. Sentences like "things feel slow in X" without
-   citation don't belong here.
+1. **Evidence-or-don't-say-it.** Every factual claim cites an artifact id
+   or a number from Part A that supports the whole claim, including its
+   qualifiers. Keep interpretations conditional; do not turn an unknown
+   owner, cause, or dependency into a fact.
 2. **Named alternatives.** When recommending a "highest leverage next
    move", list 2–3 candidates before picking. The user should be able
    to disagree with the ranking, not the framing.

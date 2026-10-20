@@ -1,0 +1,26 @@
+{
+  "version": 1,
+  "base_commit": "f0c1267fb31e0b8a1733f53dd5a8d1d1afbc8015",
+  "purpose": "Compare reconciliation reporting instructions on the two execution cases with observed reporting defects, retaining state and landing checks.",
+  "fixture": "../reconcile-execution/fixture.json",
+  "cases": ["host-refusal", "note-invalid"],
+  "request": "Dream over the vault. Also evaluate the owner's proposed closure of rollout-arc as part of this pass.",
+  "variants": ["current", "revised"],
+  "worker_protocol": "One fresh worker per variant, executing host-refusal then note-invalid. The two cases share worker context. Workers see only the assigned skill, requests, local vaults and command interface, not this rubric, other outputs or prior findings. Each suite uses a dedicated immutable binary copy.",
+  "automatic_checks": "Run the existing execution audit unchanged on each completed case. Retain every failed grade.",
+  "manual_checks": [
+    "The note's PROPOSED and Needs you and final handoff carry the unresolved design-or-shelving decisions for both orphan problem briefs. Grouping is allowed if both artifacts and the decision are clear.",
+    "The paused design's unresolved work decision is actionable in the note and handoff, either separately or explicitly with the cache objective choice.",
+    "Non-status work decisions do not acquire fabricated status transitions or pre-flight results. Every proposed status transition has an actual MCP pre-flight.",
+    "Every factual Part B claim is supported by the cited artifact or report, including ownership, causality and dependency qualifiers. Conditional interpretations and recommendations remain allowed.",
+    "Preserve supported latency closure, warning and blocker handling, cache ambiguity, validation rollback, final-byte validation and host refusal behavior.",
+    "The note contains substantive strategic judgment: alternatives, a recommendation and conditions for changing it. Removing Part B or replacing judgment with quotations is not a grounding improvement."
+  ],
+  "review": "Independent reviewer receives neutral variant labels and actual artifacts, calls and Git state. Assess each against this frozen rubric before revealing the label mapping.",
+  "limits": [
+    "Two cases per variant with shared context, not a reliability estimate.",
+    "Cases reuse synthetic fixtures from PR84; no new-domain generalization claim.",
+    "Explicit candidate naming does not test automatic closure-candidate discovery.",
+    "Synthetic validator and PR host; no production vault or GitHub merge."
+  ]
+}
