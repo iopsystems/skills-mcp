@@ -48,6 +48,8 @@ shows a clear need.
 
 ## Stage 5: Broader distribution
 
-Evaluate coding-agent plugin or marketplace packaging after local installation,
-customization, upgrade, and review workflows are stable. Treat each platform as a
-distribution adapter rather than a new source of truth.
+The repository skills ship as the `iop` Claude Code plugin. Evaluate plugin
+packaging for the vault and catalog skills, and other coding-agent platforms,
+after local installation, customization, upgrade, and review workflows are
+stable. Treat each platform as a distribution adapter rather than a new source
+of truth.

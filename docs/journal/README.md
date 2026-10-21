@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-10-21 | [Repository skills as a Claude Code plugin](2026-10-21-claude-code-plugin.md) | open |
 | 2026-10-20 | [Planning questions follow missing information](2026-10-20-concise-plan-feature.md) | open |
 | 2026-10-20 | [Shorter review exchange instructions](2026-10-20-concise-review-exchange.md) | shipped |
 | 2026-10-20 | [Complete reconciliation handoffs and grounded claims](2026-10-20-reconcile-reporting.md) | shipped |

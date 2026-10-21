@@ -21,7 +21,8 @@ creates two short paths:
   template.
 
 You can install `skills-mcp` with Homebrew, a one-line install script, or from
-source (see below). A coding-agent plugin is not distributed yet.
+source (see below). The repository skills are also published as a Claude Code
+plugin, `iop` (see "Install the Claude Code plugin").
 
 ## How project lessons become shared skills
 
@@ -49,6 +50,58 @@ equivalent:
 The DOT source is authoritative at
 [`docs/skill-feedback-loop.dot`](docs/skill-feedback-loop.dot); the SVG is rendered
 beside it and checked for freshness in CI.
+
+## Install the Claude Code plugin
+
+The skills under `skills/repository/` are also published as a Claude Code plugin
+named `iop`. They call no server tool, so the plugin can replace the MCP server
+for them. `architecture-diagram`, `dataflow-diagram` and `engineering-journal`
+mention templates or template manifests, which only the server provides; each
+works without them. Install the plugin from this repository's marketplace:
+
+```sh
+claude plugin marketplace add iopsystems/skills-mcp
+claude plugin install --scope user iop@skills-mcp
+```
+
+Start a new session, or run `/reload-plugins` in one that is open, and the
+skills are listed as `iop:<name>`, for example `iop:technical-prose`. The plugin
+sets no `version`, so its version is the commit it was installed from. Run
+`claude plugin update iop@skills-mcp` to pick up new commits on `main`, or
+enable auto-update for the marketplace under `/plugin` → Marketplaces. To try a
+checkout for one session, run `claude --plugin-dir plugins/iop`.
+
+The plugin leaves out the vault skills and the catalog skills
+(`recommend-skills`, `seed-skill-template`). The vault skills call `vault_*`
+tools or hand off to vault skills that do. The catalog skills call
+`skill_catalog` and `skill_template_get`. Only the MCP server provides those
+tools, so install the server to use these skills. A client that has both the
+plugin and the server lists each repository skill twice, once as `iop:<name>`
+and once as an MCP tool.
+
+`plugins/iop/skills/` holds one relative symlink per skill directory in
+`skills/repository/`. A git install copies the plugin into Claude Code's cache
+with the symlinks replaced by the files they point to. A checkout made with
+`core.symlinks=false`, the Git for Windows default, turns each link into a text
+file; the install then reports success and the plugin has no skills. Git for
+Windows creates symlinks only with Developer Mode on or with administrator
+rights. On Windows, turn on Developer Mode and run
+`git config --global core.symlinks true` before adding the marketplace. If the
+marketplace was added before that, run
+`claude plugin marketplace remove skills-mcp`, add the marketplace again, and
+run `claude plugin install --scope user iop@skills-mcp`. Removing the marketplace
+uninstalls the plugin. `claude plugin update` and a reinstall without removing
+the marketplace keep the checkout that has no links.
+
+`tests/plugin_layout.rs` fails when a repository skill has no link, when a link
+points anywhere else, when a link is replaced by a copy, or when either manifest
+sets a `version`. It also fails when a file in a repository skill names a tool
+the built server lists that is not a skill, or names a vault or catalog skill in
+backticks as the first word of a span (`` `name` ``, `` `/name ...` ``,
+`` `plugin:name` `` or `` `mcp__<server>__name` ``) other than in
+"Do not invoke `` `name` ``". It does not detect a skill named without
+backticks, in a Markdown link, or later in a backticked span, and the exemption
+does not read the rest of its sentence.
 
 ## Install with Homebrew
 
@@ -410,6 +463,8 @@ runtime.
 | `skills/` | Active, invocable skill instructions embedded as MCP tools |
 | `templates/` | Inert, manifest-declared bases embedded for read-only retrieval |
 | `.agents/skills/` | Project-local installed instances; not part of the MCP bundle |
+| `plugins/iop/` | The `iop` Claude Code plugin: a manifest and symlinks to `skills/repository/` |
+| `.claude-plugin/marketplace.json` | The `skills-mcp` marketplace that lists the `iop` plugin |
 | `tests/` | Registry, tool, workflow, installed-instance, and documentation contracts |
 | `docs/journal/` | Durable implementation reasoning and evidence |
 
@@ -458,7 +513,7 @@ evaluations provide comprehension evidence but never prove human usability.
 
 See [assumptions and limitations](docs/assumptions-and-limitations.md) for the
 current boundaries. The [roadmap](docs/roadmap.md) covers authorized adoption
-surveys, evidence-based template evolution, and eventual evaluation of plugin
-distribution.
+surveys, evidence-based template evolution, and plugin packaging for the vault and
+catalog skills.
 
 The package is dual-licensed under MIT or Apache-2.0.

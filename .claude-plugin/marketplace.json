@@ -1,0 +1,14 @@
+{
+  "name": "skills-mcp",
+  "description": "Claude Code plugins built from the skills-mcp skill library.",
+  "owner": {
+    "name": "IOP Systems"
+  },
+  "plugins": [
+    {
+      "name": "iop",
+      "source": "./plugins/iop",
+      "description": "The repository skills from skills-mcp: engineering journal, catch-up, diagrams generated from code, Rust source layout, technical prose, comment sweeps, PR review guides, review exchange, and sharable artifacts."
+    }
+  ]
+}

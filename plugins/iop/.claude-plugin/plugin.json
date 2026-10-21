@@ -1,0 +1,9 @@
+{
+  "name": "iop",
+  "description": "The repository skills from skills-mcp: engineering journal, catch-up, diagrams generated from code, Rust source layout, technical prose, comment sweeps, PR review guides, review exchange, and sharable artifacts.",
+  "author": {
+    "name": "IOP Systems"
+  },
+  "repository": "https://github.com/iopsystems/skills-mcp",
+  "license": "MIT OR Apache-2.0"
+}
