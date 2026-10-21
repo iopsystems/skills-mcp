@@ -21,7 +21,8 @@ creates two short paths:
   template.
 
 You can install `skills-mcp` with Homebrew, a one-line install script, or from
-source (see below). A coding-agent plugin is not distributed yet.
+source (see below). The repository skills are also published as a Claude Code
+plugin, `iop` (see "Install the Claude Code plugin").
 
 ## How project lessons become shared skills
 
@@ -49,6 +50,36 @@ equivalent:
 The DOT source is authoritative at
 [`docs/skill-feedback-loop.dot`](docs/skill-feedback-loop.dot); the SVG is rendered
 beside it and checked for freshness in CI.
+
+## Install the Claude Code plugin
+
+The eleven skills under `skills/repository/` are also published as a Claude Code
+plugin named `iop`. They need no server, so the plugin is an alternative to
+the MCP server for those skills. Install it from this repository's marketplace:
+
+```sh
+claude plugin marketplace add iopsystems/skills-mcp
+claude plugin install --scope user iop@skills-mcp
+```
+
+Start a new session, or run `/reload-plugins` in one that is open, and the
+skills are listed as `iop:<name>`, for example `iop:technical-prose`. The plugin
+sets no `version`, so its version is the commit it was installed from. Run
+`claude plugin update iop@skills-mcp` after a merge, or enable auto-update for
+the marketplace under `/plugin` → Marketplaces.
+
+The plugin leaves out the vault skills and the catalog skills
+(`recommend-skills`, `seed-skill-template`). Those skills call `vault_*`,
+`skill_catalog` and `skill_template_get`, which only the MCP server provides.
+Install the server to use them. A client that has both the plugin and the server
+lists each repository skill twice, once as `iop:<name>` and once as an MCP tool.
+
+`plugins/iop/skills/` holds one relative symlink per skill directory in
+`skills/repository/`. A git install copies the plugin into Claude Code's cache
+with the symlinks replaced by the files they point to. `tests/plugin_layout.rs`
+fails when a repository skill has no link, when a link points anywhere else, or
+when a link is replaced by a copy. To try a checkout for one session, run
+`claude --plugin-dir plugins/iop`.
 
 ## Install with Homebrew
 
@@ -410,6 +441,8 @@ runtime.
 | `skills/` | Active, invocable skill instructions embedded as MCP tools |
 | `templates/` | Inert, manifest-declared bases embedded for read-only retrieval |
 | `.agents/skills/` | Project-local installed instances; not part of the MCP bundle |
+| `plugins/iop/` | The `iop` Claude Code plugin: a manifest and symlinks to `skills/repository/` |
+| `.claude-plugin/marketplace.json` | The `skills-mcp` marketplace that lists the `iop` plugin |
 | `tests/` | Registry, tool, workflow, installed-instance, and documentation contracts |
 | `docs/journal/` | Durable implementation reasoning and evidence |
 
