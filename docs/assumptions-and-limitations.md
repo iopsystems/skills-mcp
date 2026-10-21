@@ -102,4 +102,6 @@ silently convert a limitation into an implied guarantee.
   coverage is bounded by the tap's shared CI runner matrix rather than the
   prebuilt-binary matrix, so the two install paths cover slightly different
   platform sets by design.
-- Coding-agent plugin platforms are intentionally deferred.
+- The repository skills ship as the `iop` Claude Code plugin. The vault and
+  catalog skills need the server's tools and are not packaged as a plugin, and no
+  other coding-agent plugin platform is supported.

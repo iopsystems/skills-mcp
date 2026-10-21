@@ -23,12 +23,16 @@ plugin skill with its sibling files.
 
 ## Evidence
 
-The vault skills call `vault_search`, `vault_edges`, `vault_check_transition`,
-`vault_reflect` or `vault_reindex`. `recommend-skills` and
+Nine vault skills call `vault_search`, `vault_edges`, `vault_check_transition`,
+`vault_reflect` or `vault_reindex`; `define-scope`, `open-arc`, `open-inquiry`
+and `plan-feature` hand off to vault skills that do. `recommend-skills` and
 `seed-skill-template` call `skill_catalog` and `skill_template_get`. None of
 the eleven skills under `skills/repository/` names a server tool. The only
 reference from one of them to an excluded skill is `engineering-journal`
 telling the agent not to invoke `frame-problem` or `propose-design`.
+`architecture-diagram` and `dataflow-diagram` mention their templates, and
+`engineering-journal` mentions template manifests; only the server serves them,
+and each skill works without them.
 
 Measured with Claude Code 2.1.306, in a scratch config directory:
 
@@ -52,9 +56,41 @@ root names the marketplace `skills-mcp` and lists `iop` with source
 the commit and every merge is an update.
 
 `tests/plugin_layout.rs` requires one link per repository skill, no other
-entries, each a symlink with that exact target, and no pinned version. Adding a
+entries, each a symlink with that exact target, no `version` in `plugin.json` or
+the marketplace entry, and no repository skill file that names a server tool or
+an excluded skill. Adding a
 link to `skills/vault/discuss` failed two tests. Replacing the `catchup` link
-with a copy failed one.
+with a copy failed one. An adversarial review found that a marketplace-entry
+`version` passed the first version of the test and pinned installs to it; the
+test now checks both places.
+
+A checkout with `core.symlinks=false` (the Git for Windows default) turns the
+links into text files, and `claude plugin install` then reports success with no
+skills. The first review tested a symlink-free alternative: a marketplace entry with
+`"source": "./"`, `"strict": false` and an explicit `skills` list loaded all
+eleven from such a checkout, at the cost of caching the whole repository (4.9M
+against 352K). The symlink layout was kept, and the README tells Windows users
+to set `core.symlinks=true`. A second review found that setting it after the
+marketplace was added does not help: `plugin update` and a reinstall still
+showed no skills, and only removing the marketplace, adding it again and
+reinstalling the plugin did. The same
+review found that the first version of the server-tool test read only
+`SKILL.md`, missed hand-offs to excluded skills, and skipped dot-prefixed
+directories, which Claude Code and the server both load. The test now reads
+every file and ignores only `.DS_Store`. A third review found that the recovery steps omitted the reinstall
+(removing a marketplace uninstalls its plugins), that a tool registered through
+a constant or with a comment before its name dropped out of the parse silently,
+and that the "Do not invoke" exemption covered every skill on its line. A fourth
+review found that parsing the source also missed `Tool::new_with_raw` and the
+`#[tool]` macro, that `mcp__<server>__vault_search` passed, and that
+`` `/frame-problem <topic>` `` and `` `skills-mcp:frame-problem` `` passed. The
+test now spawns the built binary, sends `tools/list`, and treats every listed
+tool that is not a skill as server-only; it matches a tool after `__`, and
+reads the skill name out of each backticked span. The exemption covers only the
+name it precedes. A fifth review found that `` `mcp__skills-mcp__frame-problem` ``
+passed and that the spawn had no timeout; the test now takes the part of a span's
+first word after its last `__`, so `` `mcp__<server>__name` `` names `name`, and
+gives up on the server after 30 seconds.
 
 ## Open
 
@@ -65,4 +101,10 @@ duplicates. That option is not built.
 
 Moving the vault skills into a plugin would need the plugin to start the
 server for its `vault_*` tools, and the server would then list those skills a
-second time.
+second time. The catalog skills have the same problem with `skill_catalog` and
+`skill_template_get`, and `recommend-skills` describes the catalog as the
+server's tool list, so it would also need rewording for a plugin install.
+
+## Appendix: Skills Invoked
+
+- `cs:open-pr` and `cs:review` — commit, adversarial review, and PR.

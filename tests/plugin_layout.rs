@@ -1,10 +1,15 @@
 //! The `iop` Claude Code plugin is a tree of symlinks into `skills/repository/`.
-//! The vault and catalog skills call tools only the MCP server provides, so they
+//! The vault and catalog skills need tools only the MCP server provides, so they
 //! stay out of it.
 
 use std::collections::BTreeSet;
 use std::fs;
+use std::io::{BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
+use std::process::{Command, Stdio};
+use std::sync::mpsc;
+use std::thread;
+use std::time::Duration;
 
 const PLUGIN_SKILLS: &str = "plugins/iop/skills";
 const SOURCE_CLUSTER: &str = "skills/repository";
@@ -17,6 +22,8 @@ fn entry_names(dir: &Path) -> BTreeSet<String> {
     fs::read_dir(dir)
         .unwrap_or_else(|error| panic!("read {}: {error}", dir.display()))
         .map(|entry| entry.unwrap().file_name().into_string().unwrap())
+        // Finder writes `.DS_Store`, which `.gitignore` hides.
+        .filter(|name| name != ".DS_Store")
         .collect()
 }
 
@@ -60,13 +67,157 @@ fn marketplace_lists_the_plugin_without_a_pinned_version() {
     assert_eq!(plugins.len(), 1);
     assert_eq!(plugins[0]["name"], "iop");
     assert_eq!(plugins[0]["source"], "./plugins/iop");
+    // A version here pins installs just as one in `plugin.json` does.
+    assert!(plugins[0].get("version").is_none());
 
     let plugin: serde_json::Value = serde_json::from_str(
         &fs::read_to_string(root().join("plugins/iop/.claude-plugin/plugin.json")).unwrap(),
     )
     .unwrap();
     assert_eq!(plugin["name"], "iop");
-    // Without a version, an install's version is the commit SHA, so every merge
-    // is an update.
+    // Without a version, an install's version is the commit SHA, so every commit
+    // on the default branch is an update.
     assert!(plugin.get("version").is_none());
+}
+
+/// The tools the server lists that are not skills: the tools a plugin-only host
+/// does not have. Asked of the built binary, so it covers every way a tool can
+/// be registered.
+fn server_tool_names() -> Vec<String> {
+    let mut server = Command::new(env!("CARGO_BIN_EXE_skills-mcp"))
+        .stdin(Stdio::piped())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::null())
+        .spawn()
+        .unwrap();
+    let mut stdin = server.stdin.take().unwrap();
+    for request in [
+        r#"{"jsonrpc":"2.0","id":1,"method":"initialize","params":{"protocolVersion":"2025-03-26","capabilities":{},"clientInfo":{"name":"plugin-layout","version":"0"}}}"#,
+        r#"{"jsonrpc":"2.0","method":"notifications/initialized","params":{}}"#,
+        r#"{"jsonrpc":"2.0","id":2,"method":"tools/list","params":{}}"#,
+    ] {
+        writeln!(stdin, "{request}").unwrap();
+    }
+    // Read on a thread so a server that never answers fails the test instead of
+    // hanging it.
+    let stdout = server.stdout.take().unwrap();
+    let (sender, receiver) = mpsc::channel();
+    thread::spawn(move || {
+        let listing = BufReader::new(stdout)
+            .lines()
+            .map_while(Result::ok)
+            .filter_map(|line| serde_json::from_str::<serde_json::Value>(&line).ok())
+            .find(|message| message["id"] == 2);
+        let _ = sender.send(listing);
+    });
+    let listing = receiver.recv_timeout(Duration::from_secs(30));
+    server.kill().unwrap();
+    server.wait().unwrap();
+    let listing = listing
+        .expect("no tools/list response within 30 seconds")
+        .expect("server closed stdout before answering tools/list");
+
+    assert!(
+        listing.get("error").is_none(),
+        "tools/list failed: {listing}"
+    );
+    let result = &listing["result"];
+    assert!(
+        result.get("nextCursor").is_none(),
+        "tools/list is paginated"
+    );
+    let skills: BTreeSet<String> = ["skills/repository", "skills/vault", "skills/catalog"]
+        .into_iter()
+        .flat_map(skill_names)
+        .collect();
+    let names: Vec<String> = result["tools"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|tool| tool["name"].as_str().unwrap().to_owned())
+        .filter(|name| !skills.contains(name))
+        .collect();
+    assert!(
+        names.iter().any(|n| n == "vault_search") && names.iter().any(|n| n == "skill_catalog"),
+        "server tools: {names:?}"
+    );
+    names
+}
+
+fn skill_names(cluster: &str) -> BTreeSet<String> {
+    entry_names(&root().join(cluster))
+}
+
+fn files_under(dir: &Path, out: &mut Vec<PathBuf>) {
+    for entry in fs::read_dir(dir).unwrap() {
+        let path = entry.unwrap().path();
+        if path.is_dir() {
+            files_under(&path, out);
+        } else {
+            out.push(path);
+        }
+    }
+}
+
+fn names_word(text: &str, word: &str) -> bool {
+    let is_ident = |c: char| c.is_ascii_alphanumeric() || c == '_';
+    text.match_indices(word).any(|(at, _)| {
+        let before = &text[..at];
+        let after = text[at + word.len()..].chars().next();
+        // `mcp__<server>__<tool>` is how Claude Code names an MCP tool.
+        let starts = !before.chars().next_back().is_some_and(is_ident) || before.ends_with("__");
+        starts && !after.is_some_and(is_ident)
+    })
+}
+
+/// The skill each backticked span on `line` would invoke: `name`, `/name`,
+/// `/name <args>`, `plugin:name` and `mcp__<server>__name` all name `name`.
+fn backticked_skills(line: &str) -> Vec<&str> {
+    line.split('`')
+        .skip(1)
+        .step_by(2)
+        .filter_map(|span| span.split_whitespace().next())
+        .map(|token| token.trim_start_matches('/'))
+        .map(|token| token.rsplit(':').next().unwrap())
+        // `mcp__<server>__<skill>`: the server serves each skill as a tool.
+        .map(|token| token.rsplit("__").next().unwrap())
+        .collect()
+}
+
+#[test]
+fn repository_skills_need_nothing_only_the_server_provides() {
+    // A plugin skill that calls a server tool, or hands off to a skill the
+    // plugin leaves out, fails on a host with only the plugin installed.
+    let tools = server_tool_names();
+    let excluded: BTreeSet<String> = skill_names("skills/vault")
+        .into_iter()
+        .chain(skill_names("skills/catalog"))
+        .collect();
+    for name in entry_names(&root().join(SOURCE_CLUSTER)) {
+        let mut files = Vec::new();
+        files_under(&root().join(SOURCE_CLUSTER).join(&name), &mut files);
+        for file in files {
+            let Ok(text) = fs::read_to_string(&file) else {
+                continue;
+            };
+            for (number, line) in text.lines().enumerate() {
+                let at = format!("{}:{}", file.display(), number + 1);
+                for tool in &tools {
+                    assert!(!names_word(line, tool), "{at} names the server tool {tool}");
+                }
+                // "Do not invoke `name`" tells the agent not to hand off. A
+                // substring test cannot tell what the rest of the sentence says.
+                let mut line = line.to_owned();
+                for skill in &excluded {
+                    line = line.replace(&format!("Do not invoke `{skill}`"), "");
+                }
+                for skill in backticked_skills(&line) {
+                    assert!(
+                        !excluded.contains(skill),
+                        "{at} hands off to {skill}, which only the server serves"
+                    );
+                }
+            }
+        }
+    }
 }
