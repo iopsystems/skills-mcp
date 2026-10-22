@@ -96,7 +96,7 @@ prepare concrete proposals for approval; do not describe them as landed.
 ### Problem brief
 
 Invoke `frame-problem` with the problem evidence. Let it handle vault search,
-frontmatter, `briefs/<id>-problem.md`, supersession and commit conventions.
+frontmatter, `briefs/<id>.md`, supersession and commit conventions.
 If it finds an accepted problem brief that already frames this plan, reuse its
 id and report the reuse. Do not duplicate or edit the accepted brief.
 
@@ -128,7 +128,7 @@ asks or the repo does not keep design docs, and report why. When written, use:
 <Short — the design brief has the detail. Summarize and link.>
 
 ## Plan
-<Ordered work items from Area 6. Reference per-repo issues once opened.>
+<Ordered work items from the Coordination section. Reference per-repo issues once opened.>
 
 ## Open questions
 <Anything unresolved. Do not invent answers to fill gaps.>
