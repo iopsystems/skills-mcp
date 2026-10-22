@@ -1275,7 +1275,7 @@ mod tests {
             .as_array()
             .expect("review-exchange evals should contain an evals array");
 
-        assert_eq!(evals.len(), 14);
+        assert_eq!(evals.len(), 16);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());
