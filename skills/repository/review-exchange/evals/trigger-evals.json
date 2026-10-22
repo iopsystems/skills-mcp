@@ -57,6 +57,24 @@
       ]
     },
     {
+      "name": "a finding whose claims are wrong",
+      "prompt": "The other agent says the branch removed the timeout check at server.py:30 and suggests documenting that the limit is 60 seconds. Apply its findings.",
+      "expectations": [
+        "Confirm the quoted text is at the cited file and line at the round's commit before acting",
+        "Check the finding's factual statements and the proposed replacement text against the code",
+        "Record a finding whose claim fails as disputed, citing the check; when only the replacement is wrong, apply a corrected replacement and say so"
+      ]
+    },
+    {
+      "name": "a finding that is one case of a kind",
+      "prompt": "The reviewer found one stale reference to a renamed function. Fix it and reply.",
+      "expectations": [
+        "Search the change for other references to the old name",
+        "Fix every instance before writing the round",
+        "List the fixes beyond the one requested"
+      ]
+    },
+    {
       "name": "partial work",
       "prompt": "I fixed two of the four findings and I am out of time.",
       "expectations": [
