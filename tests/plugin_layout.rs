@@ -331,14 +331,26 @@ fn skill_check_rejects_what_claude_code_loads_wrongly() {
     }
 }
 
-/// Claude Code 2.1.308 sizes the skill listing at
-/// `(contextWindow ?? 200000) * 4 * 0.01` characters: 8,000 for a 200,000-token
-/// window and 40,000 for 1,000,000. `skillListingBudgetFraction` and
+/// Claude Code 2.1.308 sizes the skill listing at `(contextWindow ?? 200000) *
+/// charsPerToken * 0.01` characters. `charsPerToken` is 4 for Claude 3 and 4
+/// models and 3 for others, including Claude 5: 6,000 characters for a
+/// 200,000-token Claude 5 window, 8,000 for Claude 4, and 30,000 for a
+/// 1,000,000-token Claude 5 window. `skillListingBudgetFraction` and
 /// `SLASH_COMMAND_TOOL_CHAR_BUDGET` override it. Every skill on the host shares
-/// the listing, and past the budget Claude Code drops the descriptions of the
-/// least-used skills. Past this bound, the plugin alone overflows the listing
-/// on a 200,000-token model.
-const PLUGIN_LISTING_BUDGET: usize = 8_000;
+/// the listing. Past the budget, every skill keeps its name and bundled skills
+/// keep their descriptions; the rest keep theirs in order of recent use until
+/// the budget is spent, and lose the whole description after that.
+///
+/// The plugin's listing is already past 6,000, so it overflows on its own on a
+/// 200,000-token Claude 5 model; the test prints that comparison. It asserts
+/// the 1,000,000-token Claude 5 budget: past it, the plugin overflows on its
+/// own in every 1,000,000-token window. With descriptions capped at 1,536
+/// characters, that takes about 19 skills.
+const PLUGIN_LISTING_BUDGET: usize = 30_000;
+
+/// The listing budgets for 200,000-token windows, at 3 and 4 characters a
+/// token, reported for comparison.
+const SMALL_WINDOW_BUDGETS: [(&str, usize); 2] = [("Claude 5", 6_000), ("Claude 4", 8_000)];
 
 /// One listing entry is `- iop:<name>: <description>` and a newline; Claude Code
 /// counts it as `iop:<name>`, four characters, the description, and one
@@ -348,7 +360,7 @@ fn listing_entry_chars(name: &str, description: &str) -> usize {
 }
 
 #[test]
-fn plugin_listing_fits_the_budget_of_a_200k_window() {
+fn plugin_listing_fits_the_budget_of_a_1m_claude_5_window() {
     let mut total = 0;
     for name in entry_names(&root().join(PLUGIN_SKILLS)) {
         let path = root().join(PLUGIN_SKILLS).join(&name).join("SKILL.md");
@@ -357,6 +369,10 @@ fn plugin_listing_fits_the_budget_of_a_200k_window() {
         total += listing_entry_chars(&meta.name, &meta.description);
     }
     eprintln!("plugin skill listing: {total} characters of {PLUGIN_LISTING_BUDGET}");
+    for (models, budget) in SMALL_WINDOW_BUDGETS {
+        let fits = if total <= budget { "fits" } else { "overflows" };
+        eprintln!("{fits} the {budget}-character listing of a 200,000-token {models} window");
+    }
     assert!(
         total <= PLUGIN_LISTING_BUDGET,
         "plugin skill listing totals {total} characters, past {PLUGIN_LISTING_BUDGET}"
