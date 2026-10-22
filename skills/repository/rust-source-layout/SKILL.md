@@ -96,12 +96,15 @@ Keep behavior changes separate so the reviewer can distinguish them from moves.
 ## Validate and report
 
 Run the repository's format/check commands and affected crate tests, including
-relevant features and targets already supported by the environment. Check
-downstream users of preserved public paths; a passing library unit test alone
-does not verify its consumers. Use existing table-order or fixture assertions
-to check declarative moves when available. For an organizational change, add a
-test only for an uncovered contract at risk, not to assert filenames or line
-counts.
+relevant features. Code gated to a target the host does not build, such as
+Linux-only code on a macOS host, is not compiled there: require that target's
+CI job, or `cargo check --target <triple>`, to pass, and report the gate as
+unverified when neither ran. A cross check type-checks the code but runs none of
+its tests. Check downstream users of preserved public paths; a passing library
+unit test alone does not verify its consumers. Use existing table-order or
+fixture assertions to check declarative moves when available. For an
+organizational change, add a test only for an uncovered contract at risk, not
+to assert filenames or line counts.
 
 Inspect the final diff for accidental value changes, widened visibility, lost
 attributes, and duplicate definitions. Report the responsibilities moved, the

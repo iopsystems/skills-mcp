@@ -1,6 +1,6 @@
 ---
 name: architecture-diagram
-description: Use when creating or materially revising system architecture diagrams — a build-time structure chart (units, layers, product composition), a weighted source-size view (LOC alongside source structure), or runtime charts (thread model, life-of-a-request flow). Triggers include "architecture diagram", "threading diagram", "dataflow chart", "life of a request", "diagram the system". Symptoms include a hand-maintained diagram drifting from the code, a chart that cannot say whether a thread or queue still exists, or structure and runtime claims tangled in one unreadable picture.
+description: Use when creating or materially revising system architecture diagrams — a build-time structure chart (units, layers, product composition), a weighted source-size view (LOC alongside source structure), or runtime charts (thread model, life-of-a-request flow). Triggers include "architecture diagram", "threading diagram", "life of a request", "diagram the system". Symptoms include a hand-maintained diagram drifting from the code, a chart that cannot say whether a thread or queue still exists, or structure and runtime claims tangled in one unreadable picture.
 ---
 
 # Architecture Diagrams: Structure, Source Size, and Runtime
@@ -441,9 +441,9 @@ core — derive from the program's real structures, classify through
 fail-loud tables, use the default visual language — and keeps the generator
 script with the artifact, wherever the work lives. What it loses is
 freshness: nothing will catch drift, so stamp the chart with the commit it
-was derived from and present it as a dated snapshot. Skip the charter and the
-review gate. A chart worth keeping makes the script the seed of the installed
-generator.
+was derived from and present it as a dated snapshot. Skip the charter; a
+person still reviews the chart. A chart worth keeping makes the script the seed
+of the installed generator.
 
 When the program is not in any repository the generator can read — a
 reference page about a third-party system, a dependency's internals —

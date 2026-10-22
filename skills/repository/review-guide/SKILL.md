@@ -162,8 +162,8 @@ what the citation shows.
 
 **In a durable document**, a bare line number decays. Quote a phrase from the
 cited line in the same paragraph so the number stays re-derivable from the
-text. `tests/citations.rs` can repair a number that moved; it cannot repair a
-citation whose anchor no longer exists.
+text. A check that finds the quoted phrase in the cited file can repair a
+number that moved; it cannot repair a citation whose anchor no longer exists.
 
 ## Report validation at its actual strength
 
@@ -203,7 +203,7 @@ For example, if the evidence consists of an author report and a passing
 regression fixture:
 
 > The author reports a fix for the scanner's attribute handling. Its regression
-> fixture passes; independent re-review of the fix remains pending.
+> fixture passes; no independent review of the fix is recorded.
 
 That states the current review status without retelling each review round.
 

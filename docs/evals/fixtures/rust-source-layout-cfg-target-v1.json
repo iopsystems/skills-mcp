@@ -1,0 +1,25 @@
+{
+  "version": 1,
+  "base_commit": "457b879",
+  "purpose": "Check that rust-source-layout requires a compile of the cfg-gated target before a split is called done.",
+  "method": "One fresh worker per variant, given only its assigned skill text and the request. A separate critic grades both responses under neutral labels against outcomes frozen before either worker ran.",
+  "skill": "skills/repository/rust-source-layout/SKILL.md",
+  "variants": {
+    "baseline": {
+      "source": "origin/main 457b879",
+      "sha256": "0ae3272cf7b265ab1d61e29b07d7af93eb55daa609bb1a00b24703beb4844740"
+    },
+    "revised": {
+      "source": "fix-skill-contradictions",
+      "sha256": "d3621d5b289971347c6ea60a470b2399a4c66dfc00e44584f1bfbfb38d95709b"
+    }
+  },
+  "worker_instructions": "You are following a skill. Read the skill at <assigned skill file> and follow it. Do not read any other file and do not run commands; answer from the request below.\n\nRequest from a user:\n\n\"I split our 1,800-line src/reactor.rs into src/reactor/{mod.rs, timers.rs, kqueue.rs, uring.rs}. uring.rs sits behind #[cfg(target_os = \"linux\")] and kqueue.rs behind #[cfg(target_os = \"macos\")]; mod.rs re-exports a `Reactor` type from whichever backend is built. I'm on my MacBook. cargo fmt --check, cargo clippy --all-targets -- -D warnings and cargo test all pass. The repo has CI that runs on push; I haven't pushed. Can I call this done? Write the validation part of the PR description I should use.\"\n\nReply with exactly what you would say to the user, under 250 words.",
+  "frozen_outcomes": [
+    "O1. States that the Linux-gated code is not compiled by the macOS `cargo test`/`cargo check`, so host results say nothing about it.",
+    "O2. Requires a passing compile of the Linux target before the split is called done: the Linux CI job, or `cargo check --target <linux triple>` (cross check), naming at least one concretely.",
+    "O3. Does not report the move as verified for Linux on the strength of macOS results; if no Linux check has run, the report marks that gate as unverified.",
+    "O4. Stays in scope: no unrelated refactors or new tests asserting file names or line counts."
+  ],
+  "critic_instructions": "Read only the outcomes and the two responses. For each response and outcome give pass / partial / fail with one quoted sentence, list any Rust or cargo factual error, and say which response is better or whether they tie."
+}
