@@ -287,9 +287,11 @@ Where a program has a boundary the reader must respect — asynchronous
 arrival on one side, deterministic evaluation on the other — pin the
 inputs into a single column so the boundary can be drawn as one rule.
 
-Number the compute nodes with their position in the evaluation order, as a
-circled digit (U+2460 onward). That is a real fact about the program, and
-numbering is only honest when order carries information.
+Number the compute nodes with their position in the evaluation order. That is
+a real fact about the program, and numbering is only honest when order carries
+information. Put a plain digit in a layout engine's label; when the generator
+emits geometry, draw the badge as a circle plus a digit. Unicode circled digits
+fail in font fallback.
 
 Where one chart would carry two materially different implementations of the
 same flow, give each its own panel on an obvious comparison axis — top and
