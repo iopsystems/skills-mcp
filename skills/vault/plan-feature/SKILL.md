@@ -128,7 +128,7 @@ asks or the repo does not keep design docs, and report why. When written, use:
 <Short — the design brief has the detail. Summarize and link.>
 
 ## Plan
-<Ordered work items from the Coordination section. Reference per-repo issues once opened.>
+<Ordered work items from Coordination. Reference per-repo issues once opened.>
 
 ## Open questions
 <Anything unresolved. Do not invent answers to fill gaps.>

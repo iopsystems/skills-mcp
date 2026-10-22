@@ -34,7 +34,8 @@ same skill, or the repository it is served to. Each was checked against
   review gates every chart", the red flag for a chart shipped without human
   review, and the README rule that human review is mandatory for diagrams. The
   section now skips only the charter. The existing trigger eval for this case
-  already expected only the charter and CI freshness to be skipped.
+  lists only the charter and CI freshness as skipped; it does not mention
+  review.
 - The `architecture-diagram` description listed "dataflow chart" as a trigger
   while its body sends a pipeline to `dataflow-diagram`. The trigger is removed.
 
@@ -61,14 +62,39 @@ neither ran, and notes that a cross check runs no tests.
 
 ## Evaluation
 
-Seven of the eight changes remove a contradiction between two texts. Their
-check is that the contradicting phrase is gone from `skills/` and `templates/`
-and that the surviving text agrees with the rule it conflicted with; a grep for
-each removed phrase returns nothing. No forward simulation was run for them.
+Five changes correct a path, a reference, a trigger, or example wording, and
+none was forward-simulated. Their check is that the contradicting phrase is
+gone from `skills/` and `templates/` and that the surviving text agrees with the
+rule it conflicted with; a grep for each removed phrase returns nothing.
 
-The `rust-source-layout` change alters what an agent requires before calling a
-split done, so it got a baseline, a forward simulation and a blind critic.
-Outcomes frozen before either arm ran:
+Three changes alter agent behaviour: the single-use review rule, the stage
+badge, and the gated-target check. Each got a baseline worker on the
+`origin/main` text, a worker on the revised text, and a separate critic grading
+under neutral labels against outcomes frozen before any worker ran.
+
+### Single-use review and stage badges
+
+The [protocol](../evals/fixtures/diagram-contradictions-v1.json) has two cases.
+In the first, a user plans a runtime chart of an open-source server's threads
+for a talk, cannot add files to its repository, and needs no sign-off. In the
+second, a user's generator writes SVG directly and asks for a helper that draws
+a node's evaluation-order number.
+
+The single-use baseline said "you skip the charter and the review gate", then
+still had the user view the chart at projector size; the critic graded the
+review outcome partial. The revised worker kept a review step ("someone still
+has to look at the rendered chart") and passed all four outcomes.
+
+The badge baseline emitted `chr(0x2460 + n - 1)` as the skill instructed and
+failed both badge outcomes. The revised worker drew a circle plus a text digit
+and passed all three. The
+[results](../evals/results/diagram-contradictions-v1.json) retain the four
+responses and the critic's grades.
+
+### Gated-target check
+
+The [protocol](../evals/fixtures/rust-source-layout-cfg-target-v1.json) froze
+these outcomes before either worker ran:
 
 1. States that the macOS run does not compile the Linux-gated code.
 2. Requires a passing Linux compile, naming the CI job or a cross-target check.
@@ -91,13 +117,15 @@ gate "unverified". Both wrongly said `cargo fmt` did not cover `uring.rs`.
 This is a null result for one case and one response per arm. The baseline
 model inferred the requirement from the user's description; the revision makes
 it explicit instead of depending on that inference. The sentence on cross
-checks running no tests was added after the critic's note.
+checks running no tests was added after the critic's note and was not
+evaluated. The [results](../evals/results/rust-source-layout-cfg-target-v1.json)
+retain both responses and the critic's grades.
 
 ## Validation
 
 `cargo fmt --all -- --check`, `cargo clippy --all-targets --locked -- -D
-warnings`, `cargo test --locked` (158 tests) and `./scripts/mcp-smoke.sh`
-passed. No diagram source changed, so `render-diagrams.sh --check` was not run.
+warnings`, `cargo test --locked` (158 tests), `cargo build --release --locked`,
+`./scripts/render-diagrams.sh --check` and `./scripts/mcp-smoke.sh` passed.
 
 ## Open
 
