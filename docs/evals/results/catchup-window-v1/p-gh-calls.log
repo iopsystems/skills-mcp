@@ -1,0 +1,2 @@
+gh pr view --json number,state,mergeStateStatus,statusCheckRollup
+gh pr list --author @me --state open --json number,title,headRefName,isDraft,reviewDecision,statusCheckRollup

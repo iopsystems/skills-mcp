@@ -1,123 +1,178 @@
 ---
 name: catchup
-description: Summarize recent development activity in the current repo so the user can catch up on what others have changed in the last hours/days/weeks. Picks the window automatically — since the user's last commit, or else the larger of the last 5 commits vs the last 7 days — and produces a grouped, prioritized summary (themes, risky changes, files touched, who did what). Trigger when the user says things like "what did I miss", "catch me up", "what's new on this branch", "what changed since I was out", or after returning from time off.
+description: Brief the user on a repository before work resumes — the current branch's state (uncommitted work, stashes, other worktrees, position against its upstream and the default branch), its CI checks and the user's open PRs, instruction files changed in the window, and what others landed, grouped by theme with risky changes first. Picks the window from a named time, the gap in the reflog, or the last 7 days, never from the user's last commit. Trigger when the user says things like "what did I miss", "catch me up", "what's new on this branch", "what changed since I was out", "where was I", or after returning from time off.
 ---
 
 # Catch Up
 
-You are helping the user catch up on recent development activity in the
-current repository. Produce a grouped, prioritized summary of what has
-changed since they last engaged, so they can resume work with context.
+You are helping the user resume work in the current repository. Report the
+state of their work first, then what changed around it, so they can resume
+with context.
 
 ## Operating rules
 
-- **Do not modify the repo.** This is a read-only briefing — no edits,
-  commits, branches, or pushes.
+- **Do not modify the repo.** This is a read-only briefing. `git fetch` is the
+  one exception: it updates remote-tracking refs, not the working tree. Skip it
+  if the user asks for an offline briefing, and say the comparison is as of the
+  last fetch.
 - Work from the current working directory. If the user names a different
   repo or path, `cd` into it (via a shell command you run) before starting.
-- Prefer running git commands via the Bash tool. Use `--no-pager` or pipe
-  through `cat` so output isn't paginated.
+- Use `--no-pager` or pipe through `cat` so output isn't paginated.
 - Summarize; don't dump. A raw `git log` is not the answer — the user can
   run that themselves.
-- If the range is empty ("nothing has changed since your last commit"), say
-  so plainly and stop. Do not invent filler.
+- If nothing changed and the branch is clean and green, say so in two lines
+  and stop, without the Step 6 template. Do not invent filler.
 
-## Step 1 — Determine the identity
-
-Find the user's git identity, since you need it to detect their own commits.
+## Step 1 — Fetch and pick the window
 
 ```
-git config user.email
-git config user.name
+git fetch --quiet --all --prune
+r=origin; git remote | grep -qx upstream && r=upstream   # a fork's upstream
+git symbolic-ref --short refs/remotes/$r/HEAD 2>/dev/null \
+  || git remote show $r | sed -n "s|.*HEAD branch: |$r/|p"   # default branch
 ```
 
-If both are empty, note it and fall back to the "no prior commits" path
-in step 2.
+Compare against the remote-tracking branches; a local branch omits what
+others pushed since it was last pulled. Below, `origin/main` means the default
+branch found here, which is `upstream`'s in a fork with an `upstream` remote.
+With no remote, compare against the local default branch, skip Step 3, and say
+the briefing covers local history only.
 
-## Step 2 — Pick the range
+Do not pick the window from the user's last commit: agent sessions commit
+under the user's git identity, so that commit is often minutes old.
 
-Use this decision tree, in order:
+Use the first that applies:
 
-1. **Since the user's last commit.** On the current branch, look for the
-   most recent commit authored by the user's email (preferred) or name:
+1. **The window the user named** ("since Monday", "since v0.4.0").
+2. **The last break in this checkout.** Find the newest gap of more than four
+   hours (14,400 seconds) in `HEAD`'s reflog, counting the current time as the
+   newest point, and start the window at the older entry of the gap. This
+   prints that entry's Unix time, or nothing when there is no such gap:
+
    ```
-   git log -1 --author="<email>" --pretty=%H
+   git reflog --date=unix -n 500 --format='%gd' | sed 's/.*{\(.*\)}/\1/' \
+     | awk -v now=$(date +%s) 'BEGIN{p=now} p-$1>14400{print $1; exit} {p=$1}'
    ```
-   If a commit is found, the range is `<that-sha>..HEAD`. Report the SHA
-   and date so the user can sanity-check.
 
-2. **No commits by this user on this branch.** Fall back to the *larger*
-   of these two windows, by commit count:
-   - The last 5 commits: `HEAD~5..HEAD` (guard against shallow histories).
-   - The last 7 days: `--since="7 days ago"`.
+   Unix times avoid time zone and daylight-saving arithmetic. Name the entry
+   the window starts at, with its time and message, in the Window line. An
+   agent session in this checkout while the user was away also moves `HEAD`,
+   and the window then starts at the end of that session. If the entry the
+   window starts at, or the entries before it back to the previous gap, come
+   from such a session (commits with an agent co-author trailer, or moves the
+   user does not recognise), say so and offer to start the window at the
+   previous gap instead.
+3. **The last 7 days** on `origin/main`, widened to at least 10 commits, when
+   the reflog is empty, expired, or has no such gap. Start at the earlier of
+   7 days ago and `git log -11 --format=%cI origin/main | tail -1`; `W` below
+   is excluded from the range, so the eleventh commit leaves ten in it.
 
-   Run `git rev-list --count` for each and pick whichever is bigger. Ties
-   go to the 7-day window (more time context is usually more useful).
+Record the window's start as a commit on the default branch:
 
-3. **Shallow or tiny history.** If the repo has fewer than 5 commits
-   total, just summarize everything and say so.
+```
+W=$(git rev-list -1 --first-parent --before='<window start>' origin/main)
+```
 
-Always state the chosen window at the top of your summary, e.g.
-"Showing 12 commits from the last 6 days (since your last commit
-`a91187c` on 2026-04-11)." Include both the commit range and the
-calendar range when possible.
+`--first-parent` keeps `W` on the default branch's own history. Without it, a
+pull request branch commit made before the window start and merged after it
+can become `W`, and that pull request drops out of every range below. For a
+Unix time from the reflog, write the start as `@<seconds>`. If `W` is empty, the
+window predates the default branch's first commit, and `$W..origin/main` would
+silently mean `HEAD..origin/main`. Use the full history instead: set
+`W=$(git rev-list --max-parents=0 --first-parent origin/main | tail -1)`, and
+say the window covers all of it (the root commit itself is then not listed).
 
-## Step 3 — Gather the data
+State the window and why it was chosen at the top of the briefing.
 
-Use a compact log format plus per-commit stats. Example commands:
+## Step 2 — Where the work stands
+
+```
+git status --short --branch        # dirty files; ahead/behind its upstream
+git rev-list --left-right --count origin/main...HEAD   # behind <tab> ahead
+git log --oneline @{u}..HEAD 2>/dev/null   # unpushed commits
+git stash list
+git worktree list
+```
+
+Report each. Another worktree may mean another session is working here;
+name its branch so work does not collide, and do not call it abandoned
+without evidence.
+
+## Step 3 — CI and open PRs
+
+```
+gh pr view --json number,state,mergeStateStatus,reviewDecision,statusCheckRollup
+gh pr list --author @me --state open \
+  --json number,title,headRefName,isDraft,reviewDecision,statusCheckRollup
+```
+
+For this branch's PR and each of the user's open PRs, report checks as
+passing, failing, pending, or absent, and whether a review is waiting. Never
+omit a failing check. If this branch is red, name the check and commit in the
+first lines of the briefing, and check whether the failure predates the user's
+latest commits on the branch before adding to it. If the branch has no PR, say
+so and report the default branch's latest checks
+(`gh run list --branch <default> --limit 5`). If `gh` is unavailable or
+unauthenticated, say CI was not checked.
+
+## Step 4 — Instruction files that changed
+
+```
+git diff --name-only $W origin/main -- \
+  CLAUDE.md AGENTS.md ':(glob)**/CLAUDE.md' ':(glob)**/AGENTS.md' \
+  .github/workflows rust-toolchain.toml rustfmt.toml
+```
+
+Add the repository's own gate scripts and toolchain pins (for example a
+`scripts/check.sh` or `.tool-versions`). List each with
+a one-line summary from `git diff $W origin/main -- <file>`, and read the new
+text before resuming work.
+
+## Step 5 — What landed
 
 ```
 git log --no-merges --date=short \
-  --pretty=format:'%h%x09%an%x09%ad%x09%s' <range>
-
-git log --no-merges --stat --pretty=format:'%h %s' <range>
-
-git shortlog -sn --no-merges <range>
+  --pretty=format:'%h%x09%an%x09%ad%x09%s' $W..origin/main
+git shortlog -sn --no-merges $W..origin/main
+git diff --stat $W origin/main | tail -20
 ```
 
-For large ranges (roughly >30 commits), also pull:
+List commits individually if there are fewer than about eight. Otherwise
+group by theme (infer from paths, subjects, and bodies), not by date. For each
+group, give the intent in one line, one to three short SHAs, and the authors.
+Order the groups:
+
+1. Breaking changes / API changes / schema, config, or migration changes.
+2. New features or new public surfaces.
+3. Refactors that touch many files.
+4. Bug fixes that matter to the user's current work.
+5. Test, CI, docs, and chore work — last, condensed.
+
+Call out authors by name. Commits under the user's identity with an agent
+co-author trailer came from agent sessions; label them so, since the user may
+not have seen them.
+
+Then cross the branch's changed files with what landed:
 
 ```
-git diff --stat <range>
+comm -12 <(git diff --name-only origin/main...HEAD | sort) \
+         <(git diff --name-only $W origin/main | sort)
 ```
 
-…to see aggregate file churn, and cap per-file detail to the top ~15
-churned files.
+Files in both are the likely merge conflicts.
 
-Skip merge commits from the narrative but note if a notable merge
-(e.g. a feature branch landing) happened. Don't re-summarize each
-individual commit that was already part of a squashed merge.
+## Step 6 — Write the briefing
 
-## Step 4 — Group and prioritize
-
-Don't list commits one-by-one unless there are fewer than ~8. Instead,
-organize by **theme**, not by chronology:
-
-- Group commits by area/feature (infer from paths, subject lines, and
-  commit bodies — e.g. "skill loader", "MCP transport", "build setup").
-- Within each group, note the intent in one line, cite the 1–3 key
-  commits with short SHAs, and name the author(s).
-- Surface **high-signal** items first:
-  1. Breaking changes / API changes / schema or migration changes.
-  2. New features or new public surfaces.
-  3. Notable refactors that touch many files.
-  4. Bug fixes that matter to the user's current work.
-  5. Test, CI, docs, and chore work — last, condensed.
-- Flag anything that looks like it might collide with likely in-flight
-  work (e.g. renamed files, removed functions, config format changes).
-
-Call out authors other than the current user by name — the point is
-to catch up on *others'* work.
-
-## Step 5 — Write the briefing
-
-Produce a single markdown briefing with this shape. Keep it tight —
-aim for under ~40 lines unless the range is unusually large.
+Keep it under about 40 lines unless the range is unusually large.
 
 ```
-## Catch-up: <branch> — <range summary>
+## Catch-up: <repo> on <branch>
 
-**Window:** <N commits> over <date range> (<why this window was chosen>).
+**Window:** <start> (<why>), <N commits> on <default branch>.
+**Branch:** <ahead/behind upstream and default>; <dirty, stashes, unpushed>.
+**Other worktrees:** <path: branch>, ... or none.
+**CI:** <this branch's checks>; open PRs: #n <state>, ...
+**Instructions changed:** <file: one line>, ... or none.
 **Authors:** <name (n)>, <name (n)>, ...
 
 ### Highlights
@@ -127,30 +182,25 @@ aim for under ~40 lines unless the range is unusually large.
 #### <Area 1>
 - <one-line intent> — <short sha>, <short sha> (<author>)
 
-#### <Area 2>
-- ...
-
 ### Watch out for
-- <breaking changes, renames, removed APIs, config format changes,
-  anything likely to conflict with the user's in-flight work>
+- <breaking changes, renames, removed APIs, files that overlap this branch>
   Omit this section if there's nothing to flag.
 
 ### Housekeeping
 - <one short bullet rolling up docs/tests/CI/chore commits, if any>
 ```
 
-End with a one-line suggestion for the next concrete step — e.g.
-"Pull `main` and re-run `cargo build` before resuming your branch,"
-or "Worth a quick look at `src/transport.rs` before your next change."
-Only offer a suggestion if something in the diff actually warrants it.
+Mark every header line "none" rather than dropping it, except in the two-line
+nothing-changed case. End with one concrete next step only if the state calls
+for one — e.g. "Fix the failing `lint`
+check before adding to this branch," or "Rebase onto `origin/main`; three
+files overlap."
 
 ## After the briefing
 
-Offer, but do not perform without being asked:
+Do not start the next piece of work inside this skill. Offer, but do not
+perform without being asked:
 
 - Show the full `git log` or diff for a specific area.
 - Drill into a specific commit (`git show <sha>`).
-- List files the user's in-flight branch touches that *also* changed
-  upstream (likely merge-conflict candidates).
-- Compare against a different base (e.g. `origin/main` instead of the
-  local branch tip).
+- Compare against a different base or window.
