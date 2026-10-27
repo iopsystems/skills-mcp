@@ -1,6 +1,8 @@
 //! The `iop` Claude Code plugin is a tree of symlinks into `skills/repository/`.
 //! The vault and catalog skills need tools only the MCP server provides, so they
-//! stay out of it.
+//! stay out of it. The frontmatter checks repeat the ones `check-skills` in
+//! `brayniac/custom-skills` makes, because Claude Code loads a malformed skill
+//! without an error.
 
 use std::collections::BTreeSet;
 use std::fs;
@@ -220,4 +222,159 @@ fn repository_skills_need_nothing_only_the_server_provides() {
             }
         }
     }
+}
+
+/// The keys `check-skills` in `brayniac/custom-skills` allows. Claude Code and
+/// `claude plugin validate --strict` ignore a key they do not know, so a
+/// misspelled one would pass unnoticed.
+#[derive(Debug, serde::Deserialize)]
+#[serde(deny_unknown_fields)]
+struct Frontmatter {
+    name: String,
+    description: String,
+}
+
+/// Claude Code truncates one skill's listed description past this many
+/// characters.
+const MAX_DESCRIPTION_CHARS: usize = 1536;
+
+/// The skill a `SKILL.md` declares, or why Claude Code would load it wrongly.
+/// Frontmatter the server cannot parse already fails `load_skills`; the checks
+/// after the parse are the ones nothing else makes.
+fn check_skill(dir_name: &str, text: &str) -> Result<Frontmatter, String> {
+    let yaml = text
+        .strip_prefix("---\n")
+        .and_then(|rest| rest.split_once("\n---\n"))
+        .map(|(yaml, _)| yaml)
+        .ok_or("no YAML frontmatter")?;
+    let meta: Frontmatter = serde_yaml::from_str(yaml).map_err(|error| {
+        format!("frontmatter must be YAML with exactly name and description: {error}")
+    })?;
+    let valid_name = (1..=64).contains(&meta.name.len())
+        && meta
+            .name
+            .bytes()
+            .all(|b| b.is_ascii_lowercase() || b.is_ascii_digit() || b == b'-' || b == b'_');
+    if !valid_name {
+        return Err(format!(
+            "name {:?} must match [a-z0-9_-]{{1,64}}",
+            meta.name
+        ));
+    }
+    // The plugin lists a skill by its directory; the server serves it by `name`.
+    if meta.name != dir_name {
+        return Err(format!("name {:?} differs from its directory", meta.name));
+    }
+    let chars = meta.description.trim().chars().count();
+    if !(1..=MAX_DESCRIPTION_CHARS).contains(&chars) {
+        return Err(format!(
+            "description is {chars} characters; it must be 1 to {MAX_DESCRIPTION_CHARS}"
+        ));
+    }
+    Ok(meta)
+}
+
+/// Every skill directory the server embeds and the plugin links, with the
+/// directory name each is known by.
+fn skill_dirs() -> Vec<(String, PathBuf)> {
+    let mut dirs = Vec::new();
+    for cluster in [
+        "skills/repository",
+        "skills/vault",
+        "skills/catalog",
+        PLUGIN_SKILLS,
+    ] {
+        for name in entry_names(&root().join(cluster)) {
+            let dir = root().join(cluster).join(&name);
+            dirs.push((name, dir));
+        }
+    }
+    dirs
+}
+
+#[test]
+fn skill_frontmatter_loads_in_claude_code() {
+    let dirs = skill_dirs();
+    assert!(dirs.len() > entry_names(&root().join(PLUGIN_SKILLS)).len());
+    for (name, dir) in dirs {
+        let path = dir.join("SKILL.md");
+        let text = fs::read_to_string(&path)
+            .unwrap_or_else(|error| panic!("read {}: {error}", path.display()));
+        if let Err(problem) = check_skill(&name, &text) {
+            panic!("{}: {problem}", path.display());
+        }
+    }
+}
+
+#[test]
+fn skill_check_rejects_what_claude_code_loads_wrongly() {
+    let skill = |name: &str, extra: &str, description: &str| {
+        format!("---\nname: {name}\n{extra}description: {description}\n---\n\nBody.\n")
+    };
+    assert!(check_skill("a-b_1", &skill("a-b_1", "", "Does a thing.")).is_ok());
+    assert!(check_skill("a", &skill("a", "", &"é".repeat(MAX_DESCRIPTION_CHARS))).is_ok());
+    for (dir, text) in [
+        ("a", "name: a\ndescription: x\n".to_owned()),
+        ("a", skill("a", "", "\"unterminated")),
+        // Claude Code re-quotes this value and loads it; the server's parser
+        // does not.
+        ("a", skill("a", "", "Use when: a colon")),
+        ("a", skill("a", "allowed-tools: Bash\n", "x")),
+        ("a", skill("a", "", "")),
+        ("a", skill("a", "", &"x".repeat(MAX_DESCRIPTION_CHARS + 1))),
+        ("b", skill("a", "", "x")),
+        ("Upper", skill("Upper", "", "x")),
+        ("a.b", skill("a.b", "", "x")),
+        (&"a".repeat(65), skill(&"a".repeat(65), "", "x")),
+    ] {
+        assert!(check_skill(dir, &text).is_err(), "accepted {text:?}");
+    }
+}
+
+/// Claude Code 2.1.308 sizes the skill listing at `(contextWindow ?? 200000) *
+/// charsPerToken * 0.01` characters. `charsPerToken` is 4 for Claude 3 and 4
+/// models and 3 for others, including Claude 5: 6,000 characters for a
+/// 200,000-token Claude 5 window, 8,000 for Claude 4, and 30,000 for a
+/// 1,000,000-token Claude 5 window. `skillListingBudgetFraction` and
+/// `SLASH_COMMAND_TOOL_CHAR_BUDGET` override it. Every skill on the host shares
+/// the listing. Past the budget, every skill keeps its name and bundled skills
+/// keep their descriptions; the rest keep theirs in order of recent use until
+/// the budget is spent, and lose the whole description after that.
+///
+/// The plugin's listing is already past 6,000, so it overflows on its own on a
+/// 200,000-token Claude 5 model; the test prints that comparison. It asserts
+/// the 1,000,000-token Claude 5 budget: past it, the plugin overflows on its
+/// own in every 1,000,000-token window. With descriptions capped at 1,536
+/// characters, that takes about 19 skills.
+const PLUGIN_LISTING_BUDGET: usize = 30_000;
+
+/// The listing budgets for 200,000-token windows, at 3 and 4 characters a
+/// token, reported for comparison.
+const SMALL_WINDOW_BUDGETS: [(&str, usize); 2] = [("Claude 5", 6_000), ("Claude 4", 8_000)];
+
+/// One listing entry is `- iop:<name>: <description>` and a newline; Claude Code
+/// counts it as `iop:<name>`, four characters, the description, and one
+/// separator.
+fn listing_entry_chars(name: &str, description: &str) -> usize {
+    "iop:".len() + name.len() + 4 + description.trim().chars().count() + 1
+}
+
+#[test]
+fn plugin_listing_fits_the_budget_of_a_1m_claude_5_window() {
+    let mut total = 0;
+    for name in entry_names(&root().join(PLUGIN_SKILLS)) {
+        let path = root().join(PLUGIN_SKILLS).join(&name).join("SKILL.md");
+        let meta = check_skill(&name, &fs::read_to_string(&path).unwrap())
+            .unwrap_or_else(|problem| panic!("{}: {problem}", path.display()));
+        total += listing_entry_chars(&meta.name, &meta.description);
+    }
+    eprintln!("plugin skill listing: {total} characters of {PLUGIN_LISTING_BUDGET}");
+    for (models, budget) in SMALL_WINDOW_BUDGETS {
+        let fits = if total <= budget { "fits" } else { "overflows" };
+        eprintln!("{fits} the {budget}-character listing of a 200,000-token {models} window");
+    }
+    assert!(
+        total <= PLUGIN_LISTING_BUDGET,
+        "plugin skill listing totals {total} characters, past {PLUGIN_LISTING_BUDGET}"
+    );
 }
