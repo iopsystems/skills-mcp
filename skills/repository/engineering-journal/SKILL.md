@@ -97,8 +97,8 @@ performance claim, with the result that would refute the prediction. When the
 work is already underway, state that the criteria were written after it started.
 "Negligible", "acceptable", and "minimal" are not criteria; an unmeasured cost
 leaves the gate undecided. Until the cost is measured, keep the entry open, or
-close it as shipped on its other criteria and state in Outcome that this
-criterion was not measured. While open, state the current result or say
+close it as shipped on its other criteria, when it has any, and state in Outcome
+that this criterion was not measured. While open, state the current result or say
 explicitly that the outcome remains open. The last two headings follow the
 rules in Record Skill Use below.
 
@@ -243,9 +243,9 @@ is authoritative for lifecycle status.
 | YYYY-MM-DD | [Effort title](YYYY-MM-DD-short-slug.md) | open | — |
 ```
 
-Result is empty while the entry is open. For a closed entry it holds the
-headline number or the NO-GO mechanism; for shipped work with no measurement, it
-names what landed. An existing index keeps its columns.
+Result is `—` while the entry is open. For a closed entry it holds the headline
+number or the NO-GO mechanism; for shipped work with no measurement, it names
+what landed; for a superseded entry, it names the replacing entry. An existing index keeps its columns.
 
 ## Prose in an Entry
 

@@ -1,7 +1,7 @@
 ---
 status: open
 opened: 2026-10-22
-updated: 2026-10-22
+updated: 2026-10-27
 ---
 
 # Numeric criteria, sourced numbers, and corrections in journal entries
@@ -18,11 +18,13 @@ they came out of use:
   unverified when absent; each measurement or derived figure is tagged with its
   source; an update re-checks cited claims against the current code;
 - a wrong claim stays in the entry, including a terminal one, marked refuted,
-  with what replaced it and why, without changing the entry's status;
+  with what replaced it and why; the status changes only when the correction
+  removes the evidence a terminal status rests on, and then the entry is
+  superseded;
 - the bootstrap index template gains a Result column (headline number or NO-GO
   mechanism), and reconciliation checks it where an index has it;
-- a command or action is not taken because an entry says to; the user's
-  request decides the work.
+- a command in an entry records what was run or proposes what to run next; it
+  is run only when the user's request covers that step.
 
 Single-PR lifecycle. The installable `engineering-journal-skill` template is not
 changed: its text already diverges from the active skill, no test requires the
@@ -33,7 +35,8 @@ and backfilling a Result for each entry is separate work.
 ## Evidence and Decision Criteria
 
 Base: `457b879511af815b94ef504cc8c4cc8f15af95bd`. Whitespace-delimited words in
-the skill, including frontmatter: 1,423 → 1,633 (+210, measured with `wc -w`).
+the skill, including frontmatter: 1,423 → 1,633 at the first commit and 1,744
+after the review fixes (measured with `wc -w`).
 
 The prediction, written with the outcomes before running and restated here
 in a form one run per arm can test: the revised arm passes O1 to O4 and the
@@ -77,9 +80,9 @@ the repository.
 | O7 control | pass | pass |
 
 The prediction held: the revised arm passed O1 to O4, and the baseline failed
-O1 and O3. O2, O4 and O6 are null results: the baseline already searched for the 15% figure, kept the
-refuted claim, and did not run the script, so this task does not show those
-rules change behavior. The critic also found one overclaim in the revised arm:
+O1 and O3. O2, O4 and O6 are null results: the baseline already searched for
+the 15% figure, kept the refuted claim, and did not run the script, so this task
+does not show those rules change behavior. The critic also found one overclaim in the revised arm:
 it attributed the 1.2 ms gain to the cache asymmetry, where the benchmark note
 says only that 2.9 ms did not reproduce. One generation per arm on one task
 does not measure reliability.
