@@ -1,7 +1,7 @@
 ---
 status: open
 opened: 2026-10-22
-updated: 2026-10-22
+updated: 2026-10-27
 prs: []
 ---
 
@@ -51,7 +51,8 @@ Accept the change if, on a fixture built to show the gap, the revised skill
 meets the frozen outcomes the current skill misses, with no new factual error
 and no repository change beyond `git fetch`.
 
-Size: 968 → 1,259 whitespace-delimited words, including frontmatter. Several
+Size: 968 → 1,259 whitespace-delimited words, including frontmatter, and 1,371
+after the second review's fixes. Several
 old passages were shortened to offset the four added steps.
 
 ## Evaluation
@@ -110,6 +111,23 @@ reported the nine commits since, and did not report the pulled commit. I
 graded this case myself against an outcome added to the protocol before the
 run; it had no baseline arm or blind critic
 ([briefing](../evals/results/catchup-window-v1/quiet-briefing.md)).
+
+## Review after merging main
+
+A second review found that `git rev-list -1 --before=<start> origin/main`
+can return a pull request branch commit made before the window start and
+merged after it. That pull request then drops out of every range. On this
+repository, a start one minute before the merge of #95 gave `W=5a5fa38` (a
+commit on #95's branch) and 0 commits; with `--first-parent`, `W=457b879` and
+2 commits. Step 4's `git log --since` missed the same commits by committer
+date, and now uses `git diff --name-only $W origin/main`. The gap rule is now a
+command over Unix times with a fixed 14,400-second threshold and 500 entries,
+which removes time zone and daylight-saving arithmetic. The briefing names the
+reflog entry the window starts at and says when an agent session may have
+moved it. Step 1 detects an `upstream` remote, `gh pr view` asks for
+`reviewDecision`, and the two-line nothing-changed case is exempt from the
+template. The eval was not rerun on this text; the new commands were run on the
+`main` fixture.
 
 ## Deferred or Reopen Items
 

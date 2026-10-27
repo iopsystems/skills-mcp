@@ -15,6 +15,7 @@ the user has already seen.
 from datetime import datetime, timedelta, timezone
 import json
 import os
+import shlex
 from pathlib import Path
 import subprocess
 import sys
@@ -50,7 +51,7 @@ def main():
     quiet = sys.argv[2:] == ["quiet"]
     out.mkdir(parents=True, exist_ok=False)
     origin, work, peer = out / "origin.git", out / "work", out / "peer"
-    subprocess.run(["git", "init", "-q", "--bare", "-b", "main", origin], check=True)
+    git(out, "init", "-q", "--bare", "-b", "main", str(origin))
 
     d = timedelta(days=1)
     h = timedelta(hours=1)
@@ -134,10 +135,10 @@ def main():
     stub = out / "bin/gh"
     stub.parent.mkdir()
     stub.write_text(f"""#!/bin/sh
-echo "gh $*" >> {out}/gh-calls.log
+echo "gh $*" >> {shlex.quote(str(out / "gh-calls.log"))}
 case "$1 $2" in
-  "pr view") cat {out}/gh-view.json ;;
-  "pr list") cat {out}/gh-list.json ;;
+  "pr view") cat {shlex.quote(str(out / "gh-view.json"))} ;;
+  "pr list") cat {shlex.quote(str(out / "gh-list.json"))} ;;
   "pr checks") printf 'lint\\tpass\\ntest\\tfail\\n'; exit 1 ;;
   *) echo "stub gh: unsupported: $*" >&2; exit 1 ;;
 esac

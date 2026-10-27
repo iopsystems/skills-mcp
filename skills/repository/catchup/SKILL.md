@@ -1,6 +1,6 @@
 ---
 name: catchup
-description: Brief the user on a repository before work resumes — the current branch's state (uncommitted work, stashes, other worktrees, position against its upstream and the default branch), its CI checks and the user's open PRs, instruction files changed in the window, and what others landed, grouped by theme with risky changes first. Picks the window from a named time, the gap in the reflog, or the last 7 days, never from the user's last commit, because agent sessions commit under the user's identity. Trigger when the user says things like "what did I miss", "catch me up", "what's new on this branch", "what changed since I was out", "where was I", or after returning from time off.
+description: Brief the user on a repository before work resumes — the current branch's state (uncommitted work, stashes, other worktrees, position against its upstream and the default branch), its CI checks and the user's open PRs, instruction files changed in the window, and what others landed, grouped by theme with risky changes first. Picks the window from a named time, the gap in the reflog, or the last 7 days, never from the user's last commit. Trigger when the user says things like "what did I miss", "catch me up", "what's new on this branch", "what changed since I was out", "where was I", or after returning from time off.
 ---
 
 # Catch Up
@@ -21,36 +21,46 @@ with context.
 - Summarize; don't dump. A raw `git log` is not the answer — the user can
   run that themselves.
 - If nothing changed and the branch is clean and green, say so in two lines
-  and stop. Do not invent filler.
+  and stop, without the Step 6 template. Do not invent filler.
 
 ## Step 1 — Fetch and pick the window
 
 ```
 git fetch --quiet --all --prune
-git symbolic-ref --short refs/remotes/origin/HEAD \
+git remote                                        # is there an upstream?
+git symbolic-ref --short refs/remotes/upstream/HEAD 2>/dev/null \
+  || git symbolic-ref --short refs/remotes/origin/HEAD \
   || git remote show origin | grep 'HEAD branch'   # the default branch
 ```
 
 Compare against the remote-tracking branches; a local branch omits what
 others pushed since it was last pulled. Below, `origin/main` means the default
-branch found here. If the default branch lives on another remote (`upstream`
-in a fork), use that remote. With no remote, compare against the local default
+branch found here. In a fork with an `upstream` remote, the default branch is
+`upstream`'s. With no remote, compare against the local default
 branch, skip Step 3, and say the briefing covers local history only.
 
-Do not pick the window from the user's last commit. Agent sessions commit
-under the user's git identity, so `git log -1 --author=<email>` usually returns
-a commit minutes old and the window comes out empty.
+Do not pick the window from the user's last commit: agent sessions commit
+under the user's git identity, so that commit is often minutes old.
 
 Use the first that applies:
 
 1. **The window the user named** ("since Monday", "since v0.4.0").
-2. **The last break in this checkout.** `git reflog --date=iso -n 50` lists
-   recent moves of `HEAD`. Include the current time as the newest point: if
-   the newest entry is more than about four hours old, the window starts at
-   that entry. Otherwise find the newest gap of more than about four hours
-   between consecutive entries and start the window at the older entry.
-   Entries minutes apart are one session, so the previous entry alone is not
-   the boundary.
+2. **The last break in this checkout.** Find the newest gap of more than four
+   hours (14,400 seconds) in `HEAD`'s reflog, counting the current time as the
+   newest point, and start the window at the older entry of the gap. This
+   prints that entry's Unix time, or nothing when there is no such gap:
+
+   ```
+   git reflog --date=unix -n 500 --format='%gd' | sed 's/.*{\(.*\)}/\1/' \
+     | awk -v now=$(date +%s) 'BEGIN{p=now} p-$1>14400{print $1; exit} {p=$1}'
+   ```
+
+   Unix times avoid time zone and daylight-saving arithmetic. Name the entry
+   the window starts at, with its time and message, in the Window line. An
+   agent session in this checkout while the user was away also moves `HEAD`,
+   and the window then starts after it. If the entries just after the window
+   start come from such a session (commits with an agent co-author trailer, or
+   moves the user does not recognise), say so and offer to widen the window.
 3. **The last 7 days** on `origin/main`, widened to at least 10 commits, when
    the reflog is empty, expired, or has no such gap. Start at the earlier of
    7 days ago and `git log -10 --format=%cI origin/main | tail -1`.
@@ -58,8 +68,13 @@ Use the first that applies:
 Record the window's start as a commit on the default branch:
 
 ```
-W=$(git rev-list -1 --before='<window start>' origin/main)
+W=$(git rev-list -1 --first-parent --before='<window start>' origin/main)
 ```
+
+`--first-parent` keeps `W` on the default branch's own history. Without it, a
+pull request branch commit made before the window start and merged after it
+can become `W`, and that pull request drops out of every range below. For a
+Unix time from the reflog, write the start as `@<seconds>`.
 
 State the window and why it was chosen at the top of the briefing.
 
@@ -73,14 +88,14 @@ git stash list
 git worktree list
 ```
 
-Report each. Another worktree usually means another session is working here;
+Report each. Another worktree may mean another session is working here;
 name its branch so work does not collide, and do not call it abandoned
 without evidence.
 
 ## Step 3 — CI and open PRs
 
 ```
-gh pr view --json number,state,mergeStateStatus,statusCheckRollup
+gh pr view --json number,state,mergeStateStatus,reviewDecision,statusCheckRollup
 gh pr list --author @me --state open \
   --json number,title,headRefName,isDraft,reviewDecision,statusCheckRollup
 ```
@@ -88,8 +103,8 @@ gh pr list --author @me --state open \
 For this branch's PR and each of the user's open PRs, report checks as
 passing, failing, pending, or absent, and whether a review is waiting. Never
 omit a failing check. If this branch is red, name the check and commit in the
-first lines of the briefing, and check whether the failure predates your work
-before adding to the branch. If the branch has no PR, say so and report the
+first lines of the briefing, and check whether the failure predates the user's
+latest commits on the branch before adding to it. If the branch has no PR, say so and report the
 default branch's latest checks
 (`gh run list --branch <default> --limit 5`). If `gh` is unavailable or
 unauthenticated, say CI was not checked.
@@ -97,14 +112,13 @@ unauthenticated, say CI was not checked.
 ## Step 4 — Instruction files that changed
 
 ```
-git log --since='<window start>' --name-only --format= origin/main -- \
+git diff --name-only $W origin/main -- \
   CLAUDE.md AGENTS.md ':(glob)**/CLAUDE.md' ':(glob)**/AGENTS.md' \
-  .github/workflows rust-toolchain.toml rustfmt.toml | sort -u
+  .github/workflows rust-toolchain.toml rustfmt.toml
 ```
 
 Add the repository's own gate scripts and toolchain pins (for example a
-`scripts/check.sh` or `.tool-versions`). A changed instruction file, gate, or
-toolchain pin changes how the next piece of work must be done. List each with
+`scripts/check.sh` or `.tool-versions`). List each with
 a one-line summary from `git diff $W origin/main -- <file>`, and read the new
 text before resuming work.
 
@@ -170,7 +184,8 @@ Keep it under about 40 lines unless the range is unusually large.
 - <one short bullet rolling up docs/tests/CI/chore commits, if any>
 ```
 
-Mark every header line "none" rather than dropping it. End with one concrete
+Mark every header line "none" rather than dropping it, except in the two-line
+nothing-changed case. End with one concrete
 next step only if the state calls for one — e.g. "Fix the failing `lint`
 check before adding to this branch," or "Rebase onto `origin/main`; three
 files overlap."
