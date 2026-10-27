@@ -35,8 +35,9 @@ and backfilling a Result for each entry is separate work.
 
 ## Evidence and Decision Criteria
 
-Base: `457b879511af815b94ef504cc8c4cc8f15af95bd`. Whitespace-delimited words in
-the skill, including frontmatter: 1,423 → 1,633 at the first commit and 1,746
+Base when the PR was opened: `457b879511af815b94ef504cc8c4cc8f15af95bd`; the
+skill is unchanged between it and the current merge base, `7fef9d0`. Whitespace-delimited words in
+the skill, including frontmatter: 1,423 → 1,633 at the first commit and 1,761
 after the review fixes (measured with `wc -w`).
 
 The prediction, written with the outcomes before running and restated here
@@ -109,8 +110,11 @@ contract marker. Those were fixed in e7e6d64. A third review found that
 clauses e7e6d64 added had no marker; aefcbef added markers and collapsed line
 wrapping before matching. A fourth review found that most clauses from the
 first commit still had no marker that failed when the clause was inverted
-(eleven of twelve mutations survived), so the markers now cover each added
-sentence in full and the same twelve mutations each fail the test. The eval was
+(eleven of twelve mutations survived). e1593da extended the markers to full
+sentences, and a fifth review found two sentences still cut short and no
+marker on the template's separator row; those are fixed. A substring test
+cannot catch an inserted sentence that overrides a rule, so the markers guard
+against deletion and inversion only. The eval was
 not rerun on the fixed text.
 
 Open until review and merge. `cargo fmt --check`, strict clippy,

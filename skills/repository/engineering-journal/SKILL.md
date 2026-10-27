@@ -98,7 +98,8 @@ work is already underway, state that the criteria were written after it started.
 "Negligible", "acceptable", and "minimal" are not criteria; an unmeasured cost
 leaves the gate undecided. Until the cost is measured, keep the entry open, or
 close it as shipped on its other criteria, when it has any, and state in Outcome
-that this criterion was not measured. While open, state the current result or say
+that this criterion was not measured. A NO-GO on another criterion closes the
+entry as `no-go` without waiting for this one. While open, state the current result or say
 explicitly that the outcome remains open. The last two headings follow the
 rules in Record Skill Use below.
 
