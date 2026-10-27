@@ -6,6 +6,8 @@ is authoritative for lifecycle status.
 | Opened | Effort | Status |
 | --- | --- | --- |
 | 2026-10-22 | [Catch-up windows that survive agent commits](2026-10-22-catchup-window-and-state.md) | open |
+| 2026-10-22 | [Numeric criteria, sourced numbers, and corrections in journal entries](2026-10-22-journal-criteria-and-corrections.md) | open |
+| 2026-10-22 | [Authors check review findings before applying them](2026-10-22-review-exchange-verify-findings.md) | open |
 | 2026-10-22 | [Skill frontmatter that Claude Code loads correctly](2026-10-22-skill-frontmatter-checks.md) | open |
 | 2026-10-21 | [Repository skills as a Claude Code plugin](2026-10-21-claude-code-plugin.md) | open |
 | 2026-10-20 | [Planning questions follow missing information](2026-10-20-concise-plan-feature.md) | open |
