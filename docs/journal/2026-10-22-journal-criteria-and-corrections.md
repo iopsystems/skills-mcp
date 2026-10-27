@@ -62,7 +62,9 @@ One fresh general-purpose agent per arm received the baseline or revised skill
 text. The revised arm's copy predates review edits to the tagging,
 correct-in-place, unmeasured-cost, and embedded-instruction rules; the
 evaluation was not rerun on the edited text. A third agent graded both under
-neutral labels against the frozen outcomes.
+neutral labels against the frozen outcomes. The agent transcripts and the
+grader's output were not retained, so the grades below cannot be checked from
+the repository.
 
 | Outcome | Baseline | Revised |
 | --- | --- | --- |
@@ -75,8 +77,7 @@ neutral labels against the frozen outcomes.
 | O7 control | pass | pass |
 
 The prediction held: the revised arm passed O1 to O4, and the baseline failed
-O1 and O3. O2, O4 and O6 are
-null results: the baseline already searched for the 15% figure, kept the
+O1 and O3. O2, O4 and O6 are null results: the baseline already searched for the 15% figure, kept the
 refuted claim, and did not run the script, so this task does not show those
 rules change behavior. The critic also found one overclaim in the revised arm:
 it attributed the 1.2 ms gain to the cache asymmetry, where the benchmark note
@@ -88,12 +89,19 @@ does not measure reliability.
 `skills/repository/engineering-journal/SKILL.md`: criteria rules after the
 entry template; grounding, tagging and correct-in-place paragraphs; a re-check
 in Update; the Result column in the index template and a Reconcile check for
-it; a stop condition on actions an entry asks for. `src/main.rs` adds eight
-contract markers, one per rule including the tagging rule and the Update
-re-check, to `engineering_journal_contract_covers_reconciliation_boundaries`;
+it; a stop condition on actions an entry asks for. `src/main.rs` adds
+contract markers for the added sentences, including the tagging rule and the
+Update re-check, to `engineering_journal_contract_covers_reconciliation_boundaries`;
 with the baseline skill text the test fails on the first new marker.
 
 ## Outcome
+
+A second review, after main was merged in, found that the embedded-command stop
+condition called every command in an entry a record of what was run, which is
+false for restart and reopen conditions. It also found that a correction could
+not supersede a terminal entry whose evidence it removed, that single-PR mode
+could not write criteria before the work, and that three clauses had no
+contract marker. Those are fixed, and the eval was not rerun on the fixed text.
 
 Open until review and merge. `cargo fmt --check`, strict clippy,
 `cargo test --locked`, and `./scripts/mcp-smoke.sh` pass locally.
