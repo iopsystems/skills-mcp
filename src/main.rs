@@ -1267,6 +1267,40 @@ mod tests {
     }
 
     #[test]
+    fn review_exchange_contract_checks_findings_before_applying() {
+        let skills = load_skills().expect("embedded skills should load");
+        let body = &skills
+            .iter()
+            .find(|skill| skill.name == "review-exchange")
+            .expect("review-exchange should be embedded")
+            .body;
+        // Line wrapping is collapsed so a reflowed paragraph keeps its markers.
+        let body = body.split_whitespace().collect::<Vec<_>>().join(" ");
+        for required in [
+            "the quoted text is at the cited `file:line`",
+            "a proposed replacement is true",
+            "a claimed failure reproduces",
+            "diagnosis is false, dispute it",
+            "If the quoted text is elsewhere, find it and judge the claim there.",
+            "apply a corrected replacement, mark the finding fixed, and say what you changed",
+            "mark the finding deferred with running that check as what would reopen it",
+            "search the files at the branch head, not only the diff",
+            "Before applying a finding or reporting it as fact, check at the round's `commit` that:",
+            "each factual statement holds",
+            "a claimed failure reproduces: run the input or trace the code path.",
+            "If the diagnosis holds and only the replacement fails",
+            "If you cannot run a check, say which one,",
+            "ask the reviewer in the same round whether they can run it.",
+            "fix them all before writing your round.",
+        ] {
+            assert!(
+                body.contains(required),
+                "missing contract marker: {required}"
+            );
+        }
+    }
+
+    #[test]
     fn review_exchange_evals_cover_key_scenarios() {
         let raw = include_str!("../skills/repository/review-exchange/evals/trigger-evals.json");
         let value: serde_json::Value =
@@ -1275,7 +1309,7 @@ mod tests {
             .as_array()
             .expect("review-exchange evals should contain an evals array");
 
-        assert_eq!(evals.len(), 14);
+        assert_eq!(evals.len(), 16);
         for eval in evals {
             assert!(eval["name"].as_str().is_some());
             assert!(eval["prompt"].as_str().is_some());
