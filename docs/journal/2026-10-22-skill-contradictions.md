@@ -1,7 +1,7 @@
 ---
 status: open
 opened: 2026-10-22
-updated: 2026-10-22
+updated: 2026-10-27
 prs: []
 ---
 
@@ -56,10 +56,11 @@ versions: `architecture-diagram-skill` 0.2.4, `dataflow-diagram-skill` 0.1.4.
 
 `rust-source-layout`: validation covered "targets already supported by the
 environment", which accepts a macOS run for a split that moved Linux-only code
-the host never compiles. The skill now requires the gated target's CI job or
-`cargo clippy --target <triple> --all-targets -- -D warnings` to pass, and
-reports the gate as unverified when neither ran. (The first version of this
-rule used `cargo check --target <triple>`; see Review after merging main.)
+the host never compiles. The skill now requires the gated target's CI job to
+pass or `cargo clippy --target <triple> --all-targets` to finish with no
+errors, and reports the gate as unverified when neither ran. (Earlier versions
+of this rule used `cargo check --target <triple>`, then added `-D warnings`;
+see Review after merging main.)
 
 ## Evaluation
 
@@ -140,6 +141,11 @@ failed cross build is reported as unverified, says to report rather than fix
 warnings already in the gated code, and says to report the target's tests as
 not run when only the cross check ran. A third review found that the rewording
 had narrowed the rule to Linux code on a macOS host; it again covers any target
-the host does not compile. None of this was evaluated. The
+the host does not compile. A fourth review found that `-D warnings` turns a
+lint already in the library into an error that stops dependent targets from
+compiling, which hid a type error in a gated integration test on a scratch
+crate. The rule now leaves it out, requires a run with no errors, and compares
+warnings with the base commit so the move fixes only the warnings it
+introduced. None of this was evaluated. The
 `architecture-diagram` single-use trigger eval now asserts that a person reviews
 the chart, which closes this entry's one open item.

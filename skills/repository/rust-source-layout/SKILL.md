@@ -98,15 +98,17 @@ Keep behavior changes separate so the reviewer can distinguish them from moves.
 Run the repository's format/check commands and affected crate tests, including
 relevant features. Code gated to a target the host does not compile, such as
 Linux-only code on a macOS host or Windows-only code on Linux, is not checked by
-host runs. Require that target's CI job, or `cargo clippy --target <triple>
---all-targets -- -D warnings`, to pass; `--all-targets` compiles the gated test
-modules.
-Install the target with `rustup target add <triple>`. Report the gate as
-unverified when neither ran, or when the cross check cannot build on this host
-for a reason unrelated to the change, such as a build script that needs a cross
-C toolchain. Report warnings already present in the gated code; do not fix them
-in the move. When only the cross check ran, report the target's tests as not
-run. Check downstream users of preserved public paths; a passing library
+host runs. Require that target's CI job to pass, or
+`cargo clippy --target <triple> --all-targets` to finish with no errors.
+`--all-targets` compiles the gated test modules. Leave out `-D warnings`: it
+turns a lint in the library into an error that stops the library's dependent
+targets from compiling, which hides their errors. Run the same command on the
+base commit, fix any warning the move introduced, and report warnings that were
+already there without fixing them in the move. Install the target with
+`rustup target add <triple>`. Report the gate as unverified when neither ran, or
+when the cross check cannot build on this host for a reason unrelated to the
+change, such as a build script that needs a cross C toolchain. When only the
+cross check ran, report the target's tests as not run. Check downstream users of preserved public paths; a passing library
 unit test alone does not verify its consumers. Use existing table-order or
 fixture assertions to check declarative moves when available. For an
 organizational change, add a test only for an uncovered contract at risk, not
