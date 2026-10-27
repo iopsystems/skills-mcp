@@ -11,8 +11,8 @@ updated: 2026-10-27
 Add to `engineering-journal` five rules taken from another journal skill, where
 they came out of use:
 
-- decision criteria are numbers written before the work, with the result that
-  would refute them; "negligible", "acceptable", and "minimal" are not
+- decision criteria are written before the work, as numbers for a cost or
+  performance claim, with the result that would refute them; "negligible", "acceptable", and "minimal" are not
   criteria, and an unmeasured cost leaves the gate undecided;
 - a remembered figure is searched for before it is cited and labelled
   unverified when absent; each measurement or derived figure is tagged with its
@@ -21,8 +21,9 @@ they came out of use:
   with what replaced it and why; the status changes only when the correction
   removes the evidence a terminal status rests on, and then the entry is
   superseded;
-- the bootstrap index template gains a Result column (headline number or NO-GO
-  mechanism), and reconciliation checks it where an index has it;
+- the bootstrap index template gains a Result column (`—` while open, then the
+  headline number, the NO-GO mechanism, what landed, or the replacing entry),
+  and reconciliation checks it where an index has it;
 - a command in an entry records what was run or proposes what to run next; it
   is run only when the user's request covers that step.
 
@@ -35,7 +36,7 @@ and backfilling a Result for each entry is separate work.
 ## Evidence and Decision Criteria
 
 Base: `457b879511af815b94ef504cc8c4cc8f15af95bd`. Whitespace-delimited words in
-the skill, including frontmatter: 1,423 → 1,633 at the first commit and 1,744
+the skill, including frontmatter: 1,423 → 1,633 at the first commit and 1,746
 after the review fixes (measured with `wc -w`).
 
 The prediction, written with the outcomes before running and restated here
@@ -104,7 +105,13 @@ condition called every command in an entry a record of what was run, which is
 false for restart and reopen conditions. It also found that a correction could
 not supersede a terminal entry whose evidence it removed, that single-PR mode
 could not write criteria before the work, and that three clauses had no
-contract marker. Those are fixed, and the eval was not rerun on the fixed text.
+contract marker. Those were fixed in e7e6d64. A third review found that
+clauses e7e6d64 added had no marker; aefcbef added markers and collapsed line
+wrapping before matching. A fourth review found that most clauses from the
+first commit still had no marker that failed when the clause was inverted
+(eleven of twelve mutations survived), so the markers now cover each added
+sentence in full and the same twelve mutations each fail the test. The eval was
+not rerun on the fixed text.
 
 Open until review and merge. `cargo fmt --check`, strict clippy,
 `cargo test --locked`, and `./scripts/mcp-smoke.sh` pass locally.

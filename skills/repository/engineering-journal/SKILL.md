@@ -243,8 +243,8 @@ is authoritative for lifecycle status.
 | YYYY-MM-DD | [Effort title](YYYY-MM-DD-short-slug.md) | open | — |
 ```
 
-Result is `—` while the entry is open. For a closed entry it holds the headline
-number or the NO-GO mechanism; for shipped work with no measurement, it names
+Result is `—` while the entry is open. For a shipped or no-go entry it holds the
+headline number or the NO-GO mechanism; for shipped work with no measurement, it names
 what landed; for a superseded entry, it names the replacing entry. An existing index keeps its columns.
 
 ## Prose in an Entry
