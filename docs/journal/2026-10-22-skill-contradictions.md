@@ -124,10 +124,17 @@ retain both responses and the critic's grades.
 ## Validation
 
 `cargo fmt --all -- --check`, `cargo clippy --all-targets --locked -- -D
-warnings`, `cargo test --locked` (158 tests), `cargo build --release --locked`,
+warnings`, `cargo test --locked` (161 tests after merging main), `cargo build --release --locked`,
 `./scripts/render-diagrams.sh --check` and `./scripts/mcp-smoke.sh` passed.
 
-## Open
+## Review after merging main
 
-- The `architecture-diagram` single-use trigger eval does not yet assert that
-  human review still applies.
+A second review found that `cargo check --target <triple>` skips `#[cfg(test)]`
+modules, which the same skill tells the agent to split into their own files; a
+scratch crate with a type error in a Linux-gated test module passed it and
+failed with `--all-targets`. The rule now requires `cargo clippy --target
+<triple> --all-targets -- -D warnings`, says to install the target, says when a
+failed cross build is reported as unverified, and says to report the target's
+tests as not run when only the cross check ran. None of this was evaluated. The
+`architecture-diagram` single-use trigger eval now asserts that a person reviews
+the chart, which closes this entry's one open item.

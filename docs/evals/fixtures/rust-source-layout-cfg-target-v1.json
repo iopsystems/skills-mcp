@@ -10,7 +10,7 @@
       "sha256": "0ae3272cf7b265ab1d61e29b07d7af93eb55daa609bb1a00b24703beb4844740"
     },
     "revised": {
-      "source": "fix-skill-contradictions",
+      "source": "draft of 417b0fd without the cross-check sentence",
       "sha256": "d3621d5b289971347c6ea60a470b2399a4c66dfc00e44584f1bfbfb38d95709b"
     }
   },
