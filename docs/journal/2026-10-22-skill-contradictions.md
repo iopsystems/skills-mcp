@@ -33,9 +33,9 @@ same skill, or the repository it is served to. Each was checked against
 - Single-use charts: "Skip the charter and the review gate" contradicted "Human
   review gates every chart", the red flag for a chart shipped without human
   review, and the README rule that human review is mandatory for diagrams. The
-  section now skips only the charter. The existing trigger eval for this case
-  lists only the charter and CI freshness as skipped; it does not mention
-  review.
+  section now skips only the charter. Before this PR the trigger eval for this
+  case listed only the charter and CI freshness as skipped and did not mention
+  review; it now asserts review.
 - The `architecture-diagram` description listed "dataflow chart" as a trigger
   while its body sends a pipeline to `dataflow-diagram`. The trigger is removed.
 
@@ -56,9 +56,10 @@ versions: `architecture-diagram-skill` 0.2.4, `dataflow-diagram-skill` 0.1.4.
 
 `rust-source-layout`: validation covered "targets already supported by the
 environment", which accepts a macOS run for a split that moved Linux-only code
-the host never compiles. The skill now requires the gated target's CI job or a
-`cargo check --target <triple>` to pass, reports the gate as unverified when
-neither ran, and notes that a cross check runs no tests.
+the host never compiles. The skill now requires the gated target's CI job or
+`cargo clippy --target <triple> --all-targets -- -D warnings` to pass, and
+reports the gate as unverified when neither ran. (The first version of this
+rule used `cargo check --target <triple>`; see Review after merging main.)
 
 ## Evaluation
 
@@ -124,7 +125,8 @@ retain both responses and the critic's grades.
 ## Validation
 
 `cargo fmt --all -- --check`, `cargo clippy --all-targets --locked -- -D
-warnings`, `cargo test --locked` (161 tests after merging main), `cargo build --release --locked`,
+warnings`, `cargo test --locked` (161 tests
+after merging main), `cargo build --release --locked`,
 `./scripts/render-diagrams.sh --check` and `./scripts/mcp-smoke.sh` passed.
 
 ## Review after merging main
@@ -134,7 +136,10 @@ modules, which the same skill tells the agent to split into their own files; a
 scratch crate with a type error in a Linux-gated test module passed it and
 failed with `--all-targets`. The rule now requires `cargo clippy --target
 <triple> --all-targets -- -D warnings`, says to install the target, says when a
-failed cross build is reported as unverified, and says to report the target's
-tests as not run when only the cross check ran. None of this was evaluated. The
+failed cross build is reported as unverified, says to report rather than fix
+warnings already in the gated code, and says to report the target's tests as
+not run when only the cross check ran. A third review found that the rewording
+had narrowed the rule to Linux code on a macOS host; it again covers any target
+the host does not compile. None of this was evaluated. The
 `architecture-diagram` single-use trigger eval now asserts that a person reviews
 the chart, which closes this entry's one open item.
