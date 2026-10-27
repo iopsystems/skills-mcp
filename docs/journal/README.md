@@ -5,6 +5,7 @@ is authoritative for lifecycle status.
 
 | Opened | Effort | Status |
 | --- | --- | --- |
+| 2026-10-22 | [Skill text that contradicts other skills](2026-10-22-skill-contradictions.md) | open |
 | 2026-10-22 | [Catch-up windows that survive agent commits](2026-10-22-catchup-window-and-state.md) | open |
 | 2026-10-22 | [Numeric criteria, sourced numbers, and corrections in journal entries](2026-10-22-journal-criteria-and-corrections.md) | open |
 | 2026-10-22 | [Authors check review findings before applying them](2026-10-22-review-exchange-verify-findings.md) | open |
