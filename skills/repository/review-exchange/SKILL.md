@@ -380,8 +380,9 @@ Before applying a finding or reporting it as fact, check at the round's
 If a check shows the finding's diagnosis is false, dispute it. If the quoted
 text is elsewhere, find it and judge the claim there. If the diagnosis holds and
 only the replacement fails, apply a corrected replacement, mark the finding
-fixed, and say what you changed. If you cannot run a check, say so and defer the
-finding or ask. When a finding is one case of a kind, such as a stale name,
+fixed, and say what you changed. If you cannot run a check, say which one, mark
+the finding deferred with running that check as what would reopen it, and ask
+the reviewer in the same round whether they can run it. When a finding is one case of a kind, such as a stale name,
 search the files at the branch head, not only the diff, for the rest and fix
 them all before writing your round.
 

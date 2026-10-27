@@ -1274,14 +1274,17 @@ mod tests {
             .find(|skill| skill.name == "review-exchange")
             .expect("review-exchange should be embedded")
             .body;
+        // Line wrapping is collapsed so a reflowed paragraph keeps its markers.
+        let body = body.split_whitespace().collect::<Vec<_>>().join(" ");
         for required in [
             "the quoted text is at the cited `file:line`",
             "a proposed replacement is true",
             "a claimed failure reproduces",
             "diagnosis is false, dispute it",
-            "apply a corrected replacement",
-            "If you cannot run a check, say so",
-            "not only the diff",
+            "If the quoted text is elsewhere, find it and judge the claim there.",
+            "apply a corrected replacement, mark the finding fixed, and say what you changed",
+            "mark the finding deferred with running that check as what would reopen it",
+            "search the files at the branch head, not only the diff",
         ] {
             assert!(
                 body.contains(required),

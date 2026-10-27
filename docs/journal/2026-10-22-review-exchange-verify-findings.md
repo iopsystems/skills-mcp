@@ -1,7 +1,7 @@
 ---
 status: open
 opened: 2026-10-22
-updated: 2026-10-22
+updated: 2026-10-27
 ---
 
 # Authors check review findings before applying them
@@ -21,9 +21,12 @@ Single-PR lifecycle. The installer is byte-identical.
 - Answering: before applying a finding or reporting it as fact, check at the
   round's `commit` that the quote is at the cited `file:line`, each factual
   statement holds, a proposed replacement is true, and a claimed failure
-  reproduces. Dispute a finding whose claim fails; correct a replacement that
-  fails. When a finding is one case of a kind, search the change for the rest
-  and fix them all before writing the author round.
+  reproduces. Dispute a finding only when a check shows its diagnosis is false;
+  judge a misplaced quote where it actually is; when only the replacement is
+  wrong, apply a corrected one and mark the finding fixed; when a check cannot
+  be run, mark the finding deferred and ask the reviewer. When a finding is one
+  case of a kind, search the files at the branch head, not only the diff, for
+  the rest and fix them all before writing the author round.
 - Red flags: applying a finding or its replacement without checking its claims.
 - Description: it said the skill "installs itself", while the body says to ask
   before installing. It now says the skill offers to install the bridge and
@@ -32,7 +35,8 @@ Single-PR lifecycle. The installer is byte-identical.
   wrong, and a finding that is one stale reference among several. The case
   count test moves from 14 to 16.
 
-Words outside the installer: 540 before, 654 after.
+Words after the frontmatter and outside fenced code blocks (`wc -w`): 421
+before, 535 at the first commit, and 605 after the second review's fixes.
 
 ## Evaluation
 

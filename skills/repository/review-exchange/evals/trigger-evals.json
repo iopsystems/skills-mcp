@@ -62,7 +62,7 @@
       "expectations": [
         "Confirm what the finding describes is at server.py:30 at the round's commit before acting",
         "Check the finding's factual statements and the proposed replacement text against the code",
-        "Record a finding whose claim fails as disputed, citing the check; when only the replacement is wrong, apply a corrected replacement and say so"
+        "Record a finding as disputed only when a check shows its diagnosis is false, citing the check; when only the replacement is wrong, apply a corrected replacement and mark it fixed"
       ]
     },
     {
