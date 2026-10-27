@@ -119,8 +119,8 @@ gate "unverified". Both wrongly said `cargo fmt` did not cover `uring.rs`.
 This is a null result for one case and one response per arm. The baseline
 model inferred the requirement from the user's description; the revision makes
 it explicit instead of depending on that inference. The sentence on cross
-checks running no tests was added after the critic's note and was not
-evaluated. The [results](../evals/results/rust-source-layout-cfg-target-v1.json)
+checks running no tests (417b0fd; now "report the target's tests as not run")
+was added after the critic's note and was not evaluated. The [results](../evals/results/rust-source-layout-cfg-target-v1.json)
 retain both responses and the critic's grades.
 
 ## Validation
@@ -135,17 +135,19 @@ after merging main), `cargo build --release --locked`,
 A second review found that `cargo check --target <triple>` skips `#[cfg(test)]`
 modules, which the same skill tells the agent to split into their own files; a
 scratch crate with a type error in a Linux-gated test module passed it and
-failed with `--all-targets`. The rule now requires `cargo clippy --target
-<triple> --all-targets -- -D warnings`, says to install the target, says when a
-failed cross build is reported as unverified, says to report rather than fix
-warnings already in the gated code, and says to report the target's tests as
+failed with `--all-targets`. 52def72 required `cargo clippy --target <triple>
+--all-targets -- -D warnings`, said to install the target, said when a failed
+cross build is reported as unverified, and said to report the target's tests as
 not run when only the cross check ran. A third review found that the rewording
-had narrowed the rule to Linux code on a macOS host; it again covers any target
-the host does not compile. A fourth review found that `-D warnings` turns a
-lint already in the library into an error that stops dependent targets from
-compiling, which hid a type error in a gated integration test on a scratch
-crate. The rule now leaves it out, requires a run with no errors, and compares
-warnings with the base commit so the move fixes only the warnings it
-introduced. None of this was evaluated. The
-`architecture-diagram` single-use trigger eval now asserts that a person reviews
+had narrowed the rule to Linux code on a macOS host; 12c03e0 restored the
+general rule and said to report, not fix, warnings already in the gated code.
+A fourth review found that `-D warnings` turns a lint already in the library
+into an error that stops dependent targets from compiling, which hid a type
+error in a gated integration test on a scratch crate; 1aa550c dropped the flag
+and compared warnings with the base commit. A fifth review found that a lint
+denied in `[lints]`, `.cargo/config.toml`, `RUSTFLAGS` or `#![deny]` hides
+errors the same way. The rule now passes `-- --cap-lints warn`, which made the
+hidden E0308 appear with a config-level `-D warnings` on a scratch crate, runs
+the base in a worktree, and matches warnings by lint name and item. None of this
+was evaluated. The `architecture-diagram` single-use trigger eval now asserts that a person reviews
 the chart, which closes this entry's one open item.

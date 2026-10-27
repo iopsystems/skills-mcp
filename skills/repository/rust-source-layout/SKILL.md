@@ -99,12 +99,16 @@ Run the repository's format/check commands and affected crate tests, including
 relevant features. Code gated to a target the host does not compile, such as
 Linux-only code on a macOS host or Windows-only code on Linux, is not checked by
 host runs. Require that target's CI job to pass, or
-`cargo clippy --target <triple> --all-targets` to finish with no errors.
-`--all-targets` compiles the gated test modules. Leave out `-D warnings`: it
-turns a lint in the library into an error that stops the library's dependent
-targets from compiling, which hides their errors. Run the same command on the
-base commit, fix any warning the move introduced, and report warnings that were
-already there without fixing them in the move. Install the target with
+`cargo clippy --target <triple> --all-targets -- --cap-lints warn` to finish
+with no errors. `--all-targets` compiles the gated test modules. `--cap-lints
+warn` turns every denied lint into a warning, wherever the repository denies it
+(`-D warnings`, `RUSTFLAGS`, `[lints]`, `.cargo/config.toml`, `#![deny]`), so a
+lint already in the library cannot stop its dependent targets from compiling
+and hide their errors. Run the same command in a worktree of the base commit
+(`git worktree add --detach <dir> <base>`), and match warnings by lint name and
+item, since the move changes their file and line. Fix any warning the move
+introduced, and report the ones that were already there without fixing them in
+the move. Install the target with
 `rustup target add <triple>`. Report the gate as unverified when neither ran, or
 when the cross check cannot build on this host for a reason unrelated to the
 change, such as a build script that needs a cross C toolchain. When only the
