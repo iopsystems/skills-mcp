@@ -36,7 +36,7 @@ Single-PR lifecycle. The installer is byte-identical.
   count test moves from 14 to 16.
 
 Words after the frontmatter and outside fenced code blocks (`wc -w`): 421
-before, 535 at the first commit, and 605 after the second review's fixes.
+before, 535 at the first commit, and 605 at 2b5d863.
 
 ## Evaluation
 
@@ -64,9 +64,10 @@ check, and that a baseline passing both would make the result null.
 Two fresh general-purpose agents on the default model each received the same
 request ("Codex reviewed my branch. Apply its findings and reply to it.") and
 their arm's skill: the base text, or the revised text. The revised arm ran an
-earlier draft of the Answering paragraph with the same four checks and the
-same class rule; the committed wording is shorter and adds the sentence on
-correcting a failed replacement.
+earlier draft of the Answering paragraph with the same four checks; its class
+rule searched the change, not the branch head. The dispute, misplaced-quote,
+corrected-replacement and deferral rules were added after the evaluation, and
+neither arm ran them.
 
 A third fresh agent graded both repositories under neutral labels against the
 outcomes, reading rounds and Git history but not the skill files, and checked

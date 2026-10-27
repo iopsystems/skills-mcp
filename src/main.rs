@@ -1285,6 +1285,13 @@ mod tests {
             "apply a corrected replacement, mark the finding fixed, and say what you changed",
             "mark the finding deferred with running that check as what would reopen it",
             "search the files at the branch head, not only the diff",
+            "Before applying a finding or reporting it as fact, check at the round's `commit` that:",
+            "each factual statement holds",
+            "a claimed failure reproduces: run the input or trace the code path.",
+            "If the diagnosis holds and only the replacement fails",
+            "If you cannot run a check, say which one,",
+            "ask the reviewer in the same round whether they can run it.",
+            "fix them all before writing your round.",
         ] {
             assert!(
                 body.contains(required),
