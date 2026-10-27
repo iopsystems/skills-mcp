@@ -377,10 +377,13 @@ Before applying a finding or reporting it as fact, check at the round's
 - a proposed replacement is true;
 - a claimed failure reproduces: run the input or trace the code path.
 
-If a claim fails, dispute the finding. When only its replacement fails, write
-a correct one and say so. When a finding is one case of a kind, such as a stale
-name, search the change for the rest and fix them all before writing your
-round.
+If a check shows the finding's diagnosis is false, dispute it. If the quoted
+text is elsewhere, find it and judge the claim there. If the diagnosis holds and
+only the replacement fails, apply a corrected replacement, mark the finding
+fixed, and say what you changed. If you cannot run a check, say so and defer the
+finding or ask. When a finding is one case of a kind, such as a stale name,
+search the files at the branch head, not only the diff, for the rest and fix
+them all before writing your round.
 
 Every finding in the round you are answering gets exactly one disposition:
 

@@ -1267,6 +1267,30 @@ mod tests {
     }
 
     #[test]
+    fn review_exchange_contract_checks_findings_before_applying() {
+        let skills = load_skills().expect("embedded skills should load");
+        let body = &skills
+            .iter()
+            .find(|skill| skill.name == "review-exchange")
+            .expect("review-exchange should be embedded")
+            .body;
+        for required in [
+            "the quoted text is at the cited `file:line`",
+            "a proposed replacement is true",
+            "a claimed failure reproduces",
+            "diagnosis is false, dispute it",
+            "apply a corrected replacement",
+            "If you cannot run a check, say so",
+            "not only the diff",
+        ] {
+            assert!(
+                body.contains(required),
+                "missing contract marker: {required}"
+            );
+        }
+    }
+
+    #[test]
     fn review_exchange_evals_cover_key_scenarios() {
         let raw = include_str!("../skills/repository/review-exchange/evals/trigger-evals.json");
         let value: serde_json::Value =

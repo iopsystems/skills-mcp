@@ -5,8 +5,9 @@
 # usage: setup-review-exchange-verify-eval.sh <skill.md> <dest-dir>
 set -euo pipefail
 SKILL=$(cd "$(dirname "$1")" && pwd)/$(basename "$1"); R=$2
-round=$(mktemp)
-rm -rf "$R"; mkdir -p "$R"; cd "$R"
+[ ! -e "$R" ] || { echo "$R exists; give a new directory" >&2; exit 2; }
+round=$(mktemp); trap 'rm -f "$round"' EXIT
+mkdir -p "$R"; cd "$R"
 git init -q --initial-branch=main
 git config user.email eval@example.com; git config user.name 'Eval'
 cat > fetch.py <<'P'

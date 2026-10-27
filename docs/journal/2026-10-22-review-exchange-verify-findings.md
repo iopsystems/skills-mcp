@@ -80,7 +80,9 @@ the ground truth itself at the round's commit.
 Both arms scored 6/6. The base arm checked the false finding, found the other
 stale references, and rejected the 200 ms figure without the new text. Both
 arms also corrected "retries up to five times" to five attempts, which is
-four retries. The critic found no new false claim in either round.
+four retries. The critic found no new false claim in either round. Neither arm
+nor the critic noticed the same miscount in the docstring on line 7 of the
+fixture's `fetch.py`; the outcomes did not score it.
 
 This is a null result: one task and one run per arm do not show that the new
 text changes behavior for this model. The change is kept because it states
