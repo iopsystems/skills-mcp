@@ -51,8 +51,8 @@ Accept the change if, on a fixture built to show the gap, the revised skill
 meets the frozen outcomes the current skill misses, with no new factual error
 and no repository change beyond `git fetch`.
 
-Size: 968 → 1,259 whitespace-delimited words, including frontmatter, and 1,371
-after the second review's fixes. Several
+Size: 968 → 1,259 whitespace-delimited words, including frontmatter, and 1,451
+after the review fixes. Several
 old passages were shortened to offset the four added steps.
 
 ## Evaluation
@@ -128,6 +128,15 @@ moved it. Step 1 detects an `upstream` remote, `gh pr view` asks for
 `reviewDecision`, and the two-line nothing-changed case is exempt from the
 template. The eval was not rerun on this text; the new commands were run on the
 `main` fixture.
+
+A third review found that the `upstream` detection fell back to `origin` when
+`refs/remotes/upstream/HEAD` is missing, which is the state on git before 2.48
+after `git remote add` and a fetch; it now asks the chosen remote directly. It
+also found that the agent-session check looked at entries after the window
+start, when such a session ends at the start entry, and that an empty `W`
+(a window older than the default branch) silently turned `$W..origin/main` into
+`HEAD..origin/main`. Both are fixed, and the 7-day fallback takes the eleventh
+commit so ten fall in the range.
 
 ## Deferred or Reopen Items
 

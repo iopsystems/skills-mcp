@@ -122,7 +122,8 @@ def main():
         {"name": "test", "status": "COMPLETED", "conclusion": "FAILURE"},
     ]
     view = {"number": 14, "state": "OPEN", "headRefOid": head,
-            "mergeStateStatus": "BLOCKED", "statusCheckRollup": checks}
+            "mergeStateStatus": "BLOCKED", "reviewDecision": "REVIEW_REQUIRED",
+            "statusCheckRollup": checks}
     prs = [
         {"number": 14, "title": "CSV export", "headRefName": "feature/export",
          "isDraft": False, "reviewDecision": "REVIEW_REQUIRED", "statusCheckRollup": checks},

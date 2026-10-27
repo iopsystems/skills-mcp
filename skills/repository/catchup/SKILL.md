@@ -27,17 +27,16 @@ with context.
 
 ```
 git fetch --quiet --all --prune
-git remote                                        # is there an upstream?
-git symbolic-ref --short refs/remotes/upstream/HEAD 2>/dev/null \
-  || git symbolic-ref --short refs/remotes/origin/HEAD \
-  || git remote show origin | grep 'HEAD branch'   # the default branch
+r=origin; git remote | grep -qx upstream && r=upstream   # a fork's upstream
+git symbolic-ref --short refs/remotes/$r/HEAD 2>/dev/null \
+  || git remote show $r | sed -n "s|.*HEAD branch: |$r/|p"   # default branch
 ```
 
 Compare against the remote-tracking branches; a local branch omits what
 others pushed since it was last pulled. Below, `origin/main` means the default
-branch found here. In a fork with an `upstream` remote, the default branch is
-`upstream`'s. With no remote, compare against the local default
-branch, skip Step 3, and say the briefing covers local history only.
+branch found here, which is `upstream`'s in a fork with an `upstream` remote.
+With no remote, compare against the local default branch, skip Step 3, and say
+the briefing covers local history only.
 
 Do not pick the window from the user's last commit: agent sessions commit
 under the user's git identity, so that commit is often minutes old.
@@ -58,12 +57,15 @@ Use the first that applies:
    Unix times avoid time zone and daylight-saving arithmetic. Name the entry
    the window starts at, with its time and message, in the Window line. An
    agent session in this checkout while the user was away also moves `HEAD`,
-   and the window then starts after it. If the entries just after the window
-   start come from such a session (commits with an agent co-author trailer, or
-   moves the user does not recognise), say so and offer to widen the window.
+   and the window then starts at the end of that session. If the entry the
+   window starts at, or the entries before it back to the previous gap, come
+   from such a session (commits with an agent co-author trailer, or moves the
+   user does not recognise), say so and offer to start the window at the
+   previous gap instead.
 3. **The last 7 days** on `origin/main`, widened to at least 10 commits, when
    the reflog is empty, expired, or has no such gap. Start at the earlier of
-   7 days ago and `git log -10 --format=%cI origin/main | tail -1`.
+   7 days ago and `git log -11 --format=%cI origin/main | tail -1`; `W` below
+   is excluded from the range, so the eleventh commit leaves ten in it.
 
 Record the window's start as a commit on the default branch:
 
@@ -74,7 +76,11 @@ W=$(git rev-list -1 --first-parent --before='<window start>' origin/main)
 `--first-parent` keeps `W` on the default branch's own history. Without it, a
 pull request branch commit made before the window start and merged after it
 can become `W`, and that pull request drops out of every range below. For a
-Unix time from the reflog, write the start as `@<seconds>`.
+Unix time from the reflog, write the start as `@<seconds>`. If `W` is empty, the
+window predates the default branch's first commit, and `$W..origin/main` would
+silently mean `HEAD..origin/main`. Use the full history instead: set
+`W=$(git rev-list --max-parents=0 --first-parent origin/main | tail -1)`, and
+say the window covers all of it (the root commit itself is then not listed).
 
 State the window and why it was chosen at the top of the briefing.
 
@@ -104,8 +110,8 @@ For this branch's PR and each of the user's open PRs, report checks as
 passing, failing, pending, or absent, and whether a review is waiting. Never
 omit a failing check. If this branch is red, name the check and commit in the
 first lines of the briefing, and check whether the failure predates the user's
-latest commits on the branch before adding to it. If the branch has no PR, say so and report the
-default branch's latest checks
+latest commits on the branch before adding to it. If the branch has no PR, say
+so and report the default branch's latest checks
 (`gh run list --branch <default> --limit 5`). If `gh` is unavailable or
 unauthenticated, say CI was not checked.
 
@@ -185,8 +191,8 @@ Keep it under about 40 lines unless the range is unusually large.
 ```
 
 Mark every header line "none" rather than dropping it, except in the two-line
-nothing-changed case. End with one concrete
-next step only if the state calls for one — e.g. "Fix the failing `lint`
+nothing-changed case. End with one concrete next step only if the state calls
+for one — e.g. "Fix the failing `lint`
 check before adding to this branch," or "Rebase onto `origin/main`; three
 files overlap."
 
