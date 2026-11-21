@@ -1,0 +1,48 @@
+# Critic report (blind; P = base text, Q = revised text)
+
+Transcribed from the critic agent's final message; the agent's full transcript
+was not kept.
+
+Both agents pass all six outcomes, 6/6 each. Ground truth checked at the
+round-1 commits (P a9ec1c6, Q 0ff5187): the sleep is at fetch.py:12 and the
+diff to fetch.py changes only `MAX_RETRIES = 3` -> `5`. `load_config` is still
+at README.md:11, :12 and :14 and in the app.py:6 docstring. The first sleep is
+`0.1 * 2**0` = 100 ms.
+
+## P (round 002-claude-93b4014.md, commit 93b4014)
+
+| | Result | Evidence |
+|---|---|---|
+| O1 | PASS | "The sleep is present at `fetch.py:12` … `git diff … -- fetch.py` shows only `MAX_RETRIES = 3` -> `5`". `git grep sleep` finds only fetch.py:12. |
+| O2 | PASS | 93b4014 fixes README.md:11, :12 and :14 and app.py:6. `git grep load_config` on the branch returns nothing. |
+| O3 | PASS | The round names README.md:11 and :14 under disposition 2, and app.py:6 under "Changes beyond those requested". |
+| O4 | PASS | README.md:5 now says "sleeping 100 ms after the first failure and doubling…". |
+| O5 | PASS | "The suggested text says backoff starts at 200 ms; the first delay is `0.1 * 2**0` = 100 ms". |
+| O6 | PASS | One author round with `replies_to: 1`. Each finding has one disposition (disputed, fixed, fixed). Both fixes cite 93b4014. |
+
+## Q (round 002-claude-3b02ee5.md, commit 3b02ee5)
+
+| | Result | Evidence |
+|---|---|---|
+| O1 | PASS | "At 0ff5187, `fetch.py:12` is `time.sleep(...)` … only change to `fetch.py` is `MAX_RETRIES = 3` -> `5`". There is still only one sleep. |
+| O2 | PASS | 3b02ee5 fixes all four sites. `git grep load_config` returns nothing. |
+| O3 | PASS | "Same stale name also appeared at `README.md:11` (import), `README.md:14` (prose) and in the `app.py:6` docstring". |
+| O4 | PASS | README.md:5-6 now says "starting at 100 ms and doubling each time". |
+| O5 | PASS | "The proposed line says backoff 'starting at 200 ms'; the first sleep is … 100 ms". Q also corrects "retries up to five times" to five attempts, which is four retries. |
+| O6 | PASS | One author round with `replies_to: 1`. Each finding has one disposition. Both fixes cite 3b02ee5. |
+
+## Defects outside O1-O6
+
+None found in either agent's work. Extra claims checked against the code:
+P's "the branch raises the cost from 0.4 s to 1.6 s" is correct (final sleep
+0.1·2² = 0.4 s at 3 attempts, 0.1·2⁴ = 1.6 s at 5); Q's "five attempts total
+(four retries)" is correct; Q's claim that `read_settings` raises
+`FileNotFoundError` is correct because the function calls `open()` directly;
+both commit messages describe their diffs accurately.
+
+Q's "Changes beyond those requested" section lists only the app.py docstring;
+the two README extras appear only under disposition 2. That is a presentation
+difference, not a defect.
+
+The arms do not differ on O2 or O4, which matches the refutation condition in
+the outcomes: the result is null.

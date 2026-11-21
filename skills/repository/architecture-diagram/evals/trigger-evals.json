@@ -33,7 +33,8 @@
         "Still derive from the program's real structures and fail loudly",
         "Keep the generator script with the talk materials",
         "Stamp the chart with the commit it was derived from and present it as a dated snapshot",
-        "Skip the charter and CI freshness apparatus without skipping derivation"
+        "Skip the charter and CI freshness apparatus without skipping derivation",
+        "Have a person review the rendered chart before it is used"
       ]
     },
     {

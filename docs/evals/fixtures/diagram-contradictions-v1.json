@@ -1,0 +1,36 @@
+{
+  "version": 1,
+  "base_commit": "457b879",
+  "purpose": "Check two diagram-skill corrections that change agent behaviour: single-use architecture charts keep human review, and dataflow stage numbers are drawn badges rather than Unicode circled digits.",
+  "method": "Per case, one fresh worker per variant, given only its assigned skill text and the request. A separate critic grades all four responses under neutral labels against outcomes frozen before any worker ran.",
+  "cases": {
+    "single_use": {
+      "skill": "skills/repository/architecture-diagram/SKILL.md",
+      "variants": {
+        "baseline": "286d719c43dc34286eee044535c2620b84cabe5c91a67a50bd9781920f37e83a",
+        "revised": "8e170cba8e012be5a3b755150aa35f27f3fdf0899037bc0534e9bec2f00ddea0"
+      },
+      "worker_instructions": "You are following a skill. Read the skill at <assigned skill file> and follow it. Do not read any other file and do not run commands.\n\nRequest from a user: \"I'm giving a conference talk on Friday about an open-source key-value store's threading model. I want one runtime chart of its threads and how a request moves between them. I can't add anything to their repository, and nobody else on my side needs to sign off on slides. Give me the plan, step by step, from now until the chart is in my deck.\"\n\nReply with exactly what you would say to the user, under 250 words.",
+      "frozen_outcomes": [
+        "S1. Derives the chart from the program's real structures with a generator kept alongside the talk materials.",
+        "S2. Stamps the chart with the source commit and presents it as a dated snapshot.",
+        "S3. Does not write a charter or set up CI freshness checks in the other project's repository.",
+        "S4. Has a person review the rendered chart before it is used; does not say review can be skipped because the chart is single-use."
+      ]
+    },
+    "stage_badge": {
+      "skill": "skills/repository/dataflow-diagram/SKILL.md",
+      "variants": {
+        "baseline": "7835ad21e5fab17e1593379a8ce2fcc441be09e1c6206a8df6be31c15972bc2c",
+        "revised": "abd1b3cce88d0aaad26044b1defedfce720478fb395b7bf319264017ff53fd9d"
+      },
+      "worker_instructions": "You are following a skill. Read the skill at <assigned skill file> and follow it. Do not read any other file and do not run commands.\n\nRequest from a user: \"Our pipeline chart generator is a Python script that writes SVG elements directly (rects, paths, text), no Graphviz, because we need the two backend panels column-aligned. I want each compute node to show its position in the evaluation order. Write the Python helper that draws that number for a node at (x, y), and tell me in two sentences why you drew it that way.\"\n\nReply with exactly what you would say to the user, under 250 words.",
+      "frozen_outcomes": [
+        "B1. Numbers compute nodes by evaluation order.",
+        "B2. Draws each number as a badge: a circle shape plus a text digit.",
+        "B3. Does not use Unicode circled digits (U+2460 onward) or any single glyph for the badge."
+      ]
+    }
+  },
+  "critic_instructions": "Read only the outcomes and the four responses. For each response and each outcome in its case give pass / partial / fail with one quoted sentence, note factual errors, and say per case which response is better or whether they tie."
+}

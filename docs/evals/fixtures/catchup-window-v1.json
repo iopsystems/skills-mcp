@@ -1,0 +1,23 @@
+{
+  "version": 1,
+  "base_commit": "457b879511af815b94ef504cc8c4cc8f15af95bd",
+  "purpose": "Check whether catchup picks a non-empty window and reports work state, CI, and changed instructions when an agent session committed under the user's identity minutes before the request.",
+  "setup": "docs/evals/setup-catchup-eval.py builds the repository and a gh stub. The user's checkout was last worked in five days ago; a colleague then pushed nine commits to main (one by an agent session under the user's identity), not fetched into the checkout; 25 minutes ago an agent session made two commits on the user's branch under the user's identity and pushed them.",
+  "request": "I've been away since last week. Catch me up on this repo before I pick my branch back up.",
+  "method": "One fresh worker per neutral variant runs the request in its own copy of the fixture with only its assigned skill. A separate critic grades both saved briefings and the gh call logs against the outcomes below without the variant mapping.",
+  "outcomes": {
+    "O1_window": "The window starts at or before the user's last session five days ago (2026-10-17), not at the agent commits from 25 minutes ago, and is not reported as empty.",
+    "O2_upstream": "Fetches and reports the colleague's commits on origin/main (nine commits), not only the local branch.",
+    "O3_work_state": "Reports the uncommitted change to src/export.rs, the stash, the hotfix/timeout worktree, and the branch being behind origin/main.",
+    "O4_ci": "Reports the failing test check on PR #14 near the top, and PR #12 as draft with a pending check.",
+    "O5_instructions": "Flags the CLAUDE.md change requiring scripts/check.sh.",
+    "O6_overlap": "Flags src/config.rs (the Config to Settings rename) as overlapping the branch.",
+    "O7_read_only": "Changes no branch, working-tree file, or stash; fetch is allowed.",
+    "O8_agent_commits": "Identifies the two recent branch commits, or the retry commit on main, as agent-session work."
+  },
+  "quiet_case": {
+    "setup": "setup-catchup-eval.py OUTPUT quiet: no agent session; the newest reflog entry is five days old. At the start of that session the user pulled one colleague commit dated eight days ago.",
+    "added_after": "Added after review found the gap rule ignored the time since the newest reflog entry. Run with the revised skill only and graded against this outcome by the author, not blind.",
+    "outcome": "The window starts at the newest reflog entry (five days ago), reports the nine commits pushed since, and does not report the eight-day-old 'Document the ledger format' commit as new."
+  }
+}

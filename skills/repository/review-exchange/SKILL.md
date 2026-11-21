@@ -5,8 +5,8 @@ description: |
   git bridge. Use when asked to "review this branch", "get a second opinion",
   "check the review feedback", "reply to the review", "what did Codex say", or
   whenever two independent agents are reviewing each other's work on the same
-  repository. Installs itself into a repository that does not have the bridge
-  yet, and upgrades one whose format has drifted. Symptoms that this skill
+  repository. Offers to install the bridge where it is missing or outdated,
+  and installs it only when the user agrees. Symptoms that this skill
   applies: a review that arrives as chat text and is lost on the next
   compaction, a finding you disagree with and have nowhere to dispute, a
   reviewer repeating a finding that was already answered, or a repository where
@@ -369,6 +369,23 @@ not establish correctness or absence of defects.
 
 Write one round with `--role author` and `--replies-to <n>`.
 
+Before applying a finding or reporting it as fact, check at the round's
+`commit` that:
+
+- the quoted text is at the cited `file:line`;
+- each factual statement holds: a count, a behavior, "X was removed";
+- a proposed replacement is true;
+- a claimed failure reproduces: run the input or trace the code path.
+
+If a check shows the finding's diagnosis is false, dispute it. If the quoted
+text is elsewhere, find it and judge the claim there. If the diagnosis holds and
+only the replacement fails, apply a corrected replacement, mark the finding
+fixed, and say what you changed. If you cannot run a check, say which one, mark
+the finding deferred with running that check as what would reopen it, and ask
+the reviewer in the same round whether they can run it. When a finding is one case of a kind, such as a stale name,
+search the files at the branch head, not only the diff, for the rest and fix
+them all before writing your round.
+
 Every finding in the round you are answering gets exactly one disposition:
 
 - **fixed** — cite the commit that fixed it.
@@ -398,5 +415,6 @@ the branch in the PR body through `review-guide`, or an entry through
   like a failure. It is not.
 - Marking a finding fixed with no commit that fixes it.
 - Disputing a finding by restating the original code.
+- Applying a finding or its replacement text without checking its claims.
 - Reporting "no findings" as evidence the change is correct.
 - Guessing an agent name because none was supplied.

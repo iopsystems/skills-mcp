@@ -1,0 +1,121 @@
+93b4014 Update README and docstring for read_settings and five attempts
+a9ec1c6 Rename load_config to read_settings; retry five times
+diff --git a/README.md b/README.md
+index c7aa661..3ca4d56 100644
+--- a/README.md
++++ b/README.md
+@@ -1,14 +1,15 @@
+ # fetcher
+ 
+-Fetches a list of URLs.
++Fetches a list of URLs from a JSON settings file.
+ 
+-`fetch` retries three times with exponential backoff.
++`fetch` makes up to five attempts, sleeping 100 ms after the first failure
++and doubling the delay after each later one.
+ 
+ ## Configuration
+ 
+ Settings are JSON. Read them with:
+ 
+-    from config import load_config
+-    cfg = load_config(path)
++    from config import read_settings
++    cfg = read_settings(path)
+ 
+-`load_config` raises `FileNotFoundError` when the file is missing.
++`read_settings` raises `FileNotFoundError` when the file is missing.
+diff --git a/app.py b/app.py
+index 16d33f0..9a342c6 100644
+--- a/app.py
++++ b/app.py
+@@ -1,8 +1,8 @@
+-from config import load_config
++from config import read_settings
+ from fetch import fetch
+ 
+ 
+ def run(path, get):
+-    """Load settings with load_config, then fetch each configured URL."""
+-    cfg = load_config(path)
++    """Load settings with read_settings, then fetch each configured URL."""
++    cfg = read_settings(path)
+     return [fetch(u, get) for u in cfg["urls"]]
+diff --git a/config.py b/config.py
+index 41f8f33..cafac8a 100644
+--- a/config.py
++++ b/config.py
+@@ -1,6 +1,6 @@
+ import json
+ 
+ 
+-def load_config(path):
++def read_settings(path):
+     with open(path) as f:
+         return json.load(f)
+diff --git a/fetch.py b/fetch.py
+index 1ebeac2..b7ea7e5 100644
+--- a/fetch.py
++++ b/fetch.py
+@@ -1,6 +1,6 @@
+ import time
+ 
+-MAX_RETRIES = 3
++MAX_RETRIES = 5
+ 
+ 
+ def fetch(url, get):
+---
+round:       2
+agent:       claude
+role:        author
+branch:      feature/settings
+base:        main
+commit:      93b4014f015aa6342b7e9ad5407694a96dc8605d
+merge_base:  70c78e704881e3605c3ac587b63480083882417a
+replies_to:  1
+written:     2026-10-22T10:49:57-0700
+---
+
+## Dispositions
+
+1. **P1 `fetch.py:9` backoff sleep removed** — disputed. The sleep is
+   present at `fetch.py:12` (`time.sleep(0.1 * 2 ** attempt)` under
+   `except IOError:`), identical to main. `git diff main...feature/settings
+   -- fetch.py` shows only `MAX_RETRIES = 3` -> `5`. Running `fetch` with a
+   `get` that always raises and `time.sleep` stubbed records delays
+   `[0.1, 0.2, 0.4, 0.8, 1.6]`.
+
+2. **P2 `README.md:12` still uses `load_config`** — fixed in 93b4014. Also
+   fixed the other two stale mentions you did not list: the import on
+   `README.md:11` and the `FileNotFoundError` note on `README.md:14`.
+
+3. **P3 `README.md:5` says three retries** — fixed in 93b4014, with
+   different wording. The suggested text says backoff starts at 200 ms;
+   the first delay is `0.1 * 2**0` = 100 ms (see the stub run above). The
+   line now reads: "`fetch` makes up to five attempts, sleeping 100 ms after
+   the first failure and doubling the delay after each later one." I used
+   "attempts" because `range(MAX_RETRIES)` calls `get` five times in total.
+
+## Open questions
+
+None were asked.
+
+## Changes beyond those requested
+
+- `app.py:6` docstring said "Load settings with load_config"; now
+  `read_settings` (93b4014). `grep -rn load_config` over the tree now
+  returns nothing.
+
+## Not changed
+
+- `fetch` also sleeps after the final failed attempt (1.6 s at five
+  attempts) before raising. This predates the branch; the branch raises the
+  cost from 0.4 s to 1.6 s. I left it alone; say if you want it in scope.
+
+## Verification
+
+- `python3 -c 'import app'` succeeds.
+- Stubbed-sleep run of `fetch` as above.
+
+I believe the branch is done; leaving the thread open for your next round.

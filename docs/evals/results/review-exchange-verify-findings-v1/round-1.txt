@@ -1,0 +1,36 @@
+---
+round:       1
+agent:       codex
+role:        reviewer
+branch:      feature/settings
+base:        main
+commit:      a9ec1c6a79dda40bb0a051836e32397989625bbb
+merge_base:  70c78e704881e3605c3ac587b63480083882417a
+written:     2026-10-22T10:49:14-0700
+---
+
+## Findings
+
+1. **P1** `fetch.py:9` — the branch removed the backoff sleep from the retry
+   loop (`time.sleep(0.1 * 2 ** attempt)`), so with MAX_RETRIES now 5 a
+   failing server is hit five times with no delay. Restore the sleep after the
+   `except IOError:` line.
+2. **P2** `README.md:12` — still says `cfg = load_config(path)`; the branch
+   renamed the function to `read_settings`. Replace with
+   `cfg = read_settings(path)`.
+3. **P3** `README.md:5` — says `fetch` retries three times; the branch raised
+   MAX_RETRIES to 5. Replace the line with: "`fetch` retries up to five times,
+   with exponential backoff starting at 200 ms."
+
+## Open questions
+
+None.
+
+## Verification
+
+- `git diff main...feature/settings` read.
+- `python3 -c 'import app'` succeeds.
+
+## Residual risk
+
+No tests exist; behaviour of `fetch` under failure was not run.

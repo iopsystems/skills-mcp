@@ -57,5 +57,7 @@ boundaries.
 - [ ] Test three-way upgrades across multiple real project customizations.
 - [ ] Evaluate whether more templates justify catalog search, version selection, or
   a broader template registry API.
-- [ ] Evaluate coding-agent plugin and marketplace distribution only after local
-  adoption and upgrades are stable.
+- [x] Publish the repository skills as the `iop` Claude Code plugin
+  ([journal](journal/2026-10-21-claude-code-plugin.md)).
+- [ ] Package the vault and catalog skills as a plugin without listing them twice
+  alongside the server (see the journal entry's Open section).
