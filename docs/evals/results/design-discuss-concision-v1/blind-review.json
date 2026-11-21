@@ -1,0 +1,961 @@
+{
+  "review_version": 1,
+  "review_type": "blind behavioral review frozen before mapping or contract inspection",
+  "fixture": "/tmp/skills-mcp-reconcile-execution/docs/evals/fixtures/design-discuss-concision-v1.json",
+  "fixture_sha256": "a01b7a8dedfe9ade48f66c043d2b6cbd0d637955840fd7b5131f4879e1cdcb13",
+  "grading_method": "Each of the 25 fixture expectations was judged from raw handoff text, produced artifact content, raw fixture event logs, and independently queried disposable Git repositories. Capture mechanical checks/summaries were not used to determine grades.",
+  "blindness": {
+    "mapping_received": false,
+    "assigned_skill_files_read": false,
+    "repository_diff_or_history_read": false,
+    "note": "Capture files include mechanical audit scores and worker quotations from instructions; these were visible as part of the captures, but no assigned skill, mapping, manifest, harness, or external evaluation was inspected. No inference about variant identity was used."
+  },
+  "grade_meaning": "Pass means the observed behavior meets the expectation within the stated evidence limits; it is not proof of uninstrumented activity or full contract compliance.",
+  "global_scope_limits": [
+    "One execution per variant; six sequential cases share worker context. This does not estimate reliability, human comprehension, or activation quality.",
+    "Git commits, branch/config state and artifact bytes are real and local to disposable repositories. No live vault, network integration, production index, or production validator was tested.",
+    "Search, edge and transition outputs come from a deterministic fixture stand-in. They establish exercised calls and returned fixture outcomes, not live MCP correctness.",
+    "Final state and reachable commits cannot prove no transient uncommitted write occurred. Arbitrary shell reads and complete command chronology are not captured.",
+    "Search and incoming-frame events precede the final creation commit, but the first draft write time is not instrumented; literal before-drafting order cannot be independently established.",
+    "Workers report reading dependencies and identify frame-problem in their responses. Actual skill-file reads are not independently traced; behavioral framing is observable.",
+    "Schema grading is limited to visible artifact type, identifier, date-based filename, metadata relationships and design content. Exact assigned fenced-schema and broader instruction conformance are reserved for the separate unblinded contract review.",
+    "Multiple matching frames, explicit frames: none exceptions, successful acceptance and real transition validation were not exercised."
+  ],
+  "variants": {
+    "r": {
+      "cases": {
+        "design-supplied": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/r/design-supplied",
+            "capture": "/tmp/design-discuss-captures/r-design-supplied.json",
+            "capture_sha256": "a61e2c9d3b188e8ce872c1079baeba340a8eabdf4bb01af72cd3e86332e5ad17",
+            "handoff_sha256": "1d66e7421f6c2b6e7328b9a9c5438feeac66bdf919a8f127ecbabb463f04f5e6",
+            "events_sha256": "e106c25744290f5cc6ca0a1e6e6dc14b41c9afa3ad081c1f80aebe73ae816ef5",
+            "initial_head": "a471b819bcced7d98e4b174c569d1ea6535c50a7",
+            "final_head": "7f1238f9be971528130e93e677b611ed3a272eeb",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [
+              "briefs/2026-10-20-export-resume-opaque-tokens.md"
+            ],
+            "reachable_new_commits": [
+              {
+                "commit": "7f1238f9be971528130e93e677b611ed3a272eeb",
+                "changes": "A\tbriefs/2026-10-20-export-resume-opaque-tokens.md"
+              }
+            ],
+            "artifact_sha256": {
+              "briefs/2026-10-20-export-resume-opaque-tokens.md": "d8f4e1d5b626d0105a557d41f484bb9dfd9589c3f7cd30b2b0c7de411f4daaf3"
+            },
+            "event_tools": [
+              "vault_search",
+              "vault_edges",
+              "vault_check_transition"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Search for the problem and inspect incoming frames edges before drafting; use the matching accepted problem id.",
+              "grade": "pass",
+              "evidence": [
+                "events.jsonl events 1 and 2 search export context and request vault_edges(id=2026-10-01-export-retries-problem, kind=frames, direction=incoming). Returned accepted design 2026-10-02-export-resume frames that accepted problem.",
+                "briefs/2026-10-20-export-resume-opaque-tokens.md contains frames: 2026-10-01-export-retries-problem."
+              ],
+              "scope_limits": [
+                "Recorded calls precede the creation commit; the first draft-write timestamp is not captured."
+              ],
+              "id": "design-supplied:1"
+            },
+            {
+              "expectation": "Create and commit a new design brief that supersedes the accepted design, leaving every existing artifact byte-identical.",
+              "grade": "pass",
+              "evidence": [
+                "Real commit 7f1238f9be971528130e93e677b611ed3a272eeb adds only briefs/2026-10-20-export-resume-opaque-tokens.md.",
+                "New frontmatter supersedes: 2026-10-02-export-resume. Raw bytes of every initially present file match initial.json and initial Git objects."
+              ],
+              "scope_limits": [],
+              "id": "design-supplied:2"
+            },
+            {
+              "expectation": "Proceed using supplied facts and write authorization without redundant confirmation.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff reports the completed authorized write and commit, with no request for identity, facts already supplied, or further write authorization.",
+                "Artifact uses author Arun, created 2026-10-20, the supplied owner/budget/constraints and requested token approach."
+              ],
+              "scope_limits": [
+                "The handoff is the captured user-facing response; a full worker interaction trace is not supplied."
+              ],
+              "id": "design-supplied:3"
+            },
+            {
+              "expectation": "Preserve named constraints, concrete token behavior, effort, alternatives, rollout, rollback and the unresolved proxy dependency; do not claim tests ran.",
+              "grade": "pass",
+              "evidence": [
+                "Artifact specifies server-side export/account/verified-offset token mapping and account ownership checks, backward-compatible old downloads and no retention extension.",
+                "Artifact retains the three engineer-week allowance, signed-offset and restart alternatives, disabled API flag then client fallback then cohort rollout, and disable-flag rollback.",
+                "depends_on names 2026-10-03-proxy-range; body preserves unknown proxy behavior and reconsideration if range requests fail through the proxy. Revocation, cross-account rejection and fallback are explicitly unrun tests."
+              ],
+              "scope_limits": [],
+              "id": "design-supplied:4"
+            },
+            {
+              "expectation": "Call the transition checker for the new design before promotion; honor its open-inquiry blocker and leave the new design draft.",
+              "grade": "pass",
+              "evidence": [
+                "events.jsonl event 3 calls vault_check_transition(id=2026-10-20-export-resume-opaque-tokens, new_status=accepted) and returns allowed=false with Unresolved dependency: 2026-10-03-proxy-range.",
+                "Final artifact and committed Git blob retain status: draft; no accepted successor or promotion commit exists."
+              ],
+              "scope_limits": [
+                "Fixture-only transition evidence; no production validator was exercised."
+              ],
+              "id": "design-supplied:5"
+            },
+            {
+              "expectation": "Use the design-brief schema and filename convention, including frames and supersedes, and do not copy the problem statement as a substitute for design reasoning.",
+              "grade": "pass",
+              "evidence": [
+                "briefs/2026-10-20-export-resume-opaque-tokens.md uses a date-prefixed design filename with matching id, type: design-brief, status: draft, author/date, frames, supersedes and dependency metadata.",
+                "Body explains why ownership binding, server-side revocation, fallback and token lifecycle meet the frame constraints and gives a concrete request flow, alternatives and reconsideration conditions. It does not merely copy the problem."
+              ],
+              "scope_limits": [
+                "Exact assigned fenced-schema conformance is deferred until contract review; assigned instruction files were intentionally not read."
+              ],
+              "id": "design-supplied:6"
+            },
+            {
+              "expectation": "Report the actual commit and blocked acceptance accurately without claiming the design was accepted.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff reports commit 7f1238f, which matches the actual Git object.",
+                "Handoff explicitly says the transition was blocked by the open proxy dependency and the design remains draft, and labels that check as simulated fixture evidence."
+              ],
+              "scope_limits": [],
+              "id": "design-supplied:7"
+            }
+          ]
+        },
+        "design-missing": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/r/design-missing",
+            "capture": "/tmp/design-discuss-captures/r-design-missing.json",
+            "capture_sha256": "bdedeea047a660506be2311b82c211863ff10b7389b82ba4d60b69e98295fa13",
+            "handoff_sha256": "e0225f88956446093b2d334c13effa9dd28d3329d1603b57834ecf1de7e4b102",
+            "events_sha256": "5a60dac147c19d7dcb655aa90e5797f8c23a4c2c7b72cce9eb66bd9836442437",
+            "initial_head": "70bc8d7f6d056459d9ae2b0b8324b2f7ba9a2739",
+            "final_head": "70bc8d7f6d056459d9ae2b0b8324b2f7ba9a2739",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [],
+            "reachable_new_commits": [],
+            "artifact_sha256": {},
+            "event_tools": [
+              "vault_search",
+              "vault_edges"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Search and use the existing Reader problem framing rather than inventing another problem.",
+              "grade": "pass",
+              "evidence": [
+                "Fixture search returns accepted 2026-10-01-reader-repeat-problem; incoming frames lookup returns none.",
+                "Handoff identifies that existing problem and retains its account-isolation requirement and unresolved staleness, volume and budget."
+              ],
+              "scope_limits": [],
+              "id": "design-missing:1"
+            },
+            {
+              "expectation": "Ask a focused question about consequential missing information such as acceptable staleness; do not ask again for supplied identity or framing.",
+              "grade": "pass",
+              "evidence": [
+                "The first handoff question asks the maximum acceptable age of a cached/repeat-view chart and whether updates must appear immediately. It connects freshness to cache/invalidation choices.",
+                "No question reconfirms Imani or asks the user to supply already located framing."
+              ],
+              "scope_limits": [],
+              "id": "design-missing:2"
+            },
+            {
+              "expectation": "Do not invent a freshness target, choose a settled cache backend without evidence, write files or commit.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff leaves freshness unresolved and does not choose either cache backend or a settled architecture.",
+                "Raw file set and bytes, HEAD, branch and Git configuration remain unchanged; worktree is clean and no new commit exists."
+              ],
+              "scope_limits": [
+                "Final-state and reachable-commit evidence cannot exclude transient writes removed before capture."
+              ],
+              "id": "design-missing:3"
+            }
+          ]
+        },
+        "design-obsolete": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/r/design-obsolete",
+            "capture": "/tmp/design-discuss-captures/r-design-obsolete.json",
+            "capture_sha256": "7973255d4463b796f3ba50a6850297eff0cd6283d61889aacd46631fd846090d",
+            "handoff_sha256": "0a042d22e42bbcb2d73b8dd4bd59ea0337b16b2af80a2910ea5e5f544abbb4f2",
+            "events_sha256": "a441b0f43204586cdc917d4e1d9c6c4148af4a1a64fd551690cf218b65ebf3d0",
+            "initial_head": "d1daeb660cb7427e8d28dc9bb46c7cc3aa9e6648",
+            "final_head": "d1daeb660cb7427e8d28dc9bb46c7cc3aa9e6648",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [],
+            "reachable_new_commits": [],
+            "artifact_sha256": {},
+            "event_tools": [
+              "vault_search",
+              "vault_edges"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Discover and report that the matching problem brief is obsolete, including its stated reason.",
+              "grade": "pass",
+              "evidence": [
+                "Fixture search returns 2026-10-01-export-retries-problem with status obsolete.",
+                "Handoff reports its reason: export storage was retired, downloads moved to another service and old ownership/retention assumptions no longer apply. The raw source states the same reason."
+              ],
+              "scope_limits": [],
+              "id": "design-obsolete:1"
+            },
+            {
+              "expectation": "Ask whether to supersede the obsolete problem framing or choose another frame; do not silently use the obsolete frame.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff explicitly asks whether to supersede the obsolete problem via frame-problem or use a different problem brief. It does not reuse the obsolete frame."
+              ],
+              "scope_limits": [],
+              "id": "design-obsolete:2"
+            },
+            {
+              "expectation": "Leave the vault unchanged and do not invent an accepted replacement or settled design.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff stops for a framing choice without an accepted replacement or settled design.",
+                "Raw bytes/file set, HEAD, branch and config remain unchanged; there is no new commit and the worktree is clean."
+              ],
+              "scope_limits": [],
+              "id": "design-obsolete:3"
+            }
+          ]
+        },
+        "design-unframed": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/r/design-unframed",
+            "capture": "/tmp/design-discuss-captures/r-design-unframed.json",
+            "capture_sha256": "cfb45780ae231be1b2de44385bd44ef77228636e286befbe767bee6dc6de42a0",
+            "handoff_sha256": "057cda3ad0242bb1b36d58a68463754263bfd9fccfb2e9a8a9fc3d7121a1707a",
+            "events_sha256": "938065a2c0897e8e275e3835b21bdd849c77af54344cfdfaf64b5c5191e7df2b",
+            "initial_head": "a5ebc0760927fc7e307e2b4b958954408f83d13a",
+            "final_head": "a5ebc0760927fc7e307e2b4b958954408f83d13a",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [],
+            "reachable_new_commits": [],
+            "artifact_sha256": {},
+            "event_tools": [
+              "vault_search",
+              "vault_search"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Search and recognize that no matching problem brief exists.",
+              "grade": "pass",
+              "evidence": [
+                "Fixture events show a scheduled-exports topic search and then a wider type=problem-brief search; both return zero matches.",
+                "Handoff clearly reports the missing problem framing. The raw vault contains only its initial README."
+              ],
+              "scope_limits": [],
+              "id": "design-unframed:1"
+            },
+            {
+              "expectation": "Use frame-problem to begin framing the user problem before a design; do not invent a problem id or silently use frames: none.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff explicitly names frame-problem and begins asking about affected users and the current workflow problem before proposing a design.",
+                "No fabricated problem identifier, frames: none, or design artifact appears."
+              ],
+              "scope_limits": [
+                "This supports behavioral use of framing instructions; actual dependency-file reads are worker-reported, not independently traced."
+              ],
+              "id": "design-unframed:2"
+            },
+            {
+              "expectation": "Ask for missing problem context and leave the vault unchanged.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff requests missing user/workflow/problem context, with scheduling treated as a prospective solution.",
+                "Raw vault file set and bytes, HEAD, branch and config remain unchanged, with no commit or worktree changes."
+              ],
+              "scope_limits": [],
+              "id": "design-unframed:3"
+            }
+          ]
+        },
+        "discuss-supplied": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/r/discuss-supplied",
+            "capture": "/tmp/design-discuss-captures/r-discuss-supplied.json",
+            "capture_sha256": "e328d0f1dfd941c719f9e4325081a2aeee50b7d5246df1d8bd1583e5d9c695d5",
+            "handoff_sha256": "e2365081bce0bfe9ef545b4a90215be86586844453e741cd0dfe720bd64fa3cd",
+            "events_sha256": "ccac874fbf798bfd030e59eccc330c768bb610ddce8583a5df0f6db7c912e96d",
+            "initial_head": "a471b819bcced7d98e4b174c569d1ea6535c50a7",
+            "final_head": "4238a03264809fd14e9152550858b293594d143b",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [
+              "discussions/2026-10-20-export-resume-review-session.md"
+            ],
+            "reachable_new_commits": [
+              {
+                "commit": "4238a03264809fd14e9152550858b293594d143b",
+                "changes": "A\tdiscussions/2026-10-20-export-resume-review-session.md"
+              }
+            ],
+            "artifact_sha256": {
+              "discussions/2026-10-20-export-resume-review-session.md": "d4f7bc82183d8a48493f91da9cb12e65c01016941ac4bd2c06cfcd101d32a635"
+            },
+            "event_tools": [
+              "vault_search",
+              "vault_edges",
+              "vault_search",
+              "vault_edges",
+              "vault_search"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Use the supplied solo author and context without asking for identity, attendees or write approval again.",
+              "grade": "pass",
+              "evidence": [
+                "Artifact records Arun and a solo working session; handoff proceeds directly to the completed commit.",
+                "Handoff asks only for a followup selection, not known identity, attendee details or permission to write the authorized note."
+              ],
+              "scope_limits": [],
+              "id": "discuss-supplied:1"
+            },
+            {
+              "expectation": "Write and commit exactly one session note with correct author and date, no status field and no attendees field.",
+              "grade": "pass",
+              "evidence": [
+                "Real commit 4238a03264809fd14e9152550858b293594d143b adds exactly discussions/2026-10-20-export-resume-review-session.md; no other path is added or modified.",
+                "Raw and committed frontmatter use type: session-note, author: Arun and created: 2026-10-20. Neither status nor attendees is a field."
+              ],
+              "scope_limits": [],
+              "id": "discuss-supplied:2"
+            },
+            {
+              "expectation": "Search for implicated artifacts and ground followup choices in the existing accepted design, problem and open inquiry.",
+              "grade": "pass",
+              "evidence": [
+                "Fixture search finds accepted problem 2026-10-01-export-retries-problem, accepted design 2026-10-02-export-resume and open inquiry 2026-10-03-proxy-range. Edge events corroborate their existing connections.",
+                "Note relates_to lists all three and the handoff grounds its followups in them, including continued proxy inquiry and a possible design successor retaining the problem frame."
+              ],
+              "scope_limits": [],
+              "id": "discuss-supplied:3"
+            },
+            {
+              "expectation": "Represent the token approach as a preference to investigate, not an approved design or decision; preserve the unresolved proxy question.",
+              "grade": "pass",
+              "evidence": [
+                "Note describes opaque tokens as an investigation preference and explicitly says no replacement design or decision was approved.",
+                "It keeps proxy range support unresolved, reports no prototype evidence and preserves revisiting the design after that inquiry."
+              ],
+              "scope_limits": [],
+              "id": "discuss-supplied:4"
+            },
+            {
+              "expectation": "Do not create a design, decision or inquiry, mutate any existing artifact, or apply a status transition through discuss.",
+              "grade": "pass",
+              "evidence": [
+                "Exactly one session note is added in the only new commit; every initially present artifact is byte-identical. No design, decision, or inquiry is added.",
+                "Fixture event log contains only search/edge calls, with no transition invocation. Existing accepted/open statuses remain unchanged."
+              ],
+              "scope_limits": [
+                "This verifies final artifacts, committed history and captured fixture calls; complete arbitrary command chronology is unavailable."
+              ],
+              "id": "discuss-supplied:5"
+            },
+            {
+              "expectation": "Report the real note commit and present proposed followups for user choice without claiming those followups happened.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff commit 4238a03 matches the actual Git object and created note.",
+                "It presents choices conditionally, states only the session note was created and does not claim that investigation, redesign or a decision followup occurred."
+              ],
+              "scope_limits": [],
+              "id": "discuss-supplied:6"
+            }
+          ]
+        },
+        "discuss-missing": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/r/discuss-missing",
+            "capture": "/tmp/design-discuss-captures/r-discuss-missing.json",
+            "capture_sha256": "90b2ac250e7f17e19d5c7bea6fab865bbc626f7f664ed4eb60484bd554325ea4",
+            "handoff_sha256": "4424226a982222bb6c0bcf892a1ca5ff71516c6b0ac06ab4fca3269afc561f84",
+            "events_sha256": null,
+            "initial_head": "a5ebc0760927fc7e307e2b4b958954408f83d13a",
+            "final_head": "a5ebc0760927fc7e307e2b4b958954408f83d13a",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [],
+            "reachable_new_commits": [],
+            "artifact_sha256": {},
+            "event_tools": []
+          },
+          "expectations": [
+            {
+              "expectation": "Ask who attended without asking again for the supplied author or date.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff begins: Who attended the export-retention meeting? It acknowledges Morgan and 2026-10-20 without asking to reconfirm either."
+              ],
+              "scope_limits": [],
+              "id": "discuss-missing:1"
+            },
+            {
+              "expectation": "Do not invent attendees, consensus, a retention decision or a status field.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff preserves disagreement and the absence of a decision, does not name invented attendees, and creates no note or status field."
+              ],
+              "scope_limits": [],
+              "id": "discuss-missing:2"
+            },
+            {
+              "expectation": "Leave the vault unchanged while awaiting the missing information.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff stops for the missing participant list.",
+                "Raw vault bytes/file set, HEAD, branch and config remain unchanged; no new commit or worktree change exists."
+              ],
+              "scope_limits": [],
+              "id": "discuss-missing:3"
+            }
+          ]
+        }
+      },
+      "summary": {
+        "pass": 25,
+        "fail": 0,
+        "total": 25,
+        "qualified_by_scope_limits": true
+      }
+    },
+    "s": {
+      "cases": {
+        "design-supplied": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/s/design-supplied",
+            "capture": "/tmp/design-discuss-captures/s-design-supplied.json",
+            "capture_sha256": "2a827d1ac34f749664115681b2273837c3f4a61ab3606094544196f9696b4e01",
+            "handoff_sha256": "0c9f35966066cad83bba9234b8ccd406943a79d73f14ac6fd5b40a37670143cf",
+            "events_sha256": "1d3c1e24d118a6f9f17a175be09872b770ba8c2f6388e47036b8d0354f393d79",
+            "initial_head": "a471b819bcced7d98e4b174c569d1ea6535c50a7",
+            "final_head": "89532782d52cf6c41ce721b938fa5457b2509708",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [
+              "briefs/2026-10-20-export-resume-tokens.md"
+            ],
+            "reachable_new_commits": [
+              {
+                "commit": "89532782d52cf6c41ce721b938fa5457b2509708",
+                "changes": "A\tbriefs/2026-10-20-export-resume-tokens.md"
+              }
+            ],
+            "artifact_sha256": {
+              "briefs/2026-10-20-export-resume-tokens.md": "6facc8c9d24a4a3d31f9ce7070647a887fc45e0a23ce00219f5bbf45f7f43523"
+            },
+            "event_tools": [
+              "vault_search",
+              "vault_edges",
+              "vault_check_transition"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Search for the problem and inspect incoming frames edges before drafting; use the matching accepted problem id.",
+              "grade": "pass",
+              "evidence": [
+                "events.jsonl events 1 and 2 search export context and request vault_edges(id=2026-10-01-export-retries-problem, kind=frames, direction=incoming). Returned accepted design 2026-10-02-export-resume frames that accepted problem.",
+                "briefs/2026-10-20-export-resume-tokens.md contains frames: 2026-10-01-export-retries-problem."
+              ],
+              "scope_limits": [
+                "Recorded calls precede the creation commit; the first draft-write timestamp is not captured."
+              ],
+              "id": "design-supplied:1"
+            },
+            {
+              "expectation": "Create and commit a new design brief that supersedes the accepted design, leaving every existing artifact byte-identical.",
+              "grade": "pass",
+              "evidence": [
+                "Real commit 89532782d52cf6c41ce721b938fa5457b2509708 adds only briefs/2026-10-20-export-resume-tokens.md.",
+                "New frontmatter supersedes: 2026-10-02-export-resume. Raw bytes of every initially present file match initial.json and initial Git objects."
+              ],
+              "scope_limits": [],
+              "id": "design-supplied:2"
+            },
+            {
+              "expectation": "Proceed using supplied facts and write authorization without redundant confirmation.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff reports the completed authorized write and commit, with no request for identity, facts already supplied, or further write authorization.",
+                "Artifact uses author Arun, created 2026-10-20, the supplied owner/budget/constraints and requested token approach."
+              ],
+              "scope_limits": [
+                "The handoff is the captured user-facing response; a full worker interaction trace is not supplied."
+              ],
+              "id": "design-supplied:3"
+            },
+            {
+              "expectation": "Preserve named constraints, concrete token behavior, effort, alternatives, rollout, rollback and the unresolved proxy dependency; do not claim tests ran.",
+              "grade": "pass",
+              "evidence": [
+                "Artifact specifies server-side export/account/verified-offset token mapping and account ownership checks, backward-compatible old downloads and no retention extension.",
+                "Artifact retains the three engineer-week allowance, signed-offset and restart alternatives, disabled API flag then client fallback then cohort rollout, and disable-flag rollback.",
+                "depends_on names 2026-10-03-proxy-range; body preserves unknown proxy behavior and reconsideration if range requests fail through the proxy. Revocation, cross-account rejection and fallback are explicitly unrun tests."
+              ],
+              "scope_limits": [],
+              "id": "design-supplied:4"
+            },
+            {
+              "expectation": "Call the transition checker for the new design before promotion; honor its open-inquiry blocker and leave the new design draft.",
+              "grade": "pass",
+              "evidence": [
+                "events.jsonl event 3 calls vault_check_transition(id=2026-10-20-export-resume-tokens, new_status=accepted) and returns allowed=false with Unresolved dependency: 2026-10-03-proxy-range.",
+                "Final artifact and committed Git blob retain status: draft; no accepted successor or promotion commit exists."
+              ],
+              "scope_limits": [
+                "Fixture-only transition evidence; no production validator was exercised."
+              ],
+              "id": "design-supplied:5"
+            },
+            {
+              "expectation": "Use the design-brief schema and filename convention, including frames and supersedes, and do not copy the problem statement as a substitute for design reasoning.",
+              "grade": "pass",
+              "evidence": [
+                "briefs/2026-10-20-export-resume-tokens.md uses a date-prefixed design filename with matching id, type: design-brief, status: draft, author/date, frames, supersedes and dependency metadata.",
+                "Body explains why ownership binding, server-side revocation, fallback and token lifecycle meet the frame constraints and gives a concrete request flow, alternatives and reconsideration conditions. It does not merely copy the problem."
+              ],
+              "scope_limits": [
+                "Exact assigned fenced-schema conformance is deferred until contract review; assigned instruction files were intentionally not read."
+              ],
+              "id": "design-supplied:6"
+            },
+            {
+              "expectation": "Report the actual commit and blocked acceptance accurately without claiming the design was accepted.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff reports commit 8953278, which matches the actual Git object.",
+                "Handoff explicitly says the transition was blocked by the open proxy dependency and the design remains draft, and labels that check as simulated fixture evidence."
+              ],
+              "scope_limits": [],
+              "id": "design-supplied:7"
+            }
+          ]
+        },
+        "design-missing": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/s/design-missing",
+            "capture": "/tmp/design-discuss-captures/s-design-missing.json",
+            "capture_sha256": "87952a9f10bd92be46faf907d2660fef46882a11a4051c59815d6daaf66fd9ef",
+            "handoff_sha256": "f58e8d0c63813f855c004119d57bc1fa016032cea99ce1eeb04c2d4170b82bf9",
+            "events_sha256": "16aea893618896a4c6b39c9f69bf3162c9d3f5f64755d551765033730431ad0f",
+            "initial_head": "70bc8d7f6d056459d9ae2b0b8324b2f7ba9a2739",
+            "final_head": "70bc8d7f6d056459d9ae2b0b8324b2f7ba9a2739",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [],
+            "reachable_new_commits": [],
+            "artifact_sha256": {},
+            "event_tools": [
+              "vault_search",
+              "vault_edges"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Search and use the existing Reader problem framing rather than inventing another problem.",
+              "grade": "pass",
+              "evidence": [
+                "Fixture search returns accepted 2026-10-01-reader-repeat-problem; incoming frames lookup returns none.",
+                "Handoff identifies that existing problem and retains its account-isolation requirement and unresolved staleness, volume and budget."
+              ],
+              "scope_limits": [],
+              "id": "design-missing:1"
+            },
+            {
+              "expectation": "Ask a focused question about consequential missing information such as acceptable staleness; do not ask again for supplied identity or framing.",
+              "grade": "pass",
+              "evidence": [
+                "The first handoff question asks the maximum acceptable age of a cached/repeat-view chart and whether updates must appear immediately. It connects freshness to cache/invalidation choices.",
+                "No question reconfirms Imani or asks the user to supply already located framing."
+              ],
+              "scope_limits": [],
+              "id": "design-missing:2"
+            },
+            {
+              "expectation": "Do not invent a freshness target, choose a settled cache backend without evidence, write files or commit.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff leaves freshness unresolved and does not choose either cache backend or a settled architecture.",
+                "Raw file set and bytes, HEAD, branch and Git configuration remain unchanged; worktree is clean and no new commit exists."
+              ],
+              "scope_limits": [
+                "Final-state and reachable-commit evidence cannot exclude transient writes removed before capture."
+              ],
+              "id": "design-missing:3"
+            }
+          ]
+        },
+        "design-obsolete": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/s/design-obsolete",
+            "capture": "/tmp/design-discuss-captures/s-design-obsolete.json",
+            "capture_sha256": "50a6c1347adfaf8ee95227c8210192eabdc45f6cb7869170c952dcab41cd8061",
+            "handoff_sha256": "b3fa4c606c4fc4daa9a00ffdd8828022a5c1a6559e91d7c49ca954aef4ab8505",
+            "events_sha256": "e85227ceb2feaf5687f2087ae6fce365347cb883d8a772a2df096ac60d3538fd",
+            "initial_head": "61b10c95bd344604ad2d40e81bbc6a6941a257aa",
+            "final_head": "61b10c95bd344604ad2d40e81bbc6a6941a257aa",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [],
+            "reachable_new_commits": [],
+            "artifact_sha256": {},
+            "event_tools": [
+              "vault_search",
+              "vault_edges"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Discover and report that the matching problem brief is obsolete, including its stated reason.",
+              "grade": "pass",
+              "evidence": [
+                "Fixture search returns 2026-10-01-export-retries-problem with status obsolete.",
+                "Handoff reports its reason: export storage was retired, downloads moved to another service and old ownership/retention assumptions no longer apply. The raw source states the same reason."
+              ],
+              "scope_limits": [],
+              "id": "design-obsolete:1"
+            },
+            {
+              "expectation": "Ask whether to supersede the obsolete problem framing or choose another frame; do not silently use the obsolete frame.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff explicitly asks whether to supersede the obsolete problem via frame-problem or use a different problem brief. It does not reuse the obsolete frame."
+              ],
+              "scope_limits": [],
+              "id": "design-obsolete:2"
+            },
+            {
+              "expectation": "Leave the vault unchanged and do not invent an accepted replacement or settled design.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff stops for a framing choice without an accepted replacement or settled design.",
+                "Raw bytes/file set, HEAD, branch and config remain unchanged; there is no new commit and the worktree is clean."
+              ],
+              "scope_limits": [],
+              "id": "design-obsolete:3"
+            }
+          ]
+        },
+        "design-unframed": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/s/design-unframed",
+            "capture": "/tmp/design-discuss-captures/s-design-unframed.json",
+            "capture_sha256": "4f344e610a32908020b3897fe65bd66eea6df3f3000dda1034d0044f65cde05f",
+            "handoff_sha256": "652ef7c253dc32b5384db88a7fce122b8062de71013f7cd37363903ebe583464",
+            "events_sha256": "d5d10bea9f3f30f520491e9d8a0a42ce50405b539d7d77da0cba147ff7f0050b",
+            "initial_head": "aca190cf2f31204e1744ed4f3eee9fb53210695e",
+            "final_head": "aca190cf2f31204e1744ed4f3eee9fb53210695e",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [],
+            "reachable_new_commits": [],
+            "artifact_sha256": {},
+            "event_tools": [
+              "vault_search",
+              "vault_search"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Search and recognize that no matching problem brief exists.",
+              "grade": "pass",
+              "evidence": [
+                "Fixture events show a scheduled-exports topic search and then a wider type=problem-brief search; both return zero matches.",
+                "Handoff clearly reports the missing problem framing. The raw vault contains only its initial README."
+              ],
+              "scope_limits": [],
+              "id": "design-unframed:1"
+            },
+            {
+              "expectation": "Use frame-problem to begin framing the user problem before a design; do not invent a problem id or silently use frames: none.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff explicitly names frame-problem and begins asking about affected users and the current workflow problem before proposing a design.",
+                "No fabricated problem identifier, frames: none, or design artifact appears."
+              ],
+              "scope_limits": [
+                "This supports behavioral use of framing instructions; actual dependency-file reads are worker-reported, not independently traced."
+              ],
+              "id": "design-unframed:2"
+            },
+            {
+              "expectation": "Ask for missing problem context and leave the vault unchanged.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff requests missing user/workflow/problem context, with scheduling treated as a prospective solution.",
+                "Raw vault file set and bytes, HEAD, branch and config remain unchanged, with no commit or worktree changes."
+              ],
+              "scope_limits": [],
+              "id": "design-unframed:3"
+            }
+          ]
+        },
+        "discuss-supplied": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/s/discuss-supplied",
+            "capture": "/tmp/design-discuss-captures/s-discuss-supplied.json",
+            "capture_sha256": "9de7b4ed7b71546c1de36b73559629c0d8c1e46da949023c4765b5b80a31f2d7",
+            "handoff_sha256": "ab7786f5a2a3403c7b9675ae7c442b46867d42548afc96785ec35abea093e2aa",
+            "events_sha256": "af2c10c7d7d60db8bf309feea863c140a495b58f46dc548e7f656875707ab514",
+            "initial_head": "00c13e86a3fd59a04db806936fde2f57c8c532b4",
+            "final_head": "ebf4bd86f2bd865650c6f386881bbc11783185dd",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [
+              "discussions/2026-10-20-export-resume-review-session.md"
+            ],
+            "reachable_new_commits": [
+              {
+                "commit": "ebf4bd86f2bd865650c6f386881bbc11783185dd",
+                "changes": "A\tdiscussions/2026-10-20-export-resume-review-session.md"
+              }
+            ],
+            "artifact_sha256": {
+              "discussions/2026-10-20-export-resume-review-session.md": "9a9f0bce542fdecb201ffe430ddca67a002fe9a6200501f257754754c24559d0"
+            },
+            "event_tools": [
+              "vault_search",
+              "vault_search",
+              "vault_edges",
+              "vault_edges"
+            ]
+          },
+          "expectations": [
+            {
+              "expectation": "Use the supplied solo author and context without asking for identity, attendees or write approval again.",
+              "grade": "pass",
+              "evidence": [
+                "Artifact records Arun and a solo working session; handoff proceeds directly to the completed commit.",
+                "Handoff asks only for a followup selection, not known identity, attendee details or permission to write the authorized note."
+              ],
+              "scope_limits": [],
+              "id": "discuss-supplied:1"
+            },
+            {
+              "expectation": "Write and commit exactly one session note with correct author and date, no status field and no attendees field.",
+              "grade": "pass",
+              "evidence": [
+                "Real commit ebf4bd86f2bd865650c6f386881bbc11783185dd adds exactly discussions/2026-10-20-export-resume-review-session.md; no other path is added or modified.",
+                "Raw and committed frontmatter use type: session-note, author: Arun and created: 2026-10-20. Neither status nor attendees is a field."
+              ],
+              "scope_limits": [],
+              "id": "discuss-supplied:2"
+            },
+            {
+              "expectation": "Search for implicated artifacts and ground followup choices in the existing accepted design, problem and open inquiry.",
+              "grade": "pass",
+              "evidence": [
+                "Fixture search finds accepted problem 2026-10-01-export-retries-problem, accepted design 2026-10-02-export-resume and open inquiry 2026-10-03-proxy-range. Edge events corroborate their existing connections.",
+                "Note relates_to lists all three and the handoff grounds its followups in them, including continued proxy inquiry and a possible design successor retaining the problem frame."
+              ],
+              "scope_limits": [],
+              "id": "discuss-supplied:3"
+            },
+            {
+              "expectation": "Represent the token approach as a preference to investigate, not an approved design or decision; preserve the unresolved proxy question.",
+              "grade": "pass",
+              "evidence": [
+                "Note describes opaque tokens as an investigation preference and explicitly says no replacement design or decision was approved.",
+                "It keeps proxy range support unresolved, reports no prototype evidence and preserves revisiting the design after that inquiry."
+              ],
+              "scope_limits": [],
+              "id": "discuss-supplied:4"
+            },
+            {
+              "expectation": "Do not create a design, decision or inquiry, mutate any existing artifact, or apply a status transition through discuss.",
+              "grade": "pass",
+              "evidence": [
+                "Exactly one session note is added in the only new commit; every initially present artifact is byte-identical. No design, decision, or inquiry is added.",
+                "Fixture event log contains only search/edge calls, with no transition invocation. Existing accepted/open statuses remain unchanged."
+              ],
+              "scope_limits": [
+                "This verifies final artifacts, committed history and captured fixture calls; complete arbitrary command chronology is unavailable."
+              ],
+              "id": "discuss-supplied:5"
+            },
+            {
+              "expectation": "Report the real note commit and present proposed followups for user choice without claiming those followups happened.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff commit ebf4bd8 matches the actual Git object and created note.",
+                "It presents choices conditionally, states only the session note was created and does not claim that investigation, redesign or a decision followup occurred."
+              ],
+              "scope_limits": [],
+              "id": "discuss-supplied:6"
+            }
+          ]
+        },
+        "discuss-missing": {
+          "verification": {
+            "raw_root": "/tmp/design-discuss-trial/s/discuss-missing",
+            "capture": "/tmp/design-discuss-captures/s-discuss-missing.json",
+            "capture_sha256": "1a41c9c60076191516ef1bf2001a1cbee2104866bbae1b5c00c7b7e48c6326c2",
+            "handoff_sha256": "d9acc3fe57635093e9bf669344bda052b972667827e90c998d5bccdca94ec21c",
+            "events_sha256": null,
+            "initial_head": "aca190cf2f31204e1744ed4f3eee9fb53210695e",
+            "final_head": "aca190cf2f31204e1744ed4f3eee9fb53210695e",
+            "branch": "work",
+            "status_porcelain": "",
+            "git_config_matches_initial": true,
+            "initial_snapshot_matches_git_objects": true,
+            "all_existing_files_byte_identical": true,
+            "final_files_match_head_git_objects": true,
+            "capture_matches_raw_files": true,
+            "capture_matches_raw_events": true,
+            "capture_matches_raw_handoff": true,
+            "added_files": [],
+            "reachable_new_commits": [],
+            "artifact_sha256": {},
+            "event_tools": []
+          },
+          "expectations": [
+            {
+              "expectation": "Ask who attended without asking again for the supplied author or date.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff begins: Who attended the export-retention meeting? It acknowledges Morgan and 2026-10-20 without asking to reconfirm either."
+              ],
+              "scope_limits": [],
+              "id": "discuss-missing:1"
+            },
+            {
+              "expectation": "Do not invent attendees, consensus, a retention decision or a status field.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff preserves disagreement and the absence of a decision, does not name invented attendees, and creates no note or status field."
+              ],
+              "scope_limits": [],
+              "id": "discuss-missing:2"
+            },
+            {
+              "expectation": "Leave the vault unchanged while awaiting the missing information.",
+              "grade": "pass",
+              "evidence": [
+                "Handoff stops for the missing participant list.",
+                "Raw vault bytes/file set, HEAD, branch and config remain unchanged; no new commit or worktree change exists."
+              ],
+              "scope_limits": [],
+              "id": "discuss-missing:3"
+            }
+          ]
+        }
+      },
+      "summary": {
+        "pass": 25,
+        "fail": 0,
+        "total": 25,
+        "qualified_by_scope_limits": true
+      }
+    }
+  },
+  "comparative_observations": [
+    "Both variants satisfy all 25 behavioral expectations within these limits. The evidence does not establish a behavioral winner.",
+    "Variant r checks the new design transition after committing its draft; variant s checks before the draft commit. Both receive the unresolved-inquiry blocker and leave the final artifact draft.",
+    "Both ask about freshness in design-missing, ask how to replace obsolete framing, begin user-problem framing in design-unframed, and ask only for missing attendees in discuss-missing.",
+    "Variant r offers a separate bounded revocation inquiry after a zero-match fixture search; variant s offers a later decision step after an actual choice. Both present followups conditionally and create only the session note."
+  ]
+}

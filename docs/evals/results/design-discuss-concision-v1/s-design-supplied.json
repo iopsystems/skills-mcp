@@ -1,0 +1,139 @@
+{
+  "case": "design-supplied",
+  "request": "Use propose-design at /tmp/design-discuss-trial/s/skills/propose-design.md.\nLocal dependency instructions are in /tmp/design-discuss-trial/s/skills.\n\nUser request:\nRevise the export resume design to use opaque, account-bound tokens instead of signed client offsets. I am Arun, the author and API owner. Today is 2026-10-20. You are authorized to write and commit the required new design brief in this disposable vault without asking again. Try accepting it only if the transition check permits it. Do not change other existing artifacts. Use the existing export-retries problem framing. Keep backward-compatible downloads and no added retention. Allow three engineer-weeks. The token maps to an export id, account id and verified offset; requests verify account ownership before resuming. Roll out API capability behind a disabled flag, then a client with old-download fallback, then a small cohort. Roll back by disabling the flag. Alternatives: signed offsets complicate revocation, and restarting repeats expensive work. Test token revocation, cross-account rejection and fallback; none of those tests has run. The proposed design depends on the open proxy-range inquiry because proxy support is still unknown. Reconsider the approach if the prototype shows range requests cannot pass the supported proxy.\n\nVault: /tmp/design-discuss-trial/s/design-supplied/vault\nSave your user-facing response to /tmp/design-discuss-trial/s/design-supplied/handoff.md.\nSave proposed diffs or temporary notes beside the vault, not inside it.\n\nThis is a local execution trial. Perform authorized file writes and Git commits\nin this disposable vault. There is no remote. No network, live vault or GitHub\naccess is allowed. Git config identifies the fixture owner, not the note author.\nFor vault reads/checks, use this fixture stand-in instead of live MCP calls:\npython /tmp/skills-mcp-reconcile-execution/docs/evals/design-discuss-eval.py tool /tmp/design-discuss-trial/s/design-supplied TOOL 'JSON'\nTOOL is vault_search, vault_edges or vault_check_transition. Arguments follow\nthe schemas in the supplied vault-search skill. Search uses simple token overlap;\nedges cover frames, supersedes, depends_on and relates_to. Transition checks\nonly enforce the fixture's unresolved frame/dependency blockers. These are\nsimulated tool results, not production-validator evidence. Read returned files\nfor their full content. The tool writes its own event log outside the vault.\n\nRead only this case, assigned skill/dependencies and tool results. Do not read\nthe harness source, protocol, initial.json, other cases, variants or history\noutside this vault. Do not modify instructions, harness, initial state or logs.\nIf user input is needed, save the question in handoff.md and stop the case.\nDo not wait for a simulated answer or infer approval from the test environment.\n",
+  "initial": {
+    "head": "a471b819bcced7d98e4b174c569d1ea6535c50a7",
+    "branch": "work",
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n",
+    "files": {
+      "README.md": "# Disposable knowledge vault\n",
+      "briefs/2026-10-01-export-retries-problem.md": "---\nid: 2026-10-01-export-retries-problem\ntype: problem-brief\nstatus: accepted\nauthor: Arun\ncreated: '2026-10-01'\n---\n\n# Export retries\n\nCustomers restart hour-long exports after dropped connections. Resume must preserve account isolation, existing downloads and retention limits.\n",
+      "briefs/2026-10-02-export-resume.md": "---\nid: 2026-10-02-export-resume\ntype: design-brief\nstatus: accepted\nauthor: Arun\ncreated: '2026-10-02'\nframes: 2026-10-01-export-retries-problem\n---\n\n# Export resume\n\nUse signed client offsets for resumption. Validate account ownership and retain existing downloads. Revisit if revocation cannot be enforced.\n",
+      "inquiries/2026-10-03-proxy-range.md": "---\nid: 2026-10-03-proxy-range\ntype: inquiry\nstatus: open\nauthor: Arun\ncreated: '2026-10-03'\nrelates_to:\n- 2026-10-01-export-retries-problem\n---\n\n# Proxy range support\n\nDetermine whether supported proxies preserve range requests. No prototype result is available.\n"
+    },
+    "status": ""
+  },
+  "final": {
+    "head": "89532782d52cf6c41ce721b938fa5457b2509708",
+    "branch": "work",
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n",
+    "files": {
+      "README.md": "# Disposable knowledge vault\n",
+      "briefs/2026-10-01-export-retries-problem.md": "---\nid: 2026-10-01-export-retries-problem\ntype: problem-brief\nstatus: accepted\nauthor: Arun\ncreated: '2026-10-01'\n---\n\n# Export retries\n\nCustomers restart hour-long exports after dropped connections. Resume must preserve account isolation, existing downloads and retention limits.\n",
+      "briefs/2026-10-02-export-resume.md": "---\nid: 2026-10-02-export-resume\ntype: design-brief\nstatus: accepted\nauthor: Arun\ncreated: '2026-10-02'\nframes: 2026-10-01-export-retries-problem\n---\n\n# Export resume\n\nUse signed client offsets for resumption. Validate account ownership and retain existing downloads. Revisit if revocation cannot be enforced.\n",
+      "briefs/2026-10-20-export-resume-tokens.md": "---\nid: 2026-10-20-export-resume-tokens\ntype: design-brief\nstatus: draft\nauthor: Arun\ncreated: '2026-10-20'\nframes: 2026-10-01-export-retries-problem\nscopes: []\nsupersedes: 2026-10-02-export-resume\nrelates_to: []\nconflicts_with: []\ndepends_on: [2026-10-03-proxy-range]\ntags: [exports, resume]\n---\n\n# Export resume with account-bound tokens\n\nReplace signed client offsets with opaque, account-bound resume tokens. Each token maps server-side to an export id, account id and verified offset. Authenticate the request and verify account ownership before resuming. This successor design frames the accepted export-retries problem and leaves the existing accepted design untouched.\n\n## Rationale\n\nThe frame requires account isolation, existing downloads and unchanged retention limits. Account-bound lookup and ownership checks protect isolation; old-download fallback preserves compatibility. Resume reuses retained export data within existing retention limits and does not extend those limits. Server-side token revocation avoids the revocation complexity of signed offsets.\n\n## Concrete design\n\nAn illustrative token record is `{token: <opaque value>, export_id: E, account_id: A, verified_offset: N}`. The API accepts the token with an authenticated resume request. It looks up the record, rejects revoked or unknown tokens, verifies that the requesting account owns the export and matches A, and resumes from the server-verified N. A client-provided offset cannot override N. Expired export data is unavailable for resume; token state must not extend export retention.\n\nToken creation and advancement must use verified offsets. The prototype will establish the supported proxy's range behavior before the implementation is considered ready. That unresolved question is tracked by the open proxy-range inquiry and is a dependency of this design.\n\nRoll out the API capability behind a disabled flag, then ship a client with old-download fallback, then enable a small cohort. Roll back by disabling the flag, leaving old downloads usable. Plan tests for token revocation, cross-account rejection and old-download fallback. None of these tests has run; proxy support is also unverified.\n\n## Cost and risks\n\nBudget three engineer-weeks for API/token handling, client fallback, the proxy prototype and validation. Arun is the author and API owner; API and client engineering participation plus validation support are required, with individual assignments still to be arranged. The budget is an allowance rather than measured delivery evidence. Main risks are proxy incompatibility, token lifecycle correctness and fallback regressions. Download compatibility and unchanged retention are release requirements.\n\n## Alternatives\n\n- Signed client offsets, the existing design: complicate revocation and are replaced by server-managed opaque tokens.\n- Restart from the beginning, including keeping current behavior: preserves the simple download path but repeats expensive work after a dropped connection and does not address the framed problem.\n\n## Reconsideration\n\nReconsider or supersede this approach if the prototype shows that range requests cannot pass the supported proxy. Also revisit if account isolation, revocation, fallback or existing retention limits cannot be preserved within the three-engineer-week allowance. The open proxy inquiry and unrun tests are unresolved evidence, not successful validation.\n",
+      "inquiries/2026-10-03-proxy-range.md": "---\nid: 2026-10-03-proxy-range\ntype: inquiry\nstatus: open\nauthor: Arun\ncreated: '2026-10-03'\nrelates_to:\n- 2026-10-01-export-retries-problem\n---\n\n# Proxy range support\n\nDetermine whether supported proxies preserve range requests. No prototype result is available.\n"
+    },
+    "status": ""
+  },
+  "new_files": [
+    "briefs/2026-10-20-export-resume-tokens.md"
+  ],
+  "commits": {
+    "89532782d52cf6c41ce721b938fa5457b2509708": "A\tbriefs/2026-10-20-export-resume-tokens.md"
+  },
+  "events": [
+    {
+      "tool": "vault_search",
+      "arguments": {
+        "topic": "export resume retries token proxy"
+      },
+      "result": {
+        "count": 3,
+        "matches": [
+          {
+            "id": "2026-10-01-export-retries-problem",
+            "type": "problem-brief",
+            "status": "accepted",
+            "author": "Arun",
+            "created": "2026-10-01",
+            "path": "briefs/2026-10-01-export-retries-problem.md",
+            "title": "Export retries"
+          },
+          {
+            "id": "2026-10-02-export-resume",
+            "type": "design-brief",
+            "status": "accepted",
+            "author": "Arun",
+            "created": "2026-10-02",
+            "frames": "2026-10-01-export-retries-problem",
+            "path": "briefs/2026-10-02-export-resume.md",
+            "title": "Export resume"
+          },
+          {
+            "id": "2026-10-03-proxy-range",
+            "type": "inquiry",
+            "status": "open",
+            "author": "Arun",
+            "created": "2026-10-03",
+            "relates_to": [
+              "2026-10-01-export-retries-problem"
+            ],
+            "path": "inquiries/2026-10-03-proxy-range.md",
+            "title": "Proxy range support"
+          }
+        ]
+      },
+      "head": "a471b819bcced7d98e4b174c569d1ea6535c50a7"
+    },
+    {
+      "tool": "vault_edges",
+      "arguments": {
+        "id": "2026-10-01-export-retries-problem",
+        "kind": "frames",
+        "direction": "incoming"
+      },
+      "result": {
+        "id": "2026-10-01-export-retries-problem",
+        "count": 1,
+        "edges": [
+          {
+            "from_id": "2026-10-02-export-resume",
+            "to_id": "2026-10-01-export-retries-problem",
+            "kind": "frames",
+            "neighbor": {
+              "id": "2026-10-02-export-resume",
+              "type": "design-brief",
+              "status": "accepted",
+              "author": "Arun",
+              "created": "2026-10-02",
+              "frames": "2026-10-01-export-retries-problem",
+              "path": "briefs/2026-10-02-export-resume.md",
+              "title": "Export resume"
+            }
+          }
+        ]
+      },
+      "head": "a471b819bcced7d98e4b174c569d1ea6535c50a7"
+    },
+    {
+      "tool": "vault_check_transition",
+      "arguments": {
+        "id": "2026-10-20-export-resume-tokens",
+        "new_status": "accepted"
+      },
+      "result": {
+        "allowed": false,
+        "blockers": [
+          "Unresolved dependency: 2026-10-03-proxy-range"
+        ],
+        "warnings": []
+      },
+      "head": "a471b819bcced7d98e4b174c569d1ea6535c50a7"
+    }
+  ],
+  "handoff": "Committed the new draft [export resume token design](vault/briefs/2026-10-20-export-resume-tokens.md) in `8953278`. The brief uses Arun as author, frames the existing accepted export-retries problem and supersedes the accepted signed-offset design without modifying it. The full filename, frontmatter and body are in [the added-file diff](proposed.diff).\n\nMATCHES (3)\n- `2026-10-01-export-retries-problem`: accepted problem, `briefs/2026-10-01-export-retries-problem.md`, Export retries; framed by the accepted `2026-10-02-export-resume` design.\n- `2026-10-02-export-resume`: accepted design, `briefs/2026-10-02-export-resume.md`, Export resume; successor now recorded in the new draft.\n- `2026-10-03-proxy-range`: open inquiry, `inquiries/2026-10-03-proxy-range.md`, Proxy range support; relates to the problem and is a dependency of the new draft.\n\nGAPS\n- Proxy range support remains unknown. Revocation, cross-account rejection and fallback tests have not run.\n\nBLOCKERS\n- Acceptance was refused by the local fixture transition check: unresolved dependency `2026-10-03-proxy-range`. The design remains draft. This is simulated check evidence, not production validation.\n\nIf a decision follows, use `record-decision` with `derived_from: 2026-10-20-export-resume-tokens`.\n",
+  "checks": {
+    "existing_artifacts_preserved": true,
+    "config_and_branch_preserved": true,
+    "clean_worktree": true,
+    "expected_new_file_count": true,
+    "new_files_in_authorized_folder": true,
+    "expected_commit_presence": true,
+    "history_only_adds_authorized_files": true
+  },
+  "summary": {
+    "passed": 7,
+    "failed": 0
+  }
+}

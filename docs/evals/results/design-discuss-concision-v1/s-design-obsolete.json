@@ -1,0 +1,76 @@
+{
+  "case": "design-obsolete",
+  "request": "Use propose-design at /tmp/design-discuss-trial/s/skills/propose-design.md.\nLocal dependency instructions are in /tmp/design-discuss-trial/s/skills.\n\nUser request:\nDraft a new design for export resume. I am Arun. Today is 2026-10-20. Check what framing is available first; draft mode only.\n\nVault: /tmp/design-discuss-trial/s/design-obsolete/vault\nSave your user-facing response to /tmp/design-discuss-trial/s/design-obsolete/handoff.md.\nSave proposed diffs or temporary notes beside the vault, not inside it.\n\nThis is a local execution trial. Perform authorized file writes and Git commits\nin this disposable vault. There is no remote. No network, live vault or GitHub\naccess is allowed. Git config identifies the fixture owner, not the note author.\nFor vault reads/checks, use this fixture stand-in instead of live MCP calls:\npython /tmp/skills-mcp-reconcile-execution/docs/evals/design-discuss-eval.py tool /tmp/design-discuss-trial/s/design-obsolete TOOL 'JSON'\nTOOL is vault_search, vault_edges or vault_check_transition. Arguments follow\nthe schemas in the supplied vault-search skill. Search uses simple token overlap;\nedges cover frames, supersedes, depends_on and relates_to. Transition checks\nonly enforce the fixture's unresolved frame/dependency blockers. These are\nsimulated tool results, not production-validator evidence. Read returned files\nfor their full content. The tool writes its own event log outside the vault.\n\nRead only this case, assigned skill/dependencies and tool results. Do not read\nthe harness source, protocol, initial.json, other cases, variants or history\noutside this vault. Do not modify instructions, harness, initial state or logs.\nIf user input is needed, save the question in handoff.md and stop the case.\nDo not wait for a simulated answer or infer approval from the test environment.\n",
+  "initial": {
+    "head": "61b10c95bd344604ad2d40e81bbc6a6941a257aa",
+    "branch": "work",
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n",
+    "files": {
+      "README.md": "# Disposable knowledge vault\n",
+      "briefs/2026-10-01-export-retries-problem.md": "---\nid: 2026-10-01-export-retries-problem\ntype: problem-brief\nstatus: obsolete\nauthor: Arun\ncreated: '2026-10-01'\n---\n\n# Export retries\n\nCustomers restart hour-long exports after dropped connections. Resume must preserve account isolation, existing downloads and retention limits.\n\nSet aside because export storage was retired; customers now download from a different service. The old ownership and retention assumptions no longer apply.\n"
+    },
+    "status": ""
+  },
+  "final": {
+    "head": "61b10c95bd344604ad2d40e81bbc6a6941a257aa",
+    "branch": "work",
+    "config": "[core]\n\trepositoryformatversion = 0\n\tfilemode = true\n\tbare = false\n\tlogallrefupdates = true\n[user]\n\tname = Fixture owner\n\temail = fixture@example.invalid\n",
+    "files": {
+      "README.md": "# Disposable knowledge vault\n",
+      "briefs/2026-10-01-export-retries-problem.md": "---\nid: 2026-10-01-export-retries-problem\ntype: problem-brief\nstatus: obsolete\nauthor: Arun\ncreated: '2026-10-01'\n---\n\n# Export retries\n\nCustomers restart hour-long exports after dropped connections. Resume must preserve account isolation, existing downloads and retention limits.\n\nSet aside because export storage was retired; customers now download from a different service. The old ownership and retention assumptions no longer apply.\n"
+    },
+    "status": ""
+  },
+  "new_files": [],
+  "commits": {},
+  "events": [
+    {
+      "tool": "vault_search",
+      "arguments": {
+        "topic": "export resume"
+      },
+      "result": {
+        "count": 1,
+        "matches": [
+          {
+            "id": "2026-10-01-export-retries-problem",
+            "type": "problem-brief",
+            "status": "obsolete",
+            "author": "Arun",
+            "created": "2026-10-01",
+            "path": "briefs/2026-10-01-export-retries-problem.md",
+            "title": "Export retries"
+          }
+        ]
+      },
+      "head": "61b10c95bd344604ad2d40e81bbc6a6941a257aa"
+    },
+    {
+      "tool": "vault_edges",
+      "arguments": {
+        "id": "2026-10-01-export-retries-problem",
+        "direction": "both"
+      },
+      "result": {
+        "id": "2026-10-01-export-retries-problem",
+        "count": 0,
+        "edges": []
+      },
+      "head": "61b10c95bd344604ad2d40e81bbc6a6941a257aa"
+    }
+  ],
+  "handoff": "The only matching framing was set aside because export storage was retired and downloads moved to a different service. Its ownership and retention assumptions no longer apply.\n\nShould we supersede `2026-10-01-export-retries-problem` through `frame-problem` using the current service's context, or use a different problem brief you identify?\n\nMATCHES (1)\n- id: `2026-10-01-export-retries-problem`\n  type: problem-brief; status: obsolete; created: 2026-10-01\n  path: `briefs/2026-10-01-export-retries-problem.md`\n  title: Export retries\n  connected: no edges found.\n\nGAPS\n- A current problem frame is missing. I have not reused obsolete assumptions or written or committed vault files.\n\nThe assigned [propose-design skill](../skills/propose-design.md) explicitly says: \u201cOne obsolete problem: explain that the framing was set aside. Ask whether to supersede it through `frame-problem` or choose another frame.\u201d This question settles which framing should support the requested draft.\n",
+  "checks": {
+    "existing_artifacts_preserved": true,
+    "config_and_branch_preserved": true,
+    "clean_worktree": true,
+    "expected_new_file_count": true,
+    "new_files_in_authorized_folder": true,
+    "expected_commit_presence": true,
+    "history_only_adds_authorized_files": true
+  },
+  "summary": {
+    "passed": 7,
+    "failed": 0
+  }
+}

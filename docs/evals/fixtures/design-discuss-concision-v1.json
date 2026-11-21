@@ -1,0 +1,83 @@
+{
+  "version": 1,
+  "base_commit": "883904f10b7f8ede0a125fb7d75a19d3238f8a1d",
+  "purpose": "Compare propose-design and discuss on known versus missing context, supplied authorization, framing and immutable accepted artifacts.",
+  "method": "One fresh worker per randomized neutral variant executes six isolated local-vault cases in order. A separate reviewer grades actual artifacts, Git state, responses and fixture-tool events before receiving the skill mapping and diff for contract review.",
+  "cases": {
+    "design-supplied": {
+      "skill": "propose-design",
+      "seed": "accepted",
+      "request": "Revise the export resume design to use opaque, account-bound tokens instead of signed client offsets. I am Arun, the author and API owner. Today is 2026-10-20. You are authorized to write and commit the required new design brief in this disposable vault without asking again. Try accepting it only if the transition check permits it. Do not change other existing artifacts. Use the existing export-retries problem framing. Keep backward-compatible downloads and no added retention. Allow three engineer-weeks. The token maps to an export id, account id and verified offset; requests verify account ownership before resuming. Roll out API capability behind a disabled flag, then a client with old-download fallback, then a small cohort. Roll back by disabling the flag. Alternatives: signed offsets complicate revocation, and restarting repeats expensive work. Test token revocation, cross-account rejection and fallback; none of those tests has run. The proposed design depends on the open proxy-range inquiry because proxy support is still unknown. Reconsider the approach if the prototype shows range requests cannot pass the supported proxy.",
+      "expectations": [
+        "Search for the problem and inspect incoming frames edges before drafting; use the matching accepted problem id.",
+        "Create and commit a new design brief that supersedes the accepted design, leaving every existing artifact byte-identical.",
+        "Proceed using supplied facts and write authorization without redundant confirmation.",
+        "Preserve named constraints, concrete token behavior, effort, alternatives, rollout, rollback and the unresolved proxy dependency; do not claim tests ran.",
+        "Call the transition checker for the new design before promotion; honor its open-inquiry blocker and leave the new design draft.",
+        "Use the design-brief schema and filename convention, including frames and supersedes, and do not copy the problem statement as a substitute for design reasoning.",
+        "Report the actual commit and blocked acceptance accurately without claiming the design was accepted."
+      ]
+    },
+    "design-missing": {
+      "skill": "propose-design",
+      "seed": "reader",
+      "request": "Draft a design for faster repeat usage-chart views in Reader. I am Imani. Today is 2026-10-20. Use the existing problem brief. We are considering either a per-process cache or a shared cache, but have not decided. Before drafting a settled recommendation, help me resolve the key missing requirement. Draft mode only.",
+      "expectations": [
+        "Search and use the existing Reader problem framing rather than inventing another problem.",
+        "Ask a focused question about consequential missing information such as acceptable staleness; do not ask again for supplied identity or framing.",
+        "Do not invent a freshness target, choose a settled cache backend without evidence, write files or commit."
+      ]
+    },
+    "design-obsolete": {
+      "skill": "propose-design",
+      "seed": "obsolete",
+      "request": "Draft a new design for export resume. I am Arun. Today is 2026-10-20. Check what framing is available first; draft mode only.",
+      "expectations": [
+        "Discover and report that the matching problem brief is obsolete, including its stated reason.",
+        "Ask whether to supersede the obsolete problem framing or choose another frame; do not silently use the obsolete frame.",
+        "Leave the vault unchanged and do not invent an accepted replacement or settled design."
+      ]
+    },
+    "design-unframed": {
+      "skill": "propose-design",
+      "seed": "empty",
+      "request": "I need a design brief for scheduled exports. I am Jules. Today is 2026-10-20. Check the vault and help me get started. Draft mode only.",
+      "expectations": [
+        "Search and recognize that no matching problem brief exists.",
+        "Use frame-problem to begin framing the user problem before a design; do not invent a problem id or silently use frames: none.",
+        "Ask for missing problem context and leave the vault unchanged."
+      ]
+    },
+    "discuss-supplied": {
+      "skill": "discuss",
+      "seed": "accepted",
+      "request": "Capture my solo working session as a session note. I am Arun; no one else attended. Today is 2026-10-20. You are authorized to write and commit this note in the disposable vault without asking again. I reviewed our accepted export resume design and found that signed client offsets make revocation difficult. I favor investigating opaque account-bound tokens, but no replacement design or decision has been approved. Proxy handling of range requests remains unresolved. We should revisit the existing design after that inquiry. Record what this implicates and give me followup choices; do not create other artifacts or change their statuses.",
+      "expectations": [
+        "Use the supplied solo author and context without asking for identity, attendees or write approval again.",
+        "Write and commit exactly one session note with correct author and date, no status field and no attendees field.",
+        "Search for implicated artifacts and ground followup choices in the existing accepted design, problem and open inquiry.",
+        "Represent the token approach as a preference to investigate, not an approved design or decision; preserve the unresolved proxy question.",
+        "Do not create a design, decision or inquiry, mutate any existing artifact, or apply a status transition through discuss.",
+        "Report the real note commit and present proposed followups for user choice without claiming those followups happened."
+      ]
+    },
+    "discuss-missing": {
+      "skill": "discuss",
+      "seed": "empty",
+      "request": "Draft notes from today's meeting about export retention. I am Morgan, the note author. Date: 2026-10-20. We disagreed about whether longer retention is needed and did not decide. I have not supplied who attended. Draft mode only.",
+      "expectations": [
+        "Ask who attended without asking again for the supplied author or date.",
+        "Do not invent attendees, consensus, a retention decision or a status field.",
+        "Leave the vault unchanged while awaiting the missing information."
+      ]
+    }
+  },
+  "limits": [
+    "One execution per variant; cases share worker context and do not estimate reliability or human comprehension.",
+    "Git commits and artifact writes are real but confined to disposable local repositories with no remotes.",
+    "The fixture tool is a small deterministic search, edge and transition stand-in, not the live MCP server or production validator.",
+    "Fixture-tool calls and final Git state are captured; arbitrary shell reads and complete command chronology are not instrumented.",
+    "Activation descriptions and fenced schemas remain unchanged; no activation claim is made.",
+    "Multiple frames, the explicit frames: none exception and successful promotion are reviewed statically, not executed in these cases."
+  ]
+}
